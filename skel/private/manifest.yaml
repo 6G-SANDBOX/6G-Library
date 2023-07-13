@@ -1,11 +1,10 @@
 # Component definition
 
 family: infra # infra, sw, integration
-platforms: [one, vmware, ...]
 flow:
   - ./iac/terraform
   - ./cac/01_pre/bootstrap.yml
   - ./cac/02_pre/setup.yml
   - ./cac/01_post/integration.yml
 
-  
+
