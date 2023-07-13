@@ -1,0 +1,9 @@
+#Public values that can be modified by the experimenter
+
+name: "example"
+
+hw_resources:
+  vcores: 2
+  memory: 256M
+  disks:
+  
