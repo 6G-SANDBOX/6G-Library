@@ -16,13 +16,13 @@ In simple words, the library is a catalog of building block that we can put toge
 
 ## Table Of Content
 
-- [Why do we use a git repository?](#why-do-we-use-a-git-repository-)
+- [Why do we use a git repository?](#why-do-we-use-a-git-repository)
 - [Component Structure](#component-structure)
   * [Tools](#tools)
-  * [Folder Structure](#folder-stucture)
+  * [Folder Structure](#folder-structure)
     + [Public Folder](#public-folder)
-    + [Private](#private-folder)
-    + [Documentation](#documentation-folder)
+    + [Private Folder](#private-folder)
+    + [Documentation Folder](#documentation-folder)
 - [Links](#links)
 
 ## Why do we use a git repository?
@@ -51,7 +51,7 @@ In order to simplify, there are two aspects that are closed to every component: 
 
 These are the selected tools used to automate how to create and configure a component:
 
-IMAGEN DE TERRAFORM + ANSIBLE + JENKINS + BASH
+<img width="800" alt="component_structure" src="https://github.com/6G-SANDBOX/6G-Library/assets/1454351/9ebd3f9f-0a8f-458d-a27d-0daba77a934c">
 
 + **Terraform**: To create virtual infrastructure on the private cloud providers. Components like virtual networks, virtual machines, containers, k8s clusters, etc... (https://www.terraform.io/)
 + **Ansible**: To configure components, equipments, integrations. Fine fine-grained actions over the Trial Network components. Idempotent warranty (https://www.ansible.com/).
@@ -59,19 +59,18 @@ IMAGEN DE TERRAFORM + ANSIBLE + JENKINS + BASH
 + **Bash**: To allow scripting on standalone operations (https://www.gnu.org/software/bash/).
 
 ### Folder Structure
+<img width="500" alt="component_structure" src="https://github.com/6G-SANDBOX/6G-Library/assets/1454351/5f18c78a-90d5-47c0-9876-e9de9b1132be">
 
-IMAGE FOLDER
+**title: dummy_component structure**
 
-EXAMPLE: dummy_component
-
-#### Public
+#### Public Folder
 
 Contains the components public information that could be used by third parties to integrate the catalog.
 
 + **description.yaml (file)**: Is a descriptor file with the component public information. It contains metadata (component name, version, etc, ...) and the public variables that should be used to deploy it.
 + **changelog.yaml (file)**: Is a file with the component historical evolution: new version, bug fixing, etc..
 
-#### Private
+#### Private Folder
 
 Contains the component private files with information and automation that will be used to deploy the component in a 6G-SANDBOX site
 
@@ -87,7 +86,7 @@ Contains the component private files with information and automation that will b
     + **iac(folder)**: Contains files related to infrastructure definition
     + **pac(folder)**: Contains files related to pipeline automation
 
-#### Documentation
+#### Documentation Folder
 
 It contains, detailed information about the component in MarkDown format. That enables direct integration between third parties and the catalog.
 
