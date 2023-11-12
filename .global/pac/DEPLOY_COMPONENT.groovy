@@ -53,7 +53,7 @@ pipeline {
         script {
           sh """ 
           cd ${LIBRARY_COMPONENT_NAME}/private
-          ansible-playbook manifest.yaml
+          ansible-playbook --extra-vars "tn_id=${TN_ID}" manifest.yaml
           """
           }
       }
