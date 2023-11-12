@@ -8,10 +8,16 @@
         dir: ../
         files_matching: values.yaml
 
+    - name: Task name
+      stat:
+        path: "/tmp/{{tn_id}}_{{component_name}}_vars.yaml"
+      register: file_exits
+
     - name: Load variables from config
       ansible.builtin.include_vars:
         dir: /tmp
-        files_matching: "{{tn_id}}_{{component_name}}_vars.yml"
+        files_matching: "{{tn_id}}_{{component_name}}_vars.yaml"
+      when: file_exits.stat.exists  
 
     - name: Display all variables/facts known for a host
       debug:
