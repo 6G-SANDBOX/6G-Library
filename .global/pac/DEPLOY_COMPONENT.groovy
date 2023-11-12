@@ -34,7 +34,7 @@ pipeline {
                 returnStdout: true)
             echo "${YAML_CONTENT}"
             // This file path is relevant because ansible will look for this file on stage 2
-            writeFile(file: ${FILE_PATH}, text: YAML_CONTENT)
+            writeFile(file: FILE_PATH, text: YAML_CONTENT)
           }
       }
     }  
@@ -66,5 +66,17 @@ pipeline {
           echo "DONE"
           '''
       }
+      cleanup{
+          /* clean up our workspace */
+          deleteDir()
+          /* clean up tmp directory */
+          dir("${env.workspace}@tmp") {
+              deleteDir()
+          }
+          /* clean up script directory */
+          dir("${env.workspace}@script") {
+              deleteDir()
+          }
+      }      
   }  
 }

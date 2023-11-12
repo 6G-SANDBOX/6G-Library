@@ -3,7 +3,7 @@
 ## Component metadata
 ## 
 ####################################
-component_name: vxlan
+component_name: tn_vxlan
 family: bootstrap
 maintainers: 
   - Jesus Macias Portela <jesus.maciasportela@telefonica.com>

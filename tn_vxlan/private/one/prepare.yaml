@@ -11,7 +11,7 @@
     - name: Load variables from config
       ansible.builtin.include_vars:
         dir: /tmp
-        files_matching: variables_from_tnlcm_via_jenkins_rest.yml
+        files_matching: "{{tn_id}}_{{component_name}}_vars.yml"
 
 # Generate Manifests
 - name: Generate VXLAN component manifests

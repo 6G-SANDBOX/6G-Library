@@ -12,7 +12,7 @@
   tasks:
     - name: Get Trial Network Terraform State
       ansible.builtin.debug:
-        msg: "Download from Terraform states repository"
+        msg: "Download from Terraform states repository {{ tn_terraform_state_url }}"
     - name: Execute terraform apply
       community.general.terraform:
         project_path: './one/iac/'
@@ -22,8 +22,8 @@
 
     - name: Get Terraform Outputs
       ansible.builtin.debug:
-        msg: "The VXLAN ID is  {{ result.outputs.vxlan_id.value }}"
+        msg: "The VXLAN ID is {{ result.outputs.vxlan_id.value }}"
 
-    - name: Put Trial Network Terraform State
+    - name: Push Trial Network Terraform State
       ansible.builtin.debug:
-        msg: "Upload to Terraform states repository"
+        msg: "Upload to Terraform states repository {{ tnlcm_callback }}"
