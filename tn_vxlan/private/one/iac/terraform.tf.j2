@@ -1,0 +1,46 @@
+#
+# 
+#
+
+terraform {
+  required_providers {
+    opennebula = {
+      source = "OpenNebula/opennebula"
+      version = "~> 1.3"
+    }
+  }
+}
+
+resource "opennebula_virtual_network" "{{ one_vxlan_name }}" {
+  name            = "{{ one_vxlan_name }}"
+  permissions     = "660"
+  group           = "{{ one_group }}"
+  physical_device = "{{ one_vxlan_physical_device }}"
+  type            = "vxlan"
+  automatic_vlan_id = true
+  mtu             = {{ one_vxlan_mtu }}
+  guest_mtu       = {{ one_vxlan_guest_mtu }}
+  dns             = "{{ one_vxlan_dns }}"
+  gateway         = "{{ one_vxlan_gw }}"
+  security_groups = {{ one_vxlan_security_groups }}
+  cluster_ids = {{ one_vxlan_cluster_list }}
+
+  template_section {
+   name = "{{ one_vxlan_name }}"
+   elements = {
+      TNID = "{{ tn_id }}"
+   }
+  }
+}
+
+resource "opennebula_virtual_network_address_range" "{{ one_vxlan_name }}" {
+  virtual_network_id = opennebula_virtual_network.{{ one_vxlan_name }}.id
+  ar_type            = "IP4"
+  size               = {{ one_vxlan_address_size }}
+  ip4                = "{{ one_vxlan_first_ip }}"
+}
+
+output "vxlan_id" {
+  description = "OpenNebula Network ID"
+  value       = opennebula_virtual_network.{{ one_vxlan_name }}.id
+}

@@ -1,0 +1,25 @@
+################################################
+##
+## Component private variables
+##
+## Variables that should be necessary 
+## for the deployment but are not available 
+## to the experimenter
+##
+################################################
+
+artifact_url: "https://marketplace.opennebula.io/appliance/84bd27fe-5d14-4e70-a79a-eb3fdd0072ae"
+artifact_name: "TN Bastion"
+hostname: bastion
+memory: 256M
+disk: 5G
+vcpu: 2
+network_interfaces:
+  # At least, those are mandatory. 
+  - name: ens1
+    network: vpn_external
+  - name: ens2
+    network: tn_default
+  - name: ens3
+    network: common_monitoring
+    

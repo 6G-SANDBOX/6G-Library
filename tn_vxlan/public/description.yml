@@ -3,23 +3,14 @@
 ## Component metadata
 ## 
 ####################################
-component_name: bastion
+component_name: vxlan
 family: bootstrap
 maintainers: 
   - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
 version: 0.0.1
-depends: 
-  - vxlan (>= 0.0.1)
-short_description: This is a VM that acts as bastion for a Trial Network
+short_description: This is the component that creates VXLAN networks inside ONE
 long_description: |
-  It is the component that will host various network services and manage external access to the Trial Network:
-  - DHCP server
-  - NTP server
-  - Public network masquerading
-  - Port forwarding
-  - DNS server
-  - VPN Server
-  In this version the only service available is VPN Server
+  This is the component that creates VXLAN networks inside ONE
 platforms: [one]
 sites: [malaga]
 
@@ -30,4 +21,5 @@ sites: [malaga]
 ## the TNLCM. Some of them could be optional
 ## 
 ###################################################
-network_interfaces: []
+
+one_vxlan_name: "VXLAN NAME"

@@ -1,0 +1,42 @@
+# Load Manifest Flow definitions
+- name: Load manifest flow
+  hosts: localhost
+  tags: always
+  tasks:
+    - include_vars: "../manifest.yml"
+
+# Receive variables from TN file descriptor and load into memory
+- name: Load variables
+  hosts: localhost
+  tags: always
+  tasks:
+    - include_vars: "variables_from_tnlcm_via_jenkins_rest.yml"
+    - include_vars: "../values.yml"
+
+#Check manifest FLOW and iterate trought is stages to create final manifest
+
+# Generate Manifest
+- name: Generate TN Bastion Manifests
+  hosts: localhost
+  #no_log: True
+  tasks:
+    - name: Generate Terraform Manifest
+      template:
+        src: iac/terraform.tf.j2
+        dest: iac/terraform.tf
+    - name: Generate configuration PRE stage ansible playbook
+      template:
+        src: cac/01_pre/bootstrap.yml.j2
+        dest: cac/01_pre/bootstrap.yml
+    - name: Generate configuration POST stage ansible playbook
+      template:
+        src: cac/03_post/test.yml.j2
+        dest: cac/03_post/test.yml
+
+#Check manifest FLOW and create ansible playbook to execute final manifest
+
+
+#Execute FLOW
+
+
+

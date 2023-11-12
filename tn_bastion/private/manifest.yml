@@ -1,0 +1,20 @@
+####################################
+##
+## Component flows
+## 
+## Contains at least one flow to 
+## define the install path. 
+## More paths could be available
+##
+####################################
+flow:
+  install:
+    - tool: ansible
+      file: prepare.yml #Generate manifest from jinja templates
+    - tool: ansible
+      file: ./cac/pre/bootstrap.yml #Verify if the artifact is in IMAGES DATASTORE. If not, import it.
+    - tool: terraform
+      file: ./iac/terraform #Instantiate virtual infra 
+    - tool: ansible
+      file: ./cac/post/test.yml #Verify if all services are up and running 
+

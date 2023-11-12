@@ -1,0 +1,60 @@
+#
+# 
+#
+
+export OPENNEBULA_ENDPOINT="http://192.168.24.12:2633/RPC2"
+export OPENNEBULA_FLOW_ENDPOINT="https://192.168.24.12:2474"
+export OPENNEBULA_USERNAME="oneadmin"
+export OPENNEBULA_PASSWORD="labpassword"
+export OPENNEBULA_INSECURE="true"
+
+
+terraform {
+  required_providers {
+    opennebula = {
+      source = "OpenNebula/opennebula"
+      version = "~> 1.3"
+    }
+  }
+}
+
+# provider "opennebula" {
+#   endpoint      = "http://192.168.24.12:2633/RPC2"
+#   username      = "oneadmin"
+#   password      = "labpassword"
+#   insecure      = true
+# }
+
+resource "opennebula_virtual_network" "maci_vxlan" {
+  name            = "maci_vxlan"
+  permissions     = "660"
+  group           = "oneadmin"
+  physical_device = "br_srv"
+  type            = "vxlan"
+  automatic_vlan_id = true
+  mtu             = 1500
+  guest_mtu       = 1450
+  dns             = "1.1.1.1"
+  gateway         = "192.168.199.1"
+  security_groups = [0]
+  cluster_ids = [0,100,101,103]
+
+  template_section {
+   name = "maci_vxlan"
+   elements = {
+      TNID = "AAEFW"
+   }
+  }
+}
+
+resource "opennebula_virtual_network_address_range" "example" {
+  virtual_network_id = opennebula_virtual_network.maci_vxlan.id
+  ar_type            = "IP4"
+  size               = 254
+  ip4                = "192.168.199.1"
+}
+
+output "vxlan_id" {
+  description = "OpenNebula Network ID"
+  value       = opennebula_virtual_network.maci_vxlan.id
+}

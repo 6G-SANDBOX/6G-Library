@@ -10,4 +10,4 @@ releases:
     changes:
       release_summary: This is the initial release
       major_changes:
-        - VPN Server is ready
+        - VXLAN module ready
