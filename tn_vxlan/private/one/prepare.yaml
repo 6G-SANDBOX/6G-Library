@@ -13,6 +13,10 @@
         dir: /tmp
         files_matching: "{{tn_id}}_{{component_name}}_vars.yml"
 
+    - name: Display all variables/facts known for a host
+      debug:
+        var: hostvars['localhost']        
+
 # Generate Manifests
 - name: Generate VXLAN component manifests
   hosts: localhost
