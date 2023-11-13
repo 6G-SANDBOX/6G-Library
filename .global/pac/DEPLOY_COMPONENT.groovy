@@ -44,15 +44,15 @@ pipeline {
       }
     }  
 
-    stage('Stage 1: Clone 6G library repository') {
-      steps {
-          dir ("${env.WORKSPACE}/") {
-              sh """
-              git clone --single-branch --branch ${LIBRARY_BRANCH} ${LIBRARY_URL} .
-              """
-          }
-      }
-    }      
+    // stage('Stage 1: Clone 6G library repository') {
+    //   steps {
+    //       dir ("${env.WORKSPACE}/") {
+    //           sh """
+    //           git clone --single-branch --branch ${LIBRARY_BRANCH} ${LIBRARY_URL} .
+    //           """
+    //       }
+    //   }
+    // }      
     stage('Stage 2: Run component deployment') {
       steps {
         script {

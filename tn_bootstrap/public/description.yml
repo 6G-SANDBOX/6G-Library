@@ -1,39 +1,23 @@
-CREAR VXLAN --- Publica
-INSTANCIAR EL BASTION
-
-
 ####################################
 ##
 ## Component metadata
 ## 
 ####################################
-component_name: dummy-component
-family: general
+component_name: "tn_bootstrap"
+family: bootstrap
 maintainers: 
-  - myname <myname@6g-sandbox.eu>
-version: 2.2
+  - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+version: 0.0.1
 depends: 
-  - other-component (>= 1.12.4)
-short_description: This is a test project. Long description blah blah blah.
+  - component: "tn_vxlan" 
+    version: "0.0.1"
+  - component: "tb_bastion"
+    version: "0.0.1" 
+short_description: This is the meta component that create the context to run a Trial Network
 long_description: |
-  First sentence
-  And another sentence.
-platforms: [one, vmware]
-sites: [malaga, athens, ...]
-ID_ONE: asdfasdfasdf
+  This is the meta component that create the context to run a Trial Network. It creates:
+  - VXLAN to run 
+  - Bastión as entrypoint to the Trial Network workspace
+platforms: [one]
+sites: [malaga]
 
-###################################################
-##
-## Public component variables that 
-## should be filled by the experimenter or 
-## the TNLCM. Some of them could be optional
-## 
-###################################################
-hostname: vm-ubuntu-server
-interfaces:
-  - name: ens2
-    network: default
-  - name: ens3
-    network: monitoring
-memory: 256M
-disk: 15G

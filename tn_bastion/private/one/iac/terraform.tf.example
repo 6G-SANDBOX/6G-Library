@@ -1,0 +1,21 @@
+terraform {
+  required_providers {
+    opennebula = {
+      source = "OpenNebula/opennebula"
+      version = "~> 1.3"
+    }
+  }
+}
+
+resource "opennebula_virtual_machine" "tn_bastion_XXXXX" {
+
+  name        = "tn_bastion_XXXXX"
+  description = "BASTION FOR TN ID XXXXX"
+  template_id = 41
+  group       = "oneadmin"
+  permissions = "660"
+
+  context = {
+    WIREGUARD_ALLOWEDIPS      = "192.168.199.0/24"
+  }
+}

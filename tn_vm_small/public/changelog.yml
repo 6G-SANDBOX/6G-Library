@@ -10,4 +10,4 @@ releases:
     changes:
       release_summary: This is the initial release
       major_changes:
-        - First version of the Trial Network Bootstrap
+        - VPN Server is ready
