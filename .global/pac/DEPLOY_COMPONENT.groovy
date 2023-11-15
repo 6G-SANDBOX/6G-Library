@@ -11,7 +11,7 @@ pipeline {
     string(name: 'TN_ID', defaultValue: '', description: 'TRIAL NETWORK IDENTIFIER')
     string(name: 'LIBRARY_COMPONENT_NAME', defaultValue: '', description: '6G LIBRARY COMPONENT')
     string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: '6G LIBRARY BRANCH')
-    string(name: 'DEPLOYMENT_SITE', defaultValue: 'uma', description: 'Site ')
+    string(name: 'DEPLOYMENT_SITE', defaultValue: 'uma', description: 'Site where deploy')
     base64File (name: 'FILE', description: 'YAML file that contains variables needed to deploy the component')
     //string(name: 'TNLCM_CALLBACK', defaultValue: 'https://tnlcm.uma/TN/ID/callback', description: 'URL of the TNLCM to notify result')   
   }
@@ -59,7 +59,7 @@ pipeline {
         script {
           sh """ 
           cd ${LIBRARY_COMPONENT_NAME}/private
-          ansible-playbook --extra-vars "tn_id=${TN_ID} component_name=${LIBRARY_COMPONENT_NAME}" deployment_site=${DEPLOYMENT_SITE}" manifest.yaml
+          ansible-playbook --extra-vars "tn_id=${TN_ID} component_name=${LIBRARY_COMPONENT_NAME} deployment_site=${DEPLOYMENT_SITE}" manifest.yaml
           """
           }
       }
