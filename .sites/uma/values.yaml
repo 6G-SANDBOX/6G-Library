@@ -20,14 +20,12 @@ site_vxlan_if: br_281_srv     # It must be the name of the interface on which th
 site_s3_server:
   endpoint: "http://10.11.28.95:9000"
   bucket: "demo"
-  #key: "terraform.tfstate"
-  #access_key="AKIAIOSFODNN7EXAMPLE"
-  #secret_key="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
   region: "main"
-  skip_credentials_validation: true
-  skip_metadata_api_check: true
-  skip_region_validation: true
-  force_path_style: true
+  skip_requesting_account_id: "true"
+  skip_credentials_validation: "true"
+  skip_metadata_api_check: "true"
+  skip_region_validation: "true"
+  force_path_style: "true"
 
 
 

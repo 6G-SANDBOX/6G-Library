@@ -28,6 +28,9 @@ pipeline {
       OPENNEBULA_PASSWORD = credentials('OPENNEBULA_PASSWORD')
       OPENNEBULA_ENDPOINT = credentials('OPENNEBULA_ENDPOINT')
       OPENNEBULA_INSECURE = credentials('OPENNEBULA_INSECURE')
+      // MINIO CREDENTIALS
+      AWS_ACCESS_KEY_ID = credentials('MINIO_KEY')
+      AWS_SECRET_ACCESS_KEY = credentials('MINIO_SECRET')
   }
 
   stages {
