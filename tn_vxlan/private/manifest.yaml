@@ -10,9 +10,12 @@
 - name: Create virtual infrastructure
   hosts: localhost
   tasks:
-    - name: Get Trial Network Terraform State
-      ansible.builtin.debug:
-        msg: "Download from Terraform states repository {{ tn_terraform_state_url }}"
+    # - name: Get Trial Network Terraform State
+    #   ansible.builtin.debug:
+    #     msg: "Download from Terraform states repository {{ tn_terraform_state_url }}"
+
+    #     URL_TNLCM/TN/ZXDADSFASDV/STATE  GET  POST
+        
     - name: Execute terraform apply
       community.general.terraform:
         project_path: './one/iac/'

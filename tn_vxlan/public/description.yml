@@ -3,6 +3,7 @@
 ## Component metadata
 ## 
 ####################################
+
 component_name: tn_vxlan
 family: bootstrap
 maintainers: 
@@ -12,7 +13,7 @@ short_description: This is the component that creates VXLAN networks inside ONE
 long_description: |
   This is the component that creates VXLAN networks inside ONE
 platforms: [one]
-sites: [malaga]
+sites: [uma]
 
 ###################################################
 ##
@@ -22,4 +23,5 @@ sites: [malaga]
 ## 
 ###################################################
 
-one_vxlan_name: "VXLAN NAME"
+one_vxlan_name: "PLACEHOLDER_VXLAN_NAME"
+

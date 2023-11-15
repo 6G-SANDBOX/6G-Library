@@ -5,6 +5,19 @@ terraform {
       version = "~> 1.3"
     }
   }
+
+  backend "s3" {
+    bucket = "{{ site_s3_server.bucket }}"
+    key = "{{ tn_id }}_terraform.tfstate"
+    endpoint = "{{ site_s3_server.bucket }}"
+    #access_key="AKIAIOSFODNN7EXAMPLE"
+    #secret_key="wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    region = "{{ site_s3_server.region }}"
+    skip_credentials_validation = {{ site_s3_server.skip_credentials_validation }}
+    skip_metadata_api_check = {{ site_s3_server.skip_metadata_api_check }}
+    skip_region_validation = {{ site_s3_server.skip_region_validation }}
+    force_path_style = {{ site_s3_server.force_path_style }}
+  }  
 }
 
 resource "opennebula_virtual_network" "{{ one_vxlan_name }}" {

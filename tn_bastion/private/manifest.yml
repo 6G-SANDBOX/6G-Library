@@ -27,3 +27,5 @@
     - name: Push Trial Network Terraform State
       ansible.builtin.debug:
         msg: "Upload to Terraform states repository {{ tnlcm_callback }}"
+
+- 

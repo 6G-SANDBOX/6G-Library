@@ -19,3 +19,8 @@ resource "opennebula_virtual_machine" "{{ one_bastion_name }}_{{ tn_id }}" {
     WIREGUARD_ALLOWEDIPS      = "{{ one_bastion_wireguard_allowed_networks }}"
   }
 }
+
+output "vxlan_id" {
+  description = "OpenNebula Network ID"
+  value       = opennebula_virtual_network.{{ one_vxlan_name }}.id
+}
