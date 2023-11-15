@@ -1,5 +1,5 @@
 # GLOBAL VARIABLES SECTION (ADDED BY TNLCM)
-tn_id: "ABCDFE"    # AlphaNumeric 6 charaters
+tn_id: "ABCDEF"    # AlphaNumeric 6 charaters
 component_name: "tn_vxlan"
 
 # tn_terraform_state_url: "http://tnlcm.uma/TN/ASZDV/tfstate" # FROM MINIO
@@ -8,7 +8,7 @@ component_name: "tn_vxlan"
 tnlcm_callback: "http://tnlcm.uma/TN/ASZDV/callback"
 
 # FROM PUBLIC VARIABLES SECTION
-one_vxlan_name: "TEST_TODAY"
+one_vxlan_name: "TEST_ABCDEF"
 
 # FROM PRIVATE VARIABLES SECTION (ONLY FOR ADVANCED USERS)
 
