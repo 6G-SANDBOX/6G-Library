@@ -1,32 +1,5 @@
-# Receive variables from TN file descriptor and load into memory
-- name: Prepare execution context. Mixing variables.
-  hosts: localhost
-  tags: always
-  tasks:
-    - name: Load site variables 
-      ansible.builtin.include_vars:
-        dir: "../../../.sites/{{ deployment_site }}/"
-        files_matching: values.yaml
-
-    - name: Load variables from private config
-      ansible.builtin.include_vars:
-        dir: ../
-        files_matching: values.yaml
-
-    - name: Check if file with variables from private config exits
-      stat:
-        path: "/tmp/{{ tn_id }}_{{ component_name }}_vars.yaml"
-      register: file_exits
-
-    - name: Load variables from private config
-      ansible.builtin.include_vars:
-        dir: /tmp
-        files_matching: "{{ tn_id }}_{{ component_name }}_vars.yaml"
-      when: file_exits.stat.exists  
-
-    # - name: Display all variables/facts known for a host
-    #   debug:
-    #     var: hostvars['localhost']        
+- name: Generate installation manifest from templates
+  ansible.builtin.import_playbook: "../../../.global/cac/mix_variables.yaml"
 
 # Generate Manifests
 - name: Generate VXLAN component manifests
