@@ -1,29 +1,17 @@
-# Receive variables from TN file descriptor and load into memory
-- name: Prepare execution context
+# START MANDATORY BLOCK
+- name: Mix variables from different sources
+  ansible.builtin.import_playbook: "../../../.global/cac/mix_variables.yaml"
+# END MANDATORY BLOCK    
+
+# Generate Infrastructure Manifests
+- name: Generate Terraform backend manifests
   hosts: localhost
-  tags: always
   tasks:
-    - name: Load variables from config
-      ansible.builtin.include_vars:
-        dir: ../
-        files_matching: values.yaml
+    - name: Generate Terraform manifest
+      template:
+        src: ../../../.global/iac/backend.tf.j2
+        dest: iac/backend.tf
 
-    - name: Check if the TNLCM variable files exits 
-      stat:
-        path: "/tmp/{{tn_id}}_{{component_name}}_vars.yaml"
-      register: file_exits
-
-    - name: Load variables from config
-      ansible.builtin.include_vars:
-        dir: /tmp
-        files_matching: "{{tn_id}}_{{component_name}}_vars.yaml"
-      when: file_exits.stat.exists  
-
-    - name: Display all variables/facts known for a host
-      debug:
-        var: hostvars['localhost']        
-
-# Generate Manifests
 - name: Generate VXLAN component manifests
   hosts: localhost
   tasks:
