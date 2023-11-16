@@ -19,7 +19,7 @@ resource "opennebula_virtual_network" "{{ tn_id }}_{{ one_vxlan_name }}" {
   dns             = "{{ one_vxlan_dns }}"
   gateway         = "{{ one_vxlan_gw }}"
   security_groups = {{ one_vxlan_security_groups }}
-  cluster_ids = {{ one_vxlan_cluster_list }}
+  cluster_ids = {{  site_network_clusters }}
 
   template_section {
    name = "{{ one_vxlan_name }}"
@@ -30,7 +30,7 @@ resource "opennebula_virtual_network" "{{ tn_id }}_{{ one_vxlan_name }}" {
 }
 
 resource "opennebula_virtual_network_address_range" "{{ one_vxlan_name }}" {
-  virtual_network_id = opennebula_virtual_network.{{ one_vxlan_name }}.id
+  virtual_network_id = opennebula_virtual_network.{{ tn_id }}_{{ one_vxlan_name }}.id
   ar_type            = "IP4"
   size               = {{ one_vxlan_address_size }}
   ip4                = "{{ one_vxlan_first_ip }}"
@@ -38,5 +38,5 @@ resource "opennebula_virtual_network_address_range" "{{ one_vxlan_name }}" {
 
 output "vxlan_id" {
   description = "OpenNebula Network ID"
-  value       = opennebula_virtual_network.{{ one_vxlan_name }}.id
+  value       = opennebula_virtual_network.{{ tn_id }}_{{ one_vxlan_name }}.id
 }

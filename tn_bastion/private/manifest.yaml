@@ -17,4 +17,48 @@
         force_init: true
       register: result 
 
+# STAGE 3: Get Terraform outputs
 
+- name: Get Terraform outputs
+  hosts: localhost
+  tasks:
+    - name: Get Terraform Output
+      ansible.builtin.shell:
+      args:
+        chdir: ./one/iac/
+        cmd: "terraform output --json | jq 'with_entries(.value |= .value)'"
+      register: terraform_output
+
+    - name: Load Terraform Output into execution context
+      ansible.builtin.set_fact:
+        outputs: "{{ terraform_output.stdout | from_json }}"
+
+    - name: Get VM ip from default site network
+      ansible.builtin.set_fact:
+        vm_ip: "{{ item.value }}"
+      loop: "{{ lookup('ansible.builtin.dict', outputs.network_assignments) }}"
+      when: item.key | int == site_default_network_id
+
+    - name: Verify that is correctly loaded
+      ansible.builtin.debug:
+        msg: "Network Interface {{ vm_ip }}"
+
+    - name: Add new VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_ssh_host: "{{ vm_ip }}"
+        ansible_ssh_port: "22"
+        ansible_user: "ansible"
+        ansible_ssh_pass: "ansible"
+
+    - name: Wait for service to be ready
+      wait_for:
+        port: 22
+        host: "{{ vm_ip }}"
+        connect_timeout: 5
+        delay: 20
+        timeout: 120
+
+# STAGE 4: VM is ready, execute configuration 
+- name: Execute Post Configuration
+  ansible.builtin.import_playbook: ./one/cac/03_post/get_vpn_client_config.yaml
