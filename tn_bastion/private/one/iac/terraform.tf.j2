@@ -7,20 +7,26 @@ terraform {
   }
 }
 
-resource "opennebula_virtual_machine" "{{ one_bastion_name }}_{{ tn_id }}" {
+resource "opennebula_virtual_machine" "{{ tn_id }}_{{ one_bastion_name }}" {
 
-  name        = "{{ one_bastion_name }}_{{ tn_id }}"
+  name        = "{{ tn_id }}_{{ one_bastion_name }}_{{ tn_id }}"
   description = "BASTION FOR TN ID {{ tn_id }}"
-  template_id = 41
+  template_id = {{ site_one_templates.tn_bastion.id }}
   group       = "oneadmin"
   permissions = "660"
 
   context = {
+    HOSTNAME = "$NAME"
+    PASSWORD = "demo"
     WIREGUARD_ALLOWEDIPS      = "{{ one_bastion_wireguard_allowed_networks }}"
   }
-}
 
-output "vxlan_id" {
-  description = "OpenNebula Network ID"
-  value       = opennebula_virtual_network.{{ one_vxlan_name }}.id
+{% for network_id in one_component_networks %}
+  nic {
+    model           = "virtio"
+    network_id      = network
+    security_groups = [0]
+  }
+{% endfor %}
+
 }

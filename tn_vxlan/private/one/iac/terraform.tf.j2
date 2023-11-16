@@ -7,8 +7,8 @@ terraform {
   }
 }
 
-resource "opennebula_virtual_network" "{{ one_vxlan_name }}" {
-  name            = "{{ one_vxlan_name }}"
+resource "opennebula_virtual_network" "{{ tn_id }}_{{ one_vxlan_name }}" {
+  name            = "{{ tn_id }}_{{ one_vxlan_name }}"
   permissions     = "660"
   group           = "{{ one_group }}"
   physical_device = "{{ one_vxlan_physical_device }}"

@@ -9,11 +9,11 @@
 
 site_hipervisor: one #one, vmware, etc ...
 site_networks:
-  - id: 0                    # ID from OpenNebula Networks List
-    name: External Network   # Representative Name
+  - name: External Network   # Representative Name
+    id: 0                    # ID from OpenNebula Networks List
     if_name: br_281_srv      # Interface that support this Network
-  - id: 13
-    name: NTN Network
+  - name: NTN Network
+    id: 13
     if_name: br_120
 site_vxlan_if: br_281_srv     # It must be the name of the interface on which the new vxlan will be created
 
@@ -27,5 +27,6 @@ site_s3_server:
   skip_region_validation: "true"
   force_path_style: "true"
 
-
-
+site_one_templates:
+  tn_bastion:
+    id: 41
