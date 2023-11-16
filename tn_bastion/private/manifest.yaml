@@ -1,0 +1,31 @@
+# FLOW: INSTALL
+
+# STAGE 1: Prepare manifest from templates
+
+- name: Generate installation manifest from templates
+  ansible.builtin.import_playbook: ./one/prepare.yaml
+
+# STAGE 2: Execute manifest
+
+- name: Create virtual infrastructure
+  hosts: localhost
+  tasks:
+    - name: Get Trial Network Terraform State
+      ansible.builtin.debug:
+        msg: "Download from Terraform states repository {{ tn_terraform_state_url }}"
+    - name: Execute terraform apply
+      community.general.terraform:
+        project_path: './one/iac/'
+        state: "present"
+        force_init: true
+      register: result 
+
+    - name: Get Terraform Outputs
+      ansible.builtin.debug:
+        msg: "The VXLAN ID is {{ result.outputs.vxlan_id.value }}"
+
+    - name: Push Trial Network Terraform State
+      ansible.builtin.debug:
+        msg: "Upload to Terraform states repository {{ tnlcm_callback }}"
+
+- 
