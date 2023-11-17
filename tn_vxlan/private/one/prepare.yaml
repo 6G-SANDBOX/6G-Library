@@ -7,9 +7,13 @@
 - name: Generate Terraform backend manifests
   hosts: localhost
   tasks:
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: "../../../.global/iac/providers.tf"
+        dest: iac/providers.tf
     - name: Generate Terraform manifest
       template:
-        src: ../../../.global/iac/backend.tf.j2
+        src: "../../../.global/iac/backend.tf.j2"
         dest: iac/backend.tf
 
 - name: Generate VXLAN component manifests
@@ -18,4 +22,7 @@
     - name: Generate Terraform manifest
       template:
         src: iac/terraform.tf.j2
-        dest: iac/terraform.tf
+        dest: "iac/terraform.tf"
+
+- name: Download Terraform previous manifest
+  ansible.builtin.import_playbook: "../../../.global/cac/download_bucket_content.yaml" dst_folder="{{ playbook_dir }}"
