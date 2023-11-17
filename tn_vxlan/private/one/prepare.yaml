@@ -22,7 +22,7 @@
     - name: Generate Terraform manifest
       template:
         src: iac/terraform.tf.j2
-        dest: "iac/terraform.tf"
+        dest: "iac/{{ tn_id}}_{{ component_name }}.tf"
 
 - name: Download Terraform previous manifest
   ansible.builtin.import_playbook: "../../../.global/cac/download_bucket_content.yaml" 
