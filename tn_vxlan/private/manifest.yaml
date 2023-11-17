@@ -33,6 +33,6 @@
 
 - name: Upload Terraform manifest
   ansible.builtin.import_playbook: "../../.global/cac/upload_manifest_to_folder.yaml"
-    vars:
+  vars:
     dst_folder: "{{ playbook_dir }}/one/iac/"
     
