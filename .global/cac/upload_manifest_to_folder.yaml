@@ -24,7 +24,6 @@
         bucket: "{{ site_s3_server.bucket }}"
         object: "{{ tn_id }}/{{ item }}"
         src: "../../{{ component_name }}/private/{{ site_hipervisor }}/iac/{{ item }}"
-        headers:
-          X-Amz-Server-Side-Encryption: ""
+        encrypt: no
       with_items: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
 
