@@ -20,7 +20,7 @@
         aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
         object: "{{ item }}"
-        dest: "{{ dst_folder }}/iac/{{ item|basename }}"
+        dest: "{{ dst_folder }}/{{ item|basename }}"
       with_items: "{{ s3_bucket_items.s3_keys }}"
 
 

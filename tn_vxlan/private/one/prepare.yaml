@@ -25,4 +25,6 @@
         dest: "iac/terraform.tf"
 
 - name: Download Terraform previous manifest
-  ansible.builtin.import_playbook: "../../../.global/cac/download_bucket_content.yaml" dst_folder="{{ playbook_dir }}"
+  ansible.builtin.import_playbook: "../../../.global/cac/download_bucket_content.yaml" 
+  vars:
+    dst_folder: "{{ playbook_dir }}/iac"

@@ -32,4 +32,7 @@
         msg: "Upload to Terraform states repository {{ tnlcm_callback }}"
 
 - name: Upload Terraform manifest
-  ansible.builtin.import_playbook: "../../.global/cac/upload_manifest_to_folder.yaml" dst_folder="{{ playbook_dir }}/one/iac/"
+  ansible.builtin.import_playbook: "../../.global/cac/upload_manifest_to_folder.yaml"
+    vars:
+    dst_folder: "{{ playbook_dir }}/one/iac/"
+    
