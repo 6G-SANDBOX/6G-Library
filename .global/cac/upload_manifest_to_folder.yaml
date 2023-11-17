@@ -11,16 +11,16 @@
 
     - name: print file names without path
       debug:
-        msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
+        msg: "{{ found_files['files'] | map(attribute='path') | list }}"
 
-    - name: Download files from S3
+    - name: Upload files to S3
       amazon.aws.aws_s3:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put
         aws_access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ item }}"
+        content: "{{ item }}"
         dest: "{{ tn_id }}/{{ item|basename }}"
       with_items: "{{ found_files['files'] | map(attribute='path') | list }}"
 
