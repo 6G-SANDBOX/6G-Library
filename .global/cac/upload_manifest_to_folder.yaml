@@ -2,9 +2,9 @@
 - name: Upload terraform manifest to S3 Bucket
   hosts: localhost
   tasks:
-    - name: "get files from dir"
+    - name: "Get files from dir"
       find:
-        paths: "{{ dst_folder }}"
+        paths: "../../{{ component_name }}/private/{{ site_hipervisor }}/iac"
         patterns: "*.tf"
         excludes: "providers,backend"
       register: found_files
