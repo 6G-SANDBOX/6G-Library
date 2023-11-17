@@ -22,5 +22,6 @@
         object: "{{ item }}"
         dest: "{{ dst_folder }}/{{ item|basename }}"
       with_items: "{{ s3_bucket_items.s3_keys }}"
+      when: item != "{{ tn_id }}_terraform.state"
 
 
