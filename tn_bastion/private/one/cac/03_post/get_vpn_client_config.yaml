@@ -16,4 +16,4 @@
 
     - name: Debug returned client config
       ansible.builtin.debug:
-        msg: "{{ client | b64decode }}"      
+        msg: "{{ client['content'] | b64decode }}"      
