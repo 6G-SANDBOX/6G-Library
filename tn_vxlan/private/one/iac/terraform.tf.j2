@@ -29,7 +29,7 @@ resource "opennebula_virtual_network" "{{ tn_id }}_{{ one_vxlan_name }}" {
   }
 }
 
-resource "opennebula_virtual_network_address_range" "{{ one_vxlan_name }}" {
+resource "opennebula_virtual_network_address_range" "{{ tn_id }}_{{ one_vxlan_name }}" {
   virtual_network_id = opennebula_virtual_network.{{ tn_id }}_{{ one_vxlan_name }}.id
   ar_type            = "IP4"
   size               = {{ one_vxlan_address_size }}
