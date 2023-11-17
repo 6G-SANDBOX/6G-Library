@@ -6,12 +6,14 @@
       find:
         paths: "../../{{ component_name }}/private/{{ site_hipervisor }}/iac"
         patterns: "*.tf"
-        excludes: "providers,backend"
+        excludes: 
+          - "providers.tf"
+          - "backend.tf"
       register: found_files
 
     - name: print file names without path
       debug:
-        msg: "{{ found_files['files'] | map(attribute='path') | list }}"
+        msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
 
     - name: Upload files to S3
       amazon.aws.aws_s3:
@@ -20,7 +22,7 @@
         aws_access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
-        content: "{{ item }}"
-        dest: "{{ tn_id }}/{{ item|basename }}"
-      with_items: "{{ found_files['files'] | map(attribute='path') | list }}"
+        object: "{{ tn_id }}/{{{ item }}"
+        src: "../../{{ component_name }}/private/{{ site_hipervisor }}/iac/{{ item }}"
+      with_items: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
 
