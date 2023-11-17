@@ -5,11 +5,13 @@
     - name: "get files from dir"
       find:
         paths: "{{ dst_folder }}"
+        patterns: "*.tf"
+        excludes: "providers,backend"
       register: found_files
 
     - name: print file names without path
       debug:
-        msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list | select("match", "*.tf")}}"
+        msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
 
     - name: Download files from S3
       amazon.aws.aws_s3:
@@ -20,5 +22,5 @@
         bucket: "{{ site_s3_server.bucket }}"
         object: "{{ item }}"
         dest: "{{ tn_id }}/{{ item|basename }}"
-      with_items: "{{ found_files['files'] | map(attribute='path') | list | select("match", "*.tf")}}"
+      with_items: "{{ found_files['files'] | map(attribute='path') | list }}"
 
