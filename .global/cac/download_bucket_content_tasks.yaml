@@ -9,21 +9,34 @@
     marker: "{{ tn_id }}"
   register: s3_bucket_items
 
-- name: Get Terraform Outputs
-  ansible.builtin.debug:
-    msg: "{{ item | basename }}"  
-  with_items: "{{ s3_bucket_items.s3_keys }}"
- 
-- name: Download files from S3
-  amazon.aws.aws_s3:
-    endpoint_url: "{{ site_s3_server.endpoint }}"
-    mode: get
-    aws_access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
-    aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
-    bucket: "{{ site_s3_server.bucket }}"
-    object: "{{ item }}"
-    dest: " /tmp/{{ item | basename }}"
-  with_items: "{{ s3_bucket_items.s3_keys }}"
-  when: not ".state" in item
+- name: Get 
+  ansible.builtin.set_fact:
+    files: "{{ s3_bucket_items.s3_keys | map('basename') | list }}"
 
-# dest: " {{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ item | basename }}"
+# STAGE 2: Execute manifest
+- name: Infrastructure Tasks
+  hosts: localhost
+  task:
+    - name: Get list of files from S3
+      amazon.aws.aws_s3:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: list
+        aws_access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        prefix: "{{ tn_id }}"
+        marker: "{{ tn_id }}"
+      register: s3_bucket_items  
+    - name: Download files from S3
+      amazon.aws.aws_s3:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: get
+        aws_access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ item }}"
+        dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ item | basename }}"
+      with_items: "{{ s3_bucket_items.s3_keys }}"
+      when: not "terraform.tfstate" in item
+
+# dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ item | basename }}"
