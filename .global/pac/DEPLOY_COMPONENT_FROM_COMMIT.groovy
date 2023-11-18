@@ -64,7 +64,7 @@ pipeline {
         script {
           sh """ 
           cd ${LIBRARY_COMPONENT_NAME}/private
-          ansible-playbook --extra-vars "tn_id=${TN_ID} component_name=${LIBRARY_COMPONENT_NAME} deployment_site=${DEPLOYMENT_SITE} workspace=${WORKSPACE}" manifest.yaml
+          ansible-playbook --extra-vars \"tn_id=${TN_ID} component_name=${LIBRARY_COMPONENT_NAME} deployment_site=${DEPLOYMENT_SITE} workspace=${WORKSPACE}\" manifest.yaml
           """
           }
       }
