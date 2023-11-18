@@ -22,7 +22,7 @@ pipeline {
       LIBRARY_COMPONENT_NAME="${params.LIBRARY_COMPONENT_NAME}"
       LIBRARY_BRANCH="${params.LIBRARY_BRANCH}"
       DEPLOYMENT_SITE="${params.DEPLOYMENT_SITE}"
-      FILE_PATH="/tmp/${params.TN_ID}_${params.LIBRARY_COMPONENT_NAME}_vars.yaml"
+      FILE_PATH="${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/private/tnlcm_vars.yaml"
       OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
       OPENNEBULA_USERNAME = credentials('OPENNEBULA_USERNAME')
       OPENNEBULA_PASSWORD = credentials('OPENNEBULA_PASSWORD')
@@ -62,7 +62,7 @@ pipeline {
         script {
           sh """ 
           cd ${LIBRARY_COMPONENT_NAME}/private
-          ansible-playbook --extra-vars "tn_id=${TN_ID} component_name=${LIBRARY_COMPONENT_NAME} deployment_site=${DEPLOYMENT_SITE}" manifest.yaml
+          ansible-playbook --extra-vars "tn_id=${TN_ID} component_name=${LIBRARY_COMPONENT_NAME} deployment_site=${DEPLOYMENT_SITE} workdir=${WORKSPACE}" manifest.yaml
           """
           }
       }

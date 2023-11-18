@@ -7,7 +7,7 @@
 # SITE: UMA
 #
 
-site_hipervisor: one #one, vmware, etc ...
+site_hypervisor: one #one, vmware, etc ...
 site_default_network_id: 0
 site_networks:
   - name: External Network   # Representative Name

@@ -1,24 +1,25 @@
-# FLOW: INSTALL
+# START MANDATORY BLOCK
+- name: Mix variables from different sources
+  ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
+# END MANDATORY BLOCK    
 
 # STAGE 1: Prepare manifest from templates
-
 - name: Generate installation manifest from templates
-  ansible.builtin.import_playbook: ./one/prepare.yaml
+  hosts: localhost
+  tasks: 
+    - name: Generate installation manifest from templates
+      ansible.builtin.include_tasks: ./{{ site_hypervisor }}/prepare.yaml
 
 # STAGE 2: Execute manifest
-
-- name: Create virtual infrastructure
+- name: Infrastructure Tasks
   hosts: localhost
   tasks:
-    # - name: Get Trial Network Terraform State
-    #   ansible.builtin.debug:
-    #     msg: "Download from Terraform states repository {{ tn_terraform_state_url }}"
-
-    #     URL_TNLCM/TN/ZXDADSFASDV/STATE  GET  POST
-        
+    - name: Download Terraform manifest from previos TN components
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_bucket_content_tasks.yaml" 
+          
     - name: Execute terraform apply
       community.general.terraform:
-        project_path: './one/iac/'
+        project_path: './{{ site_hypervisor }}/iac/'
         state: "present"
         force_init: true
       register: result 
@@ -27,12 +28,11 @@
       ansible.builtin.debug:
         msg: "The VXLAN ID is {{ result.outputs.vxlan_id.value }}"
 
-    - name: Push Trial Network Terraform State
+    - name: Upload Terraform manifest
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
+      vars:
+        dst_folder: "{{ playbook_dir }}/{{ site_hypervisor }}/iac/"
+    
+    - name: Update TNLCM with component deployment outputs
       ansible.builtin.debug:
         msg: "Upload to Terraform states repository {{ tnlcm_callback }}"
-
-- name: Upload Terraform manifest
-  ansible.builtin.import_playbook: "../../.global/cac/upload_manifest_to_folder.yaml"
-  vars:
-    dst_folder: "{{ playbook_dir }}/one/iac/"
-    
