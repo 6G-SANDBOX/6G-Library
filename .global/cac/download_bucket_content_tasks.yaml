@@ -8,6 +8,12 @@
     prefix: "{{ tn_id }}"
     marker: "{{ tn_id }}"
   register: s3_bucket_items
+
+- name: Get Terraform Outputs
+  ansible.builtin.debug:
+    msg: "{{ item|basename }}"  
+  with_items: "{{ s3_bucket_items.s3_keys }}"
+ 
 - name: Download files from S3
   amazon.aws.aws_s3:
     endpoint_url: "{{ site_s3_server.endpoint }}"
