@@ -18,6 +18,5 @@
     object: "{{ item }}"
     dest: " {{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/{{ item|basename }}"
   with_items: "{{ s3_bucket_items.s3_keys }}"
-  when: item != "{{ tn_id }}_terraform.state"
-
+  when: not ".state" in item
 
