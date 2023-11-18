@@ -9,7 +9,7 @@
     marker: "{{ tn_id }}"
   register: s3_bucket_items
 
-- name: Get 
+- name: Get files basename
   ansible.builtin.set_fact:
     files: "{{ s3_bucket_items.s3_keys | map('basename') | list }}"
 
