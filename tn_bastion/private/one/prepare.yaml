@@ -9,5 +9,5 @@
     dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/backend.tf"
 - name: Generate Bastion component manifests
   template:
-    src: "{{ workspace }}/{{ component_name }}/private/iac/terraform.tf.j2"
+    src: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/terraform.tf.j2"
     dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ component_name }}_{{ ansible_date_time.epoch }}.tf"
