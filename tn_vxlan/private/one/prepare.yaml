@@ -1,5 +1,7 @@
 # Generate Infrastructure Manifests
-
+- name: Get Terraform Outputs
+  ansible.builtin.debug:
+    msg: "{{ workspace }}/.global/iac/providers.tf"
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
     src: "{{ workspace }}/.global/iac/providers.tf"
