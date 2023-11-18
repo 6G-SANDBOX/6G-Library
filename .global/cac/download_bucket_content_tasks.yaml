@@ -22,7 +22,8 @@
     aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ item }}"
-    dest: " {{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ item | basename }}"
+    dest: " /tmp/{{ item | basename }}"
   with_items: "{{ s3_bucket_items.s3_keys }}"
   when: not ".state" in item
 
+# dest: " {{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ item | basename }}"
