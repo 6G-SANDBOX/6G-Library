@@ -11,7 +11,7 @@
 
 - name: Get Terraform Outputs
   ansible.builtin.debug:
-    msg: "{{ item|basename }}"  
+    msg: "{{ item | basename }}"  
   with_items: "{{ s3_bucket_items.s3_keys }}"
  
 - name: Download files from S3
@@ -22,7 +22,7 @@
     aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ item }}"
-    dest: " {{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/{{ item|basename }}"
+    dest: " {{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ item | basename }}"
   with_items: "{{ s3_bucket_items.s3_keys }}"
   when: not ".state" in item
 
