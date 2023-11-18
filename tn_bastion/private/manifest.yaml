@@ -80,8 +80,6 @@
   tasks:
     - name: Mix variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-
-# STAGE 4: VM is ready, execute configuration 
-- name: Execute Post Configuration
-  ansible.builtin.import_playbook: "./{{ site_hypervisor }}/cac/03_post/get_vpn_client_config.yaml"
-  when: "site_hypervisor == 'one'"
+    - name: Execute Post Configuration
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/get_vpn_client_config.yaml"
+      when: "site_hypervisor == 'one'"
