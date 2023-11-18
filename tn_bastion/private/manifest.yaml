@@ -67,4 +67,4 @@
 # STAGE 3: VM is ready, execute configuration 
 - name: Execute Post Configuration
   ansible.builtin.import_playbook: "./one/cac/03_post/get_vpn_client_config.yaml"
-  when: site_hypervisor == "one"
+  when: "'one' in site_hypervisor"
