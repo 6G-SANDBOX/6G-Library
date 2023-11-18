@@ -35,6 +35,15 @@
         cmd: "terraform output --json | jq 'with_entries(.value |= .value)'"
       register: terraform_output
 
+    - name: Upload Terraform manifest
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
+      vars:
+        dst_folder: "{{ playbook_dir }}/{{ site_hypervisor }}/iac/"
+    
+    - name: Update TNLCM with component deployment outputs
+      ansible.builtin.debug:
+        msg: "Upload to Terraform states repository {{ tnlcm_callback }}"
+        
     - name: Load Terraform Output into execution context
       ansible.builtin.set_fact:
         outputs: "{{ terraform_output.stdout | from_json }}"
@@ -70,15 +79,7 @@
   hosts: bastion
   gather_facts: true
   tasks:
-    - name: Mix variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-
-# STAGE 3: Execute manifest
-- name: Load Variables into new VM Bastion
-  hosts: bastion
-  gather_facts: true
-  tasks:
-    - name: Mix variables from different sources
+    - name: Load Variables into new VM Bastion
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
     - name: Execute Post Configuration
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/get_vpn_client_config.yaml"
