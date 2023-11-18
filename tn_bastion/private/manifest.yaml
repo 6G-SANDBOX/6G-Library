@@ -4,7 +4,7 @@
   tasks: 
     - name: Mix variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-# END MANDATORY BLOCK    
+# END MANDATORY BLOCK
 
 # STAGE 1: Prepare manifest from templates
 - name: Generate installation manifest from templates

@@ -12,6 +12,5 @@
   register: file_exits
 - name: Load variables from private config
   ansible.builtin.include_vars:
-    dir: /tmp
-    files_matching: "{{ tn_id }}_{{ component_name }}_vars.yaml"
+    file: "{{ workspace }}/{{ component_name }}/private/tnlcm_vars.yaml"
   when: file_exits.stat.exists  
