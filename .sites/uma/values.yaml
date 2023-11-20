@@ -21,7 +21,7 @@ site_network_clusters: [0, 100, 101, 102]
 
 site_s3_server:
   endpoint: "http://10.11.28.95:9000"
-  bucket: "TNS"
+  bucket: "trial-networks"
   region: "main"
   skip_requesting_account_id: "true"
   skip_credentials_validation: "true"
