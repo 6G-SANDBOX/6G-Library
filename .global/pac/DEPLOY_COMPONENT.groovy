@@ -31,6 +31,10 @@ pipeline {
       // MINIO CREDENTIALS
       AWS_ACCESS_KEY_ID = credentials('MINIO_KEY')
       AWS_SECRET_ACCESS_KEY = credentials('MINIO_SECRET')
+      //ANSIBLE
+      ANSIBLE_REMOTE_USER = credentials('ANSIBLE_REMOTE_USER')
+      ANSIBLE_CONNECTION_PASSWORD_FILE = credentials('ANSIBLE_CONNECTION_PASSWORD_FILE')
+      ANSIBLE_BECOME_PASSWORD_FILE = credentials('ANSIBLE_BECOME_PASSWORD_FILE')      
   }
 
   stages {

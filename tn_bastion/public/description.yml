@@ -9,7 +9,7 @@ maintainers:
   - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
 version: 0.0.1
 depends: 
-  - vxlan (>= 0.0.1)
+  - tn_vxlan (>= 0.0.1)
 short_description: This is a VM that acts as bastion for a Trial Network
 long_description: |
   It is the component that will host various network services and manage external access to the Trial Network:
@@ -21,4 +21,4 @@ long_description: |
   - VPN Server
   In this version the only service available is VPN Server
 platforms: [one]
-sites: [malaga]
+sites: [uma]
