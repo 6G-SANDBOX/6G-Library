@@ -29,7 +29,7 @@
 
     - name: Get Terraform Outputs
       ansible.builtin.debug:
-        msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + "_vxlan_id"].value }}"
+        msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + \"_vxlan_id\"].value }}"
 
     - name: Upload Terraform manifest
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
