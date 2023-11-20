@@ -56,4 +56,4 @@
 
     - name: Verify that is correctly loaded
       ansible.builtin.debug:
-        msg: "Network Interface {{ vm_ip }}"
+        msg: "Network Interface {{ vm_ip | default('----')}}"
