@@ -7,7 +7,7 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_bastion_name }}" {
   permissions = "660"
 
   context = {
-    HOSTNAME = "$NAME"
+    SET_HOSTNAME = "$NAME"
     PASSWORD = "demo"
     WIREGUARD_ALLOWEDIPS      = "{{ one_bastion_wireguard_allowed_networks }}"
   }
