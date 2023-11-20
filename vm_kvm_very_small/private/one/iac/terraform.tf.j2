@@ -10,7 +10,6 @@ resource "opennebula_virtual_machine" "{{ tn_id }}_{{ one_component_name }}" {
     HOSTNAME = "$NAME"
     USERNAME = "{{ one_vm_username }}"
     PASSWORD = "{{ one_vm_password }}"
-    WIREGUARD_ALLOWEDIPS      = "{{ one_bastion_wireguard_allowed_networks }}"
   }
 
 {% for network_id in one_component_networks %}
