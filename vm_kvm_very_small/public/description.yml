@@ -3,15 +3,19 @@
 ## Component metadata
 ## 
 ####################################
-
-component_name: tn_vxlan
-family: bootstrap
+component_name: "vm_kvm_very_small"
+family: compute
 maintainers: 
   - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
 version: 0.0.1
-short_description: This is the component that creates VXLAN network for TN Bootstrap
+depends: 
+  - tn_vxlan (>= 0.0.1)
+short_description: This is a VM with a very small group of compute resources 
 long_description: |
-  This is the component that creates VXLAN network for TN Bootstrap
+  This image is based on Ubuntu 22.04:
+  - 2 G RAM Memory
+  - 1 vCPU
+  - 10 GB Storage
 platforms: [one]
 sites: [uma]
 
@@ -23,5 +27,6 @@ sites: [uma]
 ## 
 ###################################################
 
-one_vxlan_name: "PLACEHOLDER_VXLAN_NAME"
-
+one_component_name: "PLACEHOLDER_BM_NAME"
+one_vm_username: "username"
+one_vm_password: "password"

@@ -1,0 +1,9 @@
+# FROM PUBLIC VARIABLES SECTION
+one_vxlan_name: "net_demo_21_nov"
+
+# FROM PRIVATE VARIABLES SECTION (ONLY FOR ADVANCED USERS)
+
+one_vxlan_dns: "8.8.8.8" # 1.1.1.1, 1.0.0.1
+one_vxlan_address_size: 254 # MAX 255
+one_vxlan_first_ip: "11.21.1.1" # 192.168.199.1
+one_vxlan_gw: "11.21.1.1" # 192.168.199.1

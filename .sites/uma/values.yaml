@@ -21,7 +21,7 @@ site_network_clusters: [0, 100, 101, 102]
 
 site_s3_server:
   endpoint: "http://10.11.28.95:9000"
-  bucket: "demo"
+  bucket: "TNS"
   region: "main"
   skip_requesting_account_id: "true"
   skip_credentials_validation: "true"
@@ -32,3 +32,5 @@ site_s3_server:
 site_one_templates:
   tn_bastion:
     id: 41
+  vm_xs:
+    id: 42 
