@@ -1,6 +1,6 @@
-resource "opennebula_virtual_machine" "{{ tn_id }}_{{ one_component_name }}" {
+resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
 
-  name        = "{{ tn_id }}_{{ one_component_name }}"
+  name        = "{{ tn_id }}-{{ one_component_name }}"
   description = "{{ tn_id }} VM VERY SMALL"
   template_id = {{ site_one_templates.vm_xs.id }}
   group       = "oneadmin"

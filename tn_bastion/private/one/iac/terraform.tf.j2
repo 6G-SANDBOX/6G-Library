@@ -1,6 +1,6 @@
-resource "opennebula_virtual_machine" "{{ tn_id }}_{{ one_bastion_name }}" {
+resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_bastion_name }}" {
 
-  name        = "{{ tn_id }}_{{ one_bastion_name }}"
+  name        = "{{ tn_id }}-{{ one_bastion_name }}"
   description = "BASTION FOR TN ID {{ tn_id }}"
   template_id = {{ site_one_templates.tn_bastion.id }}
   group       = "oneadmin"
