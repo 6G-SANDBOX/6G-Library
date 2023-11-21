@@ -28,6 +28,10 @@
         force_init: true
       register: result 
     
+    - name: Terraform DEBUG
+      ansible.builtin.debug:
+        msg: "{{ result }}"
+
     - name: Get Terraform Output
       ansible.builtin.shell:
       args:
