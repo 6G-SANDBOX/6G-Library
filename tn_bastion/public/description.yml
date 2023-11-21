@@ -22,3 +22,4 @@ long_description: |
   In this version the only service available is VPN Server
 platforms: [one]
 sites: [uma]
+
