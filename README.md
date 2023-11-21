@@ -84,7 +84,6 @@ Contains the component private files with information and automation that will b
         + **install(folder)**: Contains files related to component configuration
         + **post(folder)**: Contains files related to configuration that should be done after component set-up. For example, test execution.
     + **iac(folder)**: Contains files related to infrastructure definition
-    + **pac(folder)**: Contains files related to pipeline automation
 
 #### Documentation Folder
 
