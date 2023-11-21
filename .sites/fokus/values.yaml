@@ -1,0 +1,8 @@
+# This is information about infrastructure, systems and available equipment that has a static nature and 
+# may differ between different sites. 
+# It is a way to simplify and homogenize the definition of components and their deployments.
+#
+# All first level variables SHOULD start by the prefix site_
+#
+# SITE: FOKUS
+#

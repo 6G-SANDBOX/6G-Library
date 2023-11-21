@@ -1,0 +1,28 @@
+resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_bastion_name }}" {
+
+  name        = "{{ tn_id }}-{{ one_bastion_name }}"
+  description = "BASTION FOR TN ID {{ tn_id }}"
+  template_id = {{ site_one_templates.tn_bastion.id }}
+  group       = "oneadmin"
+  permissions = "660"
+
+  context = {
+    SET_HOSTNAME = "$NAME"
+    PASSWORD = "demo"
+    WIREGUARD_ALLOWEDIPS      = "{{ one_bastion_wireguard_allowed_networks }}"
+  }
+
+{% for network_id in one_component_networks %}
+  nic {
+    model           = "virtio"
+    network_id      = {{ network_id }}
+    security_groups = [0]
+  }
+{% endfor %}
+
+}
+
+output "{{ one_bastion_name }}_network_assignments" {
+  description = "OpenNebula VM Network Assignments"
+  value = { for nic in opennebula_virtual_machine.{{ tn_id }}-{{ one_bastion_name }}.nic[*] : nic.network_id => nic.computed_ip }
+}

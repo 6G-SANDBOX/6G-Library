@@ -1,0 +1,23 @@
+- name: Get list of files from S3
+  amazon.aws.aws_s3:
+    endpoint_url: "{{ site_s3_server.endpoint }}"
+    mode: list
+    aws_access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+    aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+    bucket: "{{ site_s3_server.bucket }}"
+    prefix: "{{ tn_id }}"
+    marker: "{{ tn_id }}"
+  register: s3_bucket_items
+- name: Download files from S3
+  amazon.aws.aws_s3:
+    endpoint_url: "{{ site_s3_server.endpoint }}"
+    mode: get
+    aws_access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+    aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+    bucket: "{{ site_s3_server.bucket }}"
+    object: "{{ item }}"
+    dest: "{{ dst_folder }}/{{ item|basename }}"
+  with_items: "{{ s3_bucket_items.s3_keys }}"
+  when: item != "{{ tn_id }}_terraform.state"
+
+
