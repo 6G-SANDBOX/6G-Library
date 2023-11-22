@@ -16,7 +16,7 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
   nic {
     model           = "virtio"
     network_id      = {{ network_id }}
-    security_groups = [0]
+    # security_groups = [0]  # Commented because ONE terraform provider has a bug  
   }
 {% endfor %}
 
