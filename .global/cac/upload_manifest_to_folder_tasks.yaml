@@ -27,6 +27,8 @@
     paths: 
       - "{{ workspace }}/{{ component_name }}/doc"
     patterns: "*.md"
+    excludes: 
+      - "index.md"
   register: found_files
 - name: Print file names without path
   debug:

@@ -83,8 +83,13 @@
             "result": "ok",
             "result_msg": "{{ markdown['content'] }}"
           }
+      register: output
       when: not result.failed
       ignore_errors: true 
+
+    - name: Display result variable
+      ansible.builtin.debug:
+        msg: "{{ output | to_json }}"
 
     - name: POST result to TNLCM with NOK
       uri:
