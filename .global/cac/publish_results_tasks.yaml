@@ -9,7 +9,7 @@
       template:
         src: "{{ workspace }}/{{ component_name }}/results/result_ok.json.j2"
         dest: "{{ workspace }}/{{ component_name }}/results/result_ok.json"
-      when: result.failed
+      when: not result.failed
 
     - name: Generate markdown response for not success
       template:
