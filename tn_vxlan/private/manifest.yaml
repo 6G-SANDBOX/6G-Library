@@ -35,20 +35,19 @@
     - name: Get Terraform Outputs
       ansible.builtin.debug:
         msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + \"_vxlan_id\"].value }}"
-      when: result.failed != false
+      #when: result.failed != false
 
     - name: Generate markdown response for success
-      
       template:
         src: "{{ workspace }}/{{ component_name }}/doc/result_ok.md.j2"
         dest: "{{ workspace }}/{{ component_name }}/doc/result_ok.{{ ansible_date_time.epoch }}.md"
-      when: result.failed != false
+      #when: result.failed != false
 
     - name: Generate markdown response for not success
       template:
         src: "{{ workspace }}/{{ component_name }}/doc/result_nok.md.j2"
         dest: "{{ workspace }}/{{ component_name }}/doc/result_nok.{{ ansible_date_time.epoch }}.md"
-      when: result.failed == false
+      #when: result.failed == false
 
     - name: Upload Terraform manifest
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
