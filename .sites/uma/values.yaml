@@ -1,0 +1,36 @@
+# This is information about infrastructure, systems and available equipment that has a static nature and 
+# may differ between different sites. 
+# It is a way to simplify and homogenize the definition of components and their deployments.
+#
+# All first level variables SHOULD start by the prefix site_
+#
+# SITE: UMA
+#
+
+site_hypervisor: one #one, vmware, etc ...
+site_default_network_id: 0
+site_networks:
+  - name: External Network   # Representative Name
+    id: 0                    # ID from OpenNebula Networks List
+    if_name: br_281_srv      # Interface that support this Network
+  - name: NTN Network
+    id: 13
+    if_name: br_120
+site_vxlan_if: br_281_srv     # It must be the name of the interface on which the new vxlan will be created
+site_network_clusters: [0, 100, 101, 102]
+
+site_s3_server:
+  endpoint: "http://10.11.28.95:9000"
+  bucket: "trial-networks"
+  region: "main"
+  skip_requesting_account_id: "true"
+  skip_credentials_validation: "true"
+  skip_metadata_api_check: "true"
+  skip_region_validation: "true"
+  force_path_style: "true"
+
+site_one_templates:
+  tn_bastion:
+    id: 41
+  vm_xs:
+    id: 42 
