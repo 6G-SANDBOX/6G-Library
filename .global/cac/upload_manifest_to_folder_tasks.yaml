@@ -1,12 +1,14 @@
 - name: "Get files from dir"
   find:
-    paths: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac"
-    patterns: "*.tf"
+    paths: 
+      - "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac"
+      - "{{ workspace }}/{{ component_name }}/doc"
+    patterns: "*.tf,*.md"
     excludes: 
       - "providers.tf"
       - "backend.tf"
   register: found_files
-- name: print file names without path
+- name: Print file names without path
   debug:
     msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
 - name: Upload files to S3

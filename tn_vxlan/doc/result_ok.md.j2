@@ -1,0 +1,12 @@
+A VXLAN network has been successfully created to service the Trial Network {{ tn_id }}
+
+Important information:
+
+* OPENNEBULA NETWORK ID: {{ result.outputs[one_vxlan_name + "_vxlan_id"].value }}
+* PHYSICAL INTERFACE: {{ one_vxlan_physical_device}}:
+* VXLAN MTU: {{ one_vxlan_mtu }}
+* VXLAN GUEST MTU: {{ one_vxlan_guest_mtu }}
+* VXLAN FIRST IP: {{ one_vxlan_first_ip }}
+* VXLAN ADDRESS SIZE: {{ one_vxlan_address_size }}
+* VXLAN GW: {{ one_vxlan_gw }}
+* VXLAN DNS: {{ one_vxlan_dns }}
