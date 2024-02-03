@@ -51,7 +51,7 @@ In order to simplify, there are two aspects that are closed to every component: 
 
 These are the selected tools used to automate how to create and configure a component:
 
-<img width="800" alt="component_structure" src="https://github.com/6G-SANDBOX/6G-Library/assets/1454351/9ebd3f9f-0a8f-458d-a27d-0daba77a934c">
+<img width="800" alt="component_structure" src="https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/images/tools_logo.png">
 
 + **Terraform**: To create virtual infrastructure on the private cloud providers. Components like virtual networks, virtual machines, containers, k8s clusters, etc... (https://www.terraform.io/)
 + **Ansible**: To configure components, equipments, integrations. Fine fine-grained actions over the Trial Network components. Idempotent warranty (https://www.ansible.com/).
@@ -59,7 +59,7 @@ These are the selected tools used to automate how to create and configure a comp
 + **Bash**: To allow scripting on standalone operations (https://www.gnu.org/software/bash/).
 
 ### Folder Structure
-<img width="500" alt="component_structure" src="https://github.com/6G-SANDBOX/6G-Library/assets/1454351/5f18c78a-90d5-47c0-9876-e9de9b1132be">
+<img width="500" alt="component_structure" src="https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/images/component_structure.png">
 
 **title: dummy_component structure**
 
