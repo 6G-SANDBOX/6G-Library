@@ -36,7 +36,7 @@ pipeline {
       ANSIBLE_CONNECTION_PASSWORD_FILE = credentials('ANSIBLE_CONNECTION_PASSWORD_FILE')
       //ANSIBLE_BECOME_PASSWORD_FILE = credentials('ANSIBLE_BECOME_PASSWORD_FILE')    
       //GITHUB JENKINS TOKEN
-      GITHUB-JENKINS = credentials('GITHUB-JENKINS')  
+      GITHUB_JENKINS = credentials('GITHUB_JENKINS')  
   }
 
   stages {
@@ -58,7 +58,7 @@ pipeline {
       steps {
           dir ("${env.WORKSPACE}/") {
               sh """
-              git clone https://${GITHUB-JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git
+              git clone https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git
               """
           }
       }
