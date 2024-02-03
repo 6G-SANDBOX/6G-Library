@@ -56,14 +56,6 @@
         dest: "{{ workspace }}/{{ component_name }}/doc/result_nok.{{ ansible_date_time.epoch }}.md"
       when: result.failed
 
-    - name: Upload Terraform manifest
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-      when: not result.failed
-
-    - name: Inform TNLCM with component deployment outputs
-      ansible.builtin.debug:
-        msg: "Upload to Terraform states repository {{ tnlcm_callback }}"
-
     - name: Encode markdown OK file into base64 
       ansible.builtin.slurp:
         src: "{{ workspace }}/{{ component_name }}/doc/result_ok.{{ ansible_date_time.epoch }}.md"
@@ -76,6 +68,10 @@
       register: markdown
       when: result.failed
 
+    - name: Upload Terraform manifest
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
+      when: not result.failed   
+  
     - name: POST result to TNLCM with OK
       uri:
         url: "{{ tnlcm_callback }}"
