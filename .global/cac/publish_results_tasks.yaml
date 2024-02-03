@@ -14,18 +14,18 @@
     - name: Encode markdown OK file into base64 
       ansible.builtin.slurp:
         src: "{{ workspace }}/{{ component_name }}/results/result_ok.{{ component_name }}.{{ tn_id }}.md"
-      register: markdown
+      register: markdown2ok
       when: not result.failed
 
     - name: Encode markdown NOK file into base64 
       ansible.builtin.slurp:
         src: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ component_name }}.{{ tn_id }}.md"
-      register: markdown
+      register: markdown2nok
       when: result.failed
 
     - name: Display result variable
       ansible.builtin.debug:
-        msg: "{{ markdown | to_json }}"
+        msg: "{{ markdown2ok | to_json }}"
 
     - name: Generate markdown response for success in JSON
       template:
@@ -38,7 +38,7 @@
         src: "{{ workspace }}/{{ component_name }}/results/result_nok.json.j2"
         dest: "{{ workspace }}/{{ component_name }}/results/result_nok.json"
       when: result.failed      
-  
+
     - name: POST result to TNLCM with OK
       uri:
         url: "{{ tnlcm_callback }}"
