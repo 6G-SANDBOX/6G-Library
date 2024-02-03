@@ -23,6 +23,10 @@
       register: markdown
       when: result.failed
 
+    - name: Display result variable
+      ansible.builtin.debug:
+        src: "{{ markdown | to_json }}"
+
     - name: Generate markdown response for success in JSON
       template:
         src: "{{ workspace }}/{{ component_name }}/results/result_ok.json.j2"
