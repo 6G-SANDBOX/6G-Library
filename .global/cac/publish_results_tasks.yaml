@@ -25,7 +25,7 @@
 
     - name: Display result variable
       ansible.builtin.debug:
-        src: "{{ markdown | to_json }}"
+        msg: "{{ markdown | to_json }}"
 
     - name: Generate markdown response for success in JSON
       template:
@@ -51,7 +51,7 @@
 
     - name: Display result variable
       ansible.builtin.debug:
-        src: "{{ output | to_json }}"
+        msg: "{{ output | to_json }}"
 
     - name: POST result to TNLCM with NOK
       uri:

@@ -27,18 +27,6 @@
         force_init: true
       register: result 
 
-    - name: Display result variable
-      ansible.builtin.debug:
-        var: result
-
-    - name: Display result variable
-      ansible.builtin.debug:
-        msg: "{{ result | to_json }}"
-
-    - name: Display result variable
-      ansible.builtin.debug:
-        var: result.outputs
-
     - name: Get Terraform Outputs
       ansible.builtin.debug:
         msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + \"_vxlan_id\"].value }}"
