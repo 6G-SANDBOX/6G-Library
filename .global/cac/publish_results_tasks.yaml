@@ -2,24 +2,24 @@
     - name: Generate markdown response for success
       template:
         src: "{{ workspace }}/{{ component_name }}/results/result_ok.md.j2"
-        dest: "{{ workspace }}/{{ component_name }}/results/result_ok.{{ ansible_date_time.epoch }}.md"
+        dest: "{{ workspace }}/{{ component_name }}/results/result_ok.{{ component_name }}.{{ tn_id }}.md"
       when: not result.failed
 
     - name: Generate markdown response for not success
       template:
         src: "{{ workspace }}/{{ component_name }}/results/result_nok.md.j2"
-        dest: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ ansible_date_time.epoch }}.md"
+        dest: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ component_name }}.{{ tn_id }}.md"
       when: result.failed
 
     - name: Encode markdown OK file into base64 
       ansible.builtin.slurp:
-        src: "{{ workspace }}/{{ component_name }}/results/result_ok.{{ ansible_date_time.epoch }}.md"
+        src: "{{ workspace }}/{{ component_name }}/results/result_ok.{{ component_name }}.{{ tn_id }}.md"
       register: markdown
       when: not result.failed
 
     - name: Encode markdown NOK file into base64 
       ansible.builtin.slurp:
-        src: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ ansible_date_time.epoch }}.md"
+        src: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ component_name }}.{{ tn_id }}.md"
       register: markdown
       when: result.failed
 
