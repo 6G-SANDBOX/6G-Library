@@ -27,6 +27,11 @@
         force_init: true
       register: result 
 
+    - name: Display result variable
+      ansible.builtin.debug:
+        var: result
+        verbosity: 4
+
     - name: Get Terraform Outputs
       ansible.builtin.debug:
         msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + \"_vxlan_id\"].value }}"
