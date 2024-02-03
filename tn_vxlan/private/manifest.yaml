@@ -42,23 +42,23 @@
     - name: Get Terraform Outputs
       ansible.builtin.debug:
         msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + \"_vxlan_id\"].value }}"
-      #when: result.failed != false
+      when: not result.failed
 
     - name: Generate markdown response for success
       template:
         src: "{{ workspace }}/{{ component_name }}/doc/result_ok.md.j2"
         dest: "{{ workspace }}/{{ component_name }}/doc/result_ok.{{ ansible_date_time.epoch }}.md"
-      #when: result.failed != false
+      when: not result.failed
 
     - name: Generate markdown response for not success
       template:
         src: "{{ workspace }}/{{ component_name }}/doc/result_nok.md.j2"
         dest: "{{ workspace }}/{{ component_name }}/doc/result_nok.{{ ansible_date_time.epoch }}.md"
-      #when: result.failed == false
+      when: result.failed
 
     - name: Upload Terraform manifest
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-      when: result.failed != false
+      when: not result.failed
 
     - name: Inform TNLCM with component deployment outputs
       ansible.builtin.debug:
@@ -68,13 +68,13 @@
       ansible.builtin.slurp:
         src: "{{ workspace }}/{{ component_name }}/doc/result_ok.{{ ansible_date_time.epoch }}.md"
       register: markdown
-      when: result.failed == false
+      when: not result.failed
 
     - name: Encode markdown NOK file into base64 
       ansible.builtin.slurp:
         src: "{{ workspace }}/{{ component_name }}/doc/result_nok.{{ ansible_date_time.epoch }}.md"
       register: markdown
-      when: result.failed != false
+      when: result.failed
 
     - name: POST result to TNLCM with OK
       uri:
@@ -87,7 +87,7 @@
             "result": "ok",
             "result_msg": "{{ markdown['content'] }}"
           }
-      when: result.failed == false
+      when: not result.failed
       ignore_errors: true 
 
     - name: POST result to TNLCM with NOK
@@ -100,5 +100,5 @@
             "result": "nok",
             "result_msg": " {{ markdown['content'] }}"
           }
-      when: result.failed != false
+      when: result.failed
       ignore_errors: true
