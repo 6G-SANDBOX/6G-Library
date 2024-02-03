@@ -29,7 +29,7 @@
 
     - name: Display result variable
       ansible.builtin.debug:
-        var: result
+        msg: "{{ result }}"
         verbosity: 4
 
     - name: Get Terraform Outputs
