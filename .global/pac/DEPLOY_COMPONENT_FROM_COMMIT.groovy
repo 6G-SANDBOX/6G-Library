@@ -1,9 +1,11 @@
+/* WIP: MUST BE REVIEWED */
+
 pipeline {
 
   agent any
 
   options {
-      timeout(time: 30, unit: 'MINUTES')
+      timeout(time: 45, unit: 'MINUTES')
       //retry(1)
   }
 
