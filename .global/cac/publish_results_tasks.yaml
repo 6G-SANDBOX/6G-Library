@@ -5,22 +5,10 @@
         dest: "{{ workspace }}/{{ component_name }}/results/result_ok.{{ ansible_date_time.epoch }}.md"
       when: not result.failed
 
-    - name: Generate markdown response for success in JSON
-      template:
-        src: "{{ workspace }}/{{ component_name }}/results/result_ok.json.j2"
-        dest: "{{ workspace }}/{{ component_name }}/results/result_ok.json"
-      when: not result.failed
-
     - name: Generate markdown response for not success
       template:
         src: "{{ workspace }}/{{ component_name }}/results/result_nok.md.j2"
         dest: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ ansible_date_time.epoch }}.md"
-      when: result.failed
-
-    - name: Generate markdown response for not success in JSON
-      template:
-        src: "{{ workspace }}/{{ component_name }}/results/result_nok.json.j2"
-        dest: "{{ workspace }}/{{ component_name }}/results/result_nok.json"
       when: result.failed
 
     - name: Encode markdown OK file into base64 
@@ -34,6 +22,18 @@
         src: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ ansible_date_time.epoch }}.md"
       register: markdown
       when: result.failed
+
+    - name: Generate markdown response for success in JSON
+      template:
+        src: "{{ workspace }}/{{ component_name }}/results/result_ok.json.j2"
+        dest: "{{ workspace }}/{{ component_name }}/results/result_ok.json"
+      when: not result.failed
+
+    - name: Generate markdown response for not success in JSON
+      template:
+        src: "{{ workspace }}/{{ component_name }}/results/result_nok.json.j2"
+        dest: "{{ workspace }}/{{ component_name }}/results/result_nok.json"
+      when: result.failed      
   
     - name: POST result to TNLCM with OK
       uri:
