@@ -44,62 +44,9 @@
         msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + \"_vxlan_id\"].value }}"
       when: not result.failed
 
-    - name: Generate markdown response for success
-      template:
-        src: "{{ workspace }}/{{ component_name }}/doc/result_ok.md.j2"
-        dest: "{{ workspace }}/{{ component_name }}/doc/result_ok.{{ ansible_date_time.epoch }}.md"
-      when: not result.failed
-
-    - name: Generate markdown response for not success
-      template:
-        src: "{{ workspace }}/{{ component_name }}/doc/result_nok.md.j2"
-        dest: "{{ workspace }}/{{ component_name }}/doc/result_nok.{{ ansible_date_time.epoch }}.md"
-      when: result.failed
-
-    - name: Encode markdown OK file into base64 
-      ansible.builtin.slurp:
-        src: "{{ workspace }}/{{ component_name }}/doc/result_ok.{{ ansible_date_time.epoch }}.md"
-      register: markdown
-      when: not result.failed
-
-    - name: Encode markdown NOK file into base64 
-      ansible.builtin.slurp:
-        src: "{{ workspace }}/{{ component_name }}/doc/result_nok.{{ ansible_date_time.epoch }}.md"
-      register: markdown
-      when: result.failed
+    - name: Publish execution results
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
 
     - name: Upload Terraform manifest
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
       when: not result.failed   
-  
-    - name: POST result to TNLCM with OK
-      uri:
-        url: "{{ tnlcm_callback }}"
-        method: POST
-        body_format: json
-        body: |
-          {
-            "tn_vxlan_id": "{{ result.outputs[one_vxlan_name + \"_vxlan_id\"].value }}",
-            "result": "ok",
-            "result_msg": "{{ markdown['content'] }}"
-          }
-      register: output
-      when: not result.failed
-      ignore_errors: true 
-
-    - name: Display result variable
-      ansible.builtin.debug:
-        msg: "{{ output | to_json }}"
-
-    - name: POST result to TNLCM with NOK
-      uri:
-        url: "{{ tnlcm_callback }}"
-        method: POST
-        body_format: json
-        body: |
-          {
-            "result": "nok",
-            "result_msg": " {{ markdown['content'] }}"
-          }
-      when: result.failed
-      ignore_errors: true

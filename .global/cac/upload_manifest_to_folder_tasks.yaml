@@ -25,10 +25,8 @@
 - name: "Get markdown files from dir"
   find:
     paths: 
-      - "{{ workspace }}/{{ component_name }}/doc"
+      - "{{ workspace }}/{{ component_name }}/results"
     patterns: "*.md"
-    excludes: 
-      - "index.md"
   register: found_files
 - name: Print file names without path
   debug:
@@ -41,6 +39,6 @@
     aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/{{ item }}"
-    src: "{{ workspace }}/{{ component_name }}/doc/{{ item }}"
+    src: "{{ workspace }}/{{ component_name }}/results/{{ item }}"
     encrypt: no
   with_items: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
