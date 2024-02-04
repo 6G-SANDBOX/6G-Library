@@ -30,3 +30,13 @@ metadata:
 ## 
 ####################################
 public:
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:
+  vm_ip: "Main Network Interface"
+  vpn_client_config: "VPN Client config to connect to this Trial Network"

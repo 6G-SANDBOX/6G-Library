@@ -4,6 +4,8 @@ The BASTION router and firewall component has been successfully created into the
 
 Important information:
 
+* MAIN NETWORK INTERFACE: {{ vm_ip }}
+
 ### BASTION NETWORK INTERFACES
 ```
 {{ outputs[one_bastion_name + "_network_assignments"] }}
@@ -12,5 +14,5 @@ Important information:
 ### VNP WIREGUARD CLIENT CONFIG
 
 ```
-{{ hostvars['bastion']['client']['content'] }}
+{{ hostvars['bastion']['client']['content'] | b64decode }}
 ```
