@@ -2,6 +2,7 @@
   community.general.ssh_config:
     host: "{{ tn_id }}-tn-bastion"
     hostname: "{{ vm_ip }}" 
+    remote_user: root
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present
 

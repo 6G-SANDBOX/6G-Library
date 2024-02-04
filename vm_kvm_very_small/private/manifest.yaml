@@ -59,8 +59,6 @@
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "{{ tn_id }}-{{ one_component_name }}"
-        ansible_ssh_host: "{{ vm_ip }}"
-        ansible_ssh_port: "22"
         ansible_user: "root"
 
     - name: Create SSH config file into Jenkins
