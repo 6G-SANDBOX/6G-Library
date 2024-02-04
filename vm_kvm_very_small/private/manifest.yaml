@@ -64,19 +64,30 @@
     - name: Create SSH config file into Jenkins
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"        
 
-# STAGE 3: Execute manifest
-- name: Infrastructure Tasks
-  hosts: "{{ hostvars['localhost']['tn_id'] }}-tn-bastion"
-  gather_facts: true
-  tasks:
-    - name: Wait for service to be ready
-      wait_for:
-        port: 22
-        host: "{{ hostvars['localhost']['vm_ip'] }}"
-        connect_timeout: 5
-        delay: 20
-        timeout: 120  
+# # STAGE 3: Execute manifest
+# - name: Infrastructure Tasks
+#   hosts: "{{ hostvars['localhost']['tn_id'] }}-tn-bastion"
+#   gather_facts: true
+#   tasks:
+#     - name: Wait for service to be ready
+#       wait_for:
+#         port: 22
+#         host: "{{ hostvars['localhost']['vm_ip'] }}"
+#         connect_timeout: 5
+#         delay: 20
+#         timeout: 120  
 
+# STAGE 3: Execute manifest
+- name: Wait for VM Ready
+  hosts: localhost
+  tasks:
+    - name: Try SSH - Wait for contextualization ready
+      shell: "ssh {{ tn_id }}-{{ one_component_name }} ls"
+      register: test
+      until: "test is not failed"
+      retries: 10
+      delay: 20
+  
 # STAGE 3: Execute manifest
 - name: Infrastructure Tasks
   hosts: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }}"
