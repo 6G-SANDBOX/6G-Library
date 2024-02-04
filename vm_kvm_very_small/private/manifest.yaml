@@ -99,5 +99,7 @@
     - command: "cat /etc/hostname"
       register: hostname_out
 
-    - debug: var={{hostname_out}}
+    - name: "DEBUG" 
+      ansible.builtin.debug:
+        msg: "{{ hostname_out | to_json }}"
 
