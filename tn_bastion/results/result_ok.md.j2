@@ -14,5 +14,5 @@ Important information:
 ### VNP WIREGUARD CLIENT CONFIG
 
 ```
-{{ hostvars['bastion']['client']['content'] | b64decode }}
+{{ hostvars[tn_id + '-' + one_bastion_name]['client']['content'] | b64decode }}
 ```
