@@ -64,12 +64,6 @@
     - name: Create SSH config file into Jenkins
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"
 
-    - name: Create Ansible inventory for this Trial Network
-      community.general.ini_file:
-        path: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/cac/inventory.ini"
-        option: "{{ tn_id }}-{{ one_bastion_name }}"
-        state: present
-
     - name: Wait for service to be ready
       wait_for:
         port: 22
