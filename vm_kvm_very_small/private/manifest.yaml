@@ -74,7 +74,7 @@
     - name: Wait for service to be ready
       wait_for:
         port: 22
-        host: "{{ vm_ip }}"
+        host: "{{ hostvars['localhost']['vm_ip'] }}"
         connect_timeout: 5
         delay: 20
         timeout: 120  
