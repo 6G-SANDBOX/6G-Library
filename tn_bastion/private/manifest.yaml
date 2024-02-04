@@ -71,7 +71,7 @@
 
 # STAGE 3: Execute manifest
 - name: Infrastructure Tasks
-  hosts: "{{ tn_id }}-{{ one_bastion_name }}"
+  hosts: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_bastion_name'] }}"
   gather_facts: true
   tasks:
     - name: Load Variables into new VM Bastion
