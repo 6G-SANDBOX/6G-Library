@@ -38,15 +38,6 @@
         chdir: "./{{ site_hypervisor }}/iac/"
         cmd: "terraform output --json | jq 'with_entries(.value |= .value)'"
       register: terraform_output
-
-    - name: Upload Terraform manifest
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-      vars:
-        dst_folder: "{{ playbook_dir }}/{{ site_hypervisor }}/iac/"
-    
-    - name: Update TNLCM with component deployment outputs
-      ansible.builtin.debug:
-        msg: "Upload to Terraform states repository {{ tnlcm_callback }}"
         
     - name: Load Terraform Output into execution context
       ansible.builtin.set_fact:
@@ -67,8 +58,8 @@
         hostname: "bastion"
         ansible_ssh_host: "{{ vm_ip }}"
         ansible_ssh_port: "22"
-        ansible_user: "ansible"
-        ansible_ssh_pass: "ansible"
+        ansible_user: "root"
+        #ansible_ssh_pass: "ansible"
 
     - name: Wait for service to be ready
       wait_for:
@@ -78,7 +69,7 @@
         delay: 20
         timeout: 120
 
-# STAGE 2: Execute manifest
+# STAGE 3: Execute manifest
 - name: Infrastructure Tasks
   hosts: bastion
   gather_facts: true
@@ -88,3 +79,16 @@
     - name: Execute Post Configuration
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/get_vpn_client_config.yaml"
       when: "site_hypervisor == 'one'"
+
+
+# STAGE 4: Execute manifest
+- name: Results
+  hosts: localhost
+  tasks:
+
+    - name: Publish execution results
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
+
+    - name: Upload Terraform manifest
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
+  

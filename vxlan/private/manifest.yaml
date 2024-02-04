@@ -30,12 +30,11 @@
     - name: Get Terraform Outputs
       ansible.builtin.debug:
         msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + \"_vxlan_id\"].value }}"
+      when: not result.failed
+
+    - name: Publish execution results
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
 
     - name: Upload Terraform manifest
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-      vars:
-        dst_folder: "{{ playbook_dir }}/{{ site_hypervisor }}/iac/"
-    
-    - name: Update TNLCM with component deployment outputs
-      ansible.builtin.debug:
-        msg: "Upload to Terraform states repository {{ tnlcm_callback }}"
+      when: not result.failed   

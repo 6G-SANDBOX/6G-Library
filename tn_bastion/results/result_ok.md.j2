@@ -1,0 +1,16 @@
+## TN_BASTION: {{ one_bastion_name }}
+
+The BASTION router and firewall component has been successfully created into the Trial Network {{ tn_id }}
+
+Important information:
+
+### BASTION NETWORK INTERFACES
+```
+{{ outputs[one_bastion_name + "_network_assignments"] }}
+````
+
+### VNP WIREGUARD CLIENT CONFIG
+
+```
+{{ hostvars['bastion']['client']['content'] }}
+```
