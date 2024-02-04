@@ -4,10 +4,9 @@ A Virtual Machine size XS han been created into the Trial Network {{ tn_id }}
 
 Important information:
 
-* OPENNEBULA NETWORK ID: {{ result.outputs[one_vxlan_name + "_vxlan_id"].value }}
-* VXLAN MTU: {{ one_vxlan_mtu }}
-* VXLAN GUEST MTU: {{ one_vxlan_guest_mtu }}
-* VXLAN FIRST IP: {{ one_vxlan_first_ip }}
-* VXLAN ADDRESS SIZE: {{ one_vxlan_address_size }}
-* VXLAN GW: {{ one_vxlan_gw }}
-* VXLAN DNS: {{ one_vxlan_dns }}
+* MAIN NETWORK INTERFACE: {{ vm_ip }}
+
+### VIRTUAL MACHINE NETWORK INTERFACES
+```
+{{ outputs[one_component_name + "_network_assignments"] }}
+````
