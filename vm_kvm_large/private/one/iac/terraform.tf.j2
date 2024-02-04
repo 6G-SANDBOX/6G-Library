@@ -14,8 +14,8 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
   }
 
   disk {
-    image_id = {{ site_one_templates.vm_xs.disk_id }}
-    size     = {{ site_one_templates.vm_xs.disk_size }}
+    image_id = {{ site_one_templates.vm_l.disk_id }}
+    size     = {{ site_one_templates.vm_l.disk_size }}
     target   = "vda"
     driver   = "qcow2"
   }  
