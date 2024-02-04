@@ -64,21 +64,8 @@
     - name: Create SSH config file into Jenkins
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"        
 
-# # STAGE 3: Execute manifest
-# - name: Infrastructure Tasks
-#   hosts: "{{ hostvars['localhost']['tn_id'] }}-tn-bastion"
-#   gather_facts: true
-#   tasks:
-#     - name: Wait for service to be ready
-#       wait_for:
-#         port: 22
-#         host: "{{ hostvars['localhost']['vm_ip'] }}"
-#         connect_timeout: 5
-#         delay: 20
-#         timeout: 120  
-
 # STAGE 3: Execute manifest
-- name: Wait for VM Ready
+- name: Wait for VM ready from jenkins jumping through TN Bastion
   hosts: localhost
   tasks:
     - name: Try SSH - Wait for contextualization ready
@@ -88,7 +75,7 @@
       retries: 10
       delay: 20
   
-# STAGE 3: Execute manifest
+# STAGE 4: Execute manifest
 - name: Infrastructure Tasks
   hosts: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }}"
   gather_facts: true
@@ -103,3 +90,13 @@
       ansible.builtin.debug:
         msg: "{{ hostname_out | to_json }}"
 
+# STAGE 5: Execute manifest
+- name: Infrastructure Tasks
+  hosts: localhost
+  tasks:
+    - name: Publish execution results
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
+
+    - name: Upload Terraform manifest
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
+      when: not result.failed   
