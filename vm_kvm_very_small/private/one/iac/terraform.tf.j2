@@ -10,6 +10,7 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
     SET_HOSTNAME = "$NAME"
     USERNAME = "{{ one_vm_username }}"
     PASSWORD = "{{ one_vm_password }}"
+    SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
   }
 
 {% for network_id in one_component_networks %}

@@ -61,11 +61,13 @@
         ansible_ssh_host: "{{ vm_ip }}"
         ansible_ssh_port: "22"
         ansible_user: "root"
-        #ansible_ssh_pass: "ansible"
+
+    - name: Create SSH config file into Jenkins
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"        
 
 # STAGE 3: Execute manifest
 - name: Infrastructure Tasks
-  hosts: bastion
+  hosts: "{{ hostvars['localhost']['tn_id'] }}-tn-bastion"
   gather_facts: true
   tasks:
     - name: Wait for service to be ready
@@ -75,50 +77,23 @@
         connect_timeout: 5
         delay: 20
         timeout: 120  
-    - name: Load Variables into new VM Bastion
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-    - name: Execute Post Configuration
-      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/get_vpn_client_config.yaml"
-      when: "site_hypervisor == 'one'"
 
 # STAGE 3: Execute manifest
 - name: Infrastructure Tasks
-  hosts: bastion
+  hosts: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }}"
   gather_facts: true
   tasks:
-    - name: Wait for service to be ready
-      wait_for:
-        port: 22
-        host: "{{ vm_ip }}"
-        connect_timeout: 5
-        delay: 20
-        timeout: 120  
-    - name: Load Variables into new VM Bastion
+    - name: Load Variables into new VM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-    - name: Execute Post Configuration
-      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/get_vpn_client_config.yaml"
-      when: "site_hypervisor == 'one'"
 
-# STAGE 4: Execute manifest
-- name: Results
-  hosts: localhost
-  tasks:
+    - command: "cat /etc/hostname"
+      register: hostname_out
 
-    - name: Publish execution results
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
+    - debug: var={{item}}
+      with_items: hostname_out.stdout_lines
 
-    - name: Upload Terraform manifest
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-  
+    - command: "ls /etc/"
+      register: dir_out
 
-
-
-
-    - name: Upload Terraform manifest
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-      vars:
-        dst_folder: "{{ playbook_dir }}/{{ site_hypervisor }}/iac/"
-    
-    - name: Update TNLCM with component deployment outputs
-      ansible.builtin.debug:
-        msg: "Upload to Terraform states repository {{ tnlcm_callback }}"
+    - debug: var={{item}}
+      with_items: dir_out.stdout_lines
