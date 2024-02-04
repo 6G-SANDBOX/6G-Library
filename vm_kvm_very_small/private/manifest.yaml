@@ -49,7 +49,7 @@
       ansible.builtin.set_fact:
         vm_ip: "{{ item.value }}"
       loop: "{{ lookup('ansible.builtin.dict', outputs[one_component_name + \"_network_assignments\"], wantlist=True) }}"
-      when: item.key | int == site_default_network_id
+      when: item.key | int == one_component_networks[0]
 
     - name: Verify that is correctly loaded
       ansible.builtin.debug:
