@@ -9,4 +9,5 @@
   community.general.ssh_config:
     host: "{{ tn_id }}-* !{{ tn_id }}-tn-bastion"
     proxyjump: "{{ tn_id }}-tn-bastion"
+    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present
