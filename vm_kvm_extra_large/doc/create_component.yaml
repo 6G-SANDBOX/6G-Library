@@ -4,7 +4,7 @@
 tnlcm_callback: "http://tnlcm.uma/TN/ASZDV/callback"
 
 # FROM PUBLIC VARIABLES SECTION
-one_component_name: "vm_test_xs"
+one_component_name: "vm_test_xl"
 one_vm_username: "maci"
 one_vm_password: "maci"
 

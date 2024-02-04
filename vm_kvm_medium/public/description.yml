@@ -3,7 +3,7 @@
 ## Component metadata
 ## 
 ####################################
-component_name: "vm_kvm_very_small"
+component_name: "vm_kvm_medium"
 metadata:
   family: compute
   maintainers: 
@@ -11,12 +11,12 @@ metadata:
   version: 0.0.1
   depends: 
     - tn_vxlan (>= 0.0.1)
-  short_description: This is a VM with a very small group of compute resources 
+  short_description: This is a VM with a medium group of compute resources 
   long_description: |
     This image is based on Ubuntu 22.04:
-    - 2 G RAM Memory
-    - 1 vCPU
-    - 10 GB Storage
+    - 4 G RAM Memory
+    - 4 vCPU
+    - 20 GB Storage
   platforms: [one]
   sites: [uma]
 
