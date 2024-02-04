@@ -99,11 +99,5 @@
     - command: "cat /etc/hostname"
       register: hostname_out
 
-    - debug: var={{item}}
-      with_items: hostname_out.stdout_lines
+    - debug: var={{hostname_out}}
 
-    - command: "ls /etc/"
-      register: dir_out
-
-    - debug: var={{item}}
-      with_items: dir_out.stdout_lines
