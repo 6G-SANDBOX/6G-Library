@@ -1,0 +1,33 @@
+####################################
+##
+## Component changelog
+##
+####################################
+
+ancestor: 0.5.4
+releases:
+  1.0.0-alpha:
+    ...
+  1.0.0-beta:
+    ...
+  1.0.0:
+    release_date: '2020-04-01'
+    changes:
+      release_summary: This is the initial White Rabbit release. Enjoy!
+      major_changes:
+        - The authentication method handling has been rewritten.
+      minor_changes:
+        - foo - Module can now reformat hard disks without asking.
+        - bob lookup - Makes sure Bob isn't there multiple times.
+      breaking_changes:
+        - Due to the security bug in the post module, the module no longer accepts the password
+          option. Please stop using the option and change any password you ever supplied to the
+          module.
+      deprecated_features:
+        - foo - The bar option has been deprecated. Use the username option instead.
+      removed_features:
+        - foo - The baz option has been removed. It has never been used anyway.
+      security_fixes:
+        - post - The module accidentally sent your password in plaintext to all servers it could find.
+      bugfixes:
+        - post - The module made PUT requests instead of POST requests.
