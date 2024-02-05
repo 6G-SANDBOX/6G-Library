@@ -1,0 +1,46 @@
+####################################
+##
+## Component metadata
+## 
+####################################
+component_name: "capif"
+metadata:
+  family: general
+  maintainers: 
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+  version: 0.0.1
+  depends: 
+    - oneKE (>= 0.0.1)
+  short_description: This component deploy CAPIF component inside a Trial Network
+  long_description: |
+    This component deploy CAPIF component as part of a Trial Network. The deployment consist on multiple microservices 
+    deployed on a kubernetes cluster that exposes various services:
+    - CCF endpoint
+    - Register Service endpoint
+    CAPIF has been implemented following 3GPP Release 17 specifications
+  platforms: [one]
+  sites: [uma]
+
+###################################################
+##
+## Public component variables that 
+## should be filled by the experimenter or 
+## the TNLCM. Some of them could be optional
+## 
+###################################################
+public:
+  monitoring: true
+  k8s_external_ip: "PLACEHOLDER_ONEKE_PUBLIC_IP" 
+  capif_hostname: "PLACEHOLDER_PUBLIC_CAPIF_URL"
+  vault_hostname: "PLACEHOLDER" 
+  vault_port:
+  vault_token:
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:
+  tn_vxlan_id: "ID from OpenNebula to identify this Network"
