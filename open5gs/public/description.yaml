@@ -1,0 +1,44 @@
+####################################
+##
+## Component metadata
+## 
+####################################
+component_name: open5gs
+metadata:
+  family: network
+  maintainers: 
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+  version: 0.0.1
+  depends: 
+    - k8s_medium (>= 0.0.1)
+  short_description: This component deploy open5Gs core inside a Kubernetes cluster
+  long_description: |
+    This component deploy open5GS core inside a kubernetes cluster and expose the AMF interface to be accesible.
+  platforms: [one]
+  sites: [uma]
+
+###################################################
+##
+## Public component variables that 
+## should be filled by the experimenter or 
+## the TNLCM. Some of them could be optional
+## 
+###################################################
+public:
+  hostname: vm-ubuntu-server
+  interfaces:
+    - name: ens2
+      network: default
+    - name: ens3
+      network: monitoring
+  memory: 256M
+  disk: 15G
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:
+  tn_vxlan_id: "ID from OpenNebula to identify this Network"
