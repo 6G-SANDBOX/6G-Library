@@ -1,0 +1,18 @@
+## K8S size medium: {{ one_bastion_name }}
+
+The BASTION router and firewall component has been successfully created into the Trial Network {{ tn_id }}
+
+Important information:
+
+* MAIN NETWORK INTERFACE: {{ vm_ip }}
+
+### BASTION NETWORK INTERFACES
+```
+{{ outputs[one_bastion_name + "_network_assignments"] }}
+````
+
+### VNP WIREGUARD CLIENT CONFIG
+
+```
+{{ hostvars[tn_id + '-' + one_bastion_name]['client']['content'] | b64decode }}
+```

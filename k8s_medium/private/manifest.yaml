@@ -1,0 +1,25 @@
+####################################
+##
+## Component flows
+## 
+## Contains at least one flow to 
+## define the install path. 
+## More paths could be available
+##
+####################################
+flow:
+  install:
+    - tool: terraform
+      file: ./iac/terraform
+    - tool: ansible
+      file: ./cac/pre/bootstrap.yml
+    - tool: ansible
+      file: ./cac/pre/setup.yml
+    - tool: ansible
+      file: ./cac/post/integration.yml
+  backup:
+    - tool: ansible
+      file: ./cac/post/backup.yml
+
+
+
