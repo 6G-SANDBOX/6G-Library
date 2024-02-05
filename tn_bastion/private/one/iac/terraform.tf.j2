@@ -8,7 +8,7 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_bastion_name }}" {
 
   context = {
     SET_HOSTNAME = "$NAME"
-    PASSWORD_BASE64 = "{{ site_one_bastion_default_password }}"
+    PASSWORD = "{{ site_one_bastion_default_password }}"
     WIREGUARD_ALLOWEDIPS = "{{ one_bastion_wireguard_allowed_networks }}"
     SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
   }
