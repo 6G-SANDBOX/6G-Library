@@ -3,16 +3,15 @@
 ## Component metadata
 ## 
 ####################################
-
-component_name: vxlan
-metadata:
+component_name: tsn
+public:
   family: network
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
   version: 0.0.1
-  short_description: This is the component that creates VXLAN networks inside ONE
+  short_description: This is the component that enable the use of TSN
   long_description: |
-    This is the component that creates VXLAN networks inside ONE
+    This is the component that enables the use of TSN into a Trial Network
   platforms: [one]
   sites: [uma]
 
@@ -24,11 +23,6 @@ metadata:
 ## 
 ###################################################
 public:
-  one_vxlan_name: "PLACEHOLDER_VXLAN_NAME"
-  one_vxlan_dns: "PLACEHOLDER_DNS" # 1.1.1.1, 1.0.0.1
-  one_vxlan_address_size: 254 # MAX 255
-  one_vxlan_first_ip: "PLACEHOLDER_VXLAN_FIRST_IP" # 192.168.199.1
-  one_vxlan_gw: "PLACEHOLDER_VXLAN_GW" # 192.168.199.1
 
 ###################################################
 ##
@@ -37,4 +31,4 @@ public:
 ## 
 ###################################################
 outputs:
-  one_network_id: "OPENNEBULA INTERNAL NETWORK ID"
+  info: "INSTRUCTIONS FOR THE EXPERIMENTER ABOUT HOW TO USE TSN"
