@@ -4,18 +4,19 @@
 ## 
 ####################################
 component_name: dummy-component
-family: general
-maintainers: 
-  - myname <myname@6g-sandbox.eu>
-version: 2.0
-depends: 
-  - other-component (>= 1.12.4)
-short_description: This is a test project. Long description blah blah blah.
-long_description: |
-  First sentence
-  And another sentence.
-platforms: [one, vmware]
-sites: [malaga, athens, ...]
+metadata:
+  family: general
+  maintainers: 
+    - myname <myname@6g-sandbox.eu>
+  version: 2.0
+  depends: 
+    - other-component (>= 1.12.4)
+  short_description: This is a test project. Long description blah blah blah.
+  long_description: |
+    First sentence
+    And another sentence.
+  platforms: [one, vmware]
+  sites: [malaga, athens, ...]
 
 ###################################################
 ##
@@ -24,11 +25,21 @@ sites: [malaga, athens, ...]
 ## the TNLCM. Some of them could be optional
 ## 
 ###################################################
-hostname: vm-ubuntu-server
-interfaces:
-  - name: ens2
-    network: default
-  - name: ens3
-    network: monitoring
-memory: 256M
-disk: 15G
+public:
+  hostname: vm-ubuntu-server
+  interfaces:
+    - name: ens2
+      network: default
+    - name: ens3
+      network: monitoring
+  memory: 256M
+  disk: 15G
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:
+  tn_vxlan_id: "ID from OpenNebula to identify this Network"
