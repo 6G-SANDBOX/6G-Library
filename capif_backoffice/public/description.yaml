@@ -1,0 +1,38 @@
+####################################
+##
+## Component metadata
+## 
+####################################
+component_name: capif_backoffice
+metadata:
+  family: general
+  maintainers: 
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+  version: 0.0.1
+  depends: 
+    - capif (>= 0.0.1)
+  short_description: This is a web portal to manage CAPIF instance.
+  long_description: |
+    CAPIF is a complex component that is not designed to have a management interface
+    This is a backoffice portal that enable management capabilites for IT Operators
+  platforms: [one]
+  sites: [uma]
+
+###################################################
+##
+## Public component variables that 
+## should be filled by the experimenter or 
+## the TNLCM. Some of them could be optional
+## 
+###################################################
+public:
+  component_name: vm-ubuntu-server
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:
+  backoffice_url: "URL to access this backoffice"
