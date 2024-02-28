@@ -17,3 +17,4 @@ one_vxlan_gw: "192.168.199.1"
 one_vxlan_security_groups: [0]
 one_vxlan_address_size: 254  
 one_vxlan_first_ip: "192.168.199.1"
+one_vxlan_netmask: "255.255.255.0"
