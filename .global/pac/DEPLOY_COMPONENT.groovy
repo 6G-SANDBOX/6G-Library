@@ -3,7 +3,7 @@ pipeline {
   agent any
 
   options {
-      timeout(time: 30, unit: 'MINUTES')
+      timeout(time: 45, unit: 'MINUTES')
       //retry(1)
   }
 
@@ -34,7 +34,9 @@ pipeline {
       //ANSIBLE
       ANSIBLE_REMOTE_USER = credentials('ANSIBLE_REMOTE_USER')
       ANSIBLE_CONNECTION_PASSWORD_FILE = credentials('ANSIBLE_CONNECTION_PASSWORD_FILE')
-      //ANSIBLE_BECOME_PASSWORD_FILE = credentials('ANSIBLE_BECOME_PASSWORD_FILE')      
+      //ANSIBLE_BECOME_PASSWORD_FILE = credentials('ANSIBLE_BECOME_PASSWORD_FILE')    
+      //GITHUB JENKINS TOKEN
+      GITHUB_JENKINS = credentials('GITHUB_JENKINS')  
   }
 
   stages {
@@ -52,15 +54,15 @@ pipeline {
       }
     }  
 
-    // stage('Stage 1: Clone 6G library repository') {
-    //   steps {
-    //       dir ("${env.WORKSPACE}/") {
-    //           sh """
-    //           git clone --single-branch --branch ${LIBRARY_BRANCH} ${LIBRARY_URL} .
-    //           """
-    //       }
-    //   }
-    // }      
+    stage('Stage 1: Clone 6G Sites Private Values repository') {
+      steps {
+          dir ("${env.WORKSPACE}/") {
+              sh """
+              git clone https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git
+              """
+          }
+      }
+    }      
     stage('Stage 2: Run component deployment') {
       steps {
         script {

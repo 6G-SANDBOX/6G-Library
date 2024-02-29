@@ -1,0 +1,43 @@
+####################################
+##
+## Component metadata
+## 
+####################################
+component_name: "vm_kvm_small"
+metadata:
+  family: compute
+  maintainers: 
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+  version: 0.0.1
+  depends: 
+    - tn_vxlan (>= 0.0.1)
+  short_description: This is a VM with a small group of compute resources 
+  long_description: |
+    This image is based on Ubuntu 22.04:
+    - 2 G RAM Memory
+    - 2 vCPU
+    - 15 GB Storage
+  platforms: [one]
+  sites: [uma]
+
+###################################################
+##
+## Public component variables that 
+## should be filled by the experimenter or 
+## the TNLCM. Some of them could be optional
+## 
+###################################################
+public:
+  one_component_name: "PLACEHOLDER_VM_NAME"
+  one_vm_username: "username"
+  one_vm_password: "password"    
+  one_component_networks: "List of networks"
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:
+  vm_ip: "Main Network Interface"

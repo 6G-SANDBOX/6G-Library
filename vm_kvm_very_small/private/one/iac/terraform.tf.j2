@@ -10,7 +10,15 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
     SET_HOSTNAME = "$NAME"
     USERNAME = "{{ one_vm_username }}"
     PASSWORD = "{{ one_vm_password }}"
+    START_SCRIPT_BASE64 = "{{ site_jenkins_script_base64 }}" 
   }
+
+  disk {
+    image_id = {{ site_one_templates.vm_xs.disk_id }}
+    size     = {{ site_one_templates.vm_xs.disk_size }}
+    target   = "vda"
+    driver   = "qcow2"
+  }  
 
 {% for network_id in one_component_networks %}
   nic {

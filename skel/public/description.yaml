@@ -3,7 +3,8 @@
 ## Component metadata
 ## 
 ####################################
-
+component_name: ...
+metadata:
 
 ###################################################
 ##
@@ -12,3 +13,12 @@
 ## the TNLCM. Some of them could be optional
 ## 
 ###################################################
+public:
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:

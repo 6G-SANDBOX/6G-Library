@@ -5,7 +5,7 @@
   tasks:
     - name: Load site variables 
       ansible.builtin.include_vars:
-        dir: "../../.sites/{{ deployment_site }}/"
+        dir: "../../6G-Sandbox-Sites/.sites/{{ deployment_site }}/"
         files_matching: values.yaml
 
     - name: Load variables from private config
