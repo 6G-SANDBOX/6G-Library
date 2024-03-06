@@ -1,0 +1,14 @@
+# replaces public/description.yaml
+# variables regarding general info about the component
+# all variables must be usable in automations
+
+# previously named "component_name". same as the directory inside the 6G-LIBRARY
+name:
+
+metadata:
+
+# previously named "public". mandatory variables the deployer needs to specify in the input file
+input:
+
+# previously named "outputs". variables shown in the results file
+output:
