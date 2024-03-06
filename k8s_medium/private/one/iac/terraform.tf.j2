@@ -1,7 +1,6 @@
 resource "opennebula_service" "{{ tn_id }}-oneke-{{ service_name }}" {
 
   name        = "{{ tn_id }}-oneke-{{ service_name }}"
-  description = "Kubernetes cluster {{ tn_id }}"
   template_id = {{ site_one_templates.oneKE.id }}
 
   extra_template = jsonencode({
