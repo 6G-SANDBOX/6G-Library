@@ -27,6 +27,7 @@ pipeline {
       OPENNEBULA_USERNAME = credentials('OPENNEBULA_USERNAME')
       OPENNEBULA_PASSWORD = credentials('OPENNEBULA_PASSWORD')
       OPENNEBULA_ENDPOINT = credentials('OPENNEBULA_ENDPOINT')
+      //OPENNEBULA_FLOW_ENDPOINT = credentials('OPENNEBULA_FLOW_ENDPOINT')
       OPENNEBULA_INSECURE = credentials('OPENNEBULA_INSECURE')
       // MINIO CREDENTIALS
       AWS_ACCESS_KEY_ID = credentials('MINIO_KEY')
@@ -62,7 +63,8 @@ pipeline {
               """
           }
       }
-    }      
+    }
+    // NOTE: If parameter enviromental variables are declared in the "enviroment" stage, it should be unnecesary to declare them agaain in the ansible-playbook command line
     stage('Stage 2: Run component deployment') {
       steps {
         script {
