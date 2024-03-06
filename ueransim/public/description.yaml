@@ -8,6 +8,7 @@ metadata:
   family: network
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   version: 0.0.1
   short_description: This is the component to deploy a UERANSIM instance 
   long_description: |

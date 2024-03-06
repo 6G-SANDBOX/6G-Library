@@ -1,0 +1,13 @@
+# Generate Infrastructure Manifests
+- name: Copy OpenNebula providers.tf file to workspace
+  ansible.builtin.copy:
+    src: "{{ workspace }}/.global/iac/providers.tf"    # suggestion: rename file to one_provider_v1.3.tf for more clarity
+    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/one_provider_v1.3.tf"
+- name: Generate Terraform s3 backend manifest
+  template:
+    src: "{{ workspace }}/.global/iac/backend.tf.j2"
+    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/backend.tf"
+- name: "Generate {{ component_name }} component manifests"
+  template:
+    src: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/terraform.tf.j2"
+    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ component_name }}_{{ ansible_date_time.epoch }}.tf"  # date makes the file unique already.

@@ -1,4 +1,5 @@
-resource "opennebula_virtual_network" "{{ tn_id }}_{{ one_vxlan_name }}" {
+resource "opennebula_virtual_network" "{{ tn_id }}-{{ one_vxlan_name }}" {
+
   name            = "{{ tn_id }}_{{ one_vxlan_name }}"
   permissions     = "660"
   group           = "{{ one_group }}"
