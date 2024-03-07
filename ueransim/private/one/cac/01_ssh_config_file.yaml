@@ -1,0 +1,7 @@
+- name: Add new SSH config file with VM info to Jenkins host
+  community.general.ssh_config:
+    host: "{{ tn_id }}-{{ one_component_name }}"
+    hostname: "{{ vm_ip }}" 
+    remote_user: root
+    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+    state: present

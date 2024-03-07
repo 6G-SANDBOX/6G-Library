@@ -55,5 +55,10 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}-{{ a
 
 output "{{ one_component_name }}_network_assignments" {
   description = "OpenNebula VM Network Assignments"
-  value = { for nic in opennebula_virtual_machine.{{ tn_id }}-{{ one_component_name }}.nic[*] : nic.network_id => nic.computed_ip }
+  value = { for nic in opennebula_virtual_machine.{{ tn_id }}-{{ one_component_name }}-{{ ansible_date_time.epoch }}.nic[*] : nic.network_id => nic.computed_ip }
+}
+
+output "{{ one_component_name }}_VM_ID" {
+  description = "OpenNebula VM ID"
+  value = opennebula_virtual_machine.{{ tn_id }}-{{ one_component_name }}-{{ ansible_date_time.epoch }}.id
 }
