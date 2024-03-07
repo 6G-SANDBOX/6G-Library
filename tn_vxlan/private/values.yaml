@@ -12,7 +12,7 @@ one_group: "oneadmin"
 one_vxlan_physical_device: "{{ site_vxlan_if }}"
 one_vxlan_mtu: 1500
 one_vxlan_guest_mtu: 1450
-one_vxlan_dns: "1.1.1.1, 1.0.0.1"
+one_vxlan_dns: "1.1.1.1 1.0.0.1"
 one_vxlan_gw: "192.168.199.1"
 one_vxlan_security_groups: [0]
 one_vxlan_address_size: 254  
