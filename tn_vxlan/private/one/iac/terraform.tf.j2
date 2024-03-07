@@ -11,7 +11,7 @@ resource "opennebula_virtual_network" "{{ tn_id }}_{{ one_vxlan_name }}" {
   gateway         = "{{ one_vxlan_gw }}"
   security_groups = {{ one_vxlan_security_groups }}
   cluster_ids = {{  site_network_clusters }}
-  network_mask = {{ one_vxlan_netmask }}
+  network_mask = "{{ one_vxlan_netmask }}"
 
   template_section {
    name = "{{ one_vxlan_name }}"
