@@ -9,6 +9,8 @@ resource "opennebula_service" "{{ tn_id }}-oneke-{{ service_name }}" {
           { Private = { id = "{{ internal_vnet_id }}" } },
       ]
       custom_attrs_values = {
+        "ONEAPP_VROUTER_ETH0_VIP0": "",
+        "ONEAPP_VROUTER_ETH1_VIP0": "",
         "ONEAPP_RKE2_SUPERVISOR_EP": "ep0.eth0.vr:9345"
         "ONEAPP_K8S_CONTROL_PLANE_EP": "ep0.eth0.vr:6443",
         "ONEAPP_K8S_EXTRA_SANS": "localhost,127.0.0.1,ep0.eth0.vr,$${vnf.TEMPLATE.CONTEXT.ETH0_IP}",
