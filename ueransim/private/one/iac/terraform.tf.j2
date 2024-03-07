@@ -2,22 +2,47 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}-{{ a
   name        = "{{ tn_id }}-{{ one_component_name }}-{{ ansible_date_time.epoch }}"
   description = "{{ tn_id }} UERANSIM"
   template_id = {{ site_one_templates.vm_m.id }}
-  group       = "oneadmin"
-  permissions = "660"
+  #group       = "oneadmin"
+  #permissions = "660"
 
   context = {
     SET_HOSTNAME = "$NAME"
-    USERNAME = "{{ one_vm_username }}"
-    PASSWORD = "{{ one_vm_password }}"
-    START_SCRIPT_BASE64 = "{{ site_jenkins_script_base64 }}" 
+    {{ 'USERNAME = "{}"'.format(lookup('env', 'one_vm_username')) if 'one_vm_username' in environ else '' }}
+    {{ 'PASSWORD = "{}"'.format(lookup('env', 'one_vm_password')) if 'one_vm_password' in environ else '' }}
+    {{ 'SSH_PUBLIC_KEY = "{}"'.format(lookup('env', 'one_vm_ssh_key')) if 'one_vm_ssh_key' in environ else '' }}
+    # comes from site. STEPS: 1.creates ssh rsa key for the VM (necessary? ed25519 type better) 2.allows ssh with password (should only be done if password is provided) 3. writes ssh public key from jenkins in /root/.ssh/authorized_keys (should be defined in SSH_PUBLIC_KEY context value)
+    {{ 'START_SCRIPT_BASE64 = "{}"'.format(lookup('env', 'site_jenkins_script_base64')) if 'site_jenkins_script_base64' in environ else '' }}
+
+    ### UERANSIM variables
+    {{ 'RUN_GNB = "{}"'.format(lookup('env', 'run_gnb')) if 'run_gnb' in environ else '' }}
+    {{ 'RUN_UE = "{}"'.format(lookup('env', 'run_ue')) if 'run_ue' in environ else '' }}
+
+    {{ 'GNB_AMF_ADDRESS = "{}"'.format(lookup('env', 'gnb_amf_address')) if 'gnb_amf_address' in environ else '' }}
+    {{ 'GNB_GTPIP = "{}"'.format(lookup('env', 'gnb_gtpIp')) if 'gnb_gtpIp' in environ else '' }}
+    {{ 'GNB_LINKIP = "{}"'.format(lookup('env', 'gnb_linkIp')) if 'gnb_linkIp' in environ else '' }}
+    {{ 'GNB_MCC = "{}"'.format(lookup('env', 'gnb_mcc')) if 'gnb_mcc' in environ else '' }}
+    {{ 'GNB_MNC = "{}"'.format(lookup('env', 'gnb_mnc')) if 'gnb_mnc' in environ else '' }}
+    {{ 'GNB_NGAPIP = "{}"'.format(lookup('env', 'gnb_ngapIp')) if 'gnb_ngapIp' in environ else '' }}
+    {{ 'GNB_SLICES_SD = "{}"'.format(lookup('env', 'gnb_slices_sd')) if 'gnb_slices_sd' in environ else '' }}
+    {{ 'GNB_SLICES_SST = "{}"'.format(lookup('env', 'gnb_slices_sst')) if 'gnb_slices_sst' in environ else '' }}
+    {{ 'GNB_TAC = "{}"'.format(lookup('env', 'gnb_tac')) if 'gnb_tac' in environ else '' }}
+
+    {{ 'UE_CONFIGURED_NSSAI_SD = "{}"'.format(lookup('env', 'ue_configured_nssai_sd')) if 'ue_configured_nssai_sd' in environ else '' }}
+    {{ 'UE_CONFIGURED_NSSAI_SST = "{}"'.format(lookup('env', 'ue_configured_nssai_sst')) if 'ue_configured_nssai_sst' in environ else '' }}
+    {{ 'UE_DEFAULT_NSSAI_SD = "{}"'.format(lookup('env', 'ue_default_nssai_sd')) if 'ue_default_nssai_sd' in environ else '' }}
+    {{ 'UE_DEFAULT_NSSAI_SST = "{}"'.format(lookup('env', 'ue_default_nssai_sst')) if 'ue_default_nssai_sst' in environ else '' }}
+    {{ 'UE_GNBSEARCHLIST = "{}"'.format(lookup('env', 'ue_gnbSearchList')) if 'ue_gnbSearchList' in environ else '' }}
+    {{ 'UE_KEY = "{}"'.format(lookup('env', 'ue_key')) if 'ue_key' in environ else '' }}
+    {{ 'UE_MCC = "{}"'.format(lookup('env', 'ue_mcc')) if 'ue_mcc' in environ else '' }}
+    {{ 'UE_MNC = "{}"'.format(lookup('env', 'ue_mnc')) if 'ue_mnc' in environ else '' }}
+    {{ 'UE_OP = "{}"'.format(lookup('env', 'ue_op')) if 'ue_op' in environ else '' }}
+    {{ 'UE_SESSION_APN = "{}"'.format(lookup('env', 'ue_session_apn')) if 'ue_session_apn' in environ else '' }}
+    {{ 'UE_SESSION_SD = "{}"'.format(lookup('env', 'ue_session_sd')) if 'ue_session_sd' in environ else '' }}
+    {{ 'UE_SESSION_SST = "{}"'.format(lookup('env', 'ue_session_sst')) if 'ue_session_sst' in environ else '' }}
+    {{ 'UE_SUPI = "{}"'.format(lookup('env', 'ue_supi')) if 'ue_supi' in environ else '' }}
+    
   }
 
-  disk {
-    image_id = {{ site_one_templates.vm_m.disk_id }}
-    size     = {{ site_one_templates.vm_m.disk_size }}
-    target   = "vda"
-    driver   = "qcow2"
-  }  
 
 {% for network_id in one_component_networks %}
   nic {
@@ -26,7 +51,6 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}-{{ a
     # security_groups = [0]  # Commented because ONE terraform provider has a bug  
   }
 {% endfor %}
-
 }
 
 output "{{ one_component_name }}_network_assignments" {

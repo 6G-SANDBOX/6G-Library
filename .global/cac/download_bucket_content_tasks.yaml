@@ -1,3 +1,5 @@
+# module deprecated. installed amazon.aws collection is 6.5.0 when latest is 7.3.0 where module is not listed
+# https://docs.ansible.com/ansible/latest/collections/amazon/aws/index.html#plugins-in-amazon-aws
 - name: Get list of files from S3
   amazon.aws.aws_s3:
     endpoint_url: "{{ site_s3_server.endpoint }}"
@@ -24,4 +26,4 @@
     dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ item | basename }}"
   with_items: "{{ s3_bucket_items.s3_keys }}"
   when: not "terraform.tfstate" in item
-
+# why not .tfstate ??

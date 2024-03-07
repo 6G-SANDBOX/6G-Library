@@ -8,5 +8,6 @@
 ##
 ################################################
 
-vcpu: 4
-memory: 4G
+# Hardware requirements for the UERANSIM are not mutable by the experimenter
+# vcpu: 4
+# memory: 4G

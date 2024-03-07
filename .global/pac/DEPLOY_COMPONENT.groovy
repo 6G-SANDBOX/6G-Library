@@ -9,18 +9,19 @@ pipeline {
 
   parameters {
     string(name: 'TN_ID', defaultValue: '', description: 'TRIAL NETWORK IDENTIFIER')
-    string(name: 'LIBRARY_COMPONENT_NAME', defaultValue: '', description: '6G LIBRARY COMPONENT')
+    string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library', description: '6G LIBRARY REPOSITORY') // NEW. Making this an optional parameter makes it easy to test repository forks
     string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: '6G LIBRARY BRANCH')
+    string(name: 'LIBRARY_COMPONENT_NAME', defaultValue: '', description: '6G LIBRARY COMPONENT')
     string(name: 'DEPLOYMENT_SITE', defaultValue: 'uma', description: 'Site where deploy')
     base64File (name: 'FILE', description: 'YAML file that contains variables needed to deploy the component')
     //string(name: 'TNLCM_CALLBACK', defaultValue: 'https://tnlcm.uma/TN/ID/callback', description: 'URL of the TNLCM to notify result')   
   }
 
   environment {
-      LIBRARY_URL="https://github.com/6G-SANDBOX/6G-Library"
       TN_ID="${params.TN_ID}"
-      LIBRARY_COMPONENT_NAME="${params.LIBRARY_COMPONENT_NAME}"
+      LIBRARY_URL="${params.LIBRARY_URL}"    // NEW.
       LIBRARY_BRANCH="${params.LIBRARY_BRANCH}"
+      LIBRARY_COMPONENT_NAME="${params.LIBRARY_COMPONENT_NAME}"
       DEPLOYMENT_SITE="${params.DEPLOYMENT_SITE}"
       FILE_PATH="${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/private/tnlcm_vars.yaml"
       OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')

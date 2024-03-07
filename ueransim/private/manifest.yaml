@@ -1,46 +1,49 @@
-# START MANDATORY BLOCK
+---
 - name: Prepare workspace with necessary enviromental variables and the bastion VM
   hosts: localhost
+  # gathering facts is necessary as many ansible variables come from enviromental variables from jenkins
   gather_facts: true
-  tasks: 
+  tasks:
+    # NOTE: First 3 tasks seem common for all components.
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"      # mix_variables.yaml not used?
+
+    # NOTE: Second task would need negative conditional for vxlan and tn_bastion components
     - name: Include Trial Network bastion VM to Ansible inventory
       ansible.builtin.add_host:
-        name: "{{ tn_id }}-tn-bastion"      
-# END MANDATORY BLOCK
+        name: "{{ tn_id }}-tn-bastion"
 
-# STAGE 1: Prepare manifest from templates
-- name: Generate installation manifest from templates
-  hosts: localhost
-  tasks: 
-    - name: Generate installation manifest from templates
+    # NOTE: prepare.yml file can be common for all components if the provider being used can be specified here
+    - name: Prepare terraform manifests from templates
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/prepare.yaml"
 
-# # STAGE 2: Execute manifest
-# - name: Infrastructure Tasks
-#   hosts: localhost
-#   tasks:
-#     - name: Download Terraform manifest from previos TN components
-#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_bucket_content_tasks.yaml" 
-          
-#     - name: Execute terraform apply
-#       community.general.terraform:
-#         project_path: "./{{ site_hypervisor }}/iac/"
-#         state: "present"
-#         force_init: true
-#       register: result 
-    
-#     - name: Terraform DEBUG
-#       ansible.builtin.debug:
-#         msg: "{{ result }}"
+    # DELETE ASAP. It OUTPUTS private info.
+    - name: Debug enviromental variables
+      ansible.builtin.shell:
+      args:
+        cmd: "printenv"
+      register: env_vars
+    - name: Terraform DEBUG
+      ansible.builtin.debug:
+        msg: "{{ env_vars }}"
 
-#     - name: Get Terraform Output
-#       ansible.builtin.shell:
-#       args:
-#         chdir: "./{{ site_hypervisor }}/iac/"
-#         cmd: "terraform output --json | jq 'with_entries(.value |= .value)'"
-#       register: terraform_output
+    - name: Execute terraform apply
+      community.general.terraform:
+        project_path: "./{{ site_hypervisor }}/iac/"
+        state: "present"
+        force_init: true
+      register: result
+
+    - name: Terraform DEBUG
+      ansible.builtin.debug:
+        msg: "{{ result }}"
+
+    # - name: Get Terraform Output
+    #   ansible.builtin.shell:
+    #   args:
+    #     chdir: "./{{ site_hypervisor }}/iac/"
+    #     cmd: "terraform output --json | jq 'with_entries(.value |= .value)'"
+    #   register: terraform_output
 
 #     - name: Load Terraform Output into execution context
 #       ansible.builtin.set_fact:
@@ -62,7 +65,7 @@
 #         ansible_user: "root"
 
 #     - name: Create SSH config file into Jenkins
-#       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"        
+#       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"
 
 # # STAGE 3: Execute manifest
 # - name: Wait for VM ready from jenkins jumping through TN Bastion
@@ -74,7 +77,7 @@
 #       until: "test is not failed"
 #       retries: 10
 #       delay: 20
-  
+
 # # STAGE 4: Execute manifest
 # - name: Infrastructure Tasks
 #   hosts: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }}"
@@ -86,7 +89,7 @@
 #     - command: "cat /etc/hostname"
 #       register: hostname_out
 
-#     - name: "DEBUG" 
+#     - name: "DEBUG"
 #       ansible.builtin.debug:
 #         msg: "{{ hostname_out | to_json }}"
 
@@ -99,4 +102,4 @@
 
 #     - name: Upload Terraform manifest
 #       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-#       when: not result.failed   
+#       when: not result.failed
