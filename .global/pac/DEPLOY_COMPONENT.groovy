@@ -9,11 +9,12 @@ pipeline {
 
   parameters {
     string(name: 'TN_ID', defaultValue: '', description: 'TRIAL NETWORK IDENTIFIER')
-    string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library', description: '6G LIBRARY REPOSITORY') // NEW. Making this an optional parameter makes it easy to test repository forks
+    string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library', description: '6G LIBRARY REPOSITORY') // NEW. Making the repository an optional parameter makes it easy to test repository forks
     string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: '6G LIBRARY BRANCH')
     string(name: 'LIBRARY_COMPONENT_NAME', defaultValue: '', description: '6G LIBRARY COMPONENT')
     string(name: 'DEPLOYMENT_SITE', defaultValue: 'uma', description: 'Site where deploy')
     base64File (name: 'FILE', description: 'YAML file that contains variables needed to deploy the component')
+    booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG')                 // NEW. New binary parameter to debug the workspace
     //string(name: 'TNLCM_CALLBACK', defaultValue: 'https://tnlcm.uma/TN/ID/callback', description: 'URL of the TNLCM to notify result')   
   }
 
@@ -85,15 +86,20 @@ pipeline {
           '''
       }
       cleanup{
-          /* clean up our workspace */
-          deleteDir()
-          /* clean up tmp directory */
-          dir("${env.workspace}@tmp") {
+          if (env.DEBUG == 'false') {
+              echo 'CleanUp Workspace'
+              /* clean up our workspace */
               deleteDir()
-          }
-          /* clean up script directory */
-          dir("${env.workspace}@script") {
-              deleteDir()
+              /* clean up tmp directory */
+              dir("${env.workspace}@tmp") {
+                  deleteDir()
+              }
+              /* clean up script directory */
+              dir("${env.workspace}@script") {
+                  deleteDir()
+              }    
+          } else {
+              echo 'Workspace is not deleted'
           }
       }      
   }  
