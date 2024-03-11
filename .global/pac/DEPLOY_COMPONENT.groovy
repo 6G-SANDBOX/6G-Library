@@ -12,7 +12,7 @@ pipeline {
     string(name: 'LIBRARY_COMPONENT_NAME', defaultValue: '', description: '6G LIBRARY COMPONENT')
     string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: '6G LIBRARY BRANCH')
     string(name: 'DEPLOYMENT_SITE', defaultValue: 'uma', description: 'Site where deploy')
-    string(name: 'DEBUG', defaultValue: 'false', description: 'Enable DEBUG')
+    booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG')
     base64File (name: 'FILE', description: 'YAML file that contains variables needed to deploy the component')
     //string(name: 'TNLCM_CALLBACK', defaultValue: 'https://tnlcm.uma/TN/ID/callback', description: 'URL of the TNLCM to notify result')   
   }
@@ -83,21 +83,26 @@ pipeline {
           echo "DONE"
           '''
       }
-      // cleanup{
-      //   script {
-      //     if (params.DEBUG == "false") {
-      //         /* clean up our workspace */
-      //         deleteDir()
-      //         /* clean up tmp directory */
-      //         dir("${env.workspace}@tmp") {
-      //             deleteDir()
-      //         }
-      //         /* clean up script directory */
-      //         dir("${env.workspace}@script") {
-      //             deleteDir()
-      //         }
-      //       }
-      //     }
-      // }      
+      cleanup{
+        script {
+          echo params.DEBUG 
+          if (params.DEBUG == false) {
+            script {
+                echo "Deleting workspace"
+              }
+
+              /* clean up our workspace */
+              // deleteDir()
+              // /* clean up tmp directory */
+              // dir("${env.workspace}@tmp") {
+              //     deleteDir()
+              // }
+              // /* clean up script directory */
+              // dir("${env.workspace}@script") {
+              //     deleteDir()
+              // }
+            }
+          }
+      }      
   }  
 }
