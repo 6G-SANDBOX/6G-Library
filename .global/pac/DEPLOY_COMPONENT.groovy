@@ -85,24 +85,22 @@ pipeline {
       }
       cleanup{
         script {
-          echo params.DEBUG 
-          if (params.DEBUG == false) {
-            script {
-                echo "Deleting workspace"
-              }
-
+          if (env.DEBUG == 'false') {
+              echo 'I only execute on the master branch'
               /* clean up our workspace */
-              // deleteDir()
-              // /* clean up tmp directory */
-              // dir("${env.workspace}@tmp") {
-              //     deleteDir()
-              // }
-              // /* clean up script directory */
-              // dir("${env.workspace}@script") {
-              //     deleteDir()
-              // }
-            }
+              deleteDir()
+              /* clean up tmp directory */
+              dir("${env.workspace}@tmp") {
+                  deleteDir()
+              }
+              /* clean up script directory */
+              dir("${env.workspace}@script") {
+                  deleteDir()
+              }    
+          } else {
+              echo 'Workspace is not deleted'
           }
-      }      
+        }
+      }             
   }  
 }
