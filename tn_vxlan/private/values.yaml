@@ -8,7 +8,7 @@
 ##
 ################################################
 
-one_group: "6G-Sandbox"   # delicado
+one_group: "6G-Sandbox"   # sensible info
 one_vxlan_physical_device: "{{ site_vxlan_if }}"
 one_vxlan_mtu: 1500
 one_vxlan_guest_mtu: 1450

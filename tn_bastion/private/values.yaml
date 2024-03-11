@@ -11,6 +11,7 @@
 # artifact_url: "https://marketplace.opennebula.io/appliance/84bd27fe-5d14-4e70-a79a-eb3fdd0072ae"
 # artifact_name: "TN Bastion"
 one_bastion_name: "tn-bastion"
+one_group: "6G-Sandbox"   # sensible info
 memory: 256M
 disk: 5G
 vcpu: 2
