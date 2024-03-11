@@ -42,3 +42,14 @@ resource "opennebula_service" "{{ tn_id }}-oneke-{{ service_name }}" {
     }
   })
 }
+
+
+output "{{ tn_id }}-oneke-{{ service_name }}_service_id" {
+  description = "OpenNebula Service {{ tn_id }}-oneke-{{ service_name }}"
+  value       = opennebula_service.{{ tn_id }}-oneke-{{ service_name }}.id
+}
+
+output "{{ tn_id }}-oneke-{{ service_name }}_roles" {
+  description = "OpenNebula Service {{ tn_id }}-oneke-{{ service_name }}"
+  value       = opennebula_service.{{ tn_id }}-oneke-{{ service_name }}.roles
+}
