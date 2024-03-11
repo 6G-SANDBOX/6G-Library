@@ -86,7 +86,7 @@ pipeline {
       cleanup{
         script {
           if (env.DEBUG == 'false') {
-              echo 'I only execute on the master branch'
+              echo 'CleanUp Workspace'
               /* clean up our workspace */
               deleteDir()
               /* clean up tmp directory */
