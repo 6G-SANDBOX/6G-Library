@@ -86,20 +86,22 @@ pipeline {
           '''
       }
       cleanup{
-          if (env.DEBUG == 'false') {
-              echo 'CleanUp Workspace'
-              /* clean up our workspace */
-              deleteDir()
-              /* clean up tmp directory */
-              dir("${env.workspace}@tmp") {
+          script {
+              if (env.DEBUG == 'false') {
+                  echo 'CleanUp Workspace'
+                  /* clean up our workspace */
                   deleteDir()
+                  /* clean up tmp directory */
+                  dir("${env.workspace}@tmp") {
+                      deleteDir()
+                  }
+                  /* clean up script directory */
+                  dir("${env.workspace}@script") {
+                      deleteDir()
+                  }    
+              } else {
+                  echo 'Workspace is not deleted'
               }
-              /* clean up script directory */
-              dir("${env.workspace}@script") {
-                  deleteDir()
-              }    
-          } else {
-              echo 'Workspace is not deleted'
           }
       }      
   }  
