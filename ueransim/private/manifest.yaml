@@ -17,17 +17,6 @@
     - name: Prepare terraform manifests from templates
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/prepare.yaml"
 
-    # DELETE ASAP. It OUTPUTS private info.
-    - name: Debug enviromental variables
-      ansible.builtin.command:
-      args:
-        cmd: "printenv"
-      register: env_vars
-      changed_when: true
-    - name: Terraform DEBUG
-      ansible.builtin.debug:
-        msg: "{{ env_vars }}"
-
     - name: Execute terraform apply
       community.general.terraform:
         project_path: "./{{ site_hypervisor }}/iac/"
