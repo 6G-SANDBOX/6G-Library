@@ -3,6 +3,7 @@
     host: "{{ tn_id }}-{{ one_component_name }}"
     hostname: "{{ vm_ip }}"
     remote_user: "root"
+    proxyjump: "{{ tn_id }}-tn-bastion"
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present
 

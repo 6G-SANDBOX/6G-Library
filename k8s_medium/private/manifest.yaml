@@ -46,6 +46,55 @@
       ansible.builtin.set_fact:
         outputs: "{{ terraform_output.stdout | from_json }}"
 
+    - name: Terraform DEBUG
+      ansible.builtin.debug:
+        msg: "{{ outputs['maci-oneke-maci_roles'] }}"
+
+    # - name: Execute Python Script using the script module
+    #   ansible.builtin.script:
+    #     cmd: "{{ workspace }}/.global/scripts/get_vm_ids_from_roles.py '{{ outputs['maci-oneke-maci_roles'] | to_json }}' '{{ site_jenkins_ssh_public_key }}' 2>/dev/null"
+    #     executable: /usr/bin/python3
+    #   register: result_rsa
+
+    # - debug:
+    #     msg: "{{ result_rsa.stdout | from_json }}"
+
+    # - name: Execute Python Script using the script module
+    #   ansible.builtin.script:
+    #     cmd: "{{ workspace }}/.global/scripts/get_ips_from_roles.py {{ outputs['maci-oneke-maci_roles'] }}"
+    #     executable: /usr/bin/python3
+    #   register: result2
+
+    # - debug:
+    #     msg: "{{ result2 }}"      
+
+    # - name: Add new VM to Ansible Inventory
+    #   ansible.builtin.add_host:
+    #     hostname: "{{ tn_id }}-oneke-{{ service_name }}-{{ item.key }}"
+    #     ansible_user: "root"
+    #     ansible_password: "UMAPass1"
+    #   loop: "{{ result2.stdout | dict2items }}"
+
+    # - name: Create SSH config file into Jenkins
+    #   ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"    
+    #   vars:
+    #     tn_id: "{{ tn_id}}"
+    #     service_name: "{{ service_name }}"
+    #     role: "{{ item.key }}"
+    #     ip: "{{ item.value }}"
+    #   loop: "{{ result2.stdout | dict2items }}"
+
+# STAGE 2: Execute manifest
+- name: Infrastructure Tasks
+  hosts: "{{ hostvars['localhost']['tn_id'] }}-oneke-{{ hostvars['localhost']['service_name'] }}-master"
+  gather_facts: true
+  tasks:
+    - name: Return motd to registered var
+      ansible.builtin.command: cat /etc/hostname
+      register: hostna
+    - debug:
+        msg: "{{ hostna }}"  
+
 #     - name: Get VM ip from default site network
 #       ansible.builtin.set_fact:
 #         vm_ip: "{{ item.value }}"

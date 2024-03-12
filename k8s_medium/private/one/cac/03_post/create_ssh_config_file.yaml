@@ -1,8 +1,19 @@
 - name: Add VM in SSH the configuration
   community.general.ssh_config:
-    host: "{{ tn_id }}-{{ one_component_name }}"
-    hostname: "{{ vm_ip }}"
+    host: "{{ tnid }}-oneke-{{ servicename }}-{{ role }}"
+    hostname: "{{ ip }}"
+    proxyjump: "{{tnid}}-tn-bastion"
     remote_user: "root"
-    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tnid }}"
     state: present
+  when: role == "vnf"
 
+- name: Add VM in SSH the configuration
+  community.general.ssh_config:
+    host: "{{ tnid }}-oneke-{{ servicename }}-{{ role }}"
+    hostname: "{{ ip }}"
+    proxyjump: "{{tnid}}-oneke-{{ servicename}}-vnf"
+    remote_user: "root"
+    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tnid }}"
+    state: present
+  when: role != "vnf"
