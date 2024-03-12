@@ -7,39 +7,51 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
 
   context = {
     SET_HOSTNAME = "$NAME"
-    {{ 'USERNAME = "{}"'.format(lookup('env', 'one_vm_username'))       if lookup('env', 'one_vm_username') is not none else '' }}
-    {{ 'PASSWORD = "{}"'.format(lookup('env', 'one_vm_password'))       if lookup('env', 'one_vm_password') is not none else '' }}
-    {{ 'SSH_PUBLIC_KEY = "{}"'.format(lookup('env', 'one_vm_ssh_key'))  if lookup('env', 'one_vm_ssh_key') is not none else '' }}
+    {% if one_vm_username is defined and one_vm_username %}USERNAME = "{{ one_vm_username }}"{% endif %}
+    {% if one_vm_password is defined and one_vm_password %}PASSWORD = "{{ one_vm_password }}"{% endif %}
+    {% if one_vm_ssh_key is defined and one_vm_ssh_key %}SSH_PUBLIC_KEY = "{{ one_vm_ssh_key }}"{% endif %}
     # comes from site. STEPS: 1.creates ssh rsa key for the VM (necessary? ed25519 type better) 2.allows ssh with password (should only be done if password is provided) 3. writes ssh public key from jenkins in /root/.ssh/authorized_keys (should be defined in SSH_PUBLIC_KEY context value)
-    {{ 'START_SCRIPT_BASE64 = "{}"'.format(lookup('env', 'site_jenkins_script_base64')) if lookup('env', 'site_jenkins_script_base64') is not none else '' }}
+    {% if site_jenkins_script_base64 is defined and site_jenkins_script_base64 %}START_SCRIPT_BASE64 = "{{ site_jenkins_script_base64 }}"{% endif %}
 
     ### UERANSIM variables
-    {{ 'RUN_GNB = "{}"'.format(lookup('env', 'run_gnb'))        if lookup('env', 'run_gnb') is not none else '' }}
-    {{ 'RUN_UE = "{}"'.format(lookup('env', 'run_ue'))          if lookup('env', 'run_ue') is not none else '' }}
+    {% if run_gnb is defined and run_gnb %}RUN_GNB = "{{ run_gnb }}"{% endif %}
+    {% if run_ue is defined and run_ue %}RUN_UE = "{{ run_ue }}"{% endif %}
 
-    {{ 'GNB_AMF_ADDRESS = "{}"'.format(lookup('env', 'gnb_amf_address')) if lookup('env', 'gnb_amf_address') is not none else '' }}
-    {{ 'GNB_GTPIP = "{}"'.format(lookup('env', 'gnb_gtpIp'))             if lookup('env', 'gnb_gtpIp') is not none else '' }}
-    {{ 'GNB_LINKIP = "{}"'.format(lookup('env', 'gnb_linkIp'))           if lookup('env', 'gnb_linkIp') is not none else '' }}
-    {{ 'GNB_MCC = "{}"'.format(lookup('env', 'gnb_mcc'))                 if lookup('env', 'gnb_mcc') is not none else '' }}
-    {{ 'GNB_MNC = "{}"'.format(lookup('env', 'gnb_mnc'))                 if lookup('env', 'gnb_mnc') is not none else '' }}
-    {{ 'GNB_NGAPIP = "{}"'.format(lookup('env', 'gnb_ngapIp'))           if lookup('env', 'gnb_ngapIp') is not none else '' }}
-    {{ 'GNB_SLICES_SD = "{}"'.format(lookup('env', 'gnb_slices_sd'))     if lookup('env', 'gnb_slices_sd') is not none else '' }}
-    {{ 'GNB_SLICES_SST = "{}"'.format(lookup('env', 'gnb_slices_sst'))   if lookup('env', 'gnb_slices_sst') is not none else '' }}
-    {{ 'GNB_TAC = "{}"'.format(lookup('env', 'gnb_tac'))                 if lookup('env', 'gnb_tac') is not none else '' }}
+    {% if gnb_amf_address is defined and gnb_amf_address %}GNB_AMF_ADDRESS = "{{ gnb_amf_address }}"{% endif %}
+    {% if gnb_gtpIp is defined and gnb_gtpIp %}GNB_GTPIP = "{{ gnb_gtpIp }}"{% endif %}
+    {% if gnb_linkIp is defined and gnb_linkIp %}GNB_LINKIP = "{{ gnb_linkIp }}"{% endif %}
+    {% if gnb_mcc is defined and gnb_mcc %}GNB_MCC = "{{ gnb_mcc }}"{% endif %}
+    {% if gnb_mnc is defined and gnb_mnc %}GNB_MNC = "{{ gnb_mnc }}"{% endif %}
+    {% if gnb_ngapIp is defined and gnb_ngapIp %}GNB_NGAPIP = "{{ gnb_ngapIp }}"{% endif %}
+    {% if gnb_slices_sd is defined and gnb_slices_sd %}GNB_SLICES_SD = "{{ gnb_slices_sd }}"{% endif %}
+    {% if gnb_slices_sst is defined and gnb_slices_sst %}GNB_SLICES_SST = "{{ gnb_slices_sst }}"{% endif %}
+    {% if gnb_tac is defined and gnb_tac %}GNB_TAC = "{{ gnb_tac }}"{% endif %}
 
-    {{ 'UE_CONFIGURED_NSSAI_SD = "{}"'.format(lookup('env', 'ue_configured_nssai_sd'))   if lookup('env', 'ue_configured_nssai_sd') is not none else '' }}
-    {{ 'UE_CONFIGURED_NSSAI_SST = "{}"'.format(lookup('env', 'ue_configured_nssai_sst')) if lookup('env', 'ue_configured_nssai_sst') is not none else '' }}
-    {{ 'UE_DEFAULT_NSSAI_SD = "{}"'.format(lookup('env', 'ue_default_nssai_sd'))         if lookup('env', 'ue_default_nssai_sd') is not none else '' }}
-    {{ 'UE_DEFAULT_NSSAI_SST = "{}"'.format(lookup('env', 'ue_default_nssai_sst'))       if lookup('env', 'ue_default_nssai_sst') is not none else '' }}
-    {{ 'UE_GNBSEARCHLIST = "{}"'.format(lookup('env', 'ue_gnbSearchList'))               if lookup('env', 'ue_gnbSearchList') is not none else '' }}
-    {{ 'UE_KEY = "{}"'.format(lookup('env', 'ue_key'))                                   if lookup('env', 'ue_key') is not none else '' }}
-    {{ 'UE_MCC = "{}"'.format(lookup('env', 'ue_mcc'))                                   if lookup('env', 'ue_mcc') is not none else '' }}
-    {{ 'UE_MNC = "{}"'.format(lookup('env', 'ue_mnc'))                                   if lookup('env', 'ue_mnc') is not none else '' }}
-    {{ 'UE_OP = "{}"'.format(lookup('env', 'ue_op'))                                     if lookup('env', 'ue_op') is not none else '' }}
-    {{ 'UE_SESSION_APN = "{}"'.format(lookup('env', 'ue_session_apn'))                   if lookup('env', 'ue_session_apn') is not none else '' }}
-    {{ 'UE_SESSION_SD = "{}"'.format(lookup('env', 'ue_session_sd'))                     if lookup('env', 'ue_session_sd') is not none else '' }}
-    {{ 'UE_SESSION_SST = "{}"'.format(lookup('env', 'ue_session_sst'))                   if lookup('env', 'ue_session_sst') is not none else '' }}
-    {{ 'UE_SUPI = "{}"'.format(lookup('env', 'ue_supi'))                                 if lookup('env', 'ue_supi') is not none else '' }}
+    {% if ue_configured_nssai_sd is defined and ue_configured_nssai_sd %}UE_CONFIGURED_NSSAI_SD = "{{ ue_configured_nssai_sd }}"{% endif %}
+    {% if ue_configured_nssai_sst is defined and ue_configured_nssai_sst %}UE_CONFIGURED_NSSAI_SST = "{{ ue_configured_nssai_sst }}"{% endif %}
+    {% if ue_default_nssai_sd is defined and ue_default_nssai_sd %}UE_DEFAULT_NSSAI_SD = "{{ ue_default_nssai_sd }}"{% endif %}
+    {% if ue_default_nssai_sst is defined and ue_default_nssai_sst %}UE_DEFAULT_NSSAI_SST = "{{ ue_default_nssai_sst }}"{% endif %}
+    {% if gnb_tac is defined and gnb_tac %}GNB_TAC = "{{ gnb_tac }}"{% endif %}
+    {% if gnb_tac is defined and gnb_tac %}GNB_TAC = "{{ gnb_tac }}"{% endif %}
+    {% if gnb_tac is defined and gnb_tac %}GNB_TAC = "{{ gnb_tac }}"{% endif %}
+    {% if gnb_tac is defined and gnb_tac %}GNB_TAC = "{{ gnb_tac }}"{% endif %}
+    {% if gnb_tac is defined and gnb_tac %}GNB_TAC = "{{ gnb_tac }}"{% endif %}
+    {% if gnb_tac is defined and gnb_tac %}GNB_TAC = "{{ gnb_tac }}"{% endif %}
+    {% if gnb_tac is defined and gnb_tac %}GNB_TAC = "{{ gnb_tac }}"{% endif %}
+    {% if gnb_tac is defined and gnb_tac %}GNB_TAC = "{{ gnb_tac }}"{% endif %}
+    {% if gnb_tac is defined and gnb_tac %}GNB_TAC = "{{ gnb_tac }}"{% endif %}
+
+    {{ 'UE_DEFAULT_NSSAI_SD = "{}"'.format(lookup('env', 'ue_default_nssai_sd'))         if lookup('env', 'ue_default_nssai_sd')     else '' }}
+    {{ 'UE_DEFAULT_NSSAI_SST = "{}"'.format(lookup('env', 'ue_default_nssai_sst'))       if lookup('env', 'ue_default_nssai_sst')    else '' }}
+    {{ 'UE_GNBSEARCHLIST = "{}"'.format(lookup('env', 'ue_gnbSearchList'))               if lookup('env', 'ue_gnbSearchList')        else '' }}
+    {{ 'UE_KEY = "{}"'.format(lookup('env', 'ue_key'))                                   if lookup('env', 'ue_key')                  else '' }}
+    {{ 'UE_MCC = "{}"'.format(lookup('env', 'ue_mcc'))                                   if lookup('env', 'ue_mcc')                  else '' }}
+    {{ 'UE_MNC = "{}"'.format(lookup('env', 'ue_mnc'))                                   if lookup('env', 'ue_mnc')                  else '' }}
+    {{ 'UE_OP = "{}"'.format(lookup('env', 'ue_op'))                                     if lookup('env', 'ue_op')                   else '' }}
+    {{ 'UE_SESSION_APN = "{}"'.format(lookup('env', 'ue_session_apn'))                   if lookup('env', 'ue_session_apn')          else '' }}
+    {{ 'UE_SESSION_SD = "{}"'.format(lookup('env', 'ue_session_sd'))                     if lookup('env', 'ue_session_sd')           else '' }}
+    {{ 'UE_SESSION_SST = "{}"'.format(lookup('env', 'ue_session_sst'))                   if lookup('env', 'ue_session_sst')          else '' }}
+    {{ 'UE_SUPI = "{}"'.format(lookup('env', 'ue_supi'))                                 if lookup('env', 'ue_supi')                 else '' }}
     
   }
 
