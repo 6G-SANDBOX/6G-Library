@@ -6,9 +6,15 @@ Important information:
 
 * MAIN NETWORK INTERFACE: {{ vm_ip }}
 * VN ID: {{ outputs[one_component_name + "_VM_ID"] }}
-{% if one_vm_username is defined and one_vm_username %}* VM USER: "{{ one_vm_username }}" + "\n"{% endif %}
-{% if one_vm_password is defined and one_vm_password %}* VM PASSWORD: "{{ one_vm_password }}" + "\n"{% endif %}
-{% if one_vm_ssh_key is defined and one_vm_ssh_key %}* ALLOWED SSH PUBLIC KEY: "{{ one_vm_ssh_key }}" + "\n"{% endif %}
+{% if one_vm_username is defined and one_vm_username %}
+* VM USER: "{{ one_vm_username }}"
+{% endif %}
+{% if one_vm_password is defined and one_vm_password %}
+* VM PASSWORD: "{{ one_vm_password }}"
+{% endif %}
+{% if one_vm_ssh_key is defined and one_vm_ssh_key %}
+* ALLOWED SSH PUBLIC KEY: "{{ one_vm_ssh_key }}"
+{% endif %}
 * MEMORY: 2 GiB
 * VCPU: 2
 * STORAGE: 2,5GiB
