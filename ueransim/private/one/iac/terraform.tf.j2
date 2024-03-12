@@ -1,5 +1,5 @@
-resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}-{{ ansible_date_time.epoch }}" {
-  name        = "{{ tn_id }}-{{ one_component_name }}-{{ ansible_date_time.epoch }}"
+resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
+  name        = "{{ tn_id }}-{{ one_component_name }}"
   description = "{{ tn_id }} UERANSIM"
   template_id = {{ site_one_templates.vm_m.id }}
   #group       = "oneadmin"

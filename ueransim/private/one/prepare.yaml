@@ -1,7 +1,7 @@
 # Generate Infrastructure Manifests
 - name: "Define Terraform {{ site_hypervisor }} provider file"
   ansible.builtin.copy:
-    src: "{{ workspace }}/.global/iac/providers.tf"    # suggestion: rename "providers.tf" file to one_provider_v1.3.tf to make it easier to select it with variables, Also future possibility to select provider version
+    src: "{{ workspace }}/.global/iac/providers.tf"    # suggestion: rename "providers.tf" file to one_provider_v1.3.tf to make it easier to select the chosen provider with variables, Also future possibility to select provider version
     dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/one_provider_v1.3.tf"
 
 - name: Define Terraform backup file to store the terraform.tfstate inside a s3 backend
@@ -12,7 +12,7 @@
 - name: "Define the Terraform manifest file for the {{ component_name }} component"
   template:
     src: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/terraform.tf.j2"  # suggestion: rename to component_manifest.tf.j2, or something more specific
-    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ component_name }}_{{ ansible_date_time.epoch }}.tf"  # date makes the file unique already.
+    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ one_component_name }}_{{ ansible_date_time.epoch }}.tf"  # date makes the file unique already.
 
 # Brough from the manifest.yaml file.
 - name: Download Terraform manifest from previous TN components

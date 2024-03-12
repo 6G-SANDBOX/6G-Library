@@ -62,7 +62,7 @@
         hostname: "{{ tn_id }}-{{ one_component_name }}"
 
     - name: Add new VM into the ssh-config of the Jenkins host
-      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac//01_ssh_config_file.yaml"
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/01_ssh_config_file.yaml"
 
     - name: Wait for VM to be ready
       ansible.builtin.wait_for:

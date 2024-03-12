@@ -29,7 +29,32 @@ public:
   one_component_name: "PLACEHOLDER_VM_NAME"
   one_vm_username: "username"
   one_vm_password: "password"
-  one_component_networks: "List of networks"
+  one_vm_ssh_key: "optional ssh public key"
+  run_gnb: false
+  gnb_mcc: '999'
+  gnb_mnc: '70'
+  gnb_tac: 1
+  gnb_linkIp: 127.0.0.1
+  gnb_ngapIp: 127.0.0.1
+  gnb_gtpIp: 127.0.0.1
+  gnb_amf_address: 127.0.0.5
+  gnb_slices_sst: 1
+  gnb_slices_sd:
+  run_ue: false
+  ue_supi: 'imsi-999700000000001'
+  ue_mcc: '999'
+  ue_mnc: '70'
+  ue_key: '465B5CE8B199B49FAA5F0A2EE238A6BC'
+  ue_op: 'E8ED289DEBA952E4283B54E88E6183CA'
+  ue_gnbSearchList: 127.0.0.1
+  ue_session_apn: 'internet'
+  ue_session_sst: 1
+  ue_session_sd:
+  ue_configured_nssai_sst: 1
+  ue_configured_nssai_sd:
+  ue_default_nssai_sst: 1
+  ue_default_nssai_sd: 1
+  one_component_networks: "list of networks"
 
 ###################################################
 ##
