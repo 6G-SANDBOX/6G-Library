@@ -22,6 +22,7 @@
         project_path: "./{{ site_hypervisor }}/iac/"
         state: "present"
         force_init: true
+      register: terraform_apply
 
     - name: Retrieve terraform output
       ansible.builtin.shell:
@@ -123,4 +124,4 @@
 
     - name: Upload Terraform manifest
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"         # }upload_manifest_to_folder.yaml"  unused
-      # when: not terraform_apply.failed
+      when: not terraform_apply.failed
