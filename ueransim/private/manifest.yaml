@@ -80,7 +80,7 @@
   tasks:
 
     - name: See hostvars before gathering facts
-      ansible.builgin.debug:
+      ansible.builtin.debug:
         var: hostvars[inventory_hostname]
       delegate_to: localhost
 
@@ -94,7 +94,7 @@
       ansible.builtin.setup:
 
     - name: See hostvars after gathering facts
-      ansible.builgin.debug:
+      ansible.builtin.debug:
         var: hostvars[inventory_hostname]
       delegate_to: localhost
 
