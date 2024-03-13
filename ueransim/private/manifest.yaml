@@ -22,44 +22,52 @@
         project_path: "./{{ site_hypervisor }}/iac/"
         state: "present"
         force_init: true
-      register: terraform_apply
-    - name: Terraform DEBUG
-      ansible.builtin.debug:
-        msg: "{{ terraform_apply }}"
-      # when: not terraform_apply.failed
 
-    # Modify to extract the VM's ID
-    - name: Load Terraform Output into execution context
+    - name: Retrieve terraform output
+      ansible.builtin.command:
+      args:
+        chdir: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/"
+        cmd: "terraform output --json | jq 'with_entries(.value |= .value)"
+      register: terraform_output
+    - name: Load terraform output as an ansible fact
       ansible.builtin.set_fact:
-        outputs: "{{ terraform_apply.outputs }}"
-    - name: Terraform DEBUG
+        outputs: "{{ terraform_output.stdout | ansible.builtin.from_json }}"
+    - name: DEBUG new terraform output fact
       ansible.builtin.debug:
         msg: "{{ outputs }}"
 
     # Modify to extract "public" IP (interface 0). Execution will fail here
-    - name: Get VM ip from default site network. EXPECTED TO FAIL
+    - name: Get VM IP from default site network.
       ansible.builtin.set_fact:
-        vm_ip: "{{ item.value }}"
+        vm_internal_ip: "{{ item.value }}"
       loop: "{{ lookup('ansible.builtin.dict', outputs[one_component_name + \"_network_assignments\"], wantlist=True) }}"
-      when: not terraform_apply.failed and item.key | int == one_component_networks[0]
+      when: not terraform_apply.failed and item.key | int != one_component_networks[0]
     - name: Verify IP is correctly loaded
       ansible.builtin.debug:
-        msg: "Network Interface is: {{ vm_ip | default('----') }}"
+        msg: "Appliance reachable at address: {{ vm_internal_ip | default('----') }}"
+
+    - name: TEMPORAL, DEBUG PROXY ip
+      ansible.builtin.debug:
+        msg: "{{ lookup('ansible.builtin.dict', outputs[tn-bastion_network_assignments][0]) }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "{{ tn_id }}-{{ one_component_name }}"
+        ansible_host: "{{ vm_internal_ip }}"
+        ansible_user: "root"
+        ansible_ssh_common_args: -J "{{ lookup('ansible.builtin.dict', outputs[tn-bastion_network_assignments][0]) }}"
 
-    - name: Add new VM into the ssh-config of the Jenkins host
-      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/01_ssh_config_file.yaml"
+    # DELETE IN NEAR FUTURE, AS WELL AS THE YAML FILE
+    # - name: Add new VM into the ssh-config of the Jenkins host
+    #   ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/01_ssh_config_file.yaml"
 
-    - name: Wait for VM to be ready
-      ansible.builtin.wait_for:
-        port: 22
-        host: "{{ vm_ip }}"
-        connect_timeout: 5
-        delay: 5
-        timeout: 120
+    # - name: Wait for VM to be ready
+    #   ansible.builtin.wait_for:
+    #     port: 22
+    #     host: "{{ vm_internal_ip }}"
+    #     connect_timeout: 5
+    #     delay: 5
+    #     timeout: 120
 
 
 # Configuration Inside the VM. USELESS, COMMENT AFTER TESTING
@@ -68,19 +76,35 @@
   hosts: "{{ tn_id }}-{{ one_component_name }}"
   gather_facts: true
   tasks:
-    - name: Load Variables into new VM
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-    - name: Debug enviromental variables
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        delay: 5
+        timeout: 120
+
+    - name: Gather facts for first time
+      ansible.builtin.setup:
+
+    - name: Debug starting enviromental variables
       ansible.builtin.command:
       args:
         cmd: "printenv"
-      register: env_vars
-      changed_when: true
+      register: pre_env_vars
+      changed_when: false
     - name: Terraform DEBUG
       ansible.builtin.debug:
-        msg: "{{ env_vars }}"
-
-
+        msg: "{{ pre_env_vars }}"
+    - name: Load Variables into new VM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
+    - name: Debug loaded enviromental variables
+      ansible.builtin.command:
+      args:
+        cmd: "printenv"
+      register: post_env_vars
+      changed_when: false
+    - name: Terraform DEBUG
+      ansible.builtin.debug:
+        msg: "{{ post_env_vars }}"
 
     # - command: "cat /etc/hostname"
     #   register: hostname_out

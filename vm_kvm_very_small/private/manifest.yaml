@@ -44,7 +44,7 @@
 
     - name: Load Terraform Output into execution context
       ansible.builtin.set_fact:
-        outputs: "{{ terraform_output.stdout | from_json }}"
+        outputs: "{{ terraform_output.stdout | ansible.builtin.from_json }}"
 
     - name: Get VM ip from default site network
       ansible.builtin.set_fact:

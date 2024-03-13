@@ -1,7 +1,7 @@
 - name: Create new SSH config file about new Appliance inside the Jenkins host
   community.general.ssh_config:
     host: "{{ tn_id }}-{{ one_component_name }}"
-    hostname: "{{ vm_ip }}" 
+    hostname: "{{ vm_internal_ip }}" 
     remote_user: root
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present
