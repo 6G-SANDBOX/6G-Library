@@ -9,7 +9,7 @@ pipeline {
 
   parameters {
     string(name: 'TN_ID', defaultValue: '', description: 'TRIAL NETWORK IDENTIFIER')
-    string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library', description: '6G LIBRARY REPOSITORY') // NEW. Making the repository an optional parameter makes it easy to test repository forks
+    string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library', description: '6G LIBRARY REPOSITORY') // NEW. Making the repository an optional parameter makes it easier to test repository forks
     string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: '6G LIBRARY BRANCH')
     string(name: 'LIBRARY_COMPONENT_NAME', defaultValue: '', description: '6G LIBRARY COMPONENT')
     string(name: 'DEPLOYMENT_SITE', defaultValue: 'uma', description: 'Site where deploy')
@@ -20,7 +20,7 @@ pipeline {
 
   environment {
       TN_ID="${params.TN_ID}"
-      LIBRARY_URL="${params.LIBRARY_URL}"    // NEW.
+      LIBRARY_URL="${params.LIBRARY_URL}"
       LIBRARY_BRANCH="${params.LIBRARY_BRANCH}"
       LIBRARY_COMPONENT_NAME="${params.LIBRARY_COMPONENT_NAME}"
       DEPLOYMENT_SITE="${params.DEPLOYMENT_SITE}"
@@ -51,7 +51,6 @@ pipeline {
                 script: 'echo $FILE | base64 -d',
                 returnStdout: true)
             echo "${YAML_CONTENT}"
-            // This file path is relevant because ansible will look for this file on stage 2
             writeFile(file: FILE_PATH, text: YAML_CONTENT)
           }
       }
@@ -66,7 +65,7 @@ pipeline {
           }
       }
     }
-    // NOTE: If parameter enviromental variables are declared in the "enviroment" stage, it should be unnecesary to declare them agaain in the ansible-playbook command line
+    // NOTE: If parameter enviromental variables are declared in the "enviroment" stage, it should be unnecesary to declare them again in the ansible-playbook command line
     stage('Stage 2: Run component deployment') {
       steps {
         script {

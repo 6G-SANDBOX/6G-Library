@@ -1,5 +1,5 @@
-- name: Generate responses for success
-  when: not result.failed           # Change to "terraform_apply,failed"
+- name: Generate responses for success scenario
+  when: not result.failed           # Change to "terraform_apply.failed"
   block:
   - name: Generate markdown response for success
     ansible.builtin.template:
@@ -26,10 +26,10 @@
     ignore_errors: true 
 
 
-- name: Generate responses for not success
+- name: Generate responses for failed scenario
   when: result.failed
   block:
-  - name: Generate markdown response for not success
+  - name: Generate markdown response for failed
     ansible.builtin.template:
       src: "{{ workspace }}/{{ component_name }}/results/result_nok.md.j2"
       dest: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ component_name }}.{{ tn_id }}.md"
@@ -39,7 +39,7 @@
       src: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ component_name }}.{{ tn_id }}.md"
     register: markdown2nok
 
-  - name: Generate markdown response for not success in JSON
+  - name: Generate markdown response for failed in JSON
     ansible.builtin.template:
       src: "{{ workspace }}/{{ component_name }}/results/result_nok.json.j2"
       dest: "{{ workspace }}/{{ component_name }}/results/result_nok.json"

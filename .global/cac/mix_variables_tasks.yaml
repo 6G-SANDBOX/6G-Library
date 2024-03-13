@@ -6,11 +6,11 @@
   ansible.builtin.include_vars:
     file: "{{ workspace }}/{{ component_name }}/private/values.yaml"
 
-- name: Check if component file with tnlcm related variables exists
+- name: Check if input file with tnlcm related variables exists
   stat:
     path: "{{ workspace }}/{{ component_name }}/private/tnlcm_vars.yaml"
   register: file_exits
-- name: Load private TNLCM related variables from component
+- name: Load tnlcm related variable from input file
   ansible.builtin.include_vars:
     file: "{{ workspace }}/{{ component_name }}/private/tnlcm_vars.yaml"
   when: file_exits.stat.exists  
