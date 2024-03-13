@@ -57,7 +57,7 @@
         hostname: "{{ tn_id }}-{{ one_component_name }}"
         ansible_host: "{{ vm_internal_ip }}"
         ansible_user: "root"
-        ansible_ssh_common_args: -J "{{ outputs['tn-bastion_network_assignments']['0']) }}"
+        ansible_ssh_common_args: -J "{{ outputs['tn-bastion_network_assignments']['0'] }}"
 
     # DELETE IN NEAR FUTURE, AS WELL AS THE YAML FILE
     # - name: Add new VM into the ssh-config of the Jenkins host
