@@ -50,7 +50,7 @@
 
     - name: TEMPORAL, DEBUG PROXY ip
       ansible.builtin.debug:
-        msg: "{{ outputs['tn-bastion_network_assignments']['0']) }}"
+        msg: "{{ outputs['tn-bastion_network_assignments']['0'] }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
