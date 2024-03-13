@@ -32,18 +32,20 @@ def get_ids(roles, rsa_key):
                 print(f"Error executing command 'onevm updateconf ... " + e)
                 sys.exit(1)
                 # Capturar errores en caso de que el comando no se ejecute correctamente
+    return result
                 
 def main():
     if len(sys.argv) != 3:
         sys.exit(1)
 
     json_string = sys.argv[1]
-    rsa_key = sys.argv[1]
+    rsa_key = sys.argv[2]
 
     try:
         data = json.loads(json_string)
         roles = format_service_roles(data)
         result = get_ids(roles, rsa_key)
+        print(json.dumps(result, indent=2))
 
     except json.JSONDecodeError as e:
         print(f"Error al decodificar el JSON: {e}")
