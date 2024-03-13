@@ -1,5 +1,5 @@
 - name: Generate responses for success
-  when: not result.failed
+  when: not result.failed           # Change to "terraform_apply,failed"
   block:
   - name: Generate markdown response for success
     ansible.builtin.template:
