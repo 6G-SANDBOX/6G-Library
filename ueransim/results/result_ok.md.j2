@@ -1,6 +1,6 @@
 ## SUCESS IN THE CREATION OF COMPONENT: {{ one_component_name }}
 
-The UERANSIM VM {{ one_component_name }} has been created into the Trial Network {{ tn_id }}
+The {{ component_name }} component "{{ one_component_name }}" has been created into the Trial Network "{{ tn_id }}"
 
 Important information:
 
@@ -23,4 +23,9 @@ Important information:
 ### VIRTUAL MACHINE NETWORK INTERFACES
 ```
 {{ outputs[one_component_name + "_network_assignments"] }}
-````
+```
+
+### INPUT VALUES
+```
+{{  lookup("file", "{{ workspace }}/{{ component_name }}/private/tnlcm_vars.yaml" | safe }}
+```
