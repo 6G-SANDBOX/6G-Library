@@ -1,0 +1,8 @@
+- name: Add VM in SSH the configuration
+  community.general.ssh_config:
+    host: "{{ tn_id }}-{{ hostname }}"
+    hostname: "{{ ip }}"
+    remote_user: "root"
+    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+    state: present
+
