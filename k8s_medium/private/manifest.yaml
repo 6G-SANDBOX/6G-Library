@@ -69,11 +69,30 @@
         ip: "{{ item.value }}"
       loop: "{{ result_ips.stdout | from_json | dict2items }}"
 
+    - name: Create SSH config file into Jenkins
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"    
+      vars:
+        tnid: "{{ tn_id}}"
+        servicename: "{{ service_name }}"
+        role: "{{ item.key }}"
+        ip: "{{ item.value }}"
+      loop: "{{ result_ips.stdout | from_json | dict2items }}"
+
+
 # STAGE 3: Task on oneKE Master
 - name: OneKE Master Tasks
   hosts: "{{ hostvars['localhost']['tn_id'] }}-oneke-{{ hostvars['localhost']['service_name'] }}-master"
-  gather_facts: true
+  gather_facts: no
   tasks:
+
+    - name: Wait 120 seconds, but only start checking after 60 seconds
+      ansible.builtin.wait_for_connection:
+        delay: 10
+        timeout: 120
+
+    - name: Gather facts
+      ansible.builtin.setup:
+
     - name: Get remote kubeconfig file content
       ansible.builtin.slurp:
         src: "/etc/rancher/rke2/rke2.yaml"
@@ -128,4 +147,3 @@
 
     - name: Upload deployment manifest
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-      when: not result.failed  
