@@ -76,6 +76,7 @@
 - name: "Configuration inside {{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }} Appliance"
   #hosts: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }}"
   hosts: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }}"
+  gather_facts: false
   tasks:
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
