@@ -4,30 +4,19 @@
 ##
 ####################################
 
-ancestor: 0.5.4
 releases:
-  1.0.0-alpha:
-    ...
-  1.0.0-beta:
-    ...
-  1.0.0:
-    release_date: '2020-04-01'
+  v1.0.0:
+    release_date: '2024-03-14'
     changes:
-      release_summary: This is the initial White Rabbit release. Enjoy!
+      release_summary: First release of the UERANSIM 6G-LIBRARY component
       major_changes:
-        - The authentication method handling has been rewritten.
       minor_changes:
-        - foo - Module can now reformat hard disks without asking.
-        - bob lookup - Makes sure Bob isn't there multiple times.
       breaking_changes:
-        - Due to the security bug in the post module, the module no longer accepts the password
-          option. Please stop using the option and change any password you ever supplied to the
-          module.
+      new_features:
+      - Customization of multiple variables from the config file of the UERANSIM's gNB
+      - Customization of multiple variables from the config file of the UERANSIM's UE
+      - Possibility to start the VM with the services stopped or running independently
       deprecated_features:
-        - foo - The bar option has been deprecated. Use the username option instead.
       removed_features:
-        - foo - The baz option has been removed. It has never been used anyway.
       security_fixes:
-        - post - The module accidentally sent your password in plaintext to all servers it could find.
       bugfixes:
-        - post - The module made PUT requests instead of POST requests.
