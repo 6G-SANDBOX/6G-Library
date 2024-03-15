@@ -6,7 +6,7 @@
   tasks:
     # NOTE: First 3 tasks seem common for all components.
     - name: Load enviromental variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"      # mix_variables.yaml not used?
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
 
     # NOTE: Second task would need negative conditional for vxlan and tn_bastion components
     - name: Include Trial Network bastion VM to Ansible inventory
@@ -38,7 +38,7 @@
       ansible.builtin.debug:
         msg: "{{ outputs }}"
 
-    # Modify to extract "public" IP (interface 0). Execution will fail here
+    # Modify to extract "public" IP (interface 0).
     - name: Get VM IP from default site network.
       ansible.builtin.set_fact:
         vm_internal_ip: "{{ item.value }}"
@@ -74,7 +74,6 @@
 
 # Configuration Inside the VM. USELESS, COMMENT AFTER TESTING
 - name: "Configuration inside {{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }} Appliance"
-  #hosts: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }}"
   hosts: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }}"
   gather_facts: false
   tasks:
@@ -106,5 +105,5 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
 
     - name: Upload Terraform manifest
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"         # }upload_manifest_to_folder.yaml"  unused
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
       when: not result.failed
