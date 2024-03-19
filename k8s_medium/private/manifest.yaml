@@ -44,12 +44,12 @@
 
     - name: Update SSH Key into Service VMs
       ansible.builtin.script:
-        cmd: "{{ workspace }}/.global/scripts/update_ssh_key_service_vms.py '{{ outputs['maci-oneke-maci_roles'] | to_json }}' '{{ site_jenkins_ssh_public_key }}' 2>/dev/null"
+        cmd: "{{ workspace }}/.global/scripts/update_ssh_key_service_vms.py '{{ outputs[ tn_id + '-oneke-' + service_name + '_roles' ] | to_json }}' '{{ site_jenkins_ssh_public_key }}' 2>/dev/null"
         executable: /usr/bin/python3
 
     - name: Create data structure with roles->eth0_ips
       ansible.builtin.script:
-        cmd: "{{ workspace }}/.global/scripts/get_ips_from_roles.py '{{ outputs['maci-oneke-maci_roles'] | to_json}}' 2>/dev/null"
+        cmd: "{{ workspace }}/.global/scripts/get_ips_from_roles.py '{{ outputs[ tn_id + '-oneke-' + service_name + '_roles' ] | to_json}}' 2>/dev/null"
         executable: /usr/bin/python3
       register: result_ips  
 
