@@ -134,9 +134,9 @@
     - name: Post Actions ingress-nginx
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/install_nginx_controller.yaml"
 
-    - name: Sleep for 120 seconds until ingress-nginx is ready
+    - name: Sleep for 240 seconds until ingress-nginx is ready
       ansible.builtin.wait_for:
-        timeout: 120
+        timeout: 240
       delegate_to: localhost
     
     - name: Post Actions Skooner dashboard
