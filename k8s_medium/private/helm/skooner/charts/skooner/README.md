@@ -22,7 +22,7 @@ A Helm chart for Kubernetes
 | ingress.className | string | `"alb"` |  |
 | ingress.enabled | bool | `true` |  |
 | ingress.environment | string | `"region"` |  |
-| ingress.hosts[0].host | string | `"skooner.tactile5g.com"` |  |
+| ingress.hosts[0].host | string | `"skooner.sandbox6g.com"` |  |
 | ingress.hosts[0].paths[0].path | string | `"/"` |  |
 | ingress.hosts[0].paths[0].pathType | string | `"Prefix"` |  |
 | ingress.tls | list | `[]` |  |

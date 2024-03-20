@@ -76,7 +76,7 @@ metadata:
       alb.ingress.kubernetes.io/load-balancer-name: {{ $fullName | trunc 30 }}
       alb.ingress.kubernetes.io/target-type: instance
       alb.ingress.kubernetes.io/scheme: internal
-      alb.ingress.kubernetes.io/tags: tactile5g/digital-twins={{ .Release.Namespace }}
+      alb.ingress.kubernetes.io/tags: sandbox6g={{ .Release.Namespace }}
 spec:
   ingressClassName: alb
   defaultBackend:
