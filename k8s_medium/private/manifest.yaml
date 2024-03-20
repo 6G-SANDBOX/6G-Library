@@ -111,18 +111,18 @@
         content: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] | b64decode }}"
         dest: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
 
-    - name: Check if port 6443 is listening
-      wait_for:
-        host: localhost
-        port: 6443
-        state: started
-        timeout: 3
-      register: port_check
-      ignore_errors: yes
+    # - name: Check if port 6443 is listening
+    #   wait_for:
+    #     host: localhost
+    #     port: 6443
+    #     state: started
+    #     timeout: 3
+    #   register: port_check
+    #   ignore_errors: yes
 
     - name: Delete previous SSH tunnel
-      shell: "{{ workspace }}/.global/scripts/kill_ssh_jenkins.sh"
-      when: "'timeout' not in port_check.msg"
+      shell: "bash {{ workspace }}/.global/scripts/kill_ssh_jenkins.sh"
+      # when: "'timeout' not in port_check.msg"
       ignore_errors: yes
 
     - name: Start SSH tunnel if is not open
@@ -131,11 +131,14 @@
     # - name: Test kubectl command
     #   shell: "kubectl --kubeconfig {{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig get nodes"
 
-    - name: Post Actions
+    - name: Post Actions ingress-nginx
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/install_nginx_controller.yaml"
+    
+    - name: Post Actions Skooner dashboard
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/install_skooner_dashboard.yaml"
 
     - name: Delete previous SSH tunnel
-      shell: "{{ workspace }}/.global/scripts/kill_ssh_jenkins.sh"
+      shell: "bash {{ workspace }}/.global/scripts/kill_ssh_jenkins.sh"
       ignore_errors: yes
 
 # STAGE 5: Generate Responses and save manifest a config files

@@ -1,0 +1,12 @@
+skooner:
+  enabled: true
+  ingress:
+    enabled: true
+    className: nginx
+    hosts:
+      - host: skooner-test.int
+        paths:
+          - path: /
+            pathType: Prefix
+  service:
+    type: ClusterIP

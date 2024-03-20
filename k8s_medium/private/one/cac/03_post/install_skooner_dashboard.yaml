@@ -1,0 +1,26 @@
+- name: Install Skooner dashboard
+  kubernetes.core.helm:
+    kubeconfig: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
+    name: skooner
+    chart_ref: "{{ workspace }}/{{ component_name }}/private/helm/skooner"
+    namespace: skooner
+    create_namespace: yes
+    state: present
+    values:
+      skooner:
+        ingress:
+          enabled: true
+          className: nginx
+          hosts:
+            - host: "skooner.{{ tn_id }}.{{ site_domain }}"
+              paths:
+                - path: /
+                  pathType: Prefix
+
+- name: "Create token for dashboard access"
+  command: 'kubectl create token skooner-sa -n skooner --kubeconfig "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig --duration=720h"'
+  register: "token"
+
+- name: "Return token"
+  ansible.builtin.debug:
+    var: token.stdout_lines
