@@ -18,7 +18,7 @@
                   pathType: Prefix
 
 - name: "Create token for dashboard access"
-  command: 'kubectl create token skooner-sa -n skooner --kubeconfig "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig --duration=720h"'
+  command: 'kubectl create token skooner-sa -n skooner --kubeconfig "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig" --duration=720h'
   register: "token"
 
 - name: "Return token"
