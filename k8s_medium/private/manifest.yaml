@@ -106,7 +106,7 @@
 
     - name: Verify if port is empty
       assert:
-        that: result_port.stdour | length > 0
+        that: result_port.stdout | length > 0
         fail_msg: "There is not empty port"      
 
     - name: Start SSH tunnel if is not open
