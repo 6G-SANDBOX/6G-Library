@@ -102,42 +102,35 @@
 - name: Setup Jenkins to access oneKE Cluster
   hosts: localhost
   tasks:
-    # - name: Debug returned client config
-    #   ansible.builtin.debug:
-    #     msg: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] | b64decode }}"
 
     - name: Create kubeconfig
       ansible.builtin.copy:
         content: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] | b64decode }}"
         dest: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
 
-    # - name: Check if port 6443 is listening
-    #   wait_for:
-    #     host: localhost
-    #     port: 6443
-    #     state: started
-    #     timeout: 3
-    #   register: port_check
-    #   ignore_errors: yes
+    - name: Create data structure with roles->eth0_ips
+      ansible.builtin.script:
+        cmd: "{{ workspace }}/.global/scripts/find_free_tcp_port.py"
+        executable: /usr/bin/python3
+      register: result_port
 
-    - name: Delete previous SSH tunnel
-      shell: "bash {{ workspace }}/.global/scripts/kill_ssh_jenkins.sh"
-      # when: "'timeout' not in port_check.msg"
-      ignore_errors: yes
+    - name: Verify if port is empty
+      assert:
+        that: result_port.stdour | length > 0
+        fail_msg: "There is not empty port"      
 
     - name: Start SSH tunnel if is not open
-      shell: "ssh -f -L 6443:localhost:6443 {{ tn_id }}-oneke-{{ service_name }}-master -N"
+      shell: "ssh -f -L {{ result_port.stdout }}:localhost:6443 {{ tn_id }}-oneke-{{ service_name }}-master -N"
+      when: result_port.stdout | length > 0
 
-    # - name: Test kubectl command
-    #   shell: "kubectl --kubeconfig {{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig get nodes"
+    - name: Replace kubectl url endpoint
+      replace:
+        path: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
+        regexp: "https://127.0.0.1:6443"
+        replace: "https://127.0.0.1:{{ result_port.stdout }}"
 
     - name: Post Actions ingress-nginx
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/install_nginx_controller.yaml"
-
-    - name: Sleep for 240 seconds until ingress-nginx is ready
-      ansible.builtin.wait_for:
-        timeout: 240
-      delegate_to: localhost
     
     - name: Post Actions Skooner dashboard
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/install_skooner_dashboard.yaml"
