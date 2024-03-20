@@ -69,16 +69,6 @@
         ip: "{{ item.value }}"
       loop: "{{ result_ips.stdout | from_json | dict2items }}"
 
-    - name: Create SSH config file into Jenkins
-      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"    
-      vars:
-        tnid: "{{ tn_id}}"
-        servicename: "{{ service_name }}"
-        role: "{{ item.key }}"
-        ip: "{{ item.value }}"
-      loop: "{{ result_ips.stdout | from_json | dict2items }}"
-
-
 # STAGE 3: Task on oneKE Master
 - name: OneKE Master Tasks
   hosts: "{{ hostvars['localhost']['tn_id'] }}-oneke-{{ hostvars['localhost']['service_name'] }}-master"
@@ -120,14 +110,14 @@
         fail_msg: "There is not empty port"      
 
     - name: Start SSH tunnel if is not open
-      shell: "ssh -f -L {{ result_port.stdout }}:localhost:6443 {{ tn_id }}-oneke-{{ service_name }}-master -N"
+      shell: "ssh -f -L {{ result_port.stdout | trim }}:localhost:6443 {{ tn_id }}-oneke-{{ service_name }}-master -N"
       when: result_port.stdout | length > 0
 
     - name: Replace kubectl url endpoint
       replace:
         path: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
         regexp: "https://127.0.0.1:6443"
-        replace: "https://127.0.0.1:{{ result_port.stdout }}"
+        replace: "https://127.0.0.1:{{ result_port.stdout | trim }}"
 
     - name: Post Actions ingress-nginx
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/install_nginx_controller.yaml"
@@ -136,7 +126,7 @@
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/install_skooner_dashboard.yaml"
 
     - name: Delete previous SSH tunnel
-      shell: "bash {{ workspace }}/.global/scripts/kill_ssh_jenkins.sh"
+      shell: "bash {{ workspace }}/.global/scripts/kill_ssh_jenkins.sh {{ result_port.stdout | trim }}"
       ignore_errors: yes
 
 # STAGE 5: Generate Responses and save manifest a config files
