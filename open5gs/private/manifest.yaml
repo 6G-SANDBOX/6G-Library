@@ -18,7 +18,7 @@
   tasks:
 
     - name: Download Kubeconfig from previous k8s_medium deployment
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_kubeconfig.yaml" 
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_kubeconfig_tasks.yaml" 
 
 
 # STAGE 3: Task on oneKE Master
