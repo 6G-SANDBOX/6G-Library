@@ -43,7 +43,7 @@
       ansible.builtin.set_fact:
         vm_internal_ip: "{{ item.value }}"
       loop: "{{ lookup('ansible.builtin.dict', outputs[one_component_name + \"_network_assignments\"], wantlist=True) }}"
-      when: not result.failed and item.key | int != one_component_networks[0]
+      when: not result.failed and item.key | int != 0
     - name: Verify IP is correctly loaded
       ansible.builtin.debug:
         msg: "Appliance reachable at address: {{ vm_internal_ip | default('----') }}"
