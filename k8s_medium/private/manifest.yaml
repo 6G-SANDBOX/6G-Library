@@ -113,6 +113,9 @@
       shell: "ssh -f -L {{ result_port.stdout | trim }}:localhost:6443 {{ tn_id }}-oneke-{{ service_name }}-master -N"
       when: result_port.stdout | length > 0
 
+    - name: Upload Kubeconfig to S3 before replacing port
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_kubeconfig.yaml"
+
     - name: Replace kubectl url endpoint
       replace:
         path: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
