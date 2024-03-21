@@ -1,0 +1,130 @@
+{% raw %}
+dbURI: "mongodb://{{ .Release.Name }}-mongodb/open5gs"
+{% endraw %}
+
+populate:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: gradiant/open5gs-dbctl
+    tag: 0.10.3
+    pullPolicy: IfNotPresent
+  initCommands: #[]
+  # example of initCommands:
+  # - open5gs-dbctl add_ue_with_slice 999990000000001 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA internet 1 abcdeb
+
+# Common
+mongodb:
+  enabled: true
+  auth:
+    enabled: false
+smf:
+  enabled: true
+upf:
+  enabled: true
+webui:
+  enabled: true
+
+# 4G
+hss:
+  enabled: false
+  mongodb:
+    enabled: false
+mme:
+  enabled: false
+pcrf:
+  enabled: false
+  mongodb:
+    enabled: false
+sgwc:
+  enabled: false
+sgwu:
+  enabled: false
+
+smf:
+  config:
+    pcrf:
+      enabled: false
+# 5G
+amf:
+  enabled: true
+ausf:
+  enabled: true
+bsf:
+  enabled: true
+nrf:
+  enabled: true
+nssf:
+  enabled: true
+pcf:
+  enabled: true
+  mongodb:
+    enabled: false
+scp:
+  enabled: true
+  mongodb:
+    enabled: false
+udm:
+  enabled: true
+udr:
+  enabled: true
+  mongodb:
+    enabled: false
+
+amf:
+  config:
+    guamiList:
+      - plmn_id:
+          mcc: "{{ plmn_id_mcc }}"
+          mnc: "{{ plmn_id_mnc }}"
+        amf_id:
+          region: 2
+          set: 1
+    taiList:
+      - plmn_id:
+          mcc: "{{ plmn_id_mcc }}"
+          mnc: "{{ plmn_id_mnc }}"
+        tac: [ {{ tac }} ]
+    plmnList:
+      - plmn_id:
+          mcc: "{{ plmn_id_mcc }}"
+          mnc: "{{ plmn_id_mnc }}"
+        s_nssai:
+          - sst: {{ s_nssai_sst }}
+            sd: "{{ s_nssai_sd }}"
+    networkName: "open5gs"
+  services:
+    ngap:
+      type: LoadBalancer
+      loadBalancerIP: "{{ amf_ip }}"
+
+nrf:
+  config:
+    servingList:
+      - plmn_id:
+          mcc: "{{ plmn_id_mcc }}"
+          mnc: "{{ plmn_id_mnc }}"
+
+upf:
+  config:
+    upf:
+      gtpu:
+        advertise: "{{ upf_ip }}"
+  services:
+    gtpu:
+      type: LoadBalancer
+      loadBalancerIP: "{{ upf_ip }}"
+
+
+nssf:
+  config:
+    nsiList:
+    - uri: ""
+      sst: {{ s_nssai_sst }}
+      sd: "{{ s_nssai_sd }}"
+
+webui:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hostname: "{{ domain_webui_dashboard }}"

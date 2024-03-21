@@ -1,0 +1,10 @@
+#THIS IS AN EXAMPLE
+
+#URL To publish result
+tnlcm_callback: "http://tnlcm.uma/TN/ASZDV/callback"
+
+# FROM PUBLIC VARIABLES SECTION
+
+
+# FROM PRIVATE VARIABLES SECTION (ONLY FOR ADVANCED USERS)
+

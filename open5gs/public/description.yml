@@ -3,19 +3,18 @@
 ## Component metadata
 ## 
 ####################################
-component_name: open5gs
+component_name: k8s_medium
 metadata:
-  family: network
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com> 
   version: 0.0.1
   depends: 
-    - k8s_medium (>= 0.0.1)
-  short_description: This component deploy open5Gs core inside a Kubernetes cluster
+    - k8s_medium (>= 0.0.1) 
+  short_description: This is a component to deploy an Open5Gs on a K8S cluster.
   long_description: |
-    This component deploy open5GS core inside a kubernetes cluster and expose the AMF interface to be accesible.
-  platforms: [one]
-  sites: [uma]
+    This component deploys a 5G SA Core (Open5Gs) using Helm charts.
+    More info in this url: https:// ....
 
 ###################################################
 ##
@@ -25,14 +24,16 @@ metadata:
 ## 
 ###################################################
 public:
-  hostname: vm-ubuntu-server
-  interfaces:
-    - name: ens2
-      network: default
-    - name: ens3
-      network: monitoring
-  memory: 256M
-  disk: 15G
+  service_name: "test_component"
+  plmn_id_mcc: "001"
+  plmn_id_mnc: "01"
+  tac: "200"
+  s_nssai_sst: "1"
+  s_nssai_sd: "1"
+  amf_ip: "11.21.1.200"
+  upf_ip: "11.21.1.201"
+  domain_webui_dashboard : "webui-dashboard.int"
+
 
 ###################################################
 ##
@@ -41,4 +42,3 @@ public:
 ## 
 ###################################################
 outputs:
-  tn_vxlan_id: "ID from OpenNebula to identify this Network"
