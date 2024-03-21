@@ -1,0 +1,2 @@
+# main playbook that will be used to deploy the component
+# it must refer to the proper provider tasks for the deployment

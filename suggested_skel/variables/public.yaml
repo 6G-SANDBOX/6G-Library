@@ -1,0 +1,15 @@
+# replaces public/description.yaml
+# variables regarding general info about the component
+# all variables must and will be usable in automations (while not necesarilly useful)
+
+# previously named "component_name". same as the directory name inside the 6G-LIBRARY
+name:
+
+# all metadata can be fitted here, but useful metadata in scripts includes versions, dependencies and allowed platforms
+metadata:
+
+# previously named "public". variables the deployer can specify in the input file and their default values
+input:
+
+# previously named "outputs". new variables shown in the results file (such as component ID, IP, etc.)
+output:

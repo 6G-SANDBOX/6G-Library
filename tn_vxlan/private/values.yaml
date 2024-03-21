@@ -8,12 +8,12 @@
 ##
 ################################################
 
-one_group: "oneadmin"
+one_group: "6G-Sandbox"   # sensible info
 one_vxlan_physical_device: "{{ site_vxlan_if }}"
 one_vxlan_mtu: 1500
 one_vxlan_guest_mtu: 1450
 one_vxlan_dns: "1.1.1.1, 1.0.0.1"
 one_vxlan_gw: "192.168.199.1"
-one_vxlan_security_groups: [0]
+one_vxlan_security_groups: [100]
 one_vxlan_address_size: 254  
 one_vxlan_first_ip: "192.168.199.1"

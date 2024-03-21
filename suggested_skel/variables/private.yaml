@@ -1,0 +1,13 @@
+# previously private/values.yaml
+# internal or "technical" variables from the component
+
+
+# Be careful with conflicts with vars(credentials) from Jenkins and vars from the site repository (mostly site template IDs)
+# Variables here (in the case of opennebula) overwrite OpenNebula templates for the specific component (useful with repurposed VM templates for different sizes)
+
+
+# As well as the variables in public.yaml/input, all variables from this file can be overwriten by the input file (tnlcm.yaml)
+# However, these variables aren't supposed to be altered by the average user as they can break the Trial Network
+
+
+# POSSIBLE FEATURE: Experimenter ACL to overwrite all, some or none of the values from private.yaml
