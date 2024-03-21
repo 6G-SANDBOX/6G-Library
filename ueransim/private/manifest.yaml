@@ -1,0 +1,109 @@
+---
+- name: Prepare workspace with necessary enviromental variables and the bastion VM
+  hosts: localhost
+  # gathering facts is necessary as many ansible variables come from enviromental variables from jenkins
+  gather_facts: true
+  tasks:
+    # NOTE: First 3 tasks seem common for all components.
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
+
+    # NOTE: Second task would need negative conditional for vxlan and tn_bastion components
+    - name: Include Trial Network bastion VM to Ansible inventory
+      ansible.builtin.add_host:
+        name: "{{ tn_id }}-tn-bastion"
+
+    # NOTE: prepare.yml file can be common for all components if the provider being used can be specified here
+    - name: Prepare terraform manifests from templates
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/prepare.yaml"
+
+    - name: Execute terraform apply
+      community.general.terraform:
+        project_path: "./{{ site_hypervisor }}/iac/"
+        state: "present"
+        force_init: true
+      register: result
+
+    - name: Retrieve terraform output
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/"
+        cmd: "terraform output --json | jq 'with_entries(.value |= .value)'"
+      register: terraform_output
+      changed_when: false
+    - name: Load terraform output as an ansible fact
+      ansible.builtin.set_fact:
+        outputs: "{{ terraform_output.stdout | ansible.builtin.from_json }}"
+    - name: DEBUG new terraform output fact
+      ansible.builtin.debug:
+        msg: "{{ outputs }}"
+
+    # Modify to extract "public" IP (interface 0).
+    - name: Get VM IP from default site network.
+      ansible.builtin.set_fact:
+        vm_internal_ip: "{{ item.value }}"
+      loop: "{{ lookup('ansible.builtin.dict', outputs[one_component_name + \"_network_assignments\"], wantlist=True) }}"
+      when: not result.failed and item.key | int != one_component_networks[0]
+    - name: Verify IP is correctly loaded
+      ansible.builtin.debug:
+        msg: "Appliance reachable at address: {{ vm_internal_ip | default('----') }}"
+
+    - name: DEBUG PROXY ip
+      ansible.builtin.debug:
+        msg: "{{ outputs['tn-bastion_network_assignments']['0'] }}"
+
+    - name: Add new VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "{{ tn_id }}-{{ one_component_name }}"
+        ansible_host: "{{ vm_internal_ip }}"
+        ansible_user: "root"
+        ansible_ssh_common_args: "-J root@{{ outputs['tn-bastion_network_assignments']['0'] }}"
+
+    # DELETE IN NEAR FUTURE, AS WELL AS THE YAML FILE
+    # - name: Add new VM into the ssh-config of the Jenkins host
+    #   ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/01_ssh_config_file.yaml"
+
+    # - name: Wait for VM to be ready
+    #   ansible.builtin.wait_for:
+    #     port: 22
+    #     host: "{{ vm_internal_ip }}"
+    #     connect_timeout: 5
+    #     delay: 5
+    #     timeout: 120
+
+
+# Configuration Inside the VM. USELESS, COMMENT AFTER TESTING
+- name: "Configuration inside {{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }} Appliance"
+  hosts: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }}"
+  gather_facts: false
+  tasks:
+
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        delay: 5
+        timeout: 120
+
+    - name: Gather facts for first time
+      ansible.builtin.setup:
+
+    - name: Load Variables into new VM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
+
+    # - command: "cat /etc/hostname"
+    #   register: hostname_out
+
+    # - name: "DEBUG"
+    #   ansible.builtin.debug:
+    #     msg: "{{ hostname_out | to_json }}"
+
+
+- name: Results
+  hosts: localhost
+  tasks:
+    - name: Publish execution results
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
+
+    - name: Upload Terraform manifest
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
+      when: not result.failed

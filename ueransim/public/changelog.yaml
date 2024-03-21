@@ -1,0 +1,22 @@
+####################################
+##
+## Component changelog
+##
+####################################
+
+releases:
+  v1.0.0:
+    release_date: '2024-03-14'
+    changes:
+      release_summary: First release of the UERANSIM 6G-LIBRARY component
+      major_changes:
+      minor_changes:
+      breaking_changes:
+      new_features:
+      - Customization of multiple variables from the config file of the UERANSIM's gNB
+      - Customization of multiple variables from the config file of the UERANSIM's UE
+      - Possibility to start the VM with the services stopped or running independently
+      deprecated_features:
+      removed_features:
+      security_fixes:
+      bugfixes:
