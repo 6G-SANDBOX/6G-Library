@@ -24,7 +24,7 @@ sites: [uma]
 ###################################################
 
 one_vxlan_name: "PLACEHOLDER_VXLAN_NAME"
-one_vxlan_dns: "PLACEHOLDER_DNS" # 1.1.1.1, 1.0.0.1
+one_vxlan_dns: "PLACEHOLDER_DNS" # 1.1.1.1 1.0.0.1       space separated list of DNS IPs
 one_vxlan_address_size: 254 # MAX 255
 one_vxlan_first_ip: "PLACEHOLDER_VXLAN_FIRST_IP" # 192.168.199.1
 one_vxlan_gw: "PLACEHOLDER_VXLAN_GW" # 192.168.199.1
