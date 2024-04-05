@@ -7,7 +7,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
     - name: 'Add bastion hosts to be able to jump'
       ansible.builtin.add_host:
-        name: "{{ tn_id }}-tn-bastion"      
+        name: "{{ tn_id }}-tn_bastion"      
 # END MANDATORY BLOCK
 
 # STAGE 1: Prepare manifest from templates
@@ -49,7 +49,7 @@
     - name: Get VM ip from default site network
       ansible.builtin.set_fact:
         vm_ip: "{{ item.value }}"
-      loop: "{{ lookup('ansible.builtin.dict', outputs[one_component_name + \"_network_assignments\"], wantlist=True) }}"
+      loop: "{{ lookup('ansible.builtin.dict', outputs[one_component_name + \"-network_assignments\"], wantlist=True) }}"
       when: item.key | int == one_component_networks[0]
 
     - name: Verify that is correctly loaded

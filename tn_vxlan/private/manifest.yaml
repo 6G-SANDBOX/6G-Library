@@ -29,7 +29,7 @@
 
     - name: Get Terraform Outputs
       ansible.builtin.debug:
-        msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + \"_vxlan_id\"].value }}"
+        msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + \"-vxlan_id\"].value }}"
       when: not result.failed
 
     - name: Publish execution results

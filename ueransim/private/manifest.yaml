@@ -11,7 +11,7 @@
     # NOTE: Second task would need negative conditional for vxlan and tn_bastion components
     - name: Include Trial Network bastion VM to Ansible inventory
       ansible.builtin.add_host:
-        name: "{{ tn_id }}-tn-bastion"
+        name: "{{ tn_id }}-tn_bastion"
 
     # NOTE: prepare.yml file can be common for all components if the provider being used can be specified here
     - name: Prepare terraform manifests from templates
@@ -42,7 +42,7 @@
     - name: Get VM IP from default site network.
       ansible.builtin.set_fact:
         vm_internal_ip: "{{ item.value }}"
-      loop: "{{ lookup('ansible.builtin.dict', outputs[one_component_name + \"_network_assignments\"], wantlist=True) }}"
+      loop: "{{ lookup('ansible.builtin.dict', outputs[one_component_name + \"-network_assignments\"], wantlist=True) }}"
       when: not result.failed and item.key | int != 0
     - name: Verify IP is correctly loaded
       ansible.builtin.debug:
@@ -50,14 +50,14 @@
 
     - name: DEBUG proxy IP
       ansible.builtin.debug:
-        msg: "{{ outputs['tn-bastion_network_assignments']['0'] }}"
+        msg: "{{ outputs['tn_bastion-network_assignments']['0'] }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "{{ tn_id }}-{{ one_component_name }}"
         ansible_host: "{{ vm_internal_ip }}"
         ansible_user: "root"
-        ansible_ssh_common_args: "-J root@{{ outputs['tn-bastion_network_assignments']['0'] }}"
+        ansible_ssh_common_args: "-J root@{{ outputs['tn_bastion-network_assignments']['0'] }}"
 
     # DELETE IN NEAR FUTURE, AS WELL AS THE YAML FILE
     # - name: Add new VM into the ssh-config of the Jenkins host

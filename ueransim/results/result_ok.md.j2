@@ -5,7 +5,7 @@ The {{ component_name }} component "{{ one_component_name }}" has been created i
 Important information:
 
 * MAIN NETWORK INTERFACE: {{ vm_internal_ip }}
-* VN ID: {{ outputs[one_component_name + "_VM_ID"] }}
+* VN ID: {{ outputs[one_component_name + "-VM_ID"] }}
 {% if one_vm_username is defined and one_vm_username %}
 * VM USER: "{{ one_vm_username }}"
 {% endif %}
@@ -22,7 +22,7 @@ Important information:
 
 ### VIRTUAL MACHINE NETWORK INTERFACES
 ```
-{{ outputs[one_component_name + "_network_assignments"] }}
+{{ outputs[one_component_name + "-network_assignments"] }}
 ```
 
 ### INPUT VALUES

@@ -46,7 +46,7 @@
     - name: Get VM ip from default site network
       ansible.builtin.set_fact:
         vm_ip: "{{ item.value }}"
-      loop: "{{ lookup('ansible.builtin.dict', outputs[one_bastion_name + \"_network_assignments\"], wantlist=True) }}"
+      loop: "{{ lookup('ansible.builtin.dict', outputs[one_bastion_name + \"-network_assignments\"], wantlist=True) }}"
       when: item.key | int == site_default_network_id
 
     - name: Verify that is correctly loaded

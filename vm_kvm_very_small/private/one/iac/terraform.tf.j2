@@ -30,7 +30,7 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
 
 }
 
-output "{{ one_component_name }}_network_assignments" {
+output "{{ one_component_name }}-network_assignments" {
   description = "OpenNebula VM Network Assignments"
   value = { for nic in opennebula_virtual_machine.{{ tn_id }}-{{ one_component_name }}.nic[*] : nic.network_id => nic.computed_ip }
 }
