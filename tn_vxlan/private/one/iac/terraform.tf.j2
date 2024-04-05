@@ -1,7 +1,7 @@
 resource "opennebula_virtual_network" "{{ tn_id }}_{{ one_vxlan_name }}" {
   name            = "{{ tn_id }}_{{ one_vxlan_name }}"
   permissions     = "660"
-  group           = "{{ one_group }}"
+  group           = "{{ one_grooup }}"
   physical_device = "{{ one_vxlan_physical_device }}"
   type            = "vxlan"
   automatic_vlan_id = true

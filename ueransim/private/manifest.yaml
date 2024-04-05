@@ -48,7 +48,7 @@
       ansible.builtin.debug:
         msg: "Appliance reachable at address: {{ vm_internal_ip | default('----') }}"
 
-    - name: DEBUG PROXY ip
+    - name: DEBUG proxy IP
       ansible.builtin.debug:
         msg: "{{ outputs['tn-bastion_network_assignments']['0'] }}"
 
