@@ -8,7 +8,6 @@ one_bastion_name: "tn_bastion"
 
 # FROM PRIVATE VARIABLES SECTION (ONLY FOR ADVANCED USERS)
 one_component_networks: 
-  - 0           # First one is the default network
-  - 47
+  - 0            # First one must is the site's default network
+  - 47           # Second one must be the tn_vxlan ID created before
 one_bastion_wireguard_allowed_networks: "192.168.199.0/24"
-

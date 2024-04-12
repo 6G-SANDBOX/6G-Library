@@ -20,8 +20,3 @@ network_interfaces:
     default: True
   - name: tn_vxlan_XXXXX
 one_bastion_wireguard_allowed_networks: "192.168.199.0/24"
-
-one_component_networks: 
-  - 0           # First one is the default network
-  - VXLAN_ID    # VXLAN SHOULD BE CREATED BEFORE 
-
