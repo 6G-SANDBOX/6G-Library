@@ -9,7 +9,6 @@ pipeline {
 
   parameters {
     string(name: 'TN_ID', defaultValue: '', description: 'TRIAL NETWORK IDENTIFIER')
-    string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library', description: '6G LIBRARY REPOSITORY')
     string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: '6G LIBRARY BRANCH')
     string(name: 'LIBRARY_COMPONENT_NAME', defaultValue: '', description: '6G LIBRARY COMPONENT')
     string(name: 'DEPLOYMENT_SITE', defaultValue: 'uma', description: 'Site where deploy')
@@ -20,8 +19,6 @@ pipeline {
 
   environment {
       TN_ID="${params.TN_ID}"
-
-      LIBRARY_URL="https://github.com/6G-SANDBOX/6G-Library"
       LIBRARY_BRANCH="${params.LIBRARY_BRANCH}"
       LIBRARY_COMPONENT_NAME="${params.LIBRARY_COMPONENT_NAME}"
       DEPLOYMENT_SITE="${params.DEPLOYMENT_SITE}"
