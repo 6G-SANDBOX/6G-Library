@@ -1,8 +1,8 @@
 # Generate Infrastructure Manifests
 - name: "Define Terraform {{ site_hypervisor }} provider file"
   ansible.builtin.copy:
-    src: "{{ workspace }}/.global/iac/providers.tf"    # suggestion: rename "providers.tf" file to one_provider_v1.3.tf to make it easier to select the chosen provider with variables, Also future possibility to select provider version
-    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/one_provider_v1.3.tf"
+    src: "{{ workspace }}/.global/iac/opennebula_provider_v1.3.tf"
+    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/opennebula_provider_v1.3.tf"
 
 - name: Define Terraform backup file to store the terraform.tfstate inside a s3 backend
   template:

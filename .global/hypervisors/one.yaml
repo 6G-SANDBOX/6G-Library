@@ -1,4 +1,4 @@
-# Generate Infrastructure Manifests
+### What used to be in one/prepare.yaml
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
     src: "{{ workspace }}/.global/iac/opennebula_provider_v1.3.tf"
@@ -10,4 +10,4 @@
 - name: Generate Bastion component manifests
   template:
     src: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/terraform.tf.j2"
-    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ one_component_name }}_{{ ansible_date_time.epoch }}.tf"
+    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ one_bastion_name }}_{{ ansible_date_time.epoch }}.tf"

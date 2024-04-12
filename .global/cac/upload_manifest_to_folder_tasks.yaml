@@ -4,7 +4,7 @@
       - "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac"
     patterns: "*.tf"
     excludes: 
-      - "providers.tf"
+      - "opennebula_provider_v1.3.tf"
       - "backend.tf"
   register: found_files
 - name: Print file names without path

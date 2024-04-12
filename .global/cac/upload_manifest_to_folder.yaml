@@ -2,18 +2,18 @@
 - name: Upload terraform manifest to S3 Bucket
   hosts: localhost
   tasks:
-    - name: "Get files from dir"
-      find:
+    - name: Get files from dir
+      ansible.builtin.find:
         paths: "../../{{ component_name }}/private/{{ site_hypervisor }}/iac"
         patterns: "*.tf"
-        excludes: 
-          - "providers.tf"
+        excludes:
+          - "opennebula_provider_v1.3.tf"
           - "backend.tf"
       register: found_files
 
-    - name: print file names without path
-      debug:
-        msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
+    - name: Print file names without path
+      ansible.builtin.debug:
+        msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace', '^.*/(.*)$','\\1') | list }}"
 
     - name: Upload files to S3
       amazon.aws.aws_s3:
@@ -24,6 +24,5 @@
         bucket: "{{ site_s3_server.bucket }}"
         object: "{{ tn_id }}/{{ item }}"
         src: "../../{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ item }}"
-        encrypt: no
-      with_items: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
-
+        encrypt: false
+      with_items: "{{ found_files['files'] | map(attribute='path') | map('regex_replace', '^.*/(.*)$','\\1') | list }}"

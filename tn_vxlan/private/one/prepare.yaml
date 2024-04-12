@@ -1,8 +1,8 @@
 # Generate Infrastructure Manifests
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
-    src: "{{ workspace }}/.global/iac/providers.tf"
-    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/providers.tf"
+    src: "{{ workspace }}/.global/iac/opennebula_provider_v1.3.tf"
+    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/opennebula_provider_v1.3.tf"
 - name: Generate Terraform s3 backend manifest
   template:
     src: "{{ workspace }}/.global/iac/backend.tf.j2"

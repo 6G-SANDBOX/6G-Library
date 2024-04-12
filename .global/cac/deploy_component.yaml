@@ -1,0 +1,17 @@
+- name: "Tasks common to all components"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
+
+    - name: Once created, include the tn_bastion from the TN to the Ansible inventory
+      ansible.builtin.add_host:
+        name: "{{ tn_id }}-tn_bastion"
+      when: "{{ component_name }} != 'tn_bastion' and {{ component_name }} != 'tn_vxlan'"
+
+    - name: Generate installation manifest from templates
+      ansible.builtin.include_tasks: "{{ workspace }}./global/hypervisors/{{ site_hypervisor }}.yaml"
+
+- name: Import the manifest.yaml from the component with the rest of the tasks
+  ansible.builtin.import_playbook: "{{ workspace }}/{{ component_name }}}/private/manifest.yaml"
