@@ -38,8 +38,7 @@
       ansible.builtin.debug:
         msg: "{{ outputs }}"
 
-    # Modify to extract "public" IP (interface 0).
-    - name: Get VM IP from default site network.
+    - name: Get VM IP from the site's default network
       ansible.builtin.set_fact:
         vm_internal_ip: "{{ item.value }}"
       loop: "{{ lookup('ansible.builtin.dict', outputs[one_component_name + \"-network_assignments\"], wantlist=True) }}"
