@@ -5,7 +5,7 @@
 
 - name: Deploy Open5Gs helm
   kubernetes.core.helm:
-    kubeconfig: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
+    kubeconfig: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ oneke_cluster_name }}.kubeconfig"
     name: open5gs
     chart_ref: oci://registry-1.docker.io/gradiant/open5gs
     chart_version: 2.2.2

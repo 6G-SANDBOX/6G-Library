@@ -24,7 +24,7 @@ metadata:
 ## 
 ###################################################
 public:
-  service_name: "test_component"
+  oneke_cluster_name: "test_component"
   plmn_id_mcc: "001"
   plmn_id_mnc: "01"
   tac: "200"

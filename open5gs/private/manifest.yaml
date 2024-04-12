@@ -40,12 +40,12 @@
         fail_msg: "There is not empty port"      
 
     - name: Start SSH tunnel if is not open
-      shell: "ssh -f -L {{ result_port.stdout | trim }}:localhost:6443 {{ tn_id }}-oneke-{{ service_name }}-master -N"
+      shell: "ssh -f -L {{ result_port.stdout | trim }}:localhost:6443 {{ tn_id }}-oneke-{{ oneke_cluster_name }}-master -N"
       when: result_port.stdout | length > 0
 
     - name: Replace kubectl url endpoint
       replace:
-        path: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
+        path: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ oneke_cluster_name }}.kubeconfig"
         regexp: "https://127.0.0.1:6443"
         replace: "https://127.0.0.1:{{ result_port.stdout | trim }}"
 
