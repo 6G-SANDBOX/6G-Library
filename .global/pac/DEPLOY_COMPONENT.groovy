@@ -20,25 +20,23 @@ pipeline {
 
   environment {
       TN_ID="${params.TN_ID}"
-      LIBRARY_URL="${params.LIBRARY_URL}"
+
+      LIBRARY_URL="https://github.com/6G-SANDBOX/6G-Library"
       LIBRARY_BRANCH="${params.LIBRARY_BRANCH}"
       LIBRARY_COMPONENT_NAME="${params.LIBRARY_COMPONENT_NAME}"
       DEPLOYMENT_SITE="${params.DEPLOYMENT_SITE}"
       FILE_PATH="${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/private/tnlcm_vars.yaml"
+      DEBUG="${params.DEBUG}"
       OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
       OPENNEBULA_USERNAME = credentials('OPENNEBULA_USERNAME')
       OPENNEBULA_PASSWORD = credentials('OPENNEBULA_PASSWORD')
       OPENNEBULA_ENDPOINT = credentials('OPENNEBULA_ENDPOINT')
-      OPENNEBULA_FLOW_ENDPOINT = credentials('OPENNEBULA_FLOW_ENDPOINT')
       OPENNEBULA_INSECURE = credentials('OPENNEBULA_INSECURE')
-      // MINIO CREDENTIALS
+      OPENNEBULA_FLOW_ENDPOINT = credentials('OPENNEBULA_FLOW_ENDPOINT')
       AWS_ACCESS_KEY_ID = credentials('MINIO_KEY')
       AWS_SECRET_ACCESS_KEY = credentials('MINIO_SECRET')
-      // ANSIBLE
       ANSIBLE_REMOTE_USER = credentials('ANSIBLE_REMOTE_USER')
       ANSIBLE_CONNECTION_PASSWORD_FILE = credentials('ANSIBLE_CONNECTION_PASSWORD_FILE')
-      // ANSIBLE_BECOME_PASSWORD_FILE = credentials('ANSIBLE_BECOME_PASSWORD_FILE')    
-      // GITHUB JENKINS TOKEN
       GITHUB_JENKINS = credentials('GITHUB_JENKINS')  
   }
 
@@ -64,7 +62,7 @@ pipeline {
               """
           }
       }
-    }
+    }      
     stage('Stage 2: Run component deployment') {
       steps {
         script {
@@ -87,15 +85,15 @@ pipeline {
           script {
               if (env.DEBUG == 'false') {
                   echo 'CleanUp Workspace'
-                  /* clean up our workspace */
-                  deleteDir()
-                  /* clean up tmp directory */
-                  dir("${env.workspace}@tmp") {
-                      deleteDir()
-                  }
-                  /* clean up script directory */
-                  dir("${env.workspace}@script") {
-                      deleteDir()
+          /* clean up our workspace */
+          deleteDir()
+          /* clean up tmp directory */
+          dir("${env.workspace}@tmp") {
+              deleteDir()
+          }
+          /* clean up script directory */
+          dir("${env.workspace}@script") {
+              deleteDir()
                   }    
               } else {
                   echo 'Workspace is not deleted'
