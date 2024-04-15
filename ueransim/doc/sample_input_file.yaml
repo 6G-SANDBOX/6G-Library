@@ -35,11 +35,11 @@ gnb_mnc: '70'
 gnb_tac: 1
 
 # gNB's local IP address for Radio Link Simulation (Usually same with local IP)
-gnb_linkIp: 127.0.0.1
+gnb_linkIp: 0.0.0.0
 # gNB's local IP address for N2 Interface (Usually same with local IP)
-gnb_ngapIp: 127.0.0.1
+gnb_ngapIp: 0.0.0.0
 # gNB's local IP address for N3 Interface (Usually same with local IP)
-gnb_gtpIp: 127.0.0.1
+gnb_gtpIp: 0.0.0.0
 
 # One AMF address. Port will be 38412
 gnb_amf_address: 127.0.0.5
