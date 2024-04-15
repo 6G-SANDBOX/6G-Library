@@ -47,7 +47,7 @@ gnb_amf_address: 127.0.0.5
 
 # List of supported S-NSSAIs by this gNB
 gnb_slices_sst: 1
-gnb_slices_sd:
+gnb_slices_sd: 1
 
 
 
