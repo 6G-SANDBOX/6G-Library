@@ -43,10 +43,10 @@ public:
     type: "string"
     value: "1"
   amf_ip: 
-    type: "ip"
+    type: "ipv4"
     value: "11.21.1.200"
   upf_ip:
-    type: "ip"
+    type: "ipv4"
     value: "11.21.1.201"
   domain_webui_dashboard: 
     type: "string"
