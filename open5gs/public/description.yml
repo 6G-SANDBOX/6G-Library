@@ -24,15 +24,33 @@ metadata:
 ## 
 ###################################################
 public:
-  oneke_cluster_name: "test_component"
-  plmn_id_mcc: "001"
-  plmn_id_mnc: "01"
-  tac: "200"
-  s_nssai_sst: "1"
-  s_nssai_sd: "1"
-  amf_ip: "11.21.1.200"
-  upf_ip: "11.21.1.201"
-  domain_webui_dashboard : "webui-dashboard.int"
+  oneke_cluster_name: 
+    type: "string"
+    value: "cluster_xxxxx"
+  plmn_id_mcc: 
+    type: "string"
+    value: "001"
+  plmn_id_mnc: 
+    type: "string"
+    value: "01"
+  tac: 
+    type: "string"
+    value: "200"
+  s_nssai_sst:
+    type: "string"
+    value: "1"
+  s_nssai_sd:
+    type: "string"
+    value: "1"
+  amf_ip: 
+    type: "ip"
+    value: "11.21.1.200"
+  upf_ip:
+    type: "ip"
+    value: "11.21.1.201"
+  domain_webui_dashboard: 
+    type: "string"
+    value: "webui-dashboard.int"
 
 
 ###################################################
