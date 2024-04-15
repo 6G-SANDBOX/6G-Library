@@ -13,4 +13,4 @@
 - name: Load tnlcm related variable from input file
   ansible.builtin.include_vars:
     file: "{{ workspace }}/{{ component_name }}/private/tnlcm_vars.yaml"
-  when: file_exits.stat.exists  
+  when: file_exits.stat.exists

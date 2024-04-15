@@ -1,14 +1,14 @@
 - name: "Get terraform files from dir"
-  find:
-    paths: 
+  ansible.builtin.find:
+    paths:
       - "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac"
     patterns: "*.tf"
-    excludes: 
+    excludes:
       - "opennebula_provider_v1.3.tf"
       - "backend.tf"
   register: found_files
 - name: Print file names without path
-  debug:
+  ansible.builtin.debug:
     msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
 - name: Upload files to S3
   amazon.aws.aws_s3:
@@ -19,17 +19,17 @@
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/{{ item }}"
     src: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ item }}"
-    encrypt: no
+    encrypt: false
   with_items: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
 
 - name: "Get markdown files from dir"
-  find:
-    paths: 
+  ansible.builtin.find:
+    paths:
       - "{{ workspace }}/{{ component_name }}/results"
     patterns: "*.md"
   register: found_files
 - name: Print file names without path
-  debug:
+  ansible.builtin.debug:
     msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
 - name: Upload files to S3
   amazon.aws.aws_s3:
@@ -40,5 +40,5 @@
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/{{ item }}"
     src: "{{ workspace }}/{{ component_name }}/results/{{ item }}"
-    encrypt: no
+    encrypt: false
   with_items: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"

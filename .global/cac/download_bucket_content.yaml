@@ -9,10 +9,6 @@
     marker: "{{ tn_id }}"
   register: s3_bucket_items
 
-
-
-
-
 - name: Download files from S3
   amazon.aws.aws_s3:
     endpoint_url: "{{ site_s3_server.endpoint }}"
@@ -24,5 +20,3 @@
     dest: "{{ dst_folder }}/{{ item|basename }}"
   with_items: "{{ s3_bucket_items.s3_keys }}"
   when: item != "{{ tn_id }}_terraform.state"
-
-

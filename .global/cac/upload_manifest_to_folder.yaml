@@ -13,7 +13,7 @@
 
     - name: Print file names without path
       ansible.builtin.debug:
-        msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace', '^.*/(.*)$','\\1') | list }}"
+        msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace', '^.*/(.*)$', '\\1') | list }}"
 
     - name: Upload files to S3
       amazon.aws.aws_s3:

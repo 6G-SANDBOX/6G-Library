@@ -20,6 +20,3 @@ flow:
   backup:
     - tool: ansible
       file: ./cac/post/backup.yml
-
-
-

@@ -26,4 +26,4 @@
     object: "{{ item }}"
     dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ item | basename }}"
   with_items: "{{ s3_bucket_items.s3_keys }}"
-  when: not "terraform.tfstate" in item   #tfstate is retrieved from backend.tf file 
+  when: not "terraform.tfstate" in item                  # tfstate is retrieved from backend.tf file 
