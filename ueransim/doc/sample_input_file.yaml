@@ -27,27 +27,27 @@ run_gnb: false
 
 
 # Mobile Country Code value
-#gnb_mcc: '999'
+gnb_mcc: '999'
 # Mobile Network Code value (2 or 3 digits)
-#gnb_mnc: '70'
+gnb_mnc: '70'
 
 # Tracking Area Code
-#gnb_tac: 1
+gnb_tac: 1
 
 # gNB's local IP address for Radio Link Simulation (Usually same with local IP)
-#gnb_linkIp: 127.0.0.1
+gnb_linkIp: 127.0.0.1
 # gNB's local IP address for N2 Interface (Usually same with local IP)
-#gnb_ngapIp: 127.0.0.1
+gnb_ngapIp: 127.0.0.1
 # gNB's local IP address for N3 Interface (Usually same with local IP)
-#gnb_gtpIp: 127.0.0.1
+gnb_gtpIp: 127.0.0.1
 
 # One AMF address. Port will be 38412
-#gnb_amf_address: 127.0.0.5
+gnb_amf_address: 127.0.0.5
 
 
 # List of supported S-NSSAIs by this gNB
-#gnb_slices_sst: 1
-#gnb_slices_sd:
+gnb_slices_sst: 1
+gnb_slices_sd:
 
 
 
@@ -59,34 +59,34 @@ run_ue: false
 
 
 # IMSI number of the UE. IMSI = [MCC|MNC|MSISDN] (In total 15 digits)
-#ue_supi: 'imsi-999700000000001'
+ue_supi: 'imsi-999700000000001'
 # Mobile Country Code value of HPLMN
-#ue_mcc: '999'
+ue_mcc: '999'
 # Mobile Network Code value of HPLMN (2 or 3 digits)
-#ue_mnc: '70'
+ue_mnc: '70'
 
 # Permanent subscription key
-#ue_key: '465B5CE8B199B49FAA5F0A2EE238A6BC'
+ue_key: '465B5CE8B199B49FAA5F0A2EE238A6BC'
 # Operator code (OP or OPC) of the UE
-#ue_op: 'E8ED289DEBA952E4283B54E88E6183CA'
+ue_op: 'E8ED289DEBA952E4283B54E88E6183CA'
 
 
 # List of gNB IP addresses for Radio Link Simulation
-#ue_gnbSearchList: 127.0.0.1
+ue_gnbSearchList: 127.0.0.1
 
 
 # Initial PDU sessions to be established
-#ue_session_apn: 'internet'
-#ue_session_sst: 1
-#ue_session_sd:
+ue_session_apn: 'internet'
+ue_session_sst: 1
+ue_session_sd:
 
 # Configured NSSAI for this UE by HPLMN
-#ue_configured_nssai_sst: 1
-#ue_configured_nssai_sd:
+ue_configured_nssai_sst: 1
+ue_configured_nssai_sd:
 
 # Default Configured NSSAI for this UE
-#ue_default_nssai_sst: 1
-#ue_default_nssai_sd: 1
+ue_default_nssai_sst: 1
+ue_default_nssai_sd: 1
 
 
 
@@ -95,5 +95,5 @@ run_ue: false
 ### VNETs for the VM
 # The vxlan VNET is mandatory. Aditional ones are not
 one_component_networks: 
-  - 47           # First one is the vxlan VNET
-  - 0            # Public VNET for debugging purposes
+  - 47           # First one MUST BE the vxlan VNET
+#  - 0           # Additional VNETs for debugging purposes
