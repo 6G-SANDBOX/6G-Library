@@ -1,7 +1,4 @@
 
-####### NOTES: Commented variables are 
-
-
 #URL To publish result
 #tnlcm_callback: "http://tnlcm.uma/TN/ASZDV/callback"     # Useless for now
 
@@ -9,12 +6,11 @@
 one_component_name: "myUERANSIM"
 
 ### To access the VM, provide at least one of the following: 1.credentials 1.public ssh key
-
-# VM Credentials. If no credentials are provided, ssh access with password should be disabled
-# If no username is provided, the only user will be root and ssh access may not be available (sshd_config: PermitRootLogin without-password)
+# 1. VM Credentials: If no credentials are provided, ssh access with password should be disabled
+#    If no username is provided, the only user will be root and ssh access may not be available (sshd_config: PermitRootLogin without-password)
 one_vm_username: "experimenter"
 one_vm_password: "experimenter"
-# SSH public key
+# 2. SSH public key loaded into one_vm_username's .ssh/authorized_keys
 one_vm_ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeUX4XDplfQjNQSR21dSC+5C+jj3Oqxc2HTsdw10cq/FIOLWae07e6JZzqBSO7ARaaLs7+8TuqnsRbEMUoo6myzoFZFOR/OdNvJIpnhKAcCIq+m0axV9ON4+apyIml+HAIDvxEYGVeb8wTleNQZZhki3r1yK4TQVQIXy+O6jl8E/q7dV8Wn1y7mw/XxPjERTj75CRawqyLP2HCPHO/nBrmQZUegTT9SoFOVlLfc8yy524QxxM+mN3TEaincalIzixlVcgnPN682Waml1OkwuvQQGDq3LQAxYlBCgInadq8OHMVxYyRKG2WTwrB6/SqnwWY86j+dbCp0WZrT2z/Yakb experimenter@uma.es"
 
 
