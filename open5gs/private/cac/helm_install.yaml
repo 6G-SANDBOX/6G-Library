@@ -13,3 +13,4 @@
     create_namespace: yes
     values_files:
     - "{{ workspace }}/{{ component_name }}/private/cac/helm_values_rendered.yaml"
+  register: result
