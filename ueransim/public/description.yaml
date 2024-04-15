@@ -9,7 +9,7 @@ metadata:
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  version: 0.0.1
+  version: 1.0.0
   short_description: This is the component to deploy a UERANSIM instance 
   long_description: |
     This is the component to deploy a UERANSIM instance into a Trial Network. It can be deployed as:
