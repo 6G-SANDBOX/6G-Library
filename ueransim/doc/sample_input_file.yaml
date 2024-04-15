@@ -19,6 +19,9 @@ one_vm_ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeUX4XDplfQjNQSR21dSC+5C+
 ### All variables are commented with it's default variables. Uncomment and modify them if the value shown is not the one desired.
 ### The variables run_gnb and run_ue don't modify the config files. They are to tell the VM if it should start with the gNB or UE (respectivelly) running already.
 
+# If defined, proxy address to send the traffic to reach the "gnb_amf_address". In a TRIAL NETWORK, it's the OneKE's vnf address
+open5gs_vnf: '127.0.0.1'
+
 ############### open5gs-gnb.yaml ################################
 ### Overrides https://github.com/aligungr/UERANSIM/blob/master/config/open5gs-gnb.yaml values
 
@@ -35,11 +38,11 @@ gnb_mnc: '70'
 gnb_tac: 1
 
 # gNB's local IP address for Radio Link Simulation (Usually same with local IP)
-gnb_linkIp: 0.0.0.0
+gnb_linkIp: '127.0.0.1'
 # gNB's local IP address for N2 Interface (Usually same with local IP)
-gnb_ngapIp: 0.0.0.0
+gnb_ngapIp: '127.0.0.1'
 # gNB's local IP address for N3 Interface (Usually same with local IP)
-gnb_gtpIp: 0.0.0.0
+gnb_gtpIp: '127.0.0.1'
 
 # One AMF address. Port will be 38412
 gnb_amf_address: 127.0.0.5
