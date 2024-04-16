@@ -35,7 +35,7 @@ public:
   gnb_mcc: '999'
   gnb_mnc: '70'
   gnb_tac: 1
-  gnb_amf_address: 127.0.0.5
+  gnb_amf_address: '127.0.0.5'
   gnb_slices_sst: 1
   gnb_slices_sd: 1
   run_ue: false
@@ -44,7 +44,7 @@ public:
   ue_mnc: '70'
   ue_key: '465B5CE8B199B49FAA5F0A2EE238A6BC'
   ue_op: 'E8ED289DEBA952E4283B54E88E6183CA'
-  ue_gnbSearchList: 127.0.0.1
+  ue_gnbSearchList: '127.0.0.1'
   ue_session_apn: 'internet'
   ue_session_sst: 1
   ue_session_sd:

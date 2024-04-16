@@ -39,7 +39,7 @@ gnb_tac: 1
 
 
 # One AMF address. Port will be 38412
-gnb_amf_address: 127.0.0.5
+gnb_amf_address: '127.0.0.5'
 
 
 # List of supported S-NSSAIs by this gNB
@@ -69,7 +69,7 @@ ue_op: 'E8ED289DEBA952E4283B54E88E6183CA'
 
 
 # List of gNB IP addresses for Radio Link Simulation
-ue_gnbSearchList: 127.0.0.1
+ue_gnbSearchList: '127.0.0.1'
 
 
 # Initial PDU sessions to be established
