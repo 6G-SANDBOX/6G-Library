@@ -1,0 +1,55 @@
+resource "opennebula_service" "{{ tn_id }}-oneke-{{ service_name }}" {
+
+  name        = "{{ tn_id }}-oneke-{{ service_name }}"
+  template_id = {{ site_one_templates.k8s_medium.id }}
+
+  extra_template = jsonencode({
+      networks_values = [
+          { Public = { id = "{{ external_vnet_id }}" } },
+          { Private = { id = "{{ internal_vnet_id }}" } },
+      ]
+      custom_attrs_values = {
+        "ONEAPP_VROUTER_ETH0_VIP0": "",
+        "ONEAPP_VROUTER_ETH1_VIP0": "",
+        "ONEAPP_RKE2_SUPERVISOR_EP": "ep0.eth0.vr:9345"
+        "ONEAPP_K8S_CONTROL_PLANE_EP": "ep0.eth0.vr:6443",
+        "ONEAPP_K8S_EXTRA_SANS": "localhost,127.0.0.1,ep0.eth0.vr,$${vnf.TEMPLATE.CONTEXT.ETH0_IP}",
+        "ONEAPP_K8S_MULTUS_ENABLED": "{{ multus_enabled }}",
+        "ONEAPP_K8S_MULTUS_CONFIG": "",
+        "ONEAPP_K8S_CNI_PLUGIN": "{{ cni_plugin }}",
+        "ONEAPP_K8S_CNI_CONFIG": "",
+        "ONEAPP_K8S_CILIUM_RANGE": "",
+        "ONEAPP_K8S_LONGHORN_ENABLED": "{{ longhorn_enabled }}",
+        "ONEAPP_STORAGE_DEVICE": "/dev/vdb",
+        "ONEAPP_STORAGE_FILESYSTEM": "xfs",
+        "ONEAPP_K8S_METALLB_ENABLED": "{{ metallb_enabled }}",
+        "ONEAPP_K8S_METALLB_CONFIG": "",
+        "ONEAPP_K8S_METALLB_RANGE": "{{ metallb_range }}",
+        "ONEAPP_K8S_TRAEFIK_ENABLED": "{{ traefik_enabled }}",      
+        "ONEAPP_VNF_HAPROXY_INTERFACES": "eth0",
+        "ONEAPP_VNF_HAPROXY_REFRESH_RATE": "30",
+        "ONEAPP_VNF_HAPROXY_LB0_PORT": "9345",
+        "ONEAPP_VNF_HAPROXY_LB1_PORT": "6443",
+        "ONEAPP_VNF_HAPROXY_LB2_PORT": "443",
+        "ONEAPP_VNF_HAPROXY_LB3_PORT": "80",
+        "ONEAPP_VNF_DNS_ENABLED": "YES",
+        "ONEAPP_VNF_DNS_INTERFACES": "eth1",
+        "ONEAPP_VNF_DNS_NAMESERVERS": "{{ vnf_upstream_dns }}",
+        "ONEAPP_VNF_NAT4_ENABLED": "YES",
+        "ONEAPP_VNF_NAT4_INTERFACES_OUT": "eth0",
+        "ONEAPP_VNF_ROUTER4_ENABLED": "YES",
+        "ONEAPP_VNF_ROUTER4_INTERFACES": "eth0,eth1"
+    }
+  })
+}
+
+
+output "{{ tn_id }}-oneke-{{ service_name }}_service_id" {
+  description = "OpenNebula Service {{ tn_id }}-oneke-{{ service_name }}"
+  value       = opennebula_service.{{ tn_id }}-oneke-{{ service_name }}.id
+}
+
+output "{{ tn_id }}-oneke-{{ service_name }}_roles" {
+  description = "OpenNebula Service {{ tn_id }}-oneke-{{ service_name }}"
+  value       = opennebula_service.{{ tn_id }}-oneke-{{ service_name }}.roles
+}

@@ -1,0 +1,36 @@
+## Helm Open5Gs:
+
+Open5GS, an open-source 5G SA core network implementation, has been successfully deployed on the Kubernetes cluster **{{ oneke_cluster_name }}** using Helm. This cluster is part of the Trial Network **{{ tn_id }}**.
+
+<img src="https://open5gs.org/assets/img/open5gs-logo.png" />
+
+Below is a summary of the components that have been deployed:
+
+* NRF - NF Repository Function
+* SCP - Service Communication Proxy
+* AMF - Access and Mobility Management Function
+* SMF - Session Management Function
+* UPF - User Plane Function
+* AUSF - Authentication Server Function
+* UDM - Unified Data Management
+* UDR - Unified Data Repository
+* PCF - Policy and Charging Function
+* NSSF - Network Slice Selection Function
+* BSF - Binding Support Function
+
+If you need detailed information about OneKE you can visit the official documentation: https://open5gs.org/open5gs/docs/guide/01-quickstart/
+
+# Deployment
+
+Find here important information about the deployment:
+
+* PLMN ID (MCC): {{ plmn_id_mcc }}
+* PLMN ID (MNC): {{ plmn_id_mnc }}
+* TAC: {{ tac }}
+* S-NSSAI (SST): {{ s_nssai_sst }}
+* S-NSSAI (SD): {{ s_nssai_sd }}
+* AMF_IP: {{ amf_ip }}
+* UPF_IP: {{ upf_ip }}
+* WEB_UI DASHBOARD: {{ domain_webui_dashboard }}
+
+Note: To access the dashboard, you must add the domain to the /etc/hosts file of your machine mapping it with the IP address of your VNF Machine.

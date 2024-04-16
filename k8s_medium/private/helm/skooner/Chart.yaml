@@ -1,0 +1,12 @@
+apiVersion: v2
+name: Skooner Helm
+description: A Helm chart for Skooner Dashboard
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+
+dependencies:
+  - name: skooner
+    version: "*"
+    condition: skooner.enabled
+

@@ -1,9 +1,10 @@
-# GLOBAL VARIABLES SECTION (ADDED BY TNLCM)
+#THIS IS AN EXAMPLE
 
 #URL To publish result
 tnlcm_callback: "http://tnlcm.uma/TN/ASZDV/callback"
 
 # FROM PUBLIC VARIABLES SECTION
-one_vxlan_name: "tn_vxlan_bootstrap"
+
 
 # FROM PRIVATE VARIABLES SECTION (ONLY FOR ADVANCED USERS)
+

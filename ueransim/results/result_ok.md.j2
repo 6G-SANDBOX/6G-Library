@@ -1,24 +1,32 @@
-## SUCESS IN THE CREATION OF COMPONENT: {{ one_component_name }}
+## UERANSIM
 
-The {{ component_name }} component "{{ one_component_name }}" has been created into the Trial Network "{{ tn_id }}"
+The *UERANSIM* appliance with the name **{{ tn_id }}-{{ one_component_name }}** has been succesfully deployed as part of the Trial Network: **{{ tn_id }}**
 
-Important information:
+<img src="https://artifacthub.io/image/48ac05fa-1ef2-4d8f-8fba-1d67cb236335@3x"/>
 
-* MAIN NETWORK INTERFACE: {{ vm_internal_ip }}
-* VN ID: {{ outputs[one_component_name + "-VM_ID"] }}
+[UERANSIM](https://github.com/aligungr/UERANSIM) is a simulator for both an UE and/or a RAN (gNodeB). Both utilities are separated into two different services
+stopped and disabled by default:
+* **`ueransim_gnb.service`**: gnb simulator service defined at `/etc/systemd/system/ueransim_gnb.service`. Its behaviour is defined through the `/etc/UERANSIM/open5gs-gnb.yaml` file
+* **`ueransim_ue.service`**: User Equipment simulator service defined at `/etc/systemd/system/ueransim_ue.service`. Its behaviour is defined through the `/etc/UERANSIM/open5gs-ue.yaml` file
+
+If you need detailed information about what each parameter in the input files mean, check the [official documentation](https://github.com/aligungr/UERANSIM/wiki/Configuration)
+
+# Deployment
+Important information about the deployment
+
+* **VM ID**: {{ outputs[one_component_name + "-VM_ID"] }}
 {% if one_vm_username is defined and one_vm_username %}
-* VM USER: "{{ one_vm_username }}"
+* **VM USER**: "{{ one_vm_username }}"
 {% endif %}
 {% if one_vm_password is defined and one_vm_password %}
-* VM PASSWORD: "{{ one_vm_password }}"
+* **VM PASSWORD**: "{{ one_vm_password }}"
 {% endif %}
 {% if one_vm_ssh_key is defined and one_vm_ssh_key %}
-* ALLOWED SSH PUBLIC KEY: "{{ one_vm_ssh_key }}"
+* **ALLOWED SSH PUBLIC KEY**: "{{ one_vm_ssh_key }}"
 {% endif %}
-* MEMORY: 2 GiB
-* VCPU: 2
-* STORAGE: 3 GiB
-
+* **MEMORY**: 2 GiB
+* **VCPU**: 2
+* **STORAGE**: 3 GiB
 
 ### VIRTUAL MACHINE NETWORK INTERFACES
 ```
