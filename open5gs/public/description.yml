@@ -1,0 +1,62 @@
+####################################
+##
+## Component metadata
+## 
+####################################
+component_name: k8s_medium
+metadata:
+  maintainers: 
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com> 
+  version: 0.0.1
+  depends: 
+    - k8s_medium (>= 0.0.1) 
+  short_description: This is a component to deploy an Open5Gs on a K8S cluster.
+  long_description: |
+    This component deploys a 5G SA Core (Open5Gs) using Helm charts.
+    More info in this url: https:// ....
+
+###################################################
+##
+## Public component variables that 
+## should be filled by the experimenter or 
+## the TNLCM. Some of them could be optional
+## 
+###################################################
+public:
+  oneke_cluster_name: 
+    type: "string"
+    value: "cluster_xxxxx"
+  plmn_id_mcc: 
+    type: "string"
+    value: "001"
+  plmn_id_mnc: 
+    type: "string"
+    value: "01"
+  tac: 
+    type: "string"
+    value: "200"
+  s_nssai_sst:
+    type: "string"
+    value: "1"
+  s_nssai_sd:
+    type: "string"
+    value: "1"
+  amf_ip: 
+    type: "ipv4"
+    value: "11.21.1.200"
+  upf_ip:
+    type: "ipv4"
+    value: "11.21.1.201"
+  domain_webui_dashboard: 
+    type: "string"
+    value: "webui-dashboard.int"
+
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:

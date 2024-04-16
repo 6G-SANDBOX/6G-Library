@@ -40,7 +40,7 @@
         msg: "{{ outputs }}"
 
 
-    - name: Get VM IP from the site's default network
+    - name: Get VM IP from the site default network
       ansible.builtin.set_fact:
         vm_internal_ip: "{{ item.value }}"
       loop: "{{ lookup('ansible.builtin.dict', outputs[one_component_name + \"-network_assignments\"], wantlist=True) }}"

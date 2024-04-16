@@ -35,6 +35,6 @@
     - name: Publish execution results
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
 
-    - name: Upload Terraform manifest
+    - name: Upload manifest
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
       when: not result.failed

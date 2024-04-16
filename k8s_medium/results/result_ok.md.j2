@@ -1,0 +1,66 @@
+## K8S Cluster Size Medium: {{ service_name }}
+
+A Kubernetes cluster han been created into the Trial Network {{ tn_id }}
+
+The cluster has been deployed by OneKE Service. OneKE is a minimal hyperconverged Kubernetes platform that comes with OpenNebula out of the box.
+
+OneKE is based on RKE2 - Rancher’s Next Generation Kubernetes Distribution with preinstalled components to handle persistence, ingress traffic, and on-prem load balancing.
+
+OneKE Service has four different Roles:
+
+* VNF: Load Balancer for Control-Plane and Ingress Traffic
+* Master: Control-Plane nodes
+* Worker: Nodes to run application workloads
+* Storage: Dedicated storage nodes for Persistent Volume replicas
+
+<img src="https://docs.opennebula.io/6.6/_images/oneke-architecture.png" />
+
+Important information about cluster configuration:
+
+* CLUSTER NAME: {{ service_name }}
+* PUBLIC VIRTUAL NET: {{ external_vnet_id }}
+* PRIVATE VIRTUAL NET: {{ internal_vnet_id }}
+* CNI: {{ cni_plugin }} 
+* MULTUS ENABLED: {{ multus_enabled }}
+* METALLB ENABLED: {{ metallb_enabled }}
+* METALLB IP POOL: {{ metallb_range }}
+* TRAEFIK ENABLED: {{ traefik_enabled }}
+* VNF UPSTREAM DNS: {{ vnf_upstream_dns }}
+
+If you need detailed information about OneKE you can visit the official documentation: https://github.com/OpenNebula/one-apps/wiki/oneke_ops#operating-oneke
+
+
+## Accessing K8s API via SSH tunnels
+
+By default Kubernetes API Server's extra SANs are set to `localhost,127.0.0.1` which allows you to access Kubernetes API via SSH tunnels.
+
+> We recommend using the `ProxyCommand` SSH feature.
+
+Use kubeconfig file at the bottom of this file:
+
+> The `10.2.11.86` is the **public** VNF address, `172.20.0.101` is a **private** address of a master node inside the **private** VNET.
+
+Create SSH tunnel, forward the `6443` TCP port:
+
+```shell
+$ ssh -o ProxyCommand='ssh -A root@10.2.11.86 -W %h:%p' -L 6443:localhost:6443 root@172.20.0.101
+```
+
+and then run `kubectl` in another terminal:
+
+```shell
+$ kubectl get nodes
+NAME                    STATUS   ROLES                       AGE    VERSION
+oneke-ip-172-20-0-101   Ready    control-plane,etcd,master   58m    v1.27.2+rke2r1
+oneke-ip-172-20-0-102   Ready    <none>                      52m    v1.27.2+rke2r1
+oneke-ip-172-20-0-103   Ready    <none>                      52m    v1.27.2+rke2r1
+oneke-ip-172-20-0-104   Ready    control-plane,etcd,master   31m    v1.27.2+rke2r1
+oneke-ip-172-20-0-105   Ready    control-plane,etcd,master   29m    v1.27.2+rke2r1
+```
+
+## KubeConfig File
+
+```
+{{ kubeconfig_content }}
+```
+

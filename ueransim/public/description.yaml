@@ -9,7 +9,7 @@ metadata:
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  version: 1.0.0
+  version: 1.1.0
   short_description: This is the component to deploy a UERANSIM instance 
   long_description: |
     This is the component to deploy a UERANSIM instance into a Trial Network. It can be deployed as:
@@ -30,16 +30,14 @@ public:
   one_vm_username: "username"
   one_vm_password: "password"
   one_vm_ssh_key: "optional ssh public key"
+  oneke_vnf: '127.0.0.1'
   run_gnb: false
   gnb_mcc: '999'
   gnb_mnc: '70'
   gnb_tac: 1
-  gnb_linkIp: 127.0.0.1
-  gnb_ngapIp: 127.0.0.1
-  gnb_gtpIp: 127.0.0.1
   gnb_amf_address: 127.0.0.5
   gnb_slices_sst: 1
-  gnb_slices_sd:
+  gnb_slices_sd: 1
   run_ue: false
   ue_supi: 'imsi-999700000000001'
   ue_mcc: '999'

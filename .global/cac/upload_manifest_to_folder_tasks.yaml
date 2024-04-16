@@ -10,7 +10,7 @@
 - name: Print file names without path
   debug:
     msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
-- name: Upload files to S3
+- name: Upload terraform files to S3
   amazon.aws.aws_s3:
     endpoint_url: "{{ site_s3_server.endpoint }}"
     mode: put
@@ -31,7 +31,7 @@
 - name: Print file names without path
   debug:
     msg: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
-- name: Upload files to S3
+- name: Upload markdown files to S3
   amazon.aws.aws_s3:
     endpoint_url: "{{ site_s3_server.endpoint }}"
     mode: put
