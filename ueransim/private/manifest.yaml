@@ -28,7 +28,8 @@
       ansible.builtin.shell:
       args:
         chdir: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/"
-        cmd: "terraform output --json | jq 'with_entries(.value |= .value)'"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
       register: terraform_output
       changed_when: false
     - name: Load terraform output as an ansible fact
@@ -38,6 +39,7 @@
       ansible.builtin.debug:
         msg: "{{ outputs }}"
 
+
     - name: Get VM IP from the site's default network
       ansible.builtin.set_fact:
         vm_internal_ip: "{{ item.value }}"
@@ -46,6 +48,11 @@
     - name: Verify IP is correctly loaded
       ansible.builtin.debug:
         msg: "Appliance reachable at address: {{ vm_internal_ip | default('----') }}"
+
+    # Polemic step. Might be deleted in the future
+    - name: Create SSH config file into Jenkins
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/01_ssh_config_file.yaml"
+
 
     # - name: DEBUG proxy IP
     #   ansible.builtin.debug:
@@ -58,7 +65,7 @@
     #     ansible_user: "root"
     #     ansible_ssh_common_args: "-J root@{{ outputs['tn_bastion-network_assignments']['0'] }}"
 
-    # DELETE IN NEAR FUTURE, AS WELL AS THE YAML FILE
+    # DELETE IN NEAR FUTURE, AS WELL AS THE YAML FILE
     # - name: Add new VM into the ssh-config of the Jenkins host
     #   ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/01_ssh_config_file.yaml"
 

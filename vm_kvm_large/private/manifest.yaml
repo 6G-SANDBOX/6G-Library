@@ -62,7 +62,7 @@
         ansible_user: "root"
 
     - name: Create SSH config file into Jenkins
-      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"        
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"
 
 # STAGE 3: Execute manifest
 - name: Wait for VM ready from jenkins jumping through TN Bastion
