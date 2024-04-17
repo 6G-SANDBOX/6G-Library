@@ -1,14 +1,17 @@
-#THIS IS AN EXAMPLE
+#THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
-#URL To publish result
-tnlcm_callback: "http://tnlcm.uma/TN/ASZDV/callback"
+external_vnet_id: '274'
+internal_vnet_id: '276'
+service_name: "main-oneKE"
 
-# FROM PUBLIC VARIABLES SECTION
-one_component_name: "vm_test_xs"
-one_vm_username: "maci"
-one_vm_password: "maci"
+multus_enabled: "YES"
+cni_plugin: "canal"
 
-# FROM PRIVATE VARIABLES SECTION (ONLY FOR ADVANCED USERS)
-one_component_networks: 
-  - 0           # First one is the default network
-  - 47
+longhorn_enabled: "YES"
+
+metallb_enabled: "YES"
+
+metallb_range: "10.10.12.200-10.10.12.240"
+traefik_enabled: "NO"
+
+vnf_upstream_dns: "1.1.1.1 8.8.8.8"

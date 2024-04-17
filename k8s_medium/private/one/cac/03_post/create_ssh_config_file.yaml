@@ -2,7 +2,7 @@
   community.general.ssh_config:
     host: "{{ tnid }}-oneke-{{ servicename }}-{{ role }}"
     hostname: "{{ ip }}"
-    proxyjump: "{{tnid}}-tn-bastion"
+    proxyjump: "{{tnid}}-tn_bastion"
     remote_user: "root"
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tnid }}"
     state: present

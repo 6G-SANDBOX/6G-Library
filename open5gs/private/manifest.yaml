@@ -2,12 +2,12 @@
 - name: Generate installation manifest from templates
   hosts: localhost
   gather_facts: true
-  tasks: 
+  tasks:
     - name: Mix variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
     - name: 'Add bastion hosts to be able to jump'
       ansible.builtin.add_host:
-        name: "{{ tn_id }}-tn-bastion"      
+        name: "{{ tn_id }}-tn_bastion"
 # END MANDATORY BLOCK
 
 # STAGE 1: Prepare manifest from templates
@@ -16,9 +16,8 @@
 - name: Infrastructure Tasks
   hosts: localhost
   tasks:
-
     - name: Download Kubeconfig from previous k8s_medium deployment
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_kubeconfig_tasks.yaml" 
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_kubeconfig_tasks.yaml"
 
 
 # STAGE 3: Task on oneKE Master
@@ -35,16 +34,16 @@
       register: result_port
 
     - name: Verify if port is empty
-      assert:
+      ansible.builtin.assert:
         that: result_port.stdout | length > 0
-        fail_msg: "There is not empty port"      
+        fail_msg: "There is not empty port"
 
     - name: Start SSH tunnel if is not open
-      shell: "ssh -f -L {{ result_port.stdout | trim }}:localhost:6443 {{ tn_id }}-oneke-{{ oneke_cluster_name }}-master -N"
+      ansible.builtin.shell: "ssh -f -L {{ result_port.stdout | trim }}:localhost:6443 {{ tn_id }}-oneke-{{ oneke_cluster_name }}-master -N"
       when: result_port.stdout | length > 0
 
     - name: Replace kubectl url endpoint
-      replace:
+      ansible.builtin.replace:
         path: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ oneke_cluster_name }}.kubeconfig"
         regexp: "https://127.0.0.1:6443"
         replace: "https://127.0.0.1:{{ result_port.stdout | trim }}"
@@ -53,8 +52,8 @@
       ansible.builtin.include_tasks: "./cac/helm_install.yaml"
 
     - name: Delete previous SSH tunnel
-      shell: "bash {{ workspace }}/.global/scripts/kill_ssh_jenkins.sh {{ result_port.stdout | trim }}"
-      ignore_errors: yes
+      ansible.builtin.shell: "bash {{ workspace }}/.global/scripts/kill_ssh_jenkins.sh {{ result_port.stdout | trim }}"
+      ignore_errors: true
 
 
 # STAGE 5: Generate Responses and save manifest a config files
