@@ -2,7 +2,7 @@
   community.general.ssh_config:
     host: "{{ tn_id }}-{{ one_component_name }}"
     hostname: "{{ vm_internal_ip }}" 
-    proxyjump: "{{ tn_id }}-tn_bastionn"
-    remote_user: root
+    proxyjump: "{{ tn_id }}-tn_bastion"
+    remote_user: "{{ one_vm_username }}"
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present
