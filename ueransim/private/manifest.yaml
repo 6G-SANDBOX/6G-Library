@@ -50,7 +50,7 @@
         msg: "Appliance reachable at address: {{ vm_internal_ip | default('----') }}"
 
     # Polemic step. Might be deleted in the future
-    - name: Create SSH config file into Jenkins
+    - name: Add new VM into the ssh-config of the Jenkins host
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/01_ssh_config_file.yaml"
 
 

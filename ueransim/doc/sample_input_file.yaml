@@ -25,8 +25,8 @@ oneke_vnf: '127.0.0.1'
 ############### open5gs-gnb.yaml ################################
 ### Overrides https://github.com/aligungr/UERANSIM/blob/master/config/open5gs-gnb.yaml values
 
-# Start and enable gNB service at boot time. YES or NO
-run_gnb: NO
+# Start and enable gNB service at boot time. String 'YES' or 'NO'
+run_gnb: 'NO'
 
 
 # Mobile Country Code value
@@ -51,8 +51,8 @@ gnb_slices_sd: 1
 ############### open5gs-ue.yaml ################################
 ### Overrides https://github.com/aligungr/UERANSIM/blob/master/config/open5gs-ue.yaml values
 
-# Start and enable UE service at boot time. YES or NO
-run_ue: NO
+# Start and enable UE service at boot time. String 'YES' or 'NO'
+run_ue: 'NO'
 
 
 # IMSI number of the UE. IMSI = [MCC|MNC|MSISDN] (In total 15 digits)
