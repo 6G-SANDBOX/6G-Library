@@ -27,6 +27,9 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
 {% if run_ue  is defined and run_ue %}
     RUN_UE = "{{ run_ue }}"
 {% endif %}
+{% if oneke_vnf is defined and oneke_vnf %}
+    ONEKE_VNF = "{{ oneke_vnf }}"
+{% endif %}
 {% if gnb_amf_address is defined and gnb_amf_address %}
     GNB_AMF_ADDRESS = "{{ gnb_amf_address }}"
 {% endif %}

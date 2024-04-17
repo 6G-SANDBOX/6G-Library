@@ -25,8 +25,8 @@ oneke_vnf: '127.0.0.1'
 ############### open5gs-gnb.yaml ################################
 ### Overrides https://github.com/aligungr/UERANSIM/blob/master/config/open5gs-gnb.yaml values
 
-# Start and enable gNB service at boot time
-run_gnb: false
+# Start and enable gNB service at boot time. YES or NO
+run_gnb: NO
 
 
 # Mobile Country Code value
@@ -51,8 +51,8 @@ gnb_slices_sd: 1
 ############### open5gs-ue.yaml ################################
 ### Overrides https://github.com/aligungr/UERANSIM/blob/master/config/open5gs-ue.yaml values
 
-# Start and enable UE service at boot time
-run_ue: false
+# Start and enable UE service at boot time. YES or NO
+run_ue: NO
 
 
 # IMSI number of the UE. IMSI = [MCC|MNC|MSISDN] (In total 15 digits)
@@ -92,5 +92,5 @@ ue_default_nssai_sd: 1
 ### VNETs for the VM
 # The vxlan VNET is mandatory. Aditional ones are not
 one_component_networks: 
-  - 47           # First one MUST BE the vxlan VNET
+  - 47           # First one MUST BE the tn_vxlan VNET
 #  - 0           # Additional VNETs for debugging purposes
