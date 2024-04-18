@@ -14,3 +14,7 @@
     values_files:
     - "{{ workspace }}/{{ component_name }}/private/cac/helm_values_rendered.yaml"
   register: result
+
+- name: Wait for the pods to come up with status 'Running'
+  shell: >
+    kubectl wait pod --all --for=condition=Ready -n open5gs --kubeconfig {{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ oneke_cluster_name }}.kubeconfig --timeout=720s
