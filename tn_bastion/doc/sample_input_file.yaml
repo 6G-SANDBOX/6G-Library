@@ -1,0 +1,8 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+one_bastion_name: "tn_bastion"
+
+one_component_networks: 
+  - 0           # First one must be the site default network (for now)
+  - 274         # Second one must be the tn_vxlan ID created before
+one_bastion_wireguard_allowed_networks: "192.168.199.0/24"

@@ -1,5 +1,6 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
-#URL To publish result
+# URL To publish result
 #tnlcm_callback: "http://tnlcm.uma/TN/ASZDV/callback"     # Useless for now
 
 # No need to edit this

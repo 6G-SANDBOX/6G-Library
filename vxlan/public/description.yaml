@@ -52,14 +52,14 @@ public:
     user_input: true
     optional: false
 
-  one_vxlan_gw: 
-    description: "Gateway for VMs taht have this VNet as thier main interface. Otherwise, this field is optional"
+  one_vxlan_gw:
+    description: Gateway for VMs taht have this VNet as thier main interface. Otherwise, this field is optional
     type: "string"
     value: "192.168.199.1"
     user_input: true
     optional: true
-  one_vxlan_dns: 
-    description: "space-separated list of DNS servers for instances that have this VNet as their main interface. Otherwise, this field is optional"
+  one_vxlan_dns:
+    description: Space-separated list of DNS servers for instances that have this VNet as their main interface. Otherwise, this field is optional
     type: "string"
     value: "1.1.1.1 1.0.0.1"
     user_input: true

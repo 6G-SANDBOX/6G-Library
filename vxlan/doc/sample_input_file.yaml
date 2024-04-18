@@ -1,0 +1,16 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+# URL To publish result
+#tnlcm_callback: "http://tnlcm.uma/TN/ASZDV/callback"
+
+# Unique name in the TN to identify the vnet
+one_vxlan_name: "PLACEHOLDER_VXLAN_NAME"
+# First IPv4 address of the VNet
+one_vxlan_first_ip: "11.21.1.1"
+# Currently private vnets are hardcoded to IPv4 with netmask 255.255.255.0
+# one_vxlan_first_ip should be filled acording to one_vxlan_first_ip and this limitation (max value: 254)
+one_vxlan_address_size: 254
+# Gateway for VMs taht have this VNet as thier main interface. Otherwise, this field is optional
+one_vxlan_gw: "11.21.1.1"
+# Space-separated list of DNS servers for instances that have this VNet as their main interface. Otherwise, this field is optional
+one_vxlan_dns: "1.1.1.1 1.0.0.1"

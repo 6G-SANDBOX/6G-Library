@@ -1,10 +1,10 @@
-#THIS IS AN EXAMPLE
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
-#URL To publish result
-tnlcm_callback: "http://tnlcm.uma/TN/ASZDV/callback"
+# URL To publish result
+#tnlcm_callback: "http://tnlcm.uma/TN/ASZDV/callback"
 
 # FROM PUBLIC VARIABLES SECTION
-one_component_name: "vm_test_l"
+one_component_name: "vm_test_small"
 one_vm_username: "maci"
 one_vm_password: "maci"
 

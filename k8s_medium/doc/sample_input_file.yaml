@@ -1,4 +1,4 @@
-#THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
 external_vnet_id: '274'
 internal_vnet_id: '276'
