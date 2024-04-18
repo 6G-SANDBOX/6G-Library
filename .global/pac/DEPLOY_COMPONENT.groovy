@@ -14,7 +14,6 @@ pipeline {
     string(name: 'DEPLOYMENT_SITE', defaultValue: 'uma', description: 'Site where deploy')
     booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG')
     base64File (name: 'FILE', description: 'YAML file that contains variables needed to deploy the component')
-    booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG')
     //string(name: 'TNLCM_CALLBACK', defaultValue: 'https://tnlcm.uma/TN/ID/callback', description: 'URL of the TNLCM to notify result')   
   }
 
