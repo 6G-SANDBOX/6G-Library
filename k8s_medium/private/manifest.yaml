@@ -131,6 +131,9 @@
     - name: Post Actions Skooner dashboard
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/install_skooner_dashboard.yaml"
 
+    - name: Post Actions Longhorn dashboard
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/install_longhorn_dashboard.yaml"
+
     - name: Delete previous SSH tunnel
       shell: "bash {{ workspace }}/.global/scripts/kill_ssh_jenkins.sh {{ result_port.stdout | trim }}"
       ignore_errors: yes
