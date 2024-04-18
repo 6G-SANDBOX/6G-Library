@@ -3,14 +3,18 @@
 ## Component metadata
 ## 
 ####################################
-component_name: k8s_medium
+component_name: open5gs
 metadata:
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com> 
   version: 0.0.1
   depends: 
-    - k8s_medium (>= 0.0.1) 
+    - k8s_medium (>= 0.0.1)
+  depends: 
+    - k8s_medium:
+        version: ">0.0.1"
+        comments: "K8S clusterTrial Network management VNET"
   short_description: This is a component to deploy an Open5Gs on a K8S cluster.
   long_description: |
     This component deploys a 5G SA Core (Open5Gs) using Helm charts.
@@ -48,9 +52,9 @@ public:
   upf_ip:
     type: "ipv4"
     value: "11.21.1.201"
-  domain_webui_dashboard: 
+  subdomain_webui_dashboard: 
     type: "string"
-    value: "webui-dashboard.int"
+    value: "open5gs-dashboard"
 
 
 ###################################################

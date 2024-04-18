@@ -9,21 +9,22 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
   version: 0.0.1
   depends: 
-    - vxlan:
+    - tn_vxlan:
         version: ">0.0.1"
-        comments: "Public VNET to deploy K8S nodes"
-        isNew: "optional"
+        comments: "Trial Network management VNET"
+    - tn_bastion:
+        version: ">0.0.1"
+        comments: "Virtual Machine to manage Trial Network connectivity"
     - vxlan:
         version: ">0.0.1"
         comments: "Private VNET to deploy K8S nodes"
-        isNew: "yes" 
   short_description: This is a component to deploy a K8S cluster medium size.
   long_description: |
     This component deploy a K8S cluster using the oneKE service created by OpenNebula.
     It creates a 3 node cluster: master, worker, storage-worker
     More info in this url: https:// ....
   platforms: [one]
-  sites: [uma]
+  sites: [uma, athens, fokus]
 
 ###################################################
 ##
@@ -82,3 +83,4 @@ public:
 ## 
 ###################################################
 outputs:
+  kubeconfig: "Kubeconfig file to access to this cluster"
