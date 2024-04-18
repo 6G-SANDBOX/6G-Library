@@ -5,26 +5,71 @@
 ####################################
 
 component_name: vxlan
-family: network
-maintainers: 
-  - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
-version: 0.0.1
-short_description: This is the component that creates VXLAN networks inside ONE
-long_description: |
-  This is the component that creates VXLAN networks inside ONE
-platforms: [one]
-sites: [uma]
+metadata:
+  family: network
+  maintainers: 
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  version: 0.0.1
+  depends:
+  short_description: This is the component that creates VXLAN networks inside ONE
+  long_description: |
+    Component to create private Virtual Networks inside the Trial Network.
+    Allows the experimenter to interconnect components using private networks using it instead of using the main tn_vxlan
+  platforms: [one]
+  sites: [uma]
 
 ###################################################
 ##
 ## Public component variables that 
 ## should be filled by the experimenter or 
 ## the TNLCM. Some of them could be optional
+##
+## If component is optional, value is the default one
+## If component is not optional, value is an example one
 ## 
 ###################################################
+public:
+  one_vxlan_name:
+    description: Unique name in the TN to identify the vnet
+    type: "string"
+    value: "PLACEHOLDER_VXLAN_NAME"
+    user_input: true
+    optional: false
+  one_vxlan_first_ip:
+    description: First IPv4 address of the VNet
+    type: "string"
+    value: "192.168.199.1"
+    user_input: true
+    optional: false
+  one_vxlan_address_size:
+    description: |
+      Currently private vnets are hardcoded to IPv4 with netmask 255.255.255.0
+      one_vxlan_first_ip should be filled acording to one_vxlan_first_ip and this limitation
+    type: "int"
+    value: 254     # max 254
+    user_input: true
+    optional: false
 
-one_vxlan_name: "PLACEHOLDER_VXLAN_NAME"
-one_vxlan_dns: "PLACEHOLDER_DNS" # 1.1.1.1 1.0.0.1       space separated list of DNS IPs
-one_vxlan_address_size: 254 # MAX 255
-one_vxlan_first_ip: "PLACEHOLDER_VXLAN_FIRST_IP" # 192.168.199.1
-one_vxlan_gw: "PLACEHOLDER_VXLAN_GW" # 192.168.199.1
+  one_vxlan_gw: 
+    description: "Gateway for VMs taht have this VNet as thier main interface. Otherwise, this field is optional"
+    type: "string"
+    value: "192.168.199.1"
+    user_input: true
+    optional: true
+  one_vxlan_dns: 
+    description: "space-separated list of DNS servers for instances that have this VNet as their main interface. Otherwise, this field is optional"
+    type: "string"
+    value: "1.1.1.1 1.0.0.1"
+    user_input: true
+    optional: true
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:
+  tn_vxlan_id: "ID from OpenNebula to identify this Network"

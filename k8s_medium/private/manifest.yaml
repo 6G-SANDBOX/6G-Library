@@ -63,7 +63,7 @@
     - name: Create SSH config file into Jenkins
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"    
       vars:
-        tnid: "{{ tn_id}}"
+        tn_id: "{{ tn_id }}"    # probably unnecesary
         servicename: "{{ service_name }}"
         role: "{{ item.key }}"
         ip: "{{ item.value }}"

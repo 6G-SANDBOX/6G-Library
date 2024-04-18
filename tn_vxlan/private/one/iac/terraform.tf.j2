@@ -16,7 +16,7 @@ resource "opennebula_virtual_network" "{{ tn_id }}-{{ one_vxlan_name }}" {
   template_section {
    name = "{{ one_vxlan_name }}"
    elements = {
-      TNID = "{{ tn_id }}"
+      TN_ID = "{{ tn_id }}"
    }
   }
 }

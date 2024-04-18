@@ -4,9 +4,9 @@ The *UERANSIM* appliance with the name **{{ tn_id }}-{{ one_component_name }}** 
 
 <img src="https://artifacthub.io/image/48ac05fa-1ef2-4d8f-8fba-1d67cb236335@3x"/>
 
-[UERANSIM](https://github.com/aligungr/UERANSIM) is a simulator for both an UE and/or a RAN (gNodeB). Both utilities are separated into two different services
+[UERANSIM](https://github.com/aligungr/UERANSIM) is a simulator for both an UE and/or a RAN (gNodeB). Both utilities are separated into two different services,
 stopped and disabled by default:
-* **`ueransim_gnb.service`**: gnb simulator service defined at `/etc/systemd/system/ueransim_gnb.service`. Its behaviour is defined through the `/etc/UERANSIM/open5gs-gnb.yaml` file
+* **`ueransim_gnb.service`**: gNB simulator service defined at `/etc/systemd/system/ueransim_gnb.service`. Its behaviour is defined through the `/etc/UERANSIM/open5gs-gnb.yaml` file
 * **`ueransim_ue.service`**: User Equipment simulator service defined at `/etc/systemd/system/ueransim_ue.service`. Its behaviour is defined through the `/etc/UERANSIM/open5gs-ue.yaml` file
 
 If you need detailed information about what each parameter in the input files mean, check the [official documentation](https://github.com/aligungr/UERANSIM/wiki/Configuration)
