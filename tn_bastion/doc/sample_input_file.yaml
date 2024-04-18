@@ -1,5 +1,6 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
-tnlcm_callback: "http://tnlcm.uma/tn/{TN_ID}/callback"
+
+tnlcm_callback: "http://tnlcm.uma/tn/{tn_id}/callback"
 
 one_bastion_name: "tn_bastion"
 

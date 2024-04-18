@@ -1,7 +1,7 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
 # FROM TNLCM
-tnlcm_callback: "http://tnlcm.inet/tn/{TN_ID}/callback"
+tnlcm_callback: "http://tnlcm.inet/tn/{tn_id}/callback"
 
 # FROM PUBLIC VARIABLES SECTION
 external_vnet_id: public

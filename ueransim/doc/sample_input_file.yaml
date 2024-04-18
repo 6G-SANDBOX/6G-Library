@@ -1,7 +1,7 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
 # URL To publish result
-#tnlcm_callback: "http://tnlcm.uma/TN/ASZDV/callback"     # Useless for now
+tnlcm_callback: "http://tnlcm.inet/tn/{tn_id}/callback"
 
 # No need to edit this
 one_component_name: "myUERANSIM"
