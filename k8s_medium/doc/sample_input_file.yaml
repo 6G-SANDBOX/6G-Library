@@ -1,14 +1,15 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
+tnlcm_callback: "http://tnlcm.inet/tn/{TN_ID}/callback"
+
 external_vnet_id: '274'
 internal_vnet_id: '276'
-service_name: "main-oneKE"
+service_name: "cluster01"
 
 multus_enabled: "YES"
-cni_plugin: "canal"
+cni_plugin: "canal"  #canal, cilium or calico
 
 longhorn_enabled: "YES"
-
 metallb_enabled: "YES"
 
 metallb_range: "10.10.12.200-10.10.12.240"

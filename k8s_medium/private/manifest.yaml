@@ -117,7 +117,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_kubeconfig.yaml"
 
     - set_fact:
-        kubeconfig_content: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] }}"
+        kubeconfig_content: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] | b64decode }}"
 
     - name: Replace kubectl url endpoint
       replace:

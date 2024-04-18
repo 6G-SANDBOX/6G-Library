@@ -16,8 +16,7 @@ metadata:
   long_description: |
     This is the component that creates VXLAN network for TN Bootstrap
   platforms: [one]
-  sites: [uma]
-
+  sites: [uma, athens, fokus]
 ###################################################
 ##
 ## Public variables that 
@@ -26,10 +25,10 @@ metadata:
 ## 
 ###################################################
 public:
-  one_vxlan_name: 
+  one_vxlan_name:
     type: "string"
     value: "PLACEHOLDER_VXLAN_NAME"
-
+    
 ###################################################
 ##
 ## Output component variables that 

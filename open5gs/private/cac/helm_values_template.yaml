@@ -127,4 +127,4 @@ webui:
   ingress:
     enabled: true
     ingressClassName: nginx
-    hostname: "{{ domain_webui_dashboard }}"
+    hostname: "{{ subdomain_webui_dashboard }}.{{ tn_id}}.{{ site_domain }}"

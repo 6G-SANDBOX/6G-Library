@@ -64,3 +64,26 @@ oneke-ip-172-20-0-105   Ready    control-plane,etcd,master   29m    v1.27.2+rke2
 {{ kubeconfig_content }}
 ```
 
+## Skooner - Kubernetes Dashboard
+
+You can access to your cluster skoone dashboard whith this url skooner.{{ tn_id }}.{{ site_domain }}
+
+Skooner is the easiest way to manage your Kubernetes cluster.
+
+- **Full cluster management**: Namespaces, Nodes, Pods, Replica Sets, Deployments, Storage, RBAC and more
+- **Blazing fast and Always Live**: no need to refresh pages to see the latest cluster status
+- **Quickly visualize cluster health at a glance**: Real time charts help quickly track down poorly performing resources
+
+The token that you can use to access into the dashboard is:
+
+```
+{{ skooner_token }}
+```
+
+> The validity of this token is ten years from now. If you need to create another one, use this command:
+
+```
+kubectl create token skooner-sa -n kube-system --duration=8760h
+```
+
+More info here: https://github.com/skooner-k8s/skooner

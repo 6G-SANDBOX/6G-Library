@@ -1,6 +1,7 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+tnlcm_callback: "http://tnlcm.inet/tn/{TN_ID}/callback"
 
-oneke_cluster_name: "main-oneKE"
+oneke_cluster_name: "cluster01"
 plmn_id_mcc: "001"
 plmn_id_mnc: "01"
 tac: "200"
@@ -8,4 +9,4 @@ s_nssai_sst: "1"
 s_nssai_sd: "1"
 amf_ip: "11.21.1.200"
 upf_ip: "11.21.1.201"
-domain_webui_dashboard: "webui-dashboard.int"
+domain_webui_dashboard: open5gs-dashboard
