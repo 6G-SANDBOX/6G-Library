@@ -10,7 +10,7 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_bastion_name }}" {
     SET_HOSTNAME = "$NAME"
     PASSWORD = "{{ site_one_bastion_default_password }}"
     WIREGUARD_ALLOWEDIPS = "{{ one_bastion_wireguard_allowed_networks }}"
-    VPN_PUBLIC_IP = "{{ site_public_ip }}
+    VPN_PUBLIC_IP = "{{ site_public_ip }}"
     SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
   }
 
