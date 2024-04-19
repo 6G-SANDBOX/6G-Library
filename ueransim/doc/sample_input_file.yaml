@@ -15,6 +15,13 @@ one_vm_password: "experimenter"
 one_vm_ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDeUX4XDplfQjNQSR21dSC+5C+jj3Oqxc2HTsdw10cq/FIOLWae07e6JZzqBSO7ARaaLs7+8TuqnsRbEMUoo6myzoFZFOR/OdNvJIpnhKAcCIq+m0axV9ON4+apyIml+HAIDvxEYGVeb8wTleNQZZhki3r1yK4TQVQIXy+O6jl8E/q7dV8Wn1y7mw/XxPjERTj75CRawqyLP2HCPHO/nBrmQZUegTT9SoFOVlLfc8yy524QxxM+mN3TEaincalIzixlVcgnPN682Waml1OkwuvQQGDq3LQAxYlBCgInadq8OHMVxYyRKG2WTwrB6/SqnwWY86j+dbCp0WZrT2z/Yakb experimenter@uma.es"
 
 
+### VNETs for the VM
+# The vxlan VNET is mandatory. Aditional ones are not
+one_component_networks: 
+  - 47           # First one MUST BE the tn_vxlan VNET
+#  - 0           # Additional VNETs for debugging purposes
+
+
 ### The UERANSIM binary used inside this appliance internally uses a yaml config file with all the input's needed.
 ### The following variables let the experimenter modify a default config file inside the appliance during the VM's startup
 ### All variables are commented with it's default variables. Uncomment and modify them if the value shown is not the one desired.
@@ -40,7 +47,7 @@ gnb_tac: 1
 
 
 # One AMF address. Port will be 38412
-gnb_amf_address: '127.0.0.5'
+gnb_amf_address: '127.0.0.5'  # 10.21.12.200 if you follow the open5gs example value
 
 
 # List of supported S-NSSAIs by this gNB
@@ -85,13 +92,3 @@ ue_configured_nssai_sd:
 # Default Configured NSSAI for this UE
 ue_default_nssai_sst: 1
 ue_default_nssai_sd: 1
-
-
-
-
-
-### VNETs for the VM
-# The vxlan VNET is mandatory. Aditional ones are not
-one_component_networks: 
-  - 47           # First one MUST BE the tn_vxlan VNET
-#  - 0           # Additional VNETs for debugging purposes

@@ -7,4 +7,3 @@ tnlcm_callback: "http://tnlcm.uma/tn/{tn_id}/callback"
 one_vxlan_name: "main_vnet"
 
 # FROM PRIVATE VARIABLES SECTION (ONLY FOR ADVANCED USERS)
-
