@@ -70,7 +70,7 @@
         host: "{{ vm_ip }}"
         connect_timeout: 5
         delay: 20
-        timeout: 120
+        timeout: 240
 
 # STAGE 3: Execute manifest
 - name: Infrastructure Tasks
