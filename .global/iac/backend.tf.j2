@@ -2,7 +2,9 @@ terraform {
   backend "s3" {
     bucket = "{{ site_s3_server.bucket }}"
     key = "{{ tn_id }}/terraform.tfstate"
-    endpoint = "{{ site_s3_server.endpoint }}"
+    endpoints = {
+        s3 = "{{ site_s3_server.endpoint }}"
+    }
     region = "{{ site_s3_server.region }}"
     skip_requesting_account_id = {{ site_s3_server.skip_requesting_account_id }}
     skip_credentials_validation = {{ site_s3_server.skip_credentials_validation }}

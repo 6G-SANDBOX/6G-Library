@@ -1,0 +1,88 @@
+####################################
+##
+## Component metadata
+## 
+####################################
+component_name: k8s_medium
+metadata:
+  maintainers: 
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  version: 0.0.1
+  depends: 
+    - tn_vxlan:
+        version: ">0.0.1"
+        comments: "Trial Network management VNET"
+    - tn_bastion:
+        version: ">0.0.1"
+        comments: "Virtual Machine to manage Trial Network connectivity"
+    - vxlan:
+        version: ">0.0.1"
+        comments: "Private VNET to deploy K8S nodes"
+  short_description: This is a component to deploy a K8S cluster medium size.
+  long_description: |
+    This component deploy a K8S cluster using the oneKE service created by OpenNebula.
+    It creates a 3 node cluster: master, worker, storage-worker
+    More info in this url: https:// ....
+  platforms: [one]
+  sites: [uma, athens, fokus]
+
+###################################################
+##
+## Public component variables that 
+## should be filled by the experimenter or 
+## the TNLCM. Some of them could be optional
+## 
+###################################################
+public:
+  external_vnet_id:
+    type: "string"
+    value: ""  
+  internal_vnet_id:
+    type: "string"
+    value: ""
+  service_name: 
+    type: "string"
+    value: "OneKE-sandbox-tn-oulu"
+  multus_enabled: 
+    type: "choice"
+    value:
+      - "YES"
+      - "NO"
+  cni_plugin: 
+    type: "choice"
+    value: 
+      - "canal" # canal/cilium/calico
+      - "cilium"
+      - "calico"
+  longhorn_enabled: 
+    type: "choice"
+    value:
+      - "YES"
+      - "NO"
+  metallb_enabled: 
+    type: "choice"
+    value:
+      - "YES"
+      - "NO"
+  metallb_range: 
+    type: "string"
+    value: "10.10.12.200-10.10.12.240" # i.e. 192.168.1.240-192.168.1.250
+  traefik_enabled:
+    type: "choice"
+    value:
+      - "YES"
+      - "NO"
+  vnf_upstream_dns: 
+    type: "string"
+    value: "1.1.1.1 8.8.8.8"
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:
+  kubeconfig: "Kubeconfig file to access to this cluster"

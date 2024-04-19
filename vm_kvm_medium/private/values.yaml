@@ -10,3 +10,4 @@
 
 artifact_url: "https://marketplace.opennebula.io/appliance/84bd27fe-5d14-4e70-a79a-eb3fdd0072ae"
 artifact_name: "UBUNTU M"
+one_group: "oneadmin"   # change to "6G-Sandbox" in the future

@@ -1,0 +1,149 @@
+# START MANDATORY BLOCK
+- name: Generate installation manifest from templates
+  hosts: localhost
+  gather_facts: true
+  tasks: 
+    - name: Mix variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
+    - name: 'Add bastion hosts to be able to jump'
+      ansible.builtin.add_host:
+        name: "{{ tn_id }}-tn_bastion"      
+# END MANDATORY BLOCK
+
+# STAGE 1: Prepare manifest from templates
+- name: Generate installation manifest from templates
+  hosts: localhost
+  tasks: 
+    - name: Generate installation manifest from templates
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/prepare.yaml"
+
+# STAGE 2: Create infrastructure
+- name: Infrastructure Tasks
+  hosts: localhost
+  tasks:
+    - name: Download Terraform manifest from previos TN components
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_bucket_content_tasks.yaml" 
+          
+    - name: Execute terraform apply
+      community.general.terraform:
+        project_path: "./{{ site_hypervisor }}/iac/"
+        state: "present"
+        force_init: true
+      register: result 
+
+    - name: Get Terraform Output
+      ansible.builtin.shell:
+      args:
+        chdir: "./{{ site_hypervisor }}/iac/"
+        cmd: "terraform output --json | jq 'with_entries(.value |= .value)'"
+      register: terraform_output
+
+    - name: Load Terraform Output into execution context
+      ansible.builtin.set_fact:
+        outputs: "{{ terraform_output.stdout | from_json }}"
+
+    - name: Update SSH Key into Service VMs
+      ansible.builtin.script:
+        cmd: "{{ workspace }}/.global/scripts/update_ssh_key_service_vms.py '{{ outputs[ tn_id + '-oneke-' + service_name + '_roles' ] | to_json }}' '{{ site_jenkins_ssh_public_key }}' 2>/dev/null"
+        executable: /usr/bin/python3
+
+    - name: Create data structure with roles->eth0_ips
+      ansible.builtin.script:
+        cmd: "{{ workspace }}/.global/scripts/get_ips_from_roles.py '{{ outputs[ tn_id + '-oneke-' + service_name + '_roles' ] | to_json}}' 2>/dev/null"
+        executable: /usr/bin/python3
+      register: result_ips  
+
+    - name: Add new VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "{{ tn_id }}-oneke-{{ service_name }}-{{ item.key }}"
+        ansible_user: "root"
+        #ansible_ssh_pass: "ansible"
+      loop: "{{ result_ips.stdout | from_json | dict2items }}"
+
+    - name: Create SSH config file into Jenkins
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"    
+      vars:
+        tn_id: "{{ tn_id }}"    # probably unnecesary
+        servicename: "{{ service_name }}"
+        role: "{{ item.key }}"
+        ip: "{{ item.value }}"
+      loop: "{{ result_ips.stdout | from_json | dict2items }}"
+
+# STAGE 3: Task on oneKE Master
+- name: OneKE Master Tasks
+  hosts: "{{ hostvars['localhost']['tn_id'] }}-oneke-{{ hostvars['localhost']['service_name'] }}-master"
+  gather_facts: no
+  tasks:
+
+    - name: Wait for connection to the OneKE master
+      ansible.builtin.wait_for_connection:
+        delay: 10
+        timeout: 120
+
+    - name: Gather facts
+      ansible.builtin.setup:
+
+    - name: Get remote kubeconfig file content
+      ansible.builtin.slurp:
+        src: "/etc/rancher/rke2/rke2.yaml"
+      register: kubeconfig
+
+# STAGE 4: Execute manifest
+- name: Setup Jenkins to access oneKE Cluster
+  hosts: localhost
+  tasks:
+
+    - name: Create kubeconfig
+      ansible.builtin.copy:
+        content: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] | b64decode }}"
+        dest: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
+
+    - name: Create data structure with roles->eth0_ips
+      ansible.builtin.script:
+        cmd: "{{ workspace }}/.global/scripts/find_free_tcp_port.py"
+        executable: /usr/bin/python3
+      register: result_port
+
+    - name: Verify if port is empty
+      assert:
+        that: result_port.stdout | length > 0
+        fail_msg: "There is not empty port"      
+
+    - name: Start SSH tunnel if is not open
+      shell: "ssh -f -L {{ result_port.stdout | trim }}:localhost:6443 {{ tn_id }}-oneke-{{ service_name }}-master -N"
+      when: result_port.stdout | length > 0
+
+    - name: Upload Kubeconfig to S3 before replacing port
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_kubeconfig.yaml"
+
+    - set_fact:
+        kubeconfig_content: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] | b64decode }}"
+
+    - name: Replace kubectl url endpoint
+      replace:
+        path: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
+        regexp: "https://127.0.0.1:6443"
+        replace: "https://127.0.0.1:{{ result_port.stdout | trim }}"
+
+    - name: Post Actions ingress-nginx
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/install_nginx_controller.yaml"
+    
+    - name: Post Actions Skooner dashboard
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/install_skooner_dashboard.yaml"
+
+    - name: Post Actions Longhorn dashboard
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/install_longhorn_dashboard.yaml"
+
+    - name: Delete previous SSH tunnel
+      shell: "bash {{ workspace }}/.global/scripts/kill_ssh_jenkins.sh {{ result_port.stdout | trim }}"
+      ignore_errors: yes
+
+# STAGE 5: Generate Responses and save manifest a config files
+- name: Finishing deployment
+  hosts: localhost
+  tasks:
+    - name: Publish execution results
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
+
+    - name: Upload deployment manifest
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"

@@ -8,6 +8,8 @@ metadata:
   family: compute
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   version: 0.0.1
   depends: 
     - tn_vxlan (>= 0.0.1)

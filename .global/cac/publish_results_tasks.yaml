@@ -1,54 +1,53 @@
-- name: Generate markdown response for success
-  template:
-    src: "{{ workspace }}/{{ component_name }}/results/result_ok.md.j2"
-    dest: "{{ workspace }}/{{ component_name }}/results/result_ok.{{ component_name }}.{{ tn_id }}.md"
-  when: not result.failed
+- name: Generate responses for success scenario
+  when: not result.failed           # Change to "terraform_apply.failed"
+  block:
+  - name: Generate markdown response for success
+    ansible.builtin.template:
+      src: "{{ workspace }}/{{ component_name }}/results/result_ok.md.j2"
+      dest: "{{ workspace }}/{{ component_name }}/results/result_ok.{{ component_name }}.{{ tn_id }}.md"
 
-- name: Generate markdown response for not success
-  template:
-    src: "{{ workspace }}/{{ component_name }}/results/result_nok.md.j2"
-    dest: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ component_name }}.{{ tn_id }}.md"
+  - name: Encode markdown OK file into base64 
+    ansible.builtin.slurp:
+      src: "{{ workspace }}/{{ component_name }}/results/result_ok.{{ component_name }}.{{ tn_id }}.md"
+    register: markdown2ok
+
+  - name: Generate markdown response for success in JSON
+    ansible.builtin.template:
+      src: "{{ workspace }}/{{ component_name }}/results/result_ok.json.j2"
+      dest: "{{ workspace }}/{{ component_name }}/results/result_ok.json"
+
+  - name: POST result to TNLCM with OK
+    ansible.builtin.uri:
+      url: "{{ tnlcm_callback }}"
+      method: POST
+      body_format: json
+      src: "{{ workspace }}/{{ component_name }}/results/result_ok.json"
+    register: output
+    ignore_errors: true 
+
+
+- name: Generate responses for failed scenario
   when: result.failed
+  block:
+  - name: Generate markdown response for failed
+    ansible.builtin.template:
+      src: "{{ workspace }}/{{ component_name }}/results/result_nok.md.j2"
+      dest: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ component_name }}.{{ tn_id }}.md"
 
-- name: Encode markdown OK file into base64 
-  ansible.builtin.slurp:
-    src: "{{ workspace }}/{{ component_name }}/results/result_ok.{{ component_name }}.{{ tn_id }}.md"
-  register: markdown2ok
-  when: not result.failed
+  - name: Encode markdown NOK file into base64 
+    ansible.builtin.slurp:
+      src: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ component_name }}.{{ tn_id }}.md"
+    register: markdown2nok
 
-- name: Encode markdown NOK file into base64 
-  ansible.builtin.slurp:
-    src: "{{ workspace }}/{{ component_name }}/results/result_nok.{{ component_name }}.{{ tn_id }}.md"
-  register: markdown2nok
-  when: result.failed
+  - name: Generate markdown response for failed in JSON
+    ansible.builtin.template:
+      src: "{{ workspace }}/{{ component_name }}/results/result_nok.json.j2"
+      dest: "{{ workspace }}/{{ component_name }}/results/result_nok.json"
 
-- name: Generate markdown response for success in JSON
-  template:
-    src: "{{ workspace }}/{{ component_name }}/results/result_ok.json.j2"
-    dest: "{{ workspace }}/{{ component_name }}/results/result_ok.json"
-  when: not result.failed
-
-- name: Generate markdown response for not success in JSON
-  template:
-    src: "{{ workspace }}/{{ component_name }}/results/result_nok.json.j2"
-    dest: "{{ workspace }}/{{ component_name }}/results/result_nok.json"
-  when: result.failed      
-
-- name: POST result to TNLCM with OK
-  uri:
-    url: "{{ tnlcm_callback }}"
-    method: POST
-    body_format: json
-    src: "{{ workspace }}/{{ component_name }}/results/result_ok.json"
-  register: output
-  when: not result.failed
-  ignore_errors: true 
-
-- name: POST result to TNLCM with NOK
-  uri:
-    url: "{{ tnlcm_callback }}"
-    method: POST
-    body_format: json
-    src: "{{ workspace }}/{{ component_name }}/results/result_nok.json"
-  when: result.failed
-  ignore_errors: true
+  - name: POST result to TNLCM with NOK
+    ansible.builtin.uri:
+      url: "{{ tnlcm_callback }}"
+      method: POST
+      body_format: json
+      src: "{{ workspace }}/{{ component_name }}/results/result_nok.json"
+    ignore_errors: true

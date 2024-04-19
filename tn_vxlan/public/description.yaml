@@ -8,12 +8,15 @@ metadata:
   family: bootstrap
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   version: 0.0.1
+  depends:
   short_description: This is the component that creates VXLAN network for TN Bootstrap
   long_description: |
     This is the component that creates VXLAN network for TN Bootstrap
   platforms: [one]
-  sites: [uma]
+  sites: [uma, athens, fokus]
 ###################################################
 ##
 ## Public variables that 
@@ -22,8 +25,10 @@ metadata:
 ## 
 ###################################################
 public:
-  one_vxlan_name: "PLACEHOLDER_VXLAN_NAME"
-
+  one_vxlan_name:
+    type: "string"
+    value: "PLACEHOLDER_VXLAN_NAME"
+    
 ###################################################
 ##
 ## Output component variables that 

@@ -1,0 +1,37 @@
+####################################
+##
+## Component changelog
+##
+####################################
+
+releases:
+  "1.1.0":
+    release_date: '2024-04-16'
+    changes:
+      release_summary: Added support to connect the gNB to the Open5GS
+      major_changes:
+      - Appliance OS changed from Ubuntu22.04 minimal to Ubuntu 22.04
+      - The parameters "gnb_linkIp", "gnb_ngapIp" and "gnb_gtpIp" have been removed
+      - New parameter "oneke_vnf" to specify where to route the vnf traffic of the gnb
+      minor_changes:
+      breaking_changes:
+      new_features:
+      deprecated_features:
+      removed_features:
+      security_fixes:
+      bugfixes:
+  "1.0.0":
+    release_date: '2024-03-14'
+    changes:
+      release_summary: First release of the UERANSIM 6G-LIBRARY component
+      major_changes:
+      minor_changes:
+      breaking_changes:
+      new_features:
+      - Customization of multiple variables from the config file of the UERANSIM's gNB
+      - Customization of multiple variables from the config file of the UERANSIM's UE
+      - Possibility to start the VM with the services stopped or running independently
+      deprecated_features:
+      removed_features:
+      security_fixes:
+      bugfixes:

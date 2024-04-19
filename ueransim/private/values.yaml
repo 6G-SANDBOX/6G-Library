@@ -1,0 +1,15 @@
+################################################
+##
+## Component private variables
+##
+## Variables that should be neccesary 
+## for the deployment but are not available 
+## to the experimenter
+##
+################################################
+
+one_group: "oneadmin"   # change to "6G-Sandbox" in the future
+
+# Hardware requirements for the UERANSIM are not mutable by the experimenter
+# vcpu: 4
+# memory: 4G

@@ -1,15 +1,15 @@
 # START MANDATORY BLOCK
 - name: Generate installation manifest from templates
   hosts: localhost
-  tasks: 
+  tasks:
     - name: Mix variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-# END MANDATORY BLOCK    
+# END MANDATORY BLOCK
 
 # STAGE 1: Prepare manifest from templates
 - name: Generate installation manifest from templates
   hosts: localhost
-  tasks: 
+  tasks:
     - name: Generate installation manifest from templates
       ansible.builtin.include_tasks: ./{{ site_hypervisor }}/prepare.yaml
 
@@ -17,19 +17,19 @@
 - name: Infrastructure Tasks
   hosts: localhost
   tasks:
-    - name: Download Terraform manifest from previos TN components
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_bucket_content_tasks.yaml" 
-          
+    - name: Download Terraform manifest from previous TN components
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_bucket_content_tasks.yaml"
+
     - name: Execute terraform apply
       community.general.terraform:
         project_path: './{{ site_hypervisor }}/iac/'
         state: "present"
         force_init: true
-      register: result 
+      register: result
 
     - name: Get Terraform Outputs
       ansible.builtin.debug:
-        msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + \"_vxlan_id\"].value }}"
+        msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + \"-vxlan_id\"].value }}"
       when: not result.failed
 
     - name: Publish execution results
@@ -37,4 +37,4 @@
 
     - name: Upload Terraform manifest
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-      when: not result.failed   
+      when: not result.failed
