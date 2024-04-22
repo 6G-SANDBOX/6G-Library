@@ -53,7 +53,7 @@ public:
     optional: false
 
   one_vxlan_gw:
-    description: Gateway for VMs taht have this VNet as thier main interface. Otherwise, this field is optional
+    description: Gateway for VMs that have this VNet as thier main interface. Otherwise, this field is optional
     type: "string"
     value: "192.168.199.1"
     user_input: true
