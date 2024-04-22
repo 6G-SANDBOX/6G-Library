@@ -36,13 +36,6 @@ public:
   one_component_networks: 
     type: "array"
     values: ["RED1", "RED2"]
-    
-    
-    
-    
-    
-    List of networks"
-
 ###################################################
 ##
 ## Output component variables that 
