@@ -69,7 +69,7 @@ oneke-ip-172-20-0-105   Ready    control-plane,etcd,master   29m    v1.27.2+rke2
 ## KubeConfig File
 
 ```
-{{ kubeconfig_content }}
+{{ kubeconfig_content_decoded }}
 ```
 
 ## Skooner - Kubernetes Dashboard
@@ -85,7 +85,7 @@ Skooner is the easiest way to manage your Kubernetes cluster.
 The token that you can use to access into the dashboard is:
 
 ```
-{{ skooner_token }}
+{{ skooner_token['stdout'] }}
 ```
 
 > The validity of this token is ten years from now. If you need to create another one, use this command:
