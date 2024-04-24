@@ -20,8 +20,16 @@ Important information about cluster configuration:
 * CLUSTER NAME: {{ service_name }}
 * PUBLIC VIRTUAL NET: {{ external_vnet_id }}
 * PRIVATE VIRTUAL NET: {{ internal_vnet_id }}
-* CNI: {{ cni_plugin }} 
+{% if cni_plugin is defined and cni_plugin %}
+* CNI: {{ cni_plugin }}
+{% else %}
+* CNI: "canal"
+{% endif %}
+{% if multus_enabled is defined and multus_enabled %}
 * MULTUS ENABLED: {{ multus_enabled }}
+{% else %}
+* MULTUS ENABLED: "YES"
+{% endif %}
 * METALLB ENABLED: {{ metallb_enabled }}
 * METALLB IP POOL: {{ metallb_range }}
 * TRAEFIK ENABLED: {{ traefik_enabled }}

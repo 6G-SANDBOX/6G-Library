@@ -3,7 +3,6 @@
 ## Component metadata
 ## 
 ####################################
-
 component_name: vxlan
 metadata:
   family: network
@@ -13,12 +12,16 @@ metadata:
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   version: 0.0.1
   depends:
+    - tn_vxlan:
+        version: ">=0.0.1"
+    - tn_bastion:
+        version: ">=0.0.1"
   short_description: This is the component that creates VXLAN networks inside ONE
   long_description: |
     Component to create private Virtual Networks inside the Trial Network.
     Allows the experimenter to interconnect components using private networks using it instead of using the main tn_vxlan
   platforms: [one]
-  sites: [uma]
+  sites: [uma, athens, fokus]
 
 ###################################################
 ##
@@ -46,9 +49,9 @@ public:
   one_vxlan_address_size:
     description: |
       Currently private vnets are hardcoded to IPv4 with netmask 255.255.255.0
-      one_vxlan_first_ip should be filled acording to one_vxlan_first_ip and this limitation
+      one_vxlan_first_ip should be filled acording to one_vxlan_first_ip and this limitation (Max value=254)
     type: "int"
-    value: 254     # max 254
+    value: 254
     user_input: true
     optional: false
 
