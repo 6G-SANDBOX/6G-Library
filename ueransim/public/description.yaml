@@ -53,8 +53,8 @@ metadata:
 ###################################################
 public:
   one_component_name:
-    desciption: Unique name to identify the ueransim component inside the Trial Network
-    type: string
+    description: Unique name to identify the ueransim component inside the Trial Network
+    type: "str"
     value: "PLACEHOLDER_VM_NAME"
     user_input: true
     optional: false
@@ -62,25 +62,25 @@ public:
     description: |
       Privileged user (other than root) to access the VM by SSH
       NOTE: If no username is provided, the only user will be root and ssh access may not be available (sshd_config: PermitRootLogin without-password)
-    type: string
+    type: "str"
     value: ""
     user_input: true
     optional: true
   one_vm_password:
     description: Password to access the VM by SSH. Useful only if "one_vm_username" is defined
-    type: string
+    type: "str"
     value: ""
     user_input: true
     optional: true
   one_vm_ssh_key:
     description: SSH public key loaded into /home/"one_vm_username"/.ssh/authorized_keys. If "one_vm_username" is not defined, it will default to /root/.ssh/authorized_keys
-    type: string
+    type: "str"
     value: ""
     user_input: true
     optional: true
   one_component_networks:
     description: OpenNebula IDs of the VNets the VM will be part of. First will be the tn_vxlan ID in most cases
-    type: int-string
+    type: "list"
     value:
 #      - 47
     user_input: true
@@ -88,7 +88,7 @@ public:
 
   oneke_vnf:
     description: Proxy address to send the traffic to reach the "gnb_amf_address". The IPv4 address of a OneKE VNF inside your Trial Network
-    type: string
+    type: "str"
     value: "127.0.0.1"
     user_input: true
     optional: true
@@ -97,7 +97,7 @@ public:
     description: |
       Enable ueransim-gnb.service at start. If "YES", requires a functional open5gs appliance previously deployed
       Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
-    type: "string"
+    type: "str"
     choices:
       - "YES"
       - "NO"
@@ -106,19 +106,19 @@ public:
     optional: true
   gnb_mcc:
     description: In gNB simulation, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
-    type: string
+    type: "str"
     value: "999"
     user_input: true
     optional: true
   gnb_mnc:
     description: In gNB simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
-    type: string
+    type: "str"
     value: "70"
     user_input: true
     optional: true
   gnb_tac:
-    desciption: In gNB simulation, Tracking Area Code in the PLMN
-    type: string
+    description: In gNB simulation, Tracking Area Code in the PLMN
+    type: "str"
     value: "1"
     user_input: true
     optional: true
@@ -127,19 +127,19 @@ public:
       In gNB simulation, IPv4 address of the Access Management Function (AMF).
       If "oneke_vnf" is defined, this address is expected to be behind it, so the necessary routing rules will be automatically defined
       AMF port is currently hardcoded to always be 38412
-    type: string
+    type: "str"
     value: "127.0.0.5"
     user_input: true
     optional: true
   gnb_slices_sst:
     description: In gNB simulation, Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
-    type: int
+    type: "int"
     value: 1
     user_input: true
     optional: true
   gnb_slices_sd:
     description: In gNB simulation, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
-    type: int
+    type: "int"
     value: 1
     user_input: true
     optional: true
@@ -148,7 +148,7 @@ public:
     description: |
       Enable ueransim-ue.service at start. If "YES", requires either to set run_gnb="YES", or to have a functional ueransim with run_gnb="YES" previously deployed.
       Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
-    type: "string"
+    type: "str"
     choices:
       - "YES"
       - "NO"
@@ -157,79 +157,79 @@ public:
     optional: true
   ue_supi:
     description: In UE simulation, IMSI number of the UE. IMSI = [MCC|MNC|MSISDN] (In total 15 digits)
-    type: string
+    type: "str"
     value: 'imsi-999700000000001'
     user_input: true
     optional: true
   ue_mcc:
     description: In UE simulation, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
-    type: string
+    type: "str"
     value: "999"
     user_input: true
     optional: true
   ue_mnc:
     description: In UE simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
-    type: string
+    type: "str"
     value: "70"
     user_input: true
     optional: true
   ue_key:
     description: In UE simulation, Permanent subscription key
-    type: string
+    type: "str"
     value: 465B5CE8B199B49FAA5F0A2EE238A6BC
     user_input: true
     optional: true
   ue_op:
     description: In UE simulation, Operator code (OP or OPC) of the UE
-    type: string
+    type: "str"
     value: E8ED289DEBA952E4283B54E88E6183CA
     user_input: true
     optional: true
   ue_gnbSearchList:
     description: In UE simulation, IP address for Radio Link Simulation
-    type: string
+    type: "str"
     value: "127.0.0.1"
     user_input: true
     optional: true
   ue_session_apn:
     description: In UE simulation, Access Point Name (APN) of the initial PDU session to be established
-    type: string
+    type: "str"
     value: internet
     user_input: true
     optional: true
   ue_session_sst:
     description: In UE simulation, Slice/Service Type (SST) of the initial PDU session to be established
-    type: int
+    type: "int"
     value: 1
     user_input: true
     optional: true
   ue_session_sd:
     description: In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established
-    type: int
+    type: "int"
     value:
     user_input: true
     optional: true
   ue_configured_nssai_sst:
     description: In UE simulation, Slice/Service Type (SST) of the configured NSSAI by HPLMN
-    type: int
+    type: "int"
     value: 1
     user_input: true
     optional: true
   ue_configured_nssai_sd:
     description: In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN
-    type: int
+    type: "int"
     value:
     user_input: true
     optional: true
   ue_default_nssai_sst:
     description: In UE simulation, Slice/Service Type (SST) of the default NSSAI
-    type: int
+    type: "int"
     value: 1
     user_input: true
     optional: true
   ue_default_nssai_sd:
     description: In UE simulation, Slice Differentiator (SD) of the default NSSAI
-    type: int
+    type: "int"
     value: 1
     user_input: true
     optional: true

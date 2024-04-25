@@ -27,8 +27,8 @@ metadata:
 ###################################################
 public:
   one_vxlan_name:
-    desciption: "Name to customize the tn_vxlan component inside OpenNebula. NOTE: this variable will be removed in the next 6GLibrary update"
-    type: "string"
+    description: "Name to customize the tn_vxlan component inside OpenNebula. NOTE: this variable will be removed in the next 6GLibrary update"
+    type: "str"
     value: "PLACEHOLDER_VXLAN_NAME"
     user_input: true
     optional: false

@@ -34,7 +34,7 @@ public:
   one_vm_username: "username"
   one_vm_password: "password"
   one_component_networks: 
-    type: "array"
+    type: "list"
     values: ["RED1", "RED2"]
 ###################################################
 ##

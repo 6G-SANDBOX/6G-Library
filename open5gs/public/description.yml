@@ -35,55 +35,55 @@ metadata:
 public:
   oneke_cluster_name:
     description: Unique name to identify the OneKE cluster inside the Trial Network. OneKE cluster where the open5gs helm chart will be deployed
-    type: "string"
+    type: "str"
     value: "cluster_xxxxx"
     user_input: true
     optional: false
   plmn_id_mcc:
     description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
-    type: "string"
+    type: "str"
     value: "001"
     user_input: true
     optional: false
   plmn_id_mnc:
     description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
-    type: "string"
+    type: "str"
     value: "01"
     user_input: true
     optional: false
   tac:
     description: Tracking Area Code in the PLMN
-    type: "string"
+    type: "str"
     value: "200"
     user_input: true
     optional: false
   s_nssai_sst:
     description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
-    type: "string"
+    type: "str"
     value: "1"
     user_input: true
     optional: false
   s_nssai_sd:
     description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
-    type: "string"
+    type: "str"
     value: "1"
     user_input: true
     optional: false
   amf_ip: 
     description: IPv4 address of the Access Management Function (AMF). Should be placed inside the "metallb_range" of the OneKE
-    type: "string"
+    type: "str"
     value: "11.21.1.200"
     user_input: true
     optional: false
   upf_ip:
     description: IPv4 address of the User Plane Function (UPF). Should be placed inside the "metallb_range" of the OneKE
-    type: "string"
+    type: "str"
     value: "11.21.1.201"
     user_input: true
     optional: false
   subdomain_webui_dashboard:
     descrption: Name for the open5gs webui dashboard inside the TN subdomain.
-    type: "string"
+    type: "str"
     value: "open5gs-dashboard"
     user_input: true
     optional: false

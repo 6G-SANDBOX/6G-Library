@@ -36,13 +36,13 @@ metadata:
 public:
   one_vxlan_name:
     description: Unique name in the TN to identify the vnet
-    type: "string"
+    type: "str"
     value: "PLACEHOLDER_VXLAN_NAME"
     user_input: true
     optional: false
   one_vxlan_first_ip:
     description: First IPv4 address of the VNet
-    type: "string"
+    type: "str"
     value: "192.168.199.1"
     user_input: true
     optional: false
@@ -57,13 +57,13 @@ public:
 
   one_vxlan_gw:
     description: Gateway for VMs that have this VNet as thier main interface. Otherwise, this field is optional
-    type: "string"
+    type: "str"
     value: "192.168.199.1"
     user_input: true
     optional: true
   one_vxlan_dns:
     description: Space-separated list of DNS servers for instances that have this VNet as their main interface. Otherwise, this field is optional
-    type: "string"
+    type: "str"
     value: "1.1.1.1 1.0.0.1"
     user_input: true
     optional: true
