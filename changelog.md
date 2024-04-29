@@ -1,9 +1,57 @@
+# Changelog
 
-# Reorganization
-For each component:
-1. moved doc/sample_input_file.yaml to sample_input_file,yaml
-2. moved doc/index.md to README.md
-3. moved public/changelog.yaml to changelog.md with CHANGED FORMAT
-4. moved private/values.yaml to variables/private.yaml
+## [Unreleased]
 
-ALL CHANGELOGS SHOULD FOLLOW THE NEXT TEMPLATES (thanks to <c.andreo@uma.es> for the references)
+### Added
+
+- Standardized changelog format to fit [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog/blob/main/CHANGELOG.md) rules.
+
+### Changed
+
+- Radical repository reorganization:
+    - moved `doc/sample_input_file.yaml` to `sample_input_file.yaml`
+    - moved `doc/index.md` to `README.md`
+    - moved `public/changelog.yaml` to `changelog.md` with **changed format**
+    - moved `private/values.yaml` to `variables/private.yaml`
+
+
+## [v0.1.0] - 29-04-2024
+
+Initial release of the 6G Library. Changes will be kept on track for now on.
+
+
+<!--
+FIELDS PER VERSION:
+
+### Added
+
+- New features
+
+### Changed
+
+- Changes in existing functionality
+
+### Deprecated
+
+- Soon-to-be removed features
+
+### Removed
+
+- Removed features
+
+### Fixed
+
+- Bug fixes
+
+### Security
+
+- Vulnerability warnings
+-->
+
+
+[unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.1.1...HEAD
+<!--
+Format for next release
+[v0.1.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.1.1
+-->
+[v0.1.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.1.0
