@@ -1,0 +1,18 @@
+######################################################
+##
+## Component private variables
+##
+## Advanced variables required for the deployment, 
+## but unavailable by default to the experimenter
+## in the TNLCM. 
+## Currently only modifiable manually from the manifest
+##
+## File previously found at "private/values.yaml"
+##
+######################################################
+
+one_group: "oneadmin"   # change to "6G-Sandbox" in the future
+
+# Hardware requirements for the UERANSIM are not mutable by the experimenter
+# vcpu: 4
+# memory: 4G
