@@ -1,15 +1,102 @@
-# replaces public/description.yaml
-# variables regarding general info about the component
-# all variables must and will be usable in automations (while not necesarilly useful)
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 4 global variables
+## with all required info:
+##   1. name: name of the component
+##
+##   2. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   3. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   4. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+## File previously found at "public/description.yaml"
+##
+######################################################
 
-# previously named "component_name". same as the directory name inside the 6G-LIBRARY
-name:
 
-# all metadata can be fitted here, but useful metadata in scripts includes versions, dependencies and allowed platforms
+# "name" was previouslly called "component_name", "input" was "public" and "output" was "outputs"
+# Only "name" and "input" are useful for the deployment of Trial Networks, while metadata and output serve the THLCM
+
+# metadata gives the TNLCM some general information to help it understand how to process and order the different components. Fields:
+#   - mantainers: Unordered list of active component mantainers
+#   - depends: Component types that needs to be previously deployed. Values can be repeated if multiple instances of that component are needed.
+#   - short_description: Shown in THLCM
+#   - long_description: Shown in TNLCM
+#   - hypervisors: Unordered list of compatible hypervisors
+#   - sites: Unordered list of sites where component is avaiable
+
+# input describes all variables needed in a TN descriptor. Each variable containers the following fields:
+#   - description; A general description of the variable. It appears in the TNLCM Frontend
+#   - type: Expected data format. Avaiable types are "str", "int", "strlist" and "intlist"
+#   - value: Placeholder value that appears in the TNLCM
+#   - user_input: Variable will be asked to the experimenter in the TNLCM.
+#                 completes this variable using other component's metadata or outputs.
+#   - optional: If "user_input: True", indicates whether the placeholder ("value") serves as a default value or not. If negative, a value must always be provided by the experimenter
+#               If "user_input: False", this value is irrelevant, as it will always be filled. Defaults to false.
+
+# output values may not only be useful for the TNLCM. They can also be used to generate the result files at the end of each deployment
+
+# POSSIBLE FUTURE FEATURE: add version to component dependencies. Currently TNs need to have all components in the same 6G Library version
+
+####################################
+## Component name
+####################################
+name: Component_Name
+
+####################################
+## Component metadata
+####################################
 metadata:
+  maintainers: 
+    - Full Name <contact@mail.address>
+  depends:
+    - tn_vxlan
+    - tn_bastion
+  short_description: Short description of a Component Type
+  long_description: |
+    The long description of a Component Type may span multiple lines
+    and provide a more in depth outline of it's purpose
+  hypervisors: [one]
+  sites: [uma, athens, fokus]
 
-# previously named "public". variables the deployer can specify in the input file and their default values
+####################################
+## Component input
+####################################
 input:
+  sample_optional_variable:
+    description: Description of an optional variable
+    type: "str"
+    value: "PLACEHOLDER VALUE"
+    user_input: true
+    optional: true
+  sample_mandatory_variable:
+    description: Description of a mandatory variable
+    type: "int"
+    value: "1"
+    user_input: true
+    optional: false
+  sample_tnlcm_variable:
+    description: |
+      This description is surely useless as the experimenter should not worry to fill this variable
+    type: "intlist"
+    value:
+      - 1
+      - 2
+      - 3
+    user_input: false
+    optional: true
 
-# previously named "outputs". new variables shown in the results file (such as component ID, IP, etc.)
+####################################
+## Component input
+####################################
 output:
+  - terraform_output_value:

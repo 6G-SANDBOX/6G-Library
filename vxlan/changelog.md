@@ -8,11 +8,7 @@
 
 ### Changed
 
-- Radical repository reorganization:
-    - moved `doc/sample_input_file.yaml` to `sample_input_file.yaml`
-    - moved `doc/index.md` to `README.md`
-    - moved `public/changelog.yaml` to `changelog.md` with **changed format**
-    - moved `private/values.yaml` to `variables/private.yaml`
+- Radical repository reorganization as explained in the main changelog
 
 
 ## [v0.1.0] - 29-04-2024

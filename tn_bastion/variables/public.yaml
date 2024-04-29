@@ -35,7 +35,7 @@ metadata:
 public:
   one_component_networks:
     description: List of VNets the tn_bastion will be part of. Variable to be filled by the TNLCM
-    type: "list"
+    type: "strlist"
     value:
       - "mandatory-tn_vxlan"
     user_input: false

@@ -80,7 +80,7 @@ public:
     optional: true
   one_component_networks:
     description: OpenNebula IDs of the VNets the VM will be part of. First will be the tn_vxlan ID in most cases
-    type: "list"
+    type: "intlist"
     value:
 #      - 47
     user_input: true

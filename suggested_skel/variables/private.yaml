@@ -1,13 +1,18 @@
-# previously private/values.yaml
-# internal or "technical" variables from the component
+######################################################
+##
+## Component private variables
+##
+## Advanced variables required for the deployment, 
+## but unavailable by default to the experimenter
+## in the TNLCM. 
+## Currently only modifiable manually from the manifest
+##
+## File previously found at "private/values.yaml"
+##
+######################################################
 
+# All private variables can be overwritten by the input file in Jenkins
+# Most private variables are intended to overwrite values in the OpenNebula templates for the specific component
+# Beware some of the variables here can overwrite others from .SITES or even JENKINS
 
-# Be careful with conflicts with vars(credentials) from Jenkins and vars from the site repository (mostly site template IDs)
-# Variables here (in the case of opennebula) overwrite OpenNebula templates for the specific component (useful with repurposed VM templates for different sizes)
-
-
-# As well as the variables in public.yaml/input, all variables from this file can be overwriten by the input file (tnlcm.yaml)
-# However, these variables aren't supposed to be altered by the average user as they can break the Trial Network
-
-
-# POSSIBLE FEATURE: Experimenter ACL to overwrite all, some or none of the values from private.yaml
+# POSSIBLE FUTURE FEATURE: ACLs to give experimenter the capabilities to overwrite all, some or none of the values from private.yaml

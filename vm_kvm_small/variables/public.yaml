@@ -1,0 +1,83 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 4 global variables
+## with all required info:
+##   1. name: name of the component
+##
+##   2. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   3. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   4. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+## File previously found at "public/description.yaml"
+##
+######################################################
+
+
+####################################
+## Component name
+####################################
+name: vm_kvm_small
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers: 
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  depends: 
+    - tn_vxlan
+  short_description: VM with a small amount of compute resources 
+  long_description: |
+    This image is based on an Ubuntu 22.04 with:
+    - 4 GiB of memory
+    - 2 vCPU
+    - 15 GiB of storage
+  hypervisors: [one]
+  sites: [uma, athens, fokus]
+
+####################################
+## Component input
+####################################
+input:
+  one_component_name:
+    description: Unique name for the small VM inside the Trial Network
+    type: "str"
+    value: "PLACEHOLDER_VM_NAME"
+    user_input: true
+    optional: false
+  one_vm_username:
+    description: Username to log into the small VM
+    type: "str"
+    value: "username"
+    user_input: true
+    optional: false
+  one_vm_password:
+    description: Password to log into the small VM
+    type: "str"
+    value: "password"
+    user_input: true
+    optional: false
+  one_component_networks:
+    description: List of Virtual Networks avaiable to the small VM as NICs
+    type: "strlist"
+    value:
+    user_input: true
+    optional: false
+
+####################################
+## Component input
+####################################
+output:
+  - vm_ip:          # Main Network Interface
