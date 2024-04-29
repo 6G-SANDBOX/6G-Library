@@ -1,0 +1,98 @@
+####################################
+##
+## Component metadata
+## 
+####################################
+component_name: open5gs
+metadata:
+  maintainers: 
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  version: 0.0.1
+  depends:
+    - tn_vxlan:
+        version: ">=0.0.1"
+    - tn_bastion:
+        version: ">=0.0.1"
+    # vxlan?
+    - k8s_medium:
+        version: ">=0.0.1"
+  short_description: This is a component to deploy an Open5Gs on a K8S cluster.
+  long_description: |
+    This component deploys a 5G SA Core (Open5Gs) using Helm charts.
+    More info in this url: https:// ....
+  platforms: [one]
+  sites: [uma, athens, fokus]
+
+###################################################
+##
+## Public component variables that 
+## should be filled by the experimenter or 
+## the TNLCM. Some of them could be optional
+## 
+###################################################
+public:
+  oneke_cluster_name:
+    description: Unique name to identify the OneKE cluster inside the Trial Network. OneKE cluster where the open5gs helm chart will be deployed
+    type: "str"
+    value: "cluster_xxxxx"
+    user_input: true
+    optional: false
+  plmn_id_mcc:
+    description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
+    type: "str"
+    value: "001"
+    user_input: true
+    optional: false
+  plmn_id_mnc:
+    description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
+    type: "str"
+    value: "01"
+    user_input: true
+    optional: false
+  tac:
+    description: Tracking Area Code in the PLMN
+    type: "str"
+    value: "200"
+    user_input: true
+    optional: false
+  s_nssai_sst:
+    description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    type: "str"
+    value: "1"
+    user_input: true
+    optional: false
+  s_nssai_sd:
+    description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    type: "str"
+    value: "1"
+    user_input: true
+    optional: false
+  amf_ip: 
+    description: IPv4 address of the Access Management Function (AMF). Should be placed inside the "metallb_range" of the OneKE
+    type: "str"
+    value: "11.21.1.200"
+    user_input: true
+    optional: false
+  upf_ip:
+    description: IPv4 address of the User Plane Function (UPF). Should be placed inside the "metallb_range" of the OneKE
+    type: "str"
+    value: "11.21.1.201"
+    user_input: true
+    optional: false
+  subdomain_webui_dashboard:
+    descrption: Name for the open5gs webui dashboard inside the TN subdomain.
+    type: "str"
+    value: "open5gs-dashboard"
+    user_input: true
+    optional: false
+
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:

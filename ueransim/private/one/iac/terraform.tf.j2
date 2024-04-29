@@ -1,8 +1,9 @@
 resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
   name        = "{{ tn_id }}-{{ one_component_name }}"
   description = "{{ tn_id }} UERANSIM"
-  template_id = 71
-{# template_id = {{ site_one_templates.vm_m.id }}      # fix as soon as the site vars are updated #}
+  template_id = "{{ site_one_templates.ueransim.id }}"
+  group       = "{{ one_group }}"
+  permissions = "660"
 
   context = {
     SET_HOSTNAME = "$NAME"
@@ -25,6 +26,9 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
 {% endif %}
 {% if run_ue  is defined and run_ue %}
     RUN_UE = "{{ run_ue }}"
+{% endif %}
+{% if oneke_vnf is defined and oneke_vnf %}
+    ONEKE_VNF = "{{ oneke_vnf }}"
 {% endif %}
 {% if gnb_amf_address is defined and gnb_amf_address %}
     GNB_AMF_ADDRESS = "{{ gnb_amf_address }}"
@@ -104,12 +108,12 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
 {% endfor %}
 }
 
-output "{{ one_component_name }}_network_assignments" {
+output "{{ one_component_name }}-network_assignments" {
   description = "OpenNebula VM Network Assignments"
   value = { for nic in opennebula_virtual_machine.{{ tn_id }}-{{ one_component_name }}.nic[*] : nic.network_id => nic.computed_ip }
 }
 
-output "{{ one_component_name }}_VM_ID" {
+output "{{ one_component_name }}-VM_ID" {
   description = "OpenNebula VM ID"
   value = opennebula_virtual_machine.{{ tn_id }}-{{ one_component_name }}.id
 }

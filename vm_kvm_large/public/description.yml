@@ -8,6 +8,11 @@ metadata:
   family: compute
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+<<<<<<< HEAD
+=======
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+>>>>>>> main
   version: 0.0.1
   depends: 
     - tn_vxlan (>= 0.0.1)
@@ -31,8 +36,14 @@ public:
   one_component_name: "PLACEHOLDER_VM_NAME"
   one_vm_username: "username"
   one_vm_password: "password"
+<<<<<<< HEAD
   one_component_networks: "List of networks"
 
+=======
+  one_component_networks: 
+    type: "list"
+    values: ["RED1", "RED2"]
+>>>>>>> main
 ###################################################
 ##
 ## Output component variables that 

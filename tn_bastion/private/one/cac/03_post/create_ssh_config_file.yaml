@@ -1,14 +1,14 @@
-- name: Add bastion host in SSH the configuration
+- name: Add bastion host to the SSH configuration
   community.general.ssh_config:
-    host: "{{ tn_id }}-tn-bastion"
+    host: "{{ tn_id }}-tn_bastion"
     hostname: "{{ vm_ip }}" 
     remote_user: root
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present
 
-- name: Add rule in SSH the configuration
-  community.general.ssh_config:
-    host: "{{ tn_id }}-* !{{ tn_id }}-tn-bastion"
-    proxyjump: "{{ tn_id }}-tn-bastion"
-    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
-    state: present
+# - name: Add rule in SSH the configuration
+#   community.general.ssh_config:
+#     host: "{{ tn_id }}-* !{{ tn_id }}-tn_bastion"
+#     proxyjump: "{{ tn_id }}-tn_bastion"
+#     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+#     state: present

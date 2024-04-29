@@ -1,0 +1,20 @@
+- name: Render helm values template
+  template:
+    src: "{{ workspace }}/{{ component_name }}/private/cac/helm_values_template.yaml"
+    dest: "{{ workspace }}/{{ component_name }}/private/cac/helm_values_rendered.yaml"
+
+- name: Deploy Open5Gs helm
+  kubernetes.core.helm:
+    kubeconfig: "{{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ oneke_cluster_name }}.kubeconfig"
+    name: open5gs
+    chart_ref: oci://registry-1.docker.io/gradiant/open5gs
+    chart_version: 2.2.2
+    namespace: open5gs
+    create_namespace: yes
+    values_files:
+    - "{{ workspace }}/{{ component_name }}/private/cac/helm_values_rendered.yaml"
+  register: result
+
+- name: Wait for the pods to come up with status 'Running'
+  shell: >
+    kubectl wait pod --all --for=condition=Ready -n open5gs --kubeconfig {{ workspace }}/{{ component_name }}/private/{{ tn_id }}-oneke-{{ oneke_cluster_name }}.kubeconfig --timeout=1200s

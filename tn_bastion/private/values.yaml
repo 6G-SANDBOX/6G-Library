@@ -8,20 +8,12 @@
 ##
 ################################################
 
-# artifact_url: "https://marketplace.opennebula.io/appliance/84bd27fe-5d14-4e70-a79a-eb3fdd0072ae"
-# artifact_name: "TN Bastion"
-one_bastion_name: "tn-bastion"
-one_group: "6G-Sandbox"   # sensible info
+one_bastion_name: "tn_bastion"
+one_group: "oneadmin"   # change to "6G-Sandbox" in the future
 memory: 256M
 disk: 5G
 vcpu: 2
-network_interfaces:
-  - name: service
-    default: True
-  - name: tn_vxlan_XXXXX
 one_bastion_wireguard_allowed_networks: "192.168.199.0/24"
-
 one_component_networks: 
   - 0           # First one is the default network
   - VXLAN_ID    # VXLAN SHOULD BE CREATED BEFORE 
-

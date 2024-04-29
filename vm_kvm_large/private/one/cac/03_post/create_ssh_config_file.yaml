@@ -3,6 +3,12 @@
     host: "{{ tn_id }}-{{ one_component_name }}"
     hostname: "{{ vm_ip }}"
     remote_user: "root"
+<<<<<<< HEAD
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present
 
+=======
+    proxyjump: "{{ tn_id }}-tn_bastionn"
+    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+    state: present
+>>>>>>> main

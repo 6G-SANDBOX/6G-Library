@@ -1,9 +1,16 @@
 resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
+<<<<<<< HEAD
 
   name        = "{{ tn_id }}-{{ one_component_name }}"
   description = "{{ tn_id }} VM LARGE"
   template_id = {{ site_one_templates.vm_l.id }}
   group       = "oneadmin"
+=======
+  name        = "{{ tn_id }}-{{ one_component_name }}"
+  description = "{{ tn_id }} VM LARGE"
+  template_id = "{{ site_one_templates.vm_l.id }}"
+  group       = "{{ one_group }}"
+>>>>>>> main
   permissions = "660"
 
   context = {
@@ -30,7 +37,11 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
 
 }
 
+<<<<<<< HEAD
 output "{{ one_component_name }}_network_assignments" {
+=======
+output "{{ one_component_name }}-network_assignments" {
+>>>>>>> main
   description = "OpenNebula VM Network Assignments"
   value = { for nic in opennebula_virtual_machine.{{ tn_id }}-{{ one_component_name }}.nic[*] : nic.network_id => nic.computed_ip }
 }

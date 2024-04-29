@@ -8,12 +8,24 @@ metadata:
   family: bootstrap
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+<<<<<<< HEAD
   version: 0.0.1
+=======
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  version: 0.0.1
+  depends:
+>>>>>>> main
   short_description: This is the component that creates VXLAN network for TN Bootstrap
   long_description: |
     This is the component that creates VXLAN network for TN Bootstrap
   platforms: [one]
+<<<<<<< HEAD
   sites: [uma]
+=======
+  sites: [uma, athens, fokus]
+
+>>>>>>> main
 ###################################################
 ##
 ## Public variables that 
@@ -22,8 +34,18 @@ metadata:
 ## 
 ###################################################
 public:
+<<<<<<< HEAD
   one_vxlan_name: "PLACEHOLDER_VXLAN_NAME"
 
+=======
+  one_vxlan_name:
+    description: "Name to customize the tn_vxlan component inside OpenNebula. NOTE: this variable will be removed in the next 6GLibrary update"
+    type: "str"
+    value: "PLACEHOLDER_VXLAN_NAME"
+    user_input: true
+    optional: false
+    
+>>>>>>> main
 ###################################################
 ##
 ## Output component variables that 
