@@ -21,20 +21,8 @@ pipeline {
         base64File (name: 'FILE', description: 'YAML file that contains variables needed to deploy the component')
     }
 
-    // Enviromental variables inherited from parameters or from "Jenkins Credentials"
+    // Enviromental variables inherited from Jenkins Credentials
     environment {
-        // Parameters
-        TN_ID='${params.TN_ID}'
-        LIBRARY_COMPONENT_NAME='${params.LIBRARY_COMPONENT_NAME}'
-        ENTITY_NAME='${params.ENTITY_NAME}'
-        DEPLOYMENT_SITE='${params.DEPLOYMENT_SITE}'
-        TNLCM_CALLBACK='${params.TNLCM_CALLBACK}'
-        LIBRARY_URL='${params.LIBRARY_URL}'
-        LIBRARY_BRANCH='${params.LIBRARY_BRANCH}'
-        DEBUG='${params.DEBUG}'
-
-        INPUT_FILE_PATH='${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input.yaml'
-
         // Opennebula Terraform Provider envorimental variables https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs#environment-variables
         OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
         OPENNEBULA_USERNAME = credentials('OPENNEBULA_TNLCM_USERNAME')
@@ -51,49 +39,61 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('MINIO_SECRET')
 
         //Ansible enviromental variables https://docs.ansible.com/ansible/latest/reference_appendices/config.html
-        ANSIBLE_REMOTE_USER = credentials('ANSIBLE_REMOTE_USER')
-        ANSIBLE_CONNECTION_PASSWORD_FILE = credentials('ANSIBLE_CONNECTION_PASSWORD_FILE')
+        // ANSIBLE_REMOTE_USER = credentials('ANSIBLE_REMOTE_USER')
+        // ANSIBLE_CONNECTION_PASSWORD_FILE = credentials('ANSIBLE_CONNECTION_PASSWORD_FILE')
     }
 
     stages {
         stage('Stage 1: Import input file into the workspace') {
             steps {
-                echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file into the workspace"
-                // script step required to execute "Scripted Pipeline" syntax blocks into Declarative Pipelines
-                // script {
-                    // def YAML_CONTENT = sh (
-                    //     script: 'echo $FILE | base64 -d',
-                    //     returnStdout: true
-                    // )
-                    // if (env.DEBUG == 'true') {
-                    //     echo "${YAML_CONTENT}"
-                    // }
-                    // writeFile(file: FILE_PATH, text: YAML_CONTENT)
-                withFileParameter('FILE') {
-                    sh "cat $FILE"
+                echo 'Stage 1: Import "${TN_ID}"-"${LIBRARY_COMPONENT_NAME}"-"${ENTITY_NAME}" input file into the workspace'
+                script {
+                    def inputFile = "${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input_file.yaml"
+
+                    def fileContent = sh (
+                        script: 'echo $FILE | base64 -d',
+                        returnStdout: true
+                    )
+                    if (env.DEBUG == 'true') {
+                        echo "${fileContent}"
+                    }
+                    writeFile file: inputFile, text: fileContent
                 }
-                // }
             }
         }
 
         stage('Stage 2: Clone 6G-Sandbox-Sites repository') {
             steps {
-                echo "Stage 2: Clone 6G-Sandbox-Sites repository"
-                script {
-                    git branch: 'main',
-                        credentialsId: 'GITHUB_JENKINS',
-                        url: 'https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git',
-                        directory: '${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/'
+                dir ("${env.WORKSPACE}/") {
+                    sh """
+                    git clone https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git
+                    """
                 }
-                // dir ("${env.WORKSPACE}/") {
-                //     sh "git clone https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git"
-                // }
             }
-        } 
-   
-        stage('Stage 3: Deploy the selected component') {
+        }
+
+        stage('Stage 3: Load Jenkins parameters into file') {
             steps {
-                echo "Stage 3: Deploy the $LIBRARY_COMPONENT_NAME component"
+                echo 'Stage 3: Load Jenkins parameters into the workspace'
+                script{
+                    def paramsFile = "${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/pipeline_parameters.yaml"
+                    def paramsContent = "TN_ID=${params.TN_ID}\n"
+                    paramsContent += "LIBRARY_COMPONENT_NAME=${params.LIBRARY_COMPONENT_NAME}\n"
+                    paramsContent += "ENTITY_NAME=${params.ENTITY_NAME}\n"
+                    paramsContent += "DEPLOYMENT_SITE=${params.DEPLOYMENT_SITE}\n"
+                    paramsContent += "TNLCM_CALLBACK=${params.TNLCM_CALLBACK}\n"
+                    paramsContent += "LIBRARY_URL=${params.LIBRARY_URL}\n"
+                    paramsContent += "LIBRARY_BRANCH=${params.LIBRARY_BRANCH}\n"
+                    paramsContent += "DEBUG=${params.DEBUG}\n"
+
+                    writeFile file: paramsFile, text: paramsContent
+                }
+            }
+        }
+   
+        stage('Stage 4: Deploy the selected component') {
+            steps {
+                echo "Stage 4: Deploy the $LIBRARY_COMPONENT_NAME component"
               // script {
               //   sh """ 
               //   cd ${LIBRARY_COMPONENT_NAME}/private
