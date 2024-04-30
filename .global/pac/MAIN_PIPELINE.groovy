@@ -1,5 +1,5 @@
 
-// "Pipeline: Declarative" jenkins plugin required: https://plugins.jenkins.io/pipeline-model-definition/ https://www.jenkins.io/doc/pipeline/steps/pipeline-model-definition/
+// 'Pipeline: Declarative' jenkins plugin required: https://plugins.jenkins.io/pipeline-model-definition/ https://www.jenkins.io/doc/pipeline/steps/pipeline-model-definition/
 pipeline {
 
     agent any
@@ -17,23 +17,23 @@ pipeline {
         string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library', description: '6G-Library Repository URL. Leave it as-is unless you want to test your own fork')
         string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: 'LIBRARY_URL branch to use')
         booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG')
-        // "File Parameter" jenkins plugin required: https://plugins.jenkins.io/file-parameters/
+        // 'File Parameter' jenkins plugin required: https://plugins.jenkins.io/file-parameters/
         base64File (name: 'FILE', description: 'YAML file that contains variables needed to deploy the component')
     }
 
     // Enviromental variables inherited from parameters or from "Jenkins Credentials"
     environment {
         // Parameters
-        TN_ID="${params.TN_ID}"
-        LIBRARY_COMPONENT_NAME="${params.LIBRARY_COMPONENT_NAME}"
-        ENTITY_NAME="${params.ENTITY_NAME}"
-        DEPLOYMENT_SITE="${params.DEPLOYMENT_SITE}"
-        TNLCM_CALLBACK="${params.TNLCM_CALLBACK}"
-        LIBRARY_URL="${params.LIBRARY_URL}"
-        LIBRARY_BRANCH="${params.LIBRARY_BRANCH}"
-        DEBUG="${params.DEBUG}"
+        TN_ID='${params.TN_ID}'
+        LIBRARY_COMPONENT_NAME='${params.LIBRARY_COMPONENT_NAME}'
+        ENTITY_NAME='${params.ENTITY_NAME}'
+        DEPLOYMENT_SITE='${params.DEPLOYMENT_SITE}'
+        TNLCM_CALLBACK='${params.TNLCM_CALLBACK}'
+        LIBRARY_URL='${params.LIBRARY_URL}'
+        LIBRARY_BRANCH='${params.LIBRARY_BRANCH}'
+        DEBUG='${params.DEBUG}'
 
-        //FILE_PATH="${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input.yaml"
+        //FILE_PATH='${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input.yaml'
 
         // Opennebula Terraform Provider envorimental variables https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs#environment-variables
         OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
@@ -58,9 +58,9 @@ pipeline {
     stages {
         stage('Stage 1: Import input file into the workspace') {
             steps {
-                echo "Stage 1: Load ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file as variables of the workspace"
+                echo 'Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file into the workspace'
                 // script step required to execute "Scripted Pipeline" syntax blocks into Declarative Pipelines
-                script {
+                // script {
                     // def YAML_CONTENT = sh (
                     //     script: 'echo $FILE | base64 -d',
                     //     returnStdout: true
@@ -69,22 +69,20 @@ pipeline {
                     //     echo "${YAML_CONTENT}"
                     // }
                     // writeFile(file: FILE_PATH, text: YAML_CONTENT)
-                    withFileParameter('FILE') {
-                        writeFile(
-                            file: '${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input.yaml', 
-                            text: FILE
-                        )
-                    }
+                withFileParameter('FILE') {
+                    sh 'cat $FILE > $WORKSPACE/$LIBRARY_COMPONENT_NAME/variables/input.yaml'
                 }
+                // }
             }
         }
 
         stage('Stage 2: Clone 6G-Sandbox-Sites repository') {
             steps {
+                echo "Stage 2: Clone 6G-Sandbox-Sites repository"
                 script {
-                    git branch: 'master',
-                    url: 'https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git',
-                    directory: '${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/'
+                    git branch: 'main',
+                        url: 'https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git',
+                        directory: '${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/'
                 }
                 // dir ("${env.WORKSPACE}/") {
                 //     sh "git clone https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git"
@@ -92,15 +90,16 @@ pipeline {
             }
         } 
    
-        stage('Stage 3: Run ansible playbook to deploy the selected component site') {
+        stage('Stage 3: Deploy the selected component') {
             steps {
+                echo 'Stage 3: Deploy the $LIBRARY_COMPONENT_NAME component'
               // script {
               //   sh """ 
               //   cd ${LIBRARY_COMPONENT_NAME}/private
               //   ansible-playbook --extra-vars \"tn_id=${TN_ID} component_name=${LIBRARY_COMPONENT_NAME} deployment_site=${DEPLOYMENT_SITE} workspace=${WORKSPACE}\" manifest.yaml
               //   """
               //   }
-                echo "Stage 2: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} in the ${DEPLOYMENT_SITE} site"
+                echo "Stage 3: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} in the ${DEPLOYMENT_SITE} site"
 
               // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
                 ansiblePlaybook(
