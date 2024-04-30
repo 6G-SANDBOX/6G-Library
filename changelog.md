@@ -42,8 +42,8 @@ To be discussed:
 Initial release of the 6G Library. Changes will be kept on track for now on.
 
 
-
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...HEAD   <!-- Change value at every release -->
+<!-- Change latest version value at every release -->
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...HEAD
 <!--
 Format for next release
 [v0.1.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.1.1
