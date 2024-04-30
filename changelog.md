@@ -34,7 +34,6 @@ To be discussed:
 - remove public.yaml/name ??
 - remove tn_bastion and tn_vxlan from public.yaml/metadata/depends->needs
 - also remove intrinsec dependencies (dependency of a dependency)
-- different RAM ammounts for vm_kvm components (powers of two)
 
 
 
@@ -44,7 +43,7 @@ Initial release of the 6G Library. Changes will be kept on track for now on.
 
 
 
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v1.1.1...HEAD
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...HEAD   <!-- Change value at every release -->
 <!--
 Format for next release
 [v0.1.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.1.1

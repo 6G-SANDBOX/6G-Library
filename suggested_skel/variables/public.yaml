@@ -28,12 +28,12 @@
 
 # metadata gives the TNLCM some general information to help it understand how to process and order the different components. Fields:
 #   - mantainers: Unordered list of active component mantainers
-#   - needs: Unordered list of dictionaries of appliance types that needs to be previously deployed. Values can be repeated if multiple instances of that component are needed.
-#            Dependencies can only be applied with specific input value requirements, either in the other component ("with") or in this component ()"if"). See example
+#   - needs: Unordered list of dictionaries of appliance types that needs to be previously deployed. Values can be repeated if multiple instances of the same type are needed.
+#            Dependencies can be defined so that they only apply when specific input values are provided, either in the other component ("with") or in this component ()"if"). See example
 #   - short_description: Shown in THLCM
 #   - long_description: Shown in TNLCM
 #   - hypervisors: Unordered list of compatible hypervisors
-#   - sites: Unordered list of sites where component is avaiable
+#   - sites: Unordered list of sites where the component is avaiable. Useful for hardware-dependent components
 
 # input describes all variables needed in a TN descriptor. Each variable containers the following fields:
 #   - description; A general description of the variable. It appears in the TNLCM Frontend
@@ -43,7 +43,7 @@
 #   - user_input: Variable will be asked to the experimenter in the TNLCM.
 #                 completes this variable using other component's metadata or outputs.
 #   - optional: If "user_input: True", indicates whether the placeholder ("value") serves as a default value or not. If negative, a value must always be provided by the experimenter
-#               If "user_input: False", this value is irrelevant, as it will always be filled. Defaults to false.
+#               If "user_input: False", this value is irrelevant/optional, as it will always be filled. Defaults to false.
 
 # output values are a list of empty dictionaries of the variables expected be generated during deployments, mainly from the terraform apply.
 # They may not only be useful for the TNLCM. They can also be used to generate the result files at the end of each deployment
