@@ -46,7 +46,7 @@ pipeline {
     stages {
         stage('Stage 1: Import input file into the workspace') {
             steps {
-                echo 'Stage 1: Import "${TN_ID}"-"${LIBRARY_COMPONENT_NAME}"-"${ENTITY_NAME}" input file into the workspace'
+                echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file into the workspace"
                 script {
                     def inputFile = "${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input_file.yaml"
 
@@ -64,10 +64,9 @@ pipeline {
 
         stage('Stage 2: Clone 6G-Sandbox-Sites repository') {
             steps {
+                echo 'Stage 2: Clone 6G-Sandbox-Sites repository'
                 dir ("${env.WORKSPACE}/") {
-                    sh """
-                    git clone https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git
-                    """
+                    git credentialsId: 'GITHUB_JENKINS', url: 'https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git'
                 }
             }
         }
