@@ -69,7 +69,9 @@ pipeline {
             steps {
                 echo 'Stage 2: Clone 6G-Sandbox-Sites repository'
                 dir ("${env.WORKSPACE}/") {
-                    sh "git clone https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git"
+                    // avoid Injection via interpolation
+                    // sh "git clone https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git"
+                    sh('git clone https://$GITHUB_JENKINS@github.com/6G-SANDBOX/6G-Sandbox-Sites.git')
                 }
             }
         }
@@ -95,15 +97,7 @@ pipeline {
    
         stage('Stage 4: Deploy the selected component') {
             steps {
-                echo "Stage 4: Deploy the $LIBRARY_COMPONENT_NAME component"
-              // script {
-              //   sh """ 
-              //   cd ${LIBRARY_COMPONENT_NAME}/private
-              //   ansible-playbook --extra-vars \"tn_id=${TN_ID} component_name=${LIBRARY_COMPONENT_NAME} deployment_site=${DEPLOYMENT_SITE} workspace=${WORKSPACE}\" manifest.yaml
-              //   """
-              //   }
                 echo "Stage 3: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} in the ${DEPLOYMENT_SITE} site"
-
               // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
                 ansiblePlaybook(
                     extraVars: [

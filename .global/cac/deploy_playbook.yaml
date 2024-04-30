@@ -5,6 +5,10 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/load_variables.yaml"
 
-    - name: Display all variables
-      ansible.builtin.debug:
-        var: hostvars[inventory_hostname]
+    - name: Add the Trial Network th_bastion VM to Ansible inventory
+      ansible.builtin.add_host:
+        name: "{{ tn_id }}-tn_bastion"
+      when: (library_component_name != "tn_bastion") or (library_component_name != "tn_vxlan")
+
+    - name: Prepare terraform manifests from templates
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/iac/{{ site_hypervisor }}/prepare.yaml"
