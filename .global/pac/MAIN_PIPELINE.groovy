@@ -85,7 +85,6 @@ pipeline {
                 ansiblePlaybook(
                     colorized: true,
                     inventory: 'localhost',
-                    extraVars:
                     playbook: '${WORKSPACE}/.global/cac/deploy_playbook.yaml'
                 )
             }
