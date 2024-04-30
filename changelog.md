@@ -6,7 +6,7 @@
 
 - Standardized changelog format to fit [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog/blob/main/CHANGELOG.md) rules.
 - New parameters added to the Jenkinsfile: `ENTITY_NAME`, `TNLCM_CALLBACK`, `LIBRARY_URL` and `LIBRARY_BRANCH`
-- New `.global/hypervisors` directory with the steps previously found at `<component>/private/<hypervisor>/prepare.yml`
+- New `.global/hypervisors/` directory replacing `<component>/private/<hypervisor>/prepare.yml` with the steps common to each hypervisor
 
 ### Changed
 
@@ -23,6 +23,7 @@
     - deleted `private/` directory
 - Restructuration of public variables file.
 - Jenkins Pipeline modified and renamed
+- Renamed `.global/iac/providers.tf` to `.global/iac/opennebula_provider_v1.4.tf`
 
 
 ### Removed

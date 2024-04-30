@@ -48,12 +48,6 @@ metadata:
 ## Component input
 ####################################
 input:
-  one_vxlan_name:
-    description: Unique name in the TN to identify the vnet
-    type: "str"
-    value: "PLACEHOLDER_VXLAN_NAME"
-    user_input: true
-    optional: false
   one_vxlan_first_ip:
     description: First IPv4 address of the VNet
     type: "str"

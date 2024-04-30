@@ -1,0 +1,14 @@
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: "{{ workspace }}/.global/iac/opennebula_provider_v1.3.tf"
+    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/opennebula_provider_v1.3.tf"
+
+- name: Generate Terraform s3 backend manifest
+  template:
+    src: "{{ workspace }}/.global/iac/backend.tf.j2"
+    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/backend.tf"
+
+- name: Generate terraform manifests
+  template:
+    src: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/terraform.tf.j2"
+    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ one_bastion_name }}_{{ ansible_date_time.epoch }}.tf"  # revisar
