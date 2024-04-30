@@ -50,12 +50,6 @@ metadata:
 ## Component input
 ####################################
 input:
-  one_component_name:
-    description: Unique name for the extra_large VM inside the Trial Network
-    type: "str"
-    value: "PLACEHOLDER_VM_NAME"
-    user_input: true
-    optional: false
   one_vm_username:
     description: Username to log into the extra_large VM
     type: "str"

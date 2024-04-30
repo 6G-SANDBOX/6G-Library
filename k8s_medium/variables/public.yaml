@@ -64,13 +64,6 @@ input:
     user_input: true
     optional: false
 
-  service_name:
-    description: Unique name to identify the OneKE cluster inside the Trial Network
-    type: "str"
-    value: "OneKE-sandbox-tn-oulu"
-    user_input: true
-    optional: false
-
   multus_enabled:
     description: |
       Multus is a CNI (Container Network Interface) that enables attaching multiple network interfaces to pods.

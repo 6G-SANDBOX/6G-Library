@@ -61,7 +61,6 @@ input:
     value:
       - "mandatory-tn_vxlan"
     user_input: false
-    optional: false
 
 ####################################
 ## Component input

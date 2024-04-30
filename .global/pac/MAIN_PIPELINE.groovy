@@ -86,7 +86,7 @@ pipeline {
                     colorized: true,
                     inventory: 'localhost',
                     extraVars:
-                    playbook: '${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/code/manifest.yml'
+                    playbook: '${WORKSPACE}/.global/cac/deploy_playbook.yaml'
                 )
             }
         }    

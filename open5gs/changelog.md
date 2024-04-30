@@ -11,7 +11,7 @@
 - Radical repository reorganization as explained in the main changelog
 
 
-## [v0.1.0] - 29-04-2024
+## [v0.1.0] - 2024-04-29
 
 Initial release of the 6G Library. Changes will be kept on track for now on.
 
