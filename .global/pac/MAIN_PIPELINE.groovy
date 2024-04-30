@@ -106,7 +106,7 @@ pipeline {
 
               // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
                 ansiblePlaybook(
-                    extraVars [
+                    extraVars: [
                         workspace: "${WORKSPACE}"
                     ],
                     playbook: "${WORKSPACE}/.global/cac/deploy_playbook.yaml"
