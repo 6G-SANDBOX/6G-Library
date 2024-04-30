@@ -33,7 +33,7 @@ pipeline {
         LIBRARY_BRANCH='${params.LIBRARY_BRANCH}'
         DEBUG='${params.DEBUG}'
 
-        //FILE_PATH='${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input.yaml'
+        INPUT_FILE_PATH='${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input.yaml'
 
         // Opennebula Terraform Provider envorimental variables https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs#environment-variables
         OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
@@ -70,7 +70,7 @@ pipeline {
                     // }
                     // writeFile(file: FILE_PATH, text: YAML_CONTENT)
                 withFileParameter('FILE') {
-                    sh "cat $FILE > ${WORKSPACE}/${LIBRARY_COMPONENT_NAME}/variables/input.yaml"
+                    sh "cat $FILE > ${INPUT_FILE_PATH}"
                 }
                 // }
             }
@@ -81,7 +81,8 @@ pipeline {
                 echo "Stage 2: Clone 6G-Sandbox-Sites repository"
                 script {
                     git branch: 'main',
-                        url: 'https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git',
+                        credentialsId: 'GITHUB_JENKINS',
+                        url: 'https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git',
                         directory: '${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/'
                 }
                 // dir ("${env.WORKSPACE}/") {
