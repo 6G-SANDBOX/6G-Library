@@ -1,7 +1,7 @@
 ---
 - name: Load site-specific variables
   ansible.builtin.include_vars:
-    file: "{{ workspace }}/6G-Sandbox-Sites/.sites/{{ deployment_site }}/values.yaml"
+    file: "{{ workspace }}/6G-Sandbox-Sites/.sites/{{ ansible_env.DEPLOYMENT_SITE }}/values.yaml"
 
 - name: Load private component-specific variables
   ansible.builtin.include_vars:
