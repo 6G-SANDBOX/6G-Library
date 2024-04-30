@@ -33,7 +33,7 @@ pipeline {
         LIBRARY_BRANCH="${params.LIBRARY_BRANCH}"
         DEBUG="${params.DEBUG}"
 
-        FILE_PATH="${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input.yaml"
+        //FILE_PATH="${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input.yaml"
 
         // Opennebula Terraform Provider envorimental variables https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs#environment-variables
         OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
@@ -56,23 +56,43 @@ pipeline {
     }
 
     stages {
-        stage('Stage 1: Load ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file as variables of the workspace') {
+        stage('Stage 1: Import input file into the workspace') {
             steps {
+                echo "Stage 1: Load ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file as variables of the workspace"
                 // script step required to execute "Scripted Pipeline" syntax blocks into Declarative Pipelines
                 script {
-                    def YAML_CONTENT = sh (
-                        script: 'echo $FILE | base64 -d',
-                        returnStdout: true
-                    )
-                    if (env.DEBUG == 'true') {
-                        echo "${YAML_CONTENT}"
+                    // def YAML_CONTENT = sh (
+                    //     script: 'echo $FILE | base64 -d',
+                    //     returnStdout: true
+                    // )
+                    // if (env.DEBUG == 'true') {
+                    //     echo "${YAML_CONTENT}"
+                    // }
+                    // writeFile(file: FILE_PATH, text: YAML_CONTENT)
+                    withFileParameter('FILE') {
+                        writeFile(
+                            file: '${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input.yaml', 
+                            text: FILE
+                        )
                     }
-                    writeFile(file: FILE_PATH, text: YAML_CONTENT)
                 }
             }
         }
+
+        stage('Stage 2: Clone 6G-Sandbox-Sites repository') {
+            steps {
+                script {
+                    git branch: 'master',
+                    url: 'https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git',
+                    directory: '${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/'
+                }
+                // dir ("${env.WORKSPACE}/") {
+                //     sh "git clone https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git"
+                // }
+            }
+        } 
    
-        stage('Stage 2: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} in the ${DEPLOYMENT_SITE} site') {
+        stage('Stage 3: Run ansible playbook to deploy the selected component site') {
             steps {
               // script {
               //   sh """ 
@@ -80,11 +100,10 @@ pipeline {
               //   ansible-playbook --extra-vars \"tn_id=${TN_ID} component_name=${LIBRARY_COMPONENT_NAME} deployment_site=${DEPLOYMENT_SITE} workspace=${WORKSPACE}\" manifest.yaml
               //   """
               //   }
+                echo "Stage 2: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} in the ${DEPLOYMENT_SITE} site"
 
               // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
                 ansiblePlaybook(
-                    colorized: true,
-                    inventory: 'localhost',
                     playbook: '${WORKSPACE}/.global/cac/deploy_playbook.yaml'
                 )
             }
