@@ -66,7 +66,7 @@ pipeline {
             steps {
                 echo 'Stage 2: Clone 6G-Sandbox-Sites repository'
                 dir ("${env.WORKSPACE}/") {
-                    git credentialsId: 'GITHUB_JENKINS', url: 'https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git'
+                    git "https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git"
                 }
             }
         }
