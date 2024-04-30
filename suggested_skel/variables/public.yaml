@@ -45,7 +45,8 @@
 #   - optional: If "user_input: True", indicates whether the placeholder ("value") serves as a default value or not. If negative, a value must always be provided by the experimenter
 #               If "user_input: False", this value is irrelevant, as it will always be filled. Defaults to false.
 
-# output values may not only be useful for the TNLCM. They can also be used to generate the result files at the end of each deployment
+# output values are a list of empty dictionaries of the variables expected be generated during deployments, mainly from the terraform apply.
+# They may not only be useful for the TNLCM. They can also be used to generate the result files at the end of each deployment
 
 # POSSIBLE FUTURE FEATURE: add version to component dependencies. Currently TNs need to have all components in the same 6G Library version
 

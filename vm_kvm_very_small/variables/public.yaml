@@ -32,11 +32,11 @@ name: vm_kvm_very_small
 ## Component metadata
 ####################################
 metadata:
-  maintainers: 
+  maintainers:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  needs: 
+  needs:
     - tn_vxlan:
   short_description: VM with a very small amount of compute resources 
   long_description: |
