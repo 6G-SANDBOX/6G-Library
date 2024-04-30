@@ -5,6 +5,8 @@
 ### Added
 
 - Standardized changelog format to fit [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog/blob/main/CHANGELOG.md) rules.
+- New parameters added to the Jenkinsfile: `ENTITY_NAME`, `TNLCM_CALLBACK`, `LIBRARY_URL` and `LIBRARY_BRANCH`
+- New `.global/hypervisors` directory with the steps previously found at `<component>/private/<hypervisor>/prepare.yml`
 
 ### Changed
 
@@ -20,20 +22,37 @@
     - deleted `public/` directory
     - deleted `private/` directory
 - Restructuration of public variables file.
+- Jenkins Pipeline modified and renamed
+
+
+### Removed
+- Deleted `.global/pac/DEPLOY_COMPONENT_FROM_COMMIT.groovy`
 
 
 
 
 
-
-
+Yet to be done:
+- verify utility of some pipeline enviroment variables
+- Change OpenNebula credentials so that `oneadmin` isn't the Jenkins user no more.
+A less privileged user named `jenkins-master` will be the one deploying the components.
+It is the admin of a newly created group called `6G-Sandbox`, where custom users may be added in the future.
+- New `.global/cac/deploy_component.yaml` file with ansible tasks common to all components.
+All ansible executions will start from here, to import the corresponding "component playbook"
+- Delete `.global/cac/mix_variables.yaml` file, and `.global/cac/mix_variables_tasks.yaml` renamed to `load_variables.yaml`
+- Rename `<component>/private/manifest.yaml` to `<component>/private/playbook.yaml`.
+The term manifest is ambiguous an can refer both to the terraform files and to this yaml one.
+The name `playbook.yml` is more clear and would lead to less confusion.
+- Replace Ansible's `amazon.aws.aws_s3`module to a current one like `amazon.aws.s3_object`
+- Add `SITE_URL` and `SITE_BRANCH` parameters to test forks of the **6G-Sandbox-Sites** repository. 
+Remember to change from Jenkins the value of the `GITHUB_JENKINS` credential so that it can access all required repos.
 
 
 
 To be discussed:
 - remove public.yaml/name ??
-- remove tn_bastion and tn_vxlan from public.yaml/metadata/depends->needs
-- also remove intrinsec dependencies (dependency of a dependency)
+- rename public.yaml/metadata/needs
+- optional component dependencies. TNLCM needs aditional logic (not listed in metadata) to order components if for example a VM uses aditional vxlans
 
 
 

@@ -36,9 +36,7 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  needs: 
-    - tn_vxlan:
-    - tn_bastion:
+  needs:
     - vxlan:
   short_description: This is a component to deploy a K8S cluster medium size.
   long_description: |

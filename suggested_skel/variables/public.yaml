@@ -59,11 +59,10 @@ name: Component_Name
 ## Component metadata
 ####################################
 metadata:
-  maintainers: 
+  maintainers:
     - Full Name <contact@mail.address>
   depends:
-    - tn_vxlan:         # dependency on a previously deployed tn_vxlan component of any kind prev
-    - tn_bastion:
+    - vxlan:         # dependency on a previously deployed vxlan component of any kind prev
     - k8s_medium:       # dependency on a previously deployed k8s_medium component with input value multus_enabled: "YES"
         with:
           multus_enabled: "YES"
