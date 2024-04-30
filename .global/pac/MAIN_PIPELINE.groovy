@@ -70,7 +70,7 @@ pipeline {
                     // }
                     // writeFile(file: FILE_PATH, text: YAML_CONTENT)
                 withFileParameter('FILE') {
-                    sh "cat $FILE > ${INPUT_FILE_PATH}"
+                    sh "cat $FILE"
                 }
                 // }
             }
