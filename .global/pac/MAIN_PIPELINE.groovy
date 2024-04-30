@@ -58,7 +58,7 @@ pipeline {
     stages {
         stage('Stage 1: Import input file into the workspace') {
             steps {
-                echo 'Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file into the workspace'
+                echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file into the workspace"
                 // script step required to execute "Scripted Pipeline" syntax blocks into Declarative Pipelines
                 // script {
                     // def YAML_CONTENT = sh (
@@ -70,7 +70,7 @@ pipeline {
                     // }
                     // writeFile(file: FILE_PATH, text: YAML_CONTENT)
                 withFileParameter('FILE') {
-                    sh 'cat $FILE > $WORKSPACE/$LIBRARY_COMPONENT_NAME/variables/input.yaml'
+                    sh "cat $FILE > ${WORKSPACE}/${LIBRARY_COMPONENT_NAME}/variables/input.yaml"
                 }
                 // }
             }
@@ -92,7 +92,7 @@ pipeline {
    
         stage('Stage 3: Deploy the selected component') {
             steps {
-                echo 'Stage 3: Deploy the $LIBRARY_COMPONENT_NAME component'
+                echo "Stage 3: Deploy the $LIBRARY_COMPONENT_NAME component"
               // script {
               //   sh """ 
               //   cd ${LIBRARY_COMPONENT_NAME}/private
