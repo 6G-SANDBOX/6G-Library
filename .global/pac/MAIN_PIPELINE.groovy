@@ -69,7 +69,7 @@ pipeline {
             steps {
                 echo 'Stage 2: Clone 6G-Sandbox-Sites repository'
                 dir ("${env.WORKSPACE}/") {
-                    git "https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git"
+                    sh "git clone https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git"
                 }
             }
         }
@@ -106,7 +106,10 @@ pipeline {
 
               // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
                 ansiblePlaybook(
-                    playbook: '${WORKSPACE}/.global/cac/deploy_playbook.yaml'
+                    extraVars {
+                        workspace: "${WORKSPACE}"
+                    },
+                    playbook: "${WORKSPACE}/.global/cac/deploy_playbook.yaml"
                 )
             }
         }    
