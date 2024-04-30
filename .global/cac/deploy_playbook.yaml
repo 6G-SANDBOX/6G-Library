@@ -3,4 +3,9 @@
   gather_facts: true
   tasks:
     - name: Load enviromental variables from different sources
-      ansible.builtin.include_tasks: "{{ ansible_env.WORKSPACE }}/.global/cac/tasks/load_variables.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/load_variables.yaml"
+
+    - name: Display all variables
+      ansible.builtin.debug:
+        var: hostvars[inventory_hostname]
+

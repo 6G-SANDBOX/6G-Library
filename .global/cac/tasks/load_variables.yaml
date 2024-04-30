@@ -1,58 +1,16 @@
 ---
-- name: Import input file variables
-  include_vars:
-    file: "{{ ansible_env.WORKSPACE }}/{{ ansible_env.LIBRARY_COMPONENT_NAME }}/variables/input.yaml"
+- name: Load site-specific variables
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/6G-Sandbox-Sites/.sites/{{ deployment_site }}/values.yaml"
 
-# - name: Load variables from enviroment
-#   ansible.builtin.set_fact:
-#     "{{ item.key }}": "{{ lookup('env', item.key) | default(item.value) }}"
-#   loop: "{{ lookup('dict', ansible_env) }}"
-#   loop_control:
-#     label: "{{ item.key }}"
-#   vars:
-#     ansible_env:
-#       - TN_ID
-#       - LIBRARY_COMPONENT_NAME
-#       - ENTITY_NAME
-#       - DEPLOYMENT_SITE
-#       - TNLCM_CALLBACK
-#       - LIBRARY_URL
-#       - LIBRARY_BRANCH
-#       - DEBUG
-#       - FILE_PATH
-#       - OPENNEBULA_API_CREDENTIALS
-#       - OPENNEBULA_USERNAME
-#       - OPENNEBULA_PASSWORD
-#       - OPENNEBULA_ENDPOINT
-#       - OPENNEBULA_FLOW_ENDPOINT
-#       - OPENNEBULA_INSECURE
-#       - ONE_XMLRPC
-#       - ONE_AUTH
-#       - AWS_ACCESS_KEY_ID
-#       - AWS_SECRET_ACCESS_KEY
-#       - ANSIBLE_REMOTE_USER
-#       - ANSIBLE_CONNECTION_PASSWORD_FILE
-#       - WORKSPACE
+- name: Load private component-specific variables
+  ansible.builtin.include_vars::
+    file: "{{ workspace }}/{{ ansible_env.LIBRARY_COMPONENT_NAME }}/variables/private.yaml"
 
+- name: Load public component-specific variables
+  ansible.builtin.include_vars::
+    file: "{{ workspace }}/{{ ansible_env.LIBRARY_COMPONENT_NAME }}/variables/input_file.yaml"
 
-
-
-
-
-
-# - name: Load variables from site
-#   ansible.builtin.include_vars:
-#     file: "{{ workspace }}/6G-Sandbox-Sites/.sites/{{ deployment_site }}/values.yaml"
-
-# - name: Load private variables from component
-#   ansible.builtin.include_vars:
-#     file: "{{ workspace }}/{{ component_name }}/private/values.yaml"
-
-# - name: Check if input file with tnlcm related variables exists
-#   stat:
-#     path: "{{ workspace }}/{{ component_name }}/private/tnlcm_vars.yaml"
-#   register: file_exits
-# - name: Load tnlcm related variable from input file
-#   ansible.builtin.include_vars:
-#     file: "{{ workspace }}/{{ component_name }}/private/tnlcm_vars.yaml"
-#   when: file_exits.stat.exists
+- name: Load pipeline-specific variables
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/{{ ansible_env.LIBRARY_COMPONENT_NAME }}/variables/pipeline_parameters.yaml"
