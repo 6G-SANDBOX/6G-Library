@@ -8,4 +8,3 @@
     - name: Display all variables
       ansible.builtin.debug:
         var: hostvars[inventory_hostname]
-

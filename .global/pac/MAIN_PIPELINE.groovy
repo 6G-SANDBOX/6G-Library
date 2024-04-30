@@ -74,19 +74,19 @@ pipeline {
             }
         }
 
-        stage('Stage 3: Load Jenkins parameters into file') {
+        stage('Stage 3: Import Jenkins parameters into the workspace') {
             steps {
                 echo 'Stage 3: Load Jenkins parameters into the workspace'
                 script{
                     def paramsFile = "${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/pipeline_parameters.yaml"
-                    def paramsContent = "TN_ID=${params.TN_ID}\n"
-                    paramsContent += "LIBRARY_COMPONENT_NAME=${params.LIBRARY_COMPONENT_NAME}\n"
-                    paramsContent += "ENTITY_NAME=${params.ENTITY_NAME}\n"
-                    paramsContent += "DEPLOYMENT_SITE=${params.DEPLOYMENT_SITE}\n"
-                    paramsContent += "TNLCM_CALLBACK=${params.TNLCM_CALLBACK}\n"
-                    paramsContent += "LIBRARY_URL=${params.LIBRARY_URL}\n"
-                    paramsContent += "LIBRARY_BRANCH=${params.LIBRARY_BRANCH}\n"
-                    paramsContent += "DEBUG=${params.DEBUG}\n"
+                    def paramsContent = "tn_id: ${params.TN_ID}\n"
+                    paramsContent += "library_component_name: ${params.LIBRARY_COMPONENT_NAME}\n"
+                    paramsContent += "entity_name: ${params.ENTITY_NAME}\n"
+                    paramsContent += "deployment_site: ${params.DEPLOYMENT_SITE}\n"
+                    paramsContent += "tnlcm_callback: ${params.TNLCM_CALLBACK}\n"
+                    paramsContent += "library_url: ${params.LIBRARY_URL}\n"
+                    paramsContent += "library_branch: ${params.LIBRARY_BRANCH}\n"
+                    paramsContent += "debug: ${params.DEBUG}\n"
 
                     writeFile file: paramsFile, text: paramsContent
                 }
