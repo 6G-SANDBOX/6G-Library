@@ -36,8 +36,8 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  depends: 
-    - tn_vxlan
+  needs: 
+    - tn_vxlan:
   short_description: VM with a medium ammount of compute resources 
   long_description: |
     This image is based on an Ubuntu 22.04 with:

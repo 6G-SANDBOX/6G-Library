@@ -1,43 +1,52 @@
-####################################
+######################################################
 ##
-## Component metadata
-## 
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 4 global variables
+## with all required info:
+##   1. name: name of the component
+##
+##   2. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   3. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   4. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+## File previously found at "public/description.yaml"
+##
+######################################################
+
+
 ####################################
-component_name: tn_vxlan
+## Component name
+####################################
+name: tn_vxlan
+
+####################################
+## Component metadata
+####################################
 metadata:
-  family: bootstrap
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
-<<<<<<< HEAD
-  version: 0.0.1
-=======
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  version: 0.0.1
-  depends:
->>>>>>> main
+  needs:
   short_description: This is the component that creates VXLAN network for TN Bootstrap
   long_description: |
     This is the component that creates VXLAN network for TN Bootstrap
-  platforms: [one]
-<<<<<<< HEAD
-  sites: [uma]
-=======
+  hypervisors: [one]
   sites: [uma, athens, fokus]
 
->>>>>>> main
-###################################################
-##
-## Public variables that 
-## should be filled by the experimenter or 
-## the TNLCM. Some of them could be optional
-## 
-###################################################
-public:
-<<<<<<< HEAD
-  one_vxlan_name: "PLACEHOLDER_VXLAN_NAME"
-
-=======
+####################################
+## Component input
+####################################
+input:
   one_vxlan_name:
     description: "Name to customize the tn_vxlan component inside OpenNebula. NOTE: this variable will be removed in the next 6GLibrary update"
     type: "str"
@@ -45,12 +54,8 @@ public:
     user_input: true
     optional: false
     
->>>>>>> main
-###################################################
-##
-## Output component variables that 
-## should be keeped by the TNLCM 
-## 
-###################################################
-outputs:
-  tn_vxlan_id: "ID from OpenNebula to identify this Network"
+####################################
+## Component input
+####################################
+output:
+  - tn_vxlan_id:      # ID from OpenNebula to identify this Network

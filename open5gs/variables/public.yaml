@@ -1,38 +1,56 @@
-####################################
+######################################################
 ##
-## Component metadata
-## 
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 4 global variables
+## with all required info:
+##   1. name: name of the component
+##
+##   2. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   3. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   4. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+## File previously found at "public/description.yaml"
+##
+######################################################
+
+
 ####################################
-component_name: open5gs
+## Component name
+####################################
+name: open5gs
+
+####################################
+## Component metadata
+####################################
 metadata:
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  version: 0.0.1
-  depends:
+  needs:
     - tn_vxlan:
-        version: ">=0.0.1"
     - tn_bastion:
-        version: ">=0.0.1"
-    # vxlan?
     - k8s_medium:
-        version: ">=0.0.1"
   short_description: This is a component to deploy an Open5Gs on a K8S cluster.
   long_description: |
     This component deploys a 5G SA Core (Open5Gs) using Helm charts.
     More info in this url: https:// ....
-  platforms: [one]
+  hypervisors: [one]
   sites: [uma, athens, fokus]
 
-###################################################
-##
-## Public component variables that 
-## should be filled by the experimenter or 
-## the TNLCM. Some of them could be optional
-## 
-###################################################
-public:
+####################################
+## Component input
+####################################
+input:
   oneke_cluster_name:
     description: Unique name to identify the OneKE cluster inside the Trial Network. OneKE cluster where the open5gs helm chart will be deployed
     type: "str"
@@ -88,11 +106,7 @@ public:
     user_input: true
     optional: false
 
-
-###################################################
-##
-## Output component variables that 
-## should be keeped by the TNLCM 
-## 
-###################################################
-outputs:
+####################################
+## Component input
+####################################
+output:

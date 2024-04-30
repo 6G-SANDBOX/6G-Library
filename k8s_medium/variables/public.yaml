@@ -1,38 +1,57 @@
-####################################
+######################################################
 ##
-## Component metadata
-## 
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 4 global variables
+## with all required info:
+##   1. name: name of the component
+##
+##   2. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   3. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   4. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+## File previously found at "public/description.yaml"
+##
+######################################################
+
+
 ####################################
-component_name: k8s_medium
+## Component name
+####################################
+name: k8s_medium
+
+####################################
+## Component metadata
+####################################
 metadata:
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  version: 0.0.1
-  depends: 
+  needs: 
     - tn_vxlan:
-        version: ">=0.0.1"
     - tn_bastion:
-        version: ">=0.0.1"
     - vxlan:
-        version: ">=0.0.1"
   short_description: This is a component to deploy a K8S cluster medium size.
   long_description: |
     This component deploy a K8S cluster using the oneKE service created by OpenNebula.
     It creates a 3 node cluster: master, worker, storage-worker
     More info in this url: https:// ....
-  platforms: [one]
+  hypervisors: [one]
   sites: [uma, athens, fokus]
 
-###################################################
-##
-## Public component variables that 
-## should be filled by the experimenter or 
-## the TNLCM. Some of them could be optional
-## 
-###################################################
-public:
+####################################
+## Component input
+####################################
+input:
   external_vnet_id:
     description: Name of the VNet used to access the OneKE cluster. Most cases will use the Trial Network tn_vxlan
     type: "int"
@@ -135,11 +154,8 @@ public:
     user_input: true
     optional: false   # will be optional in the near future
 
-###################################################
-##
-## Output component variables that 
-## should be keeped by the TNLCM 
-## 
-###################################################
-outputs:
+####################################
+## Component input
+####################################
+output:
   kubeconfig: "Kubeconfig file to access to this cluster"

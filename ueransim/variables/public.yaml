@@ -1,39 +1,51 @@
-####################################
+######################################################
 ##
-## Component metadata
-## 
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 4 global variables
+## with all required info:
+##   1. name: name of the component
+##
+##   2. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   3. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   4. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+## File previously found at "public/description.yaml"
+##
+######################################################
+
+
 ####################################
-component_name: ueransim
-metadata: 
+## Component name
+####################################
+name: ueransim
+
+####################################
+## Component metadata
+####################################
+metadata:
   maintainers: 
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  version: 1.1.0
-  depends:
+  needs: 
     - tn_vxlan:
-        version: ">=0.0.1"
     - tn_bastion:
-        version: ">=0.0.1"
-    
-    # vxlan?
-    - k8s_medium:
-        version: ">=0.0.1"
-        # dependency aplied if this AND list of variable value conditions is satisfied
-        if:
-          run_gnb: "YES"
     - open5gs:
-        version: ">=0.0.1"
-        # dependency aplied if this AND list of variable value conditions is satisfied
-        if:
+        if:                # dependency aplied if this "AND" list of input value conditions is satisfied
           run_gnb: "YES"
     - ueransim:
-        version: ">=0.0.1"
-        # depends on an ueransim component with variable run_gnb: "YES" to be deployed previously
-        with:
+        with:              # dependency on an previously deployed ueransim component with input value run_gnb: "YES"
           run_gnb: "YES"
-        # dependency aplied if this AND list of variable value conditions is satisfied
-        if:
+        if:                # dependency aplied if this "AND" list of input value conditions is satisfied
           run_ue: "YES"
           run_gnb: "NO"
   short_description: This is the component to deploy a UERANSIM instance 
@@ -41,17 +53,13 @@ metadata:
     This is the component to deploy a UERANSIM instance into a Trial Network. It can be deployed as:
     - UE
     - gNB
-  platforms: [one]
+  hypervisors: [one]
   sites: [uma, athens, fokus]
 
-###################################################
-##
-## Public component variables that 
-## should be filled by the experimenter or 
-## the TNLCM. Some of them could be optional
-## 
-###################################################
-public:
+####################################
+## Component input
+####################################
+input:
   one_component_name:
     description: Unique name to identify the ueransim component inside the Trial Network
     type: "str"
@@ -63,26 +71,25 @@ public:
       Privileged user (other than root) to access the VM by SSH
       NOTE: If no username is provided, the only user will be root and ssh access may not be available (sshd_config: PermitRootLogin without-password)
     type: "str"
-    value: ""
+    value:
     user_input: true
     optional: true
   one_vm_password:
     description: Password to access the VM by SSH. Useful only if "one_vm_username" is defined
     type: "str"
-    value: ""
+    value:
     user_input: true
     optional: true
   one_vm_ssh_key:
     description: SSH public key loaded into /home/"one_vm_username"/.ssh/authorized_keys. If "one_vm_username" is not defined, it will default to /root/.ssh/authorized_keys
     type: "str"
-    value: ""
+    value:
     user_input: true
     optional: true
   one_component_networks:
     description: OpenNebula IDs of the VNets the VM will be part of. First will be the tn_vxlan ID in most cases
     type: "intlist"
     value:
-#      - 47
     user_input: true
     optional: false
 
@@ -234,12 +241,9 @@ public:
     user_input: true
     optional: true
 
-###################################################
-##
-## Output component variables that should be keeped by the TNLCM 
-## sufixing them with {{ tn_id }}-{{ one_component_name }}-
-## 
-###################################################
-outputs:
-  network_assignments: "OpenNebula VM Network Assignments"
-  vm_id: "OpenNebula VM ID"
+####################################
+## Component input
+####################################
+output:
+  - network_assignments:        # OpenNebula VM Network Assignments
+  - vm_id:                      # OpenNebula VM ID

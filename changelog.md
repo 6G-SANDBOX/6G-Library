@@ -14,7 +14,11 @@
     - moved `public/changelog.yaml` to `changelog.md` with **changed format**
     - moved `public/description.yaml` to `variables/public.yaml`
     - moved `private/values.yaml` to `variables/private.yaml`
+    - moved `private/one/` to `code/hypervisors/one/`. Also moved charts from **k8s_mediium** and **open5gs** to `code/hypervisors/all/`
+    - moved `results/` directory to `code/results/`
+    - moved `private/manifest.yaml` to `code/manifest.yaml`
     - deleted `public/` directory
+    - deleted `private/` directory
 - Restructuration of public variables file.
 
 
@@ -28,7 +32,7 @@
 
 To be discussed:
 - remove public.yaml/name ??
-- remove tn_bastion and tn_vxlan from public.yaml/metadata/depends
+- remove tn_bastion and tn_vxlan from public.yaml/metadata/depends->needs
 - also remove intrinsec dependencies (dependency of a dependency)
 - different RAM ammounts for vm_kvm components (powers of two)
 
