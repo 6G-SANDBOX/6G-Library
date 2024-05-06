@@ -9,18 +9,18 @@ pipeline {
     }
 
     parameters {
-        string(name: 'TN_ID', defaultValue: '', description: 'Trial Network Identifier')
-        string(name: 'LIBRARY_COMPONENT_NAME', defaultValue: '', description: '6G Library Component type')
-        string(name: 'ENTITY_NAME', defaultValue: '', description: 'Custom name for the component inside the Trian Network')
-        choice(name: 'DEPLOYMENT_SITE', choices: ['uma', 'athens', 'fokus'], description: 'Site where the deployment is being made')
-        string(name: 'TNLCM_CALLBACK', defaultValue: 'http://tnlcm-ip:5000/tnlcm/callback/', description: 'URL of the TNLCM to notify the results')
+        string(name: 'TN_ID', defaultValue: '', description: 'Trial Network Identifier. MANDATORY')
+        string(name: 'LIBRARY_COMPONENT_NAME', defaultValue: '', description: '6G Library Component type. MANDATORY')
+        string(name: 'ENTITY_NAME', defaultValue: '', description: 'Custom name for the component inside the Trian Network. MANDATORY except for tn_vxlan and tn_bastion')
+        choice(name: 'DEPLOYMENT_SITE', choices: ['uma', 'athens', 'fokus'], description: 'Site where the deployment is being made. Choose between uma, athens or fokus. MANDATORY')
+        string(name: 'TNLCM_CALLBACK', defaultValue: 'http://tnlcm-ip:5000/tnlcm/callback/', description: 'URL of the TNLCM to notify the results. MANDATORY')
         string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library.git', description: '6G-Library repository HTTPS URL. Leave it as-is unless you want to test your own fork')
-        string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: 'LIBRARY_URL branch to use')
+        string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: 'LIBRARY_URL branch to use. Leave it as-is unless you want to test your own branch')
         string(name: 'SITES_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git', description: '6G-Library-Sites repository HTTP URL. Leave it as-is unless you want to test your own fork')
-        string(name: 'SITES_BRANCH', defaultValue: 'main', description: 'SITES_URL branch to use')
-        booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG')
+        string(name: 'SITES_BRANCH', defaultValue: 'main', description: 'SITES_URL branch to use. Leave it as-is unless you want to test your own branch')
+        booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG. Files will not be purged after the pipeline execution')
         // 'File Parameter' jenkins plugin required: https://plugins.jenkins.io/file-parameters/
-        base64File (name: 'FILE', description: 'YAML file that contains variables needed to deploy the component')
+        base64File (name: 'FILE', description: 'YAML file that contains the public variables needed to deploy the component')
     }
 
     // Enviromental variables inherited from Jenkins Credentials

@@ -1,53 +1,64 @@
 - name: Generate responses for success scenario
-  when: not result.failed           # Change to "terraform_apply.failed"
+  when: not terraform_apply.failed
   block:
-  - name: Generate markdown response for success
+  - name: Generate OK markdown response
     ansible.builtin.template:
-      src: "{{ workspace }}/{{ library_component_name }}/results/result_ok.md.j2"
-      dest: "{{ workspace }}/{{ library_component_name }}/results/result_ok.{{ library_component_name }}.{{ tn_id }}.md"
+      src: "{{ workspace }}/{{ library_component_name }}/result_templates/ok_result.md.j2"
+      dest: "{{ workspace }}/{{ library_component_name }}/code/ok_result-{{ tn_id }}-{{ library_component_name }}-{{
+           '-'+entity_name if entity_name is defined else '' }}.md"
 
-  - name: Encode markdown OK file into base64 
+  - name: Encode OK response into base64 
     ansible.builtin.slurp:
-      src: "{{ workspace }}/{{ library_component_name }}/results/result_ok.{{ library_component_name }}.{{ tn_id }}.md"
+      src: "{{ workspace }}/{{ library_component_name }}/code/ok_result-{{ tn_id }}-{{ library_component_name }}-{{
+           '-'+entity_name if entity_name is defined else '' }}.md"
     register: markdown2ok
 
-  - name: Generate markdown response for success in JSON
+  - name: Generate OK json response
     ansible.builtin.template:
-      src: "{{ workspace }}/{{ library_component_name }}/results/result_ok.json.j2"
-      dest: "{{ workspace }}/{{ library_component_name }}/results/result_ok.json"
+      src: "{{ workspace }}/{{ library_component_name }}/result_templates/ok_result.json.j2"
+      dest: "{{ workspace }}/{{ library_component_name }}/code/ok_result-{{ tn_id }}-{{ library_component_name }}-{{
+           '-'+entity_name if entity_name is defined else '' }}.json"
 
-  - name: POST result to TNLCM with OK
+  - name: Send OK json response to TNLCM
     ansible.builtin.uri:
       url: "{{ tnlcm_callback }}"
       method: POST
       body_format: json
-      src: "{{ workspace }}/{{ library_component_name }}/results/result_ok.json"
-    register: output
+      src: "{{ workspace }}/{{ library_component_name }}/code/ok_result-{{ tn_id }}-{{ library_component_name }}-{{
+           '-'+entity_name if entity_name is defined else '' }}.json"
+    register: tnlcm_post
     ignore_errors: true 
+  - debug: var=tnlcm_post
 
 
 - name: Generate responses for failed scenario
-  when: result.failed
+  when: terraform_apply.failed
   block:
-  - name: Generate markdown response for failed
+  - name: Generate FAIL markdown response
     ansible.builtin.template:
-      src: "{{ workspace }}/{{ library_component_name }}/results/result_nok.md.j2"
-      dest: "{{ workspace }}/{{ library_component_name }}/results/result_nok.{{ library_component_name }}.{{ tn_id }}.md"
+      src: "{{ workspace }}/{{ library_component_name }}/result_templates/fail_result.md.j2"
+      dest: "{{ workspace }}/{{ library_component_name }}/code/fail_result-{{ tn_id }}-{{ library_component_name }}-{{
+           '-'+entity_name if entity_name is defined else '' }}.md"
 
-  - name: Encode markdown NOK file into base64 
+  - name: Encode FAIL markdown response into base64
     ansible.builtin.slurp:
-      src: "{{ workspace }}/{{ library_component_name }}/results/result_nok.{{ library_component_name }}.{{ tn_id }}.md"
+      src: "{{ workspace }}/{{ library_component_name }}/code/fail_result-{{ tn_id }}-{{ library_component_name }}-{{
+           '-'+entity_name if entity_name is defined else '' }}.md"
     register: markdown2nok
 
-  - name: Generate markdown response for failed in JSON
+  - name: Generate FAIL json response
     ansible.builtin.template:
-      src: "{{ workspace }}/{{ library_component_name }}/results/result_nok.json.j2"
-      dest: "{{ workspace }}/{{ library_component_name }}/results/result_nok.json"
+      src: "{{ workspace }}/{{ library_component_name }}/result_templates/fail_result.json.j2"
+      dest: "{{ workspace }}/{{ library_component_name }}/code/fail_result-{{ tn_id }}-{{ library_component_name }}-{{
+           '-'+entity_name if entity_name is defined else '' }}.json"
 
-  - name: POST result to TNLCM with NOK
+  - name: Send FAIL json response to TNLCM
     ansible.builtin.uri:
       url: "{{ tnlcm_callback }}"
       method: POST
       body_format: json
-      src: "{{ workspace }}/{{ library_component_name }}/results/result_nok.json"
-    ignore_errors: true
+      src: "{{ workspace }}/{{ library_component_name }}/code/fail_result-{{ tn_id }}-{{ library_component_name }}-{{
+           '-'+entity_name if entity_name is defined else '' }}.json"
+    register: tnlcm_post
+    ignore_errors: true 
+  - debug: var=tnlcm_post

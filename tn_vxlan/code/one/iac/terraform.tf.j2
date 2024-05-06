@@ -1,9 +1,6 @@
 # https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_network
 resource "opennebula_virtual_network" "{{ tn_id }}-tn_vxlan" {
   name            = "{{ tn_id }}-tn_vxlan"
-# permissions     = "660"
-
-# security_groups = {{ one_vxlan_security_groups }}
   physical_device = "{{ site_vxlan_if }}"
   cluster_ids = {{ site_network_clusters }}
   type            = "vxlan"
@@ -15,8 +12,8 @@ resource "opennebula_virtual_network" "{{ tn_id }}-tn_vxlan" {
   dns             = "{{ one_vxlan_dns }}"
 
   template_section {
-   name = "{{ tn_id }}-tn_vxlan"
-   elements = {
+    name = "tn_vxlan"
+    elements = {
       TN_ID = "{{ tn_id }}"
    }
   }
