@@ -1,3 +1,4 @@
+---
 - name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
   tasks:

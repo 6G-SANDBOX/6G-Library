@@ -10,9 +10,5 @@
         name: "{{ tn_id }}-tn_bastion"
       when: (library_component_name != "tn_bastion") or (library_component_name != "tn_vxlan")
 
-    - name: Display all variables/facts known for a host
-      ansible.builtin.debug:
-        var: hostvars[localhost]
-
-    - name: Start the component deployment
-      ansible.builtin.import_playbook: "{{ workspace }}/{{ library_component_name }}/code/component_playbook.yaml"
+- name: Start the component deployment
+  ansible.builtin.import_playbook: "{{ workspace }}/{{ library_component_name }}/code/component_playbook.yaml"

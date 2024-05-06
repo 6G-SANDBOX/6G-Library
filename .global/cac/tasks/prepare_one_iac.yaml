@@ -2,17 +2,17 @@
 - name: Prepare opennebula provider terraform manifest
   ansible.builtin.copy:
     src: "{{ workspace }}/.global/iac/one/opennebula_provider_v1.4.tf"
-    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/opennebula_provider_v1.3.tf"
+    dest: "{{ workspace }}/{{ library_component_name }}/private/{{ site_hypervisor }}/iac/opennebula_provider_v1.3.tf"
 
 - name: Prepare AWS s3 backend terraform manifest
   ansible.builtin.template:
     src: "{{ workspace }}/.global/iac/backend.tf.j2"
-    dest: "{{ workspace }}/{{ component_name }}/code/hypervisors/{{ site_hypervisor }}/iac/backend.tf"
+    dest: "{{ workspace }}/{{ library_component_name }}/code/hypervisors/{{ site_hypervisor }}/iac/backend.tf"
 
-- name: "Prepare {{ component_name }} terraform manifest"
+- name: "Prepare {{ library_component_name }} terraform manifest"
   ansible.builtin.template:
-    src: "{{ workspace }}/{{ component_name }}/code/hypervisors/{{ site_hypervisor }}/iac/terraform.tf.j2"
-    dest: "{{ workspace }}/{{ component_name }}/code/hypervisors/{{ site_hypervisor }}/iac/{{ component_name }}{{
+    src: "{{ workspace }}/{{ library_component_name }}/code/hypervisors/{{ site_hypervisor }}/iac/terraform.tf.j2"
+    dest: "{{ workspace }}/{{ library_component_name }}/code/hypervisors/{{ site_hypervisor }}/iac/{{ library_component_name }}{{
            '-'+entity_name if entity_name is defined else '' }}.tf"
 
 - name: "Get terraform manifests from previous deployed components"

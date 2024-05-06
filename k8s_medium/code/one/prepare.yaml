@@ -2,12 +2,12 @@
 - name: Copy file with owner and permissions
   ansible.builtin.copy:
     src: "{{ workspace }}/.global/iac/providers.tf"
-    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/providers.tf"
+    dest: "{{ workspace }}/{{ library_component_name }}/private/{{ site_hypervisor }}/iac/providers.tf"
 - name: Generate Terraform s3 backend manifest
   template:
     src: "{{ workspace }}/.global/iac/backend.tf.j2"
-    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/backend.tf"
+    dest: "{{ workspace }}/{{ library_component_name }}/private/{{ site_hypervisor }}/iac/backend.tf"
 - name: Generate oneKE manifests
   template:
-    src: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/terraform.tf.j2"
-    dest: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ service_name }}_oneke_{{ ansible_date_time.epoch }}.tf"
+    src: "{{ workspace }}/{{ library_component_name }}/private/{{ site_hypervisor }}/iac/terraform.tf.j2"
+    dest: "{{ workspace }}/{{ library_component_name }}/private/{{ site_hypervisor }}/iac/{{ service_name }}_oneke_{{ ansible_date_time.epoch }}.tf"

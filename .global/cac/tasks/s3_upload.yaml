@@ -1,7 +1,7 @@
 - name: "Get terraform files from dir"
   find:
     paths: 
-      - "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac"
+      - "{{ workspace }}/{{ library_component_name }}/private/{{ site_hypervisor }}/iac"
     patterns: "*.tf"
     excludes: 
       - "providers.tf"
@@ -18,14 +18,14 @@
     aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/{{ item }}"
-    src: "{{ workspace }}/{{ component_name }}/private/{{ site_hypervisor }}/iac/{{ item }}"
+    src: "{{ workspace }}/{{ library_component_name }}/private/{{ site_hypervisor }}/iac/{{ item }}"
     encrypt: no
   with_items: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
 
 - name: "Get markdown files from dir"
   find:
     paths: 
-      - "{{ workspace }}/{{ component_name }}/results"
+      - "{{ workspace }}/{{ library_component_name }}/results"
     patterns: "*.md"
   register: found_files
 - name: Print file names without path
@@ -39,6 +39,6 @@
     aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/{{ item }}"
-    src: "{{ workspace }}/{{ component_name }}/results/{{ item }}"
+    src: "{{ workspace }}/{{ library_component_name }}/results/{{ item }}"
     encrypt: no
   with_items: "{{ found_files['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1') | list }}"
