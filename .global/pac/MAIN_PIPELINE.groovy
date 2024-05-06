@@ -105,7 +105,7 @@ pipeline {
                 ansiblePlaybook(
                     extraVars: [
                         workspace: "${WORKSPACE}",
-                        library_component_name: "${params.DEPLOYMENT_SITE}",
+                        library_component_name: "${params.LIBRARY_COMPONENT_NAME}",
                         deployment_site: "${params.DEPLOYMENT_SITE}"
                     ],
                     playbook: "${WORKSPACE}/.global/cac/deploy_playbook.yaml"
