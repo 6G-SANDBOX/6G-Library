@@ -1,11 +1,3 @@
-# START MANDATORY BLOCK
-- name: Generate installation manifest from templates
-  hosts: localhost
-  tasks:
-    - name: Mix variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-# END MANDATORY BLOCK
-
 # STAGE 1: Prepare manifest from templates
 - name: Generate installation manifest from templates
   hosts: localhost
@@ -17,7 +9,7 @@
 - name: Infrastructure Tasks
   hosts: localhost
   tasks:
-    - name: Download Terraform manifest from previos TN components
+    - name: Download Terraform manifest from previous TN components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_bucket_content_tasks.yaml"
 
     - name: Execute terraform apply
@@ -35,6 +27,6 @@
     - name: Publish execution results
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
 
-    - name: Upload manifest
+    - name: Upload Terraform manifest
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
       when: not result.failed

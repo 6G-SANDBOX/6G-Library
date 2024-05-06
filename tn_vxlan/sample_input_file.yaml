@@ -1,9 +1,3 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
-# URL To publish result
-tnlcm_callback: "http://tnlcm.uma/tn/{tn_id}/callback"
-
-# FROM PUBLIC VARIABLES SECTION
-one_vxlan_name: "main_vnet"
-
-# FROM PRIVATE VARIABLES SECTION (ONLY FOR ADVANCED USERS)
+# This component does not need any input file

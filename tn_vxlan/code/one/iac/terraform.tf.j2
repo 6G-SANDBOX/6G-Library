@@ -1,34 +1,35 @@
-resource "opennebula_virtual_network" "{{ tn_id }}-{{ one_vxlan_name }}" {
-  name            = "{{ tn_id }}-{{ one_vxlan_name }}"
-  permissions     = "660"
-  group           = "{{ one_group }}"
-  physical_device = "{{ one_vxlan_physical_device }}"
+# https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_network
+resource "opennebula_virtual_network" "{{ tn_id }}-tn_vxlan" {
+  name            = "{{ tn_id }}-tn_vxlan"
+# permissions     = "660"
+
+# security_groups = {{ one_vxlan_security_groups }}
+  physical_device = "{{ site_vxlan_if }}"
+  cluster_ids = {{ site_network_clusters }}
   type            = "vxlan"
   automatic_vlan_id = true
   mtu             = {{ one_vxlan_mtu }}
   guest_mtu       = {{ one_vxlan_guest_mtu }}
-  dns             = "{{ one_vxlan_dns }}"
   gateway         = "{{ one_vxlan_gw }}"
-  security_groups = {{ one_vxlan_security_groups }}
-  cluster_ids = {{  site_network_clusters }}
   network_mask = "{{ one_vxlan_netmask }}"
+  dns             = "{{ one_vxlan_dns }}"
 
   template_section {
-   name = "{{ one_vxlan_name }}"
+   name = "{{ tn_id }}-tn_vxlan"
    elements = {
       TN_ID = "{{ tn_id }}"
    }
   }
 }
 
-resource "opennebula_virtual_network_address_range" "{{ tn_id }}-{{ one_vxlan_name }}" {
-  virtual_network_id = opennebula_virtual_network.{{ tn_id }}-{{ one_vxlan_name }}.id
+resource "opennebula_virtual_network_address_range" "{{ tn_id }}-tn_vxlan" {
+  virtual_network_id = opennebula_virtual_network.{{ tn_id }}-tn_vxlan.id
   ar_type            = "IP4"
-  size               = {{ one_vxlan_address_size }}
   ip4                = "{{ one_vxlan_first_ip }}"
+  size               = {{ one_vxlan_address_size }}
 }
 
-output "{{ one_vxlan_name }}-vxlan_id" {
+output "{{ tn_id }}-tn_vxlan-id" {
   description = "OpenNebula Network ID"
-  value       = opennebula_virtual_network.{{ tn_id }}-{{ one_vxlan_name }}.id
+  value       = opennebula_virtual_network.{{ tn_id }}-tn_vxlan.id
 }

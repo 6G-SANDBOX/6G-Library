@@ -3,8 +3,8 @@
   hosts: localhost
   gather_facts: true
   tasks: 
-    - name: Mix variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
+    # - name: Mix variables from different sources
+    #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
     - name: 'Add bastion hosts to be able to jump'
       ansible.builtin.add_host:
         name: "{{ tn_id }}-tn_bastion"      
@@ -44,7 +44,7 @@
 
     - name: Load Terraform Output into execution context
       ansible.builtin.set_fact:
-        outputs: "{{ terraform_output.stdout | from_json }}"
+        outputs: "{{ terraform_output.stdout | ansible.builtin.from_json }}"
 
     - name: Get VM ip from default site network
       ansible.builtin.set_fact:
@@ -62,7 +62,7 @@
         ansible_user: "root"
 
     - name: Create SSH config file into Jenkins
-      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"
+      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"        
 
 # STAGE 3: Execute manifest
 - name: Wait for VM ready from jenkins jumping through TN Bastion

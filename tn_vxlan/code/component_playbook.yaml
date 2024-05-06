@@ -1,0 +1,33 @@
+- name: "STAGE 1: Apply IAC to deploy the component"
+  hosts: localhost
+  tasks:
+    - name: Prepare terraform manifests
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/prepare_one_iac.yaml"
+      when: site_hypervisor == "uma"
+
+    - name: Terraform apply
+      community.general.terraform:
+        project_path: './{{ site_hypervisor }}/iac/'
+        state: "present"
+        force_init: true
+      register: result
+
+    - name: "DEBUG: Get Terraform Outputs"
+      ansible.builtin.debug:
+        msg: "The VXLAN ID is {{ result.outputs[tn_id + \"-tn_vxlan-id\"].value }}"
+      when: not result.failed
+
+- name: "STAGE 2: Publish execution results"
+  hosts: localhost
+  tasks:
+    - name: "DEBUG: Get Terraform Outputs"
+      ansible.builtin.debug:
+        msg: "The VXLAN ID is {{ result.outputs[tn_id + \"-tn_vxlan-id\"].value }}"
+      when: not result.failed
+
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/publish_results.yaml"
+
+    - name: Upload markdown info to S3 storage
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
+      when: not result.failed

@@ -3,8 +3,8 @@
   hosts: localhost
   gather_facts: true
   tasks: 
-    - name: Mix variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
+    # - name: Mix variables from different sources
+    #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
     - name: 'Add bastion hosts to be able to jump'
       ansible.builtin.add_host:
         name: "{{ tn_id }}-tn_bastion"      

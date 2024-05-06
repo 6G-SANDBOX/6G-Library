@@ -1,5 +1,6 @@
 {
     "yaml.schemas": {
         "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks": "file:///Users/hi03114/Developer/_PROYECTOS/_REPOS/6G-Library/.global/cac/tasks/load_variables.yaml"
-    }
+    },
+    "ansible.python.interpreterPath": "/Users/hi03114/miniconda3/envs/ansible_env/bin/python"
 }

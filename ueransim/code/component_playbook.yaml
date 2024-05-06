@@ -4,10 +4,6 @@
   # gathering facts is necessary as many ansible variables come from enviromental variables from jenkins
   gather_facts: true
   tasks:
-    # NOTE: First 3 tasks seem common for all components.
-    - name: Load enviromental variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-
     # NOTE: Second task would need negative conditional for vxlan and tn_bastion components
     - name: Include Trial Network bastion VM to Ansible inventory
       ansible.builtin.add_host:
