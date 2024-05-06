@@ -38,5 +38,5 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/publish_results.yaml"
 
     - name: Upload markdown info to S3 storage
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/s3_upload.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/s3_upload.yaml"
       when: not terraform_apply.failed
