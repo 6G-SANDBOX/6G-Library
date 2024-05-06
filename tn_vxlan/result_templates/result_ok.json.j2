@@ -1,0 +1,10 @@
+{
+    "tn_id": "{{ tn_id | b64encode }}",
+    "library_component_name": "{{ library_component_name | b64encode }}",
+    "entity_name": "{{ entity_name | b64encode }}",
+    "success": true,
+    "markdown": "{{ markdown2nok['content'] | b64encode }}",
+    "output": {
+        "tn_vxlan_id": "{{ result.outputs[one_vxlan_name + "-vxlan_id"].value | b64encode }}"
+    }
+}

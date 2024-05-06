@@ -24,6 +24,7 @@
 - Restructuration of public variables file.
 - Jenkins Pipeline modified and renamed
 - Renamed `.global/iac/providers.tf` to `.global/iac/opennebula_provider_v1.4.tf`
+- Output to the TNLCM now with base64-encoded values
 
 
 ### Removed
