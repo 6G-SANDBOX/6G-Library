@@ -14,9 +14,9 @@ pipeline {
         string(name: 'ENTITY_NAME', defaultValue: '', description: 'Custom name for the component inside the Trian Network')
         choice(name: 'DEPLOYMENT_SITE', choices: ['uma', 'athens', 'fokus'], description: 'Site where the deployment is being made')
         string(name: 'TNLCM_CALLBACK', defaultValue: 'http://tnlcm-ip:5000/tnlcm/callback/', description: 'URL of the TNLCM to notify the results')
-        string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library', description: '6G-Library Repository HTTPS URL. Leave it as-is unless you want to test your own fork')
+        string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library.git', description: '6G-Library repository HTTPS URL. Leave it as-is unless you want to test your own fork')
         string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: 'LIBRARY_URL branch to use')
-        string(name: 'SITES_URL', defaultValue: 'git@github.com:6G-SANDBOX/6G-Sandbox-Sites.git', description: '6G-Library-Sites repository SSH URL. Leave it as-is unless you want to test your own fork')
+        string(name: 'SITES_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git', description: '6G-Library-Sites repository HTTP URL. Leave it as-is unless you want to test your own fork')
         string(name: 'SITES_BRANCH', defaultValue: 'main', description: 'SITES_URL branch to use')
         booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG')
         // 'File Parameter' jenkins plugin required: https://plugins.jenkins.io/file-parameters/
@@ -28,10 +28,10 @@ pipeline {
         // URL, branch and github token to clone the 6G-Sandbox-Sites repository
         SITES_URL="${params.SITES_URL}"
         SITES_BRANCH="${params.SITES_BRANCH}"
-        GITHUB_JENKINS = credentials('GITHUB_JENKINS') 
+        GITHUB_JENKINS = credentials('GITHUB_JENKINS')
 
         // Opennebula Terraform Provider envorimental variables https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs#environment-variables
-        OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
+        // OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
         OPENNEBULA_USERNAME = credentials('OPENNEBULA_TNLCM_USERNAME')
         OPENNEBULA_PASSWORD = credentials('OPENNEBULA_TNLCM_PASSWORD')
         OPENNEBULA_ENDPOINT = credentials('OPENNEBULA_ENDPOINT')
@@ -90,15 +90,10 @@ pipeline {
         stage('Stage 3: Clone 6G-Sandbox-Sites repository') {
             steps {
                 echo 'Stage 3: Clone 6G-Sandbox-Sites repository'
-                // dir ("${env.WORKSPACE}/") {
-                //     // avoid Injection via interpolation
-                //     // sh "git clone https://${GITHUB_JENKINS}@github.com/6G-SANDBOX/6G-Sandbox-Sites.git"
-                //     sh('git clone https://$GITHUB_JENKINS@github.com/6G-SANDBOX/6G-Sandbox-Sites.git')
-                // }
                 script {
-                    def gitUrlWithToken = SITES_URL.replace('git@github.com:', "https://${GITHUB_TOKEN}@github.com/")
-                    // Cloning the repository
-                    git (branch: SITES_BRANCH, url: gitUrlWithToken)
+                    def gitUrlWithoutGitAt = SITES_URL.replace('https://', '')
+                    def gitUrlWithToken = "https://${GITHUB_JENKINS}@${gitUrlWithoutGitAt}"
+                    sh "git clone -b ${SITES_BRANCH} ${gitUrlWithToken}"
                 }
             }
         }

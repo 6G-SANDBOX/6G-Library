@@ -5,12 +5,12 @@
 
 - name: Load private component-specific variables
   ansible.builtin.include_vars:
-    file: "{{ workspace }}/{{ ansible_env.LIBRARY_COMPONENT_NAME }}/variables/private.yaml"
+    file: "{{ workspace }}/{{ ansible_env.LIBRARY_COMPONENT_NAME }}/variables/{{ site_hypervisor }}/private.yaml"
 
-- name: Load public component-specific variables
+- name: Load public component-specific variables from input file
   ansible.builtin.include_vars:
     file: "{{ workspace }}/{{ ansible_env.LIBRARY_COMPONENT_NAME }}/variables/input_file.yaml"
 
-- name: Load pipeline-specific variables
+- name: Load pipeline-specific variables from Jenkins parameters
   ansible.builtin.include_vars:
     file: "{{ workspace }}/{{ ansible_env.LIBRARY_COMPONENT_NAME }}/variables/pipeline_parameters.yaml"
