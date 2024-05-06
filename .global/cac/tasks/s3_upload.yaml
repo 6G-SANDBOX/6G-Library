@@ -6,9 +6,9 @@
     secret_key: "{{ ansible_env.AWS_SECRET_ACCESS_KEY }}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/manifest-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is defined else '' }}.tf"
+           '-' + entity_name if entity_name is not none else '' }}.tf"
     src: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/{{ library_component_name }}{{
-           '-'+entity_name if entity_name is defined else '' }}.tf"
+           '-' + entity_name if entity_name is not none else '' }}.tf"
     encrypt: no
 
 
@@ -20,7 +20,7 @@
     secret_key: "{{ ansible_env.AWS_SECRET_ACCESS_KEY }}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/ok_result-{{ tn_id }}-{{ library_component_name }}-{{
-           '-'+entity_name if entity_name is defined else '' }}.md"
+           '-' + entity_name if entity_name is not none else '' }}.md"
     src: "{{ workspace }}/{{ library_component_name }}/code/ok_result-{{ tn_id }}-{{ library_component_name }}-{{
-           '-'+entity_name if entity_name is defined else '' }}.md"
+           '-' + entity_name if entity_name is not none else '' }}.md"
     encrypt: no
