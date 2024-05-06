@@ -28,6 +28,7 @@ All ansible executions will start from here, to later import its corresponding "
 - Jenkins Pipeline modified and renamed
 - Renamed `.global/iac/providers.tf` to `.global/iac/opennebula_provider_v1.4.tf`
 - Output to the TNLCM now with base64-encoded values
+- New unprivileged user used in OpenNebula: `jenkins-master` from a newly created group called `6G-Sandbox`
 
 
 ### Removed
@@ -39,9 +40,6 @@ All ansible executions will start from here, to later import its corresponding "
 
 Yet to be done:
 - Use Ansible ENVIROMENTAL VALUES to specify the ansible user into the VMs (rootless priviledged user)
-- Change OpenNebula credentials so that `oneadmin` isn't the Jenkins user no more.
-A less privileged user named `jenkins-master` will be the one deploying the components.
-It is the admin of a newly created group called `6G-Sandbox`, where custom users may be added in the future.
 - Replace Ansible's `amazon.aws.aws_s3`module to a current one like `amazon.aws.s3_object`
 
 

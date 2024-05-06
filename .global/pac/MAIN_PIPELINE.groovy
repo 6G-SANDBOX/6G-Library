@@ -23,8 +23,6 @@ pipeline {
         base64File (name: 'FILE', description: 'YAML file that contains variables needed to deploy the component')
     }
 
-Add `SITE_URL` and `SITE_BRANCH` parameters to test forks of the **6G-Sandbox-Sites** repository. 
-
     // Enviromental variables inherited from Jenkins Credentials
     environment {
         // URL, branch and github token to clone the 6G-Sandbox-Sites repository
