@@ -98,7 +98,7 @@ pipeline {
                 script {
                     def gitUrlWithToken = SITES_URL.replace('git@github.com:', "https://${GITHUB_TOKEN}@github.com/")
                     // Cloning the repository
-                    git branch: SITES_BRANCH url: gitUrlWithToken
+                    git (branch: SITES_BRANCH, url: gitUrlWithToken)
                 }
             }
         }
