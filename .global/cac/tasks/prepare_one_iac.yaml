@@ -13,7 +13,7 @@
   ansible.builtin.template:
     src: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/terraform.tf.j2"
     dest: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/{{ library_component_name }}{{
-           '-' + entity_name if entity_name is not none else '' }}.tf"
+           '-'+entity_name if entity_name is not none else '' }}.tf"
 
 - name: "Get terraform manifests from previous deployed components"
   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/s3_download.yaml"

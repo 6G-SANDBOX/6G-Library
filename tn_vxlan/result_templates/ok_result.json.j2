@@ -3,8 +3,8 @@
     "library_component_name": "{{ library_component_name | b64encode }}",
     "entity_name": "{{ entity_name | b64encode }}",
     "success": true,
-    "markdown": "{{ markdown2nok['content'] | b64encode }}",
+    "markdown": "{{ ok2markdown['content'] }}",
     "output": {
-        "tn_vxlan_id": "{{ result.outputs[one_vxlan_name + "-vxlan_id"].value | b64encode }}"
+        "tn_vxlan_id": "{{ tn_vxlan_id | b64encode }}"
     }
 }
