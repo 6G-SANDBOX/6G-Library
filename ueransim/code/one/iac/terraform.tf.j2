@@ -1,7 +1,7 @@
 resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
   name        = "{{ tn_id }}-{{ one_component_name }}"
   description = "{{ tn_id }} UERANSIM"
-  template_id = "{{ site_one_templates.ueransim.id }}"
+  template_id = "{{ site_one_templates.ueransim }}"
   group       = "{{ one_group }}"
   permissions = "660"
 

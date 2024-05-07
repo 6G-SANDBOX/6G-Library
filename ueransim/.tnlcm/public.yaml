@@ -240,8 +240,8 @@ input:
     optional: true
 
 ####################################
-## Component input
+## Component output
 ####################################
 output:
-  - network_assignments:        # OpenNebula VM Network Assignments
-  - vm_id:                      # OpenNebula VM ID
+  network_assignments:        # OpenNebula VM Network Assignments
+  vm_id:                      # OpenNebula VM ID

@@ -105,6 +105,6 @@ input:
     optional: false
 
 ####################################
-## Component input
+## Component output
 ####################################
 output:

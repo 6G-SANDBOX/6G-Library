@@ -62,7 +62,7 @@ input:
     user_input: false
 
 ####################################
-## Component input
+## Component output
 ####################################
 output:
   vm_ip:             # Main Network Interface

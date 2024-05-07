@@ -1,16 +1,7 @@
 resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
-<<<<<<< HEAD
-
   name        = "{{ tn_id }}-{{ one_component_name }}"
   description = "{{ tn_id }} VM LARGE"
-  template_id = {{ site_one_templates.vm_l.id }}
-  group       = "oneadmin"
-=======
-  name        = "{{ tn_id }}-{{ one_component_name }}"
-  description = "{{ tn_id }} VM LARGE"
-  template_id = "{{ site_one_templates.vm_l.id }}"
-  group       = "{{ one_group }}"
->>>>>>> main
+  template_id = "{{ site_one_templates.vm_l }}"
   permissions = "660"
 
   context = {
@@ -19,13 +10,6 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
     PASSWORD = "{{ one_vm_password }}"
     START_SCRIPT_BASE64 = "{{ site_jenkins_script_base64 }}" 
   }
-
-  disk {
-    image_id = {{ site_one_templates.vm_l.disk_id }}
-    size     = {{ site_one_templates.vm_l.disk_size }}
-    target   = "vda"
-    driver   = "qcow2"
-  }  
 
 {% for network_id in one_component_networks %}
   nic {
@@ -37,11 +21,7 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
 
 }
 
-<<<<<<< HEAD
-output "{{ one_component_name }}_network_assignments" {
-=======
 output "{{ one_component_name }}-network_assignments" {
->>>>>>> main
   description = "OpenNebula VM Network Assignments"
   value = { for nic in opennebula_virtual_machine.{{ tn_id }}-{{ one_component_name }}.nic[*] : nic.network_id => nic.computed_ip }
 }

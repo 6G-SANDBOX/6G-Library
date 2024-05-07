@@ -1,7 +1,7 @@
 resource "opennebula_service" "{{ tn_id }}-oneke-{{ service_name }}" {
 
   name        = "{{ tn_id }}-oneke-{{ service_name }}"
-  template_id = {{ site_one_templates.k8s_medium.id }}
+  template_id = {{ site_one_templates.k8s_medium }}
 
   extra_template = jsonencode({
       networks_values = [

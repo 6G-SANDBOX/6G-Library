@@ -70,7 +70,7 @@ input:
     optional: false
 
 ####################################
-## Component input
+## Component output
 ####################################
 output:
-  - vm_ip:          # Main Network Interface
+  vm_ip:          # Main Network Interface

@@ -116,7 +116,7 @@ input:
     optional: true
 
 ####################################
-## Component input
+## Component output
 ####################################
 output:
   terraform_output_value:

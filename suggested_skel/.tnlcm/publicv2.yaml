@@ -1,0 +1,141 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 4 global variables
+## with all required info:
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+## File previously found at "public/description.yaml"
+##
+######################################################
+
+
+# "name" has been removed, "input" was "public" and "output" was "outputs"
+# The public.yaml file is unused in component deployments and serves the TNLCM to gather data about the component.
+# 
+# "metadata.needs" and "input" serve the TNLCM on how to order the component deployments. "output" serves it telling it the values to save.
+
+# metadata gives the TNLCM some general information to help it understand how to process and order the different components. Fields:
+#   - mantainers: Unordered list of active component mantainers
+#   - needs: Ordered "OR" list of dictionaries with conditions to satisfy. It one dictionary is not satisfied, the TNLCM checks the next one successively until at least one is.
+#            Used by the backend to validate if the manifest is acceptable. If it is not, it tells the frontend the possible conditions to satisfy.
+#            Dependencies consist on different component types + maybe specific provided input values, either in the other component ("with") or in this component ()"if"). See examples
+#   - short_description: Shown in THLCM
+#   - long_description: Shown in TNLCM
+#   - hypervisors: Unordered list of compatible hypervisors. Orientative variable, does not apply to any check, as the sites themselves can only have one specific hypervisor (variable site_hypervisor)
+#   - sites: Unordered list of sites where the component is avaiable. Useful for hardware-dependent components
+
+# input describes all variables needed in a TN descriptor. Each variable containers the following fields:
+#   - description; A general description of the variable. It appears in the TNLCM Frontend. "str" by default
+#   - type: Expected data format. Avaiable types are "str", "int", "strlist" and "intlist". "str" by default
+#   - choices: Optional parameter that only appears in variables with limited possible values. Conflicts with "tnlcm_input". free choice by default
+#   - value: Placeholder value that appears in the TNLCM. "str" by default
+#   - optional: Indicates whether the placeholder ("value") serves as a default value or not. If negative, a value must always be provided by the experimenter. false by default
+#   - tnlcm_input: Optional parameter that only appears when the variable uses values stored in the TNLCM such as other component's metadata or outputs. Frontend asks the experimenter between the desired possibilites using backend readable paths. Conflicts with "choices". "" by default
+
+# output values are a list of empty dictionaries of the variables expected be generated during deployments, mainly from the terraform apply.
+# They may not only be useful for the TNLCM, they can also be used to generate the result files at the end of each deployment
+# maybe its value here in the public.yaml could be the value type (str, int...)
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Full Name <contact@mail.address>
+  needs:
+      # TN must satisfy all 3 dependencies
+    - vxlan:            # dependency on a previously deployed vxlan component of any kind prev
+      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value multus_enabled: "YES"
+        with:
+          multus_enabled: "YES"
+      ueransim:         # dependency on a previously deployed ueransim component with input value run_gnb: "YES" ONLY IF this component has input value 'sample_optional_value: "positive"'
+        with:
+          run_gnb: "YES"
+        if:
+          sample_optional_value: "positive"
+      # TN must satisfy only 2 dependencies
+    - vxlan:            # dependency on a previously deployed vxlan component of any kind prev
+      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value multus_enabled: "NO"
+        with:
+          multus_enabled: "NO"    
+    
+  short_description: Short description of a Component Type
+  long_description: |
+    The long description of a Component Type may span multiple lines
+    and provide a more in depth outline of it's purpose
+  hypervisors: [one]
+  sites: [uma, athens, fokus]
+
+####################################
+## Component input
+####################################
+input:
+  sample_optional_variable:
+    description: Description of an optional variable
+    type: "str"
+    value: "PLACEHOLDER VALUE"
+    optional: true
+  sample_mandatory_variable:
+    description: Description of a mandatory variable. 1 is a placeholder value, user input is required
+    type: "int"
+    value: 1
+    optional: false
+  sample_choice_variable:
+    description: |
+      Long despription that can spam more than one line. Be careful with these ones.
+      2 is just the placeholder value. User input is required
+    type: "int"
+    choices:
+      - 1
+      - 2
+      - 3
+    value: 2
+    optional: false
+
+  sample_tnlcm_single_variable:
+    description: User sees the different VM IDs and chooses one
+    type: "int"
+    value:
+    optional: false   # no default value (not even placeholder value). User MUST select one.
+    tnlcm_input:
+      quantity: 1
+      paths:      # the paths (not their value) of all component of these types are shown to the experimenter in this order for it to choose ONLY ONE. Then, the value of that path is placed in the manifest
+        - "vm_kvm_extra_large.id"      # would show the "id" output of both "vm_kvm_extra_large-maquina1" and "vm_kvm_extra_large-maquina2"
+        - "vm_kvm_extra_large.id"
+        - "vm_kvm_large.id"
+        - "vm_kvm_medium.id"
+        - "vm_kvm_small.id"
+        - "vm_kvm_very_small.id"
+
+  sample_tnlcm_list_variable:
+    description: User can optionally select the ID of any OpenNebula virtual network; tn_vxlan and vnet resources
+    type: "strlist"
+    value:
+      - 0
+      - tn_vxlan.id
+    optional: true   # if not filled, default value is just a hardcoded 0 and the tn_vxlan value 
+    tnlcm_input: 
+      quantity: "(0, inf)"   # any number of inputs can be provided.
+      paths:
+        - tn_vxlan.id
+        - vnet-small_net.id
+      # repeated: false    # maybe this is too much. Enable selecting the same path multiple times
+
+
+####################################
+## Component output
+####################################
+output:
+  terraform_output_value: # ¿maybe the type of data to expect?

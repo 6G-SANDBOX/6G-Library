@@ -2,8 +2,7 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
 
   name        = "{{ tn_id }}-{{ one_component_name }}"
   description = "{{ tn_id }} VM VERY SMALL"
-  template_id = {{ site_one_templates.vm_xs.id }}
-  group       = "{{ one_group }}"
+  template_id = {{ site_one_templates.vm_xs }}
   permissions = "660"
 
   context = {
@@ -12,13 +11,6 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
     PASSWORD = "{{ one_vm_password }}"
     START_SCRIPT_BASE64 = "{{ site_jenkins_script_base64 }}" 
   }
-
-  disk {
-    image_id = {{ site_one_templates.vm_xs.disk_id }}
-    size     = {{ site_one_templates.vm_xs.disk_size }}
-    target   = "vda"
-    driver   = "qcow2"
-  }  
 
 {% for network_id in one_component_networks %}
   nic {

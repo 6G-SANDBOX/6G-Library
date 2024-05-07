@@ -146,7 +146,7 @@ input:
     optional: false   # will be optional in the near future
 
 ####################################
-## Component input
+## Component output
 ####################################
 output:
   kubeconfig: "Kubeconfig file to access to this cluster"
