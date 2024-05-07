@@ -36,7 +36,6 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  version: 0.0.1
   needs:
   short_description: This is a VM that acts as bastion for a Trial Network
   long_description: |
@@ -56,7 +55,7 @@ metadata:
 ####################################
 input:
   one_component_networks:
-    description: List of VNets the tn_bastion will be part of. Variable to be filled by the TNLCM
+    description: List of VNet IDs the tn_bastion will be part of. Variable to be filled by the TNLCM
     type: "strlist"
     value:
       - "mandatory-tn_vxlan"
@@ -66,5 +65,5 @@ input:
 ## Component input
 ####################################
 output:
-  - vm_ip:             # Main Network Interface
-  - vpn_client_config: # VPN Client config to connect to this Trial Network
+  vm_ip:             # Main Network Interface
+  vpn_client_config: # VPN Client config to connect to this Trial Network

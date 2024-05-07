@@ -54,7 +54,11 @@ pipeline {
     stages {
         stage('Stage 1: Import input file into the workspace') {
             steps {
-                echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file into the workspace"
+                if (env.ENTITY_NAME) {
+                    echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file into the workspace"
+                } else {
+                    echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME} input file into the workspace"
+                }
                 script {
                     def inputFile = "${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input_file.yaml"
 
@@ -93,14 +97,19 @@ pipeline {
                 script {
                     def gitUrlWithoutGitAt = SITES_URL.replace('https://', '')
                     def gitUrlWithToken = "https://${GITHUB_JENKINS}@${gitUrlWithoutGitAt}"
-                    sh "git clone -b ${SITES_BRANCH} ${gitUrlWithToken}"
+                    sh ('git clone -b $SITES_BRANCH $gitUrlWithToken')
                 }
             }
         }
 
         stage('Stage 4: Deploy the selected component') {
             steps {
-                echo "Stage 3: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} in the ${DEPLOYMENT_SITE} site"
+                if (env.ENTITY_NAME) {
+                    echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} in the ${DEPLOYMENT_SITE} site"
+                } else {
+                    echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME} in the ${DEPLOYMENT_SITE} site"
+                }
+                
               // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
                 ansiblePlaybook(
                     extraVars: [

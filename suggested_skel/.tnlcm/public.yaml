@@ -63,7 +63,7 @@ name: Component_Name
 metadata:
   maintainers:
     - Full Name <contact@mail.address>
-  depends:
+  needs:
     - vxlan:         # dependency on a previously deployed vxlan component of any kind prev
     - k8s_medium:       # dependency on a previously deployed k8s_medium component with input value multus_enabled: "YES"
         with:
@@ -119,4 +119,4 @@ input:
 ## Component input
 ####################################
 output:
-  - terraform_output_value:
+  terraform_output_value:

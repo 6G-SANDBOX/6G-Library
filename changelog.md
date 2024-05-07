@@ -41,6 +41,7 @@ All ansible executions will start from here, to later import its corresponding "
 Yet to be done:
 - Use Ansible ENVIROMENTAL VALUES to specify the ansible user into the VMs (rootless priviledged user). 3 default ssh keys: site-admin, jenkins-master and tn-user
 - UE gets GNB IP directly
+- remove extra template info from sites. just ID
 
 
 

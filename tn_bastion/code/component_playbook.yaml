@@ -1,28 +1,45 @@
-# STAGE 1: Prepare manifest from templates
-- name: Generate installation manifest from templates
+---
+- name: "STAGE 1: Apply IAC to deploy the component" 
   hosts: localhost
+  gather_facts: false
   tasks: 
-    - name: Generate installation manifest from templates
-      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/prepare.yaml"
+    - name: Prepare terraform manifests
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/prepare_one_iac.yaml"
+      when: site_hypervisor == "one"
 
-# STAGE 2: Execute manifest
-- name: Infrastructure Tasks
-  hosts: localhost
-  tasks:
-    - name: Download Terraform manifest from previous TN components
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_bucket_content_tasks.yaml" 
-          
-    - name: Execute terraform apply
+    - name: Terraform apply
       community.general.terraform:
-        project_path: "./{{ site_hypervisor }}/iac/"
+        project_path: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/iac/"
         state: "present"
         force_init: true
-      register: result 
+      ignore_errors: true
+      register: terraform_apply
 
-    - name: Terraform DEBUG
-      ansible.builtin.debug:
-        msg: "{{ result }}"
-    
+  
+- name: "STAGE 2: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Retrieve terraform output
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/tn_vxlan/code/{{ site_hypervisor }}/iac/"
+        cmd: "set -o pipefail && terraform output --json"
+        executable: /bin/bash
+      register: terraform_output
+      changed_when: false
+      when: not terraform_apply.failed
+
+    - debug: var=terraform_output
+
+    ### execution will fail here
+
+    - name: Set Terraform outputs as facts
+      ansible.builtin.set_fact:
+        tn_vxlan_id: "{{ (terraform_output.stdout | from_json)[tn_id + '-tn_vxlan-id'].value }}"
+      when: not terraform_apply.failed
+
+
     - name: Get Terraform Output
       ansible.builtin.shell:
       args:

@@ -1,0 +1,69 @@
+# TNLCM le manda al jenkins los parámetros implícitos y el file con el resto de variables.
+# Los parámetros explícitos son TN_ID, LIBRARY_COMPONENT_NAME y (salvo en tn_vxlan y tn_bastion) ENTITY_NAME. Los implícitos son:
+# - DEPLOYMENT_SITE: definido en el front y el back cuando se crearon.
+# - TNLCM_CALLBACK:
+# el resto LIBRARY_URL, LIBRARY_BRANCH, SITES_URL, SITES_BRANCH y DEBUG ya si eso para users avanzados. Hay que borrar el workspace a mano tras un debug así que...
+
+# el front usa "needs" e "input" de .tnlcm/public.yaml para saber qué necesita. El back usa "output" para saber qué esperar. name sigue siendo innecesario XD
+
+# el "needs" del public.yaml es una lista OR (ordenada, orden de comprobación) de diccionarios de condiciones con los tipos de componentes (con qué outputs) que tienen que haber.
+# el frontend usa needs para pedir componentes anteriores al user, y para ordenar los componentes en el manifesto. No se hace mención de needs en el manifesto
+#   se parte de que tn_vxlan y tn_bastion ya existen
+#   el órden también depende de "input"
+
+# el "input" del public.yaml es un diccionario de los valores que se piden para crear el componente. Algunos obligatorios, otros no. Algunos para el user, otros para el TNLCM.
+# cuando la variable la tiene que rellenar el tnlcm, casi siempre van a ser outputs de otros componentes, luego hay que definir sintaxis para buscarlos
+# el "input" en el manifesto es un diccionario con sólamente el valor pedido.
+
+
+# COSAS HARDCODEADAS: 
+#   Que el tn_vxlan y tn_bastion van antes de todo
+#   input de tn_bastion
+
+
+paosdkfjasodjfk:   # se pasa como parámetro "TN_ID". Si aleatorio, más largo. Lógica para ver si ya existe ese tn_id
+
+  - type: "tn_vxlan"      # se pasa como parámetro "LIBRARY_COMPONENT_NAME", no hay "ENTITY_NAME"
+    input: {}
+
+  - type: "tn_bastion"
+    input:  # no 
+      one_component_networks:     # en input.one_component_networks.type se dijo que aquí va un "strlist"
+        - 0
+        - "tn_vxlan.tn_vxlan_id"  # guardado en el backend tras la ejecución anterior. (Seguramente cambie el nombre por "vnet_id" o solamente "id")
+  
+  # como en su public.yaml no tiene nada en needs, el TNLCM sabe que va en cualquier lado tras el bastión
+  - type: "vnet"         # en needs venía tn_bastion
+    name: "small_net"    # se pasa como parámetro ENTITY_NAME
+    input:  # todas user_input y en un futuro opcionales
+      one_vxlan_first_ip: "10.10.10.1"
+      one_vxlan_address_size: 254
+      one_vxlan_gw: "10.10.10.1"
+      one_vxlan_dns: "1.1.1.1 1.0.0.1"
+
+  # como en su public.yaml no tiene nada en needs, el TNLCM sabe que va en cualquier lado tras el bastión
+  # PERO, como en input se ha puesto un output de vnet-small_net, debe ir tras él
+  - type: "vm_kvm_large"   # en needs venía sólo tn_bastion, pero como en input se pidió un output de "vnet-small_net", se tiene en cuenta
+    name: "ubuntu-22.04"
+    input:
+      one_component_name: "one_vm_kvm_very_small"
+      one_vm_username: "test"
+      one_vm_password: "test"
+      one_component_networks:
+        - "tn_vxlan.output.tn_vxlan_id"     # separación componente-output con punto. valor "output" me dices, según facilite procesamiento del json.
+        - "vnet-small_net.output.vxlan_id"
+
+  # como en su public.yaml pone vxlan en vnet, el TNLCM sabe que va en cualquier lado tras un vnet. Cual? Según el pedido en input.
+  - type: "k8s_medium"
+    name: "oneKE_1_27a"   # caracteres prohibidos son "-" ó "."
+    input:
+      external_vnet_id: "tn_vxlan.output.tn_vxlan_id" 
+      internal_vnet_id: "vnet-small_net.output.vxlan_id"
+      service_name: "oneKE_1_27a"
+      multus_enabled: "YES"
+      cni_plugin: "canal"
+      longhorn_enabled: "YES"
+      metallb_enabled: "YES"
+      metallb_range: "10.10.12.200-10.10.12.240"
+      traefik_enabled: "NO"
+      vnf_upstream_dns: "1.1.1.1 8.8.8.8"

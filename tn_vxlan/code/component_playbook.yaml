@@ -9,11 +9,12 @@
 
     - name: Terraform apply
       community.general.terraform:
-        project_path: './{{ site_hypervisor }}/iac/'
+        project_path: "{{ workspace }}/tn_vxlan/code/{{ site_hypervisor }}/iac/"
         state: "present"
         force_init: true
       ignore_errors: true
       register: terraform_apply
+
 
 - name: "STAGE 2: Publish execution results"
   hosts: localhost

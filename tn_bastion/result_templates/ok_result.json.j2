@@ -3,7 +3,7 @@
     "library_component_name": "{{ library_component_name | b64encode }}",
     "entity_name": "{{ entity_name | b64encode }}",
     "success": true,
-    "markdown": "{{ markdown2nok['content'] | b64encode }}",
+    "markdown": "{{ ok2markdown['content'] }}",
     "output": {
         "vpm_ip": "{{ vm_ip | b64encode }}",
         "vpn_client_config": "{{ hostvars[tn_id + '-' + one_bastion_name]['client']['content'] | b64encode }}"
