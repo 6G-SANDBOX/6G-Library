@@ -1,16 +1,26 @@
-https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
-resource "opennebula_virtual_machine" "{{ tn_id }}-tn_bastion" {
+# https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
+# https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
+resource "opennebula_virtual_machine" "tn_bastion" {
   name        = "{{ tn_id }}-tn_bastion"
-  template_id = {{ site_one_templates.tn_bastion }}
-  group       = "{{ one_group }}"
+  template_id = {{ site_one_templates.tn_bastion.id }}
+  cpu         = {{ one_bastion_cpu }}
+  memory      = {{ one_bastion_cpu }}
 
   context = {
     NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
-    PASSWORD = "{{ site_one_bastion_default_password }}"
-    WIREGUARD_ALLOWEDIPS = "{{ one_bastion_wireguard_allowed_networks }}"
-    VPN_PUBLIC_IP = "{{ site_public_ip }}"
+    USERNAME = "{{ site_jenkins_user }}"
     SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
+    VPN_PUBLIC_IP = "{{ site_public_ip }}"
+    WIREGUARD_ALLOWEDIPS = "{{ one_bastion_wireguard_allowed_networks }}"
+  }
+
+
+  disk {
+    image_id = {{ site_one_templates.tn_bastion.image_id }}
+    size     = {{ one_bastion_disk }}
+    target   = "vda"
+    driver   = "qcow2"
   }
 
 {% for network_id in one_component_networks %}
@@ -21,12 +31,12 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-tn_bastion" {
 {% endfor %}
 }
 
-output "{{ one_bastion_name }}-network_assignments" {
-  description = "OpenNebula VM Network Assignments"
-  value = { for nic in opennebula_virtual_machine.{{ tn_id }}-{{ one_bastion_name }}.nic[*] : nic.network_id => nic.computed_ip }
+output "tn_bastion-id" {
+  description = "OpenNebula VM ID"
+  value = opennebula_virtual_machine.tn_bastion.id
 }
 
-output "{{ one_component_name }}-VM_ID" {
-  description = "OpenNebula VM ID"
-  value = opennebula_virtual_machine.{{ tn_id }}-{{ one_component_name }}.id
+output "tn_bastion-ips" {
+  description = "OpenNebula VM Network Assignments"
+  value = { for nic in opennebula_virtual_machine.tn_bastion.nic[*] : nic.network_id => nic.computed_ip }
 }

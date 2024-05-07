@@ -55,10 +55,12 @@ metadata:
 ####################################
 input:
   one_component_networks:
-    description: List of VNet IDs the tn_bastion will be part of. Variable to be filled by the TNLCM
+    description: List of VNet IDs the tn_bastion will be part of. Variable to be partially filled by the TNLCM
     type: "strlist"
     value:
-      - "mandatory-tn_vxlan"
+      - site_networks.default.id           # First one is the default network
+      - tn_vxlan.id                        # VXLAN SHOULD BE CREATED BEFORE 
+    optional: true
     user_input: false
 
 ####################################

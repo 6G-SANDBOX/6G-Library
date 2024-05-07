@@ -45,10 +45,6 @@ pipeline {
         // AWS Terraform Provider envirmental variables (for the MinIO S3 storage) https://registry.terraform.io/providers/hashicorp/aws/2.54.0/docs#environment-variables
         AWS_ACCESS_KEY_ID = credentials('MINIO_KEY')
         AWS_SECRET_ACCESS_KEY = credentials('MINIO_SECRET')
-
-        // Ansible enviromental variables https://docs.ansible.com/ansible/latest/reference_appendices/config.html
-        // ANSIBLE_REMOTE_USER = credentials('ANSIBLE_REMOTE_USER')
-        // ANSIBLE_CONNECTION_PASSWORD_FILE = credentials('ANSIBLE_CONNECTION_PASSWORD_FILE')
     }
 
     stages {
@@ -111,7 +107,9 @@ pipeline {
                 }
                 
               // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
+              // "SSH credentials" plugin required: https://plugins.jenkins.io/ssh-credentials/
                 ansiblePlaybook(
+                    credentialsId: 'remote_ssh',
                     extraVars: [
                         workspace: "${WORKSPACE}",
                         library_component_name: "${params.LIBRARY_COMPONENT_NAME}",
