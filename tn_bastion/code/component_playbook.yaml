@@ -36,10 +36,10 @@
 
     ### execution will fail here
 
-    - name: Set Terraform outputs as facts
-      ansible.builtin.set_fact:
-        tn_vxlan_id: "{{ (terraform_output.stdout | from_json)[tn_id + '-tn_vxlan-id'].value }}"
-      when: not terraform_apply.failed
+    # - name: Set Terraform outputs as facts
+    #   ansible.builtin.set_fact:
+    #     tn_vxlan_id: "{{ (terraform_output.stdout | from_json)[tn_id + '-tn_vxlan-id'].value }}"
+    #   when: not terraform_apply.failed
 
 
     - name: Get Terraform Output

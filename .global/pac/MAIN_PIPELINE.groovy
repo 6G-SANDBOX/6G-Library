@@ -50,7 +50,7 @@ pipeline {
     stages {
         stage('Stage 1: Import input file into the workspace') {
             steps {
-                if (env.ENTITY_NAME) {
+                if ($ENTITY_NAME) {
                     echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file into the workspace"
                 } else {
                     echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME} input file into the workspace"
