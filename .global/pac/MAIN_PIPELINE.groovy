@@ -50,12 +50,13 @@ pipeline {
     stages {
         stage('Stage 1: Import input file into the workspace') {
             steps {
-                if ($ENTITY_NAME) {
-                    echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file into the workspace"
-                } else {
-                    echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME} input file into the workspace"
-                }
                 script {
+                    if (env.ENTITY_NAME) {
+                        echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file into the workspace"
+                    } else {
+                        echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME} input file into the workspace"
+                    }
+
                     def inputFile = "${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input_file.yaml"
 
                     def fileContent = sh (
@@ -100,11 +101,13 @@ pipeline {
 
         stage('Stage 4: Deploy the selected component') {
             steps {
-                if (env.ENTITY_NAME) {
-                    echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} in the ${DEPLOYMENT_SITE} site"
-                } else {
-                    echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME} in the ${DEPLOYMENT_SITE} site"
-                }
+                script {
+                    if (env.ENTITY_NAME) {
+                        echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} in the ${DEPLOYMENT_SITE} site"
+                    } else {
+                        echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME} in the ${DEPLOYMENT_SITE} site"
+                    }
+                } 
                 
               // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
               // "SSH credentials" plugin required: https://plugins.jenkins.io/ssh-credentials/
