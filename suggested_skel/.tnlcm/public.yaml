@@ -6,16 +6,14 @@
 ##
 ## They are contained inside 4 global variables
 ## with all required info:
-##   1. name: name of the component
-##
-##   2. metadata: General information like mantainers,
+##   1. metadata: General information like mantainers,
 ##      component dependencies and allowed platforms
 ##
-##   3. input: Customizable variables for each
+##   2. input: Customizable variables for each
 ##      deployment to be filled by the experimenter
 ##      or the TNLCM
 ##
-##   4. output: Values sent to the TNLCM callback to
+##   3. output: Values sent to the TNLCM callback to
 ##      keep track of the TN deployments
 ##
 ## File previously found at "public/description.yaml"
@@ -23,39 +21,33 @@
 ######################################################
 
 
-# "name" was previouslly called "component_name", "input" was "public" and "output" was "outputs"
+# "name" has been removed, "input" was "public" and "output" was "outputs"
 # The public.yaml file is unused in component deployments and serves the TNLCM to gather data about the component.
 # 
-# Only "name" and "input" are useful for the deployment of Trial Networks, while metadata and output serve the THLCM
+# "metadata.needs" and "input" serve the TNLCM on how to order the component deployments. "output" serves it telling it the values to save.
 
 # metadata gives the TNLCM some general information to help it understand how to process and order the different components. Fields:
 #   - mantainers: Unordered list of active component mantainers
-#   - needs: Unordered list of dictionaries of appliance types that needs to be previously deployed. Values can be repeated if multiple instances of the same type are needed.
-#            Dependencies can be defined so that they only apply when specific input values are provided, either in the other component ("with") or in this component ()"if"). See example
+#   - needs: Ordered "OR" list of dictionaries with conditions to satisfy. It one dictionary is not satisfied, the TNLCM checks the next one successively until at least one is.
+#            Used by the backend to validate if the manifest is acceptable. If it is not, it tells the frontend the possible conditions to satisfy.
+#            Dependencies consist on different component types + maybe specific provided input values, either in the other component ("with") or in this component ()"if"). See examples
 #   - short_description: Shown in THLCM
 #   - long_description: Shown in TNLCM
-#   - hypervisors: Unordered list of compatible hypervisors
+#   - hypervisors: Unordered list of compatible hypervisors. Orientative variable, does not apply to any check, as the sites themselves can only have one specific hypervisor (variable site_hypervisor)
 #   - sites: Unordered list of sites where the component is avaiable. Useful for hardware-dependent components
 
 # input describes all variables needed in a TN descriptor. Each variable containers the following fields:
-#   - description; A general description of the variable. It appears in the TNLCM Frontend
-#   - type: Expected data format. Avaiable types are "str", "int", "strlist" and "intlist"
-#   - choices: Optional parameter that only appears in variables with limited possible values
-#   - value: Placeholder value that appears in the TNLCM
-#   - user_input: Variable will be asked to the experimenter in the TNLCM.
-#                 completes this variable using other component's metadata or outputs.
-#   - optional: If "user_input: True", indicates whether the placeholder ("value") serves as a default value or not. If negative, a value must always be provided by the experimenter
-#               If "user_input: False", this field is irrelevant, as the variable will always be filled.
+#   - description; A general description of the variable. It appears in the TNLCM Frontend. "" by default
+#   - type: Expected data format. Avaiable types are "str", "int", "strlist" and "intlist". "str" by default
+#quantity
+#   - choices: Optional parameter that only appears in variables with limited possible values. Conflicts with "tnlcm_input". free choice by default
+#   - value: Placeholder value that appears in the TNLCM. "" by default
+#   - optional: Indicates whether the placeholder ("value") serves as a default value or not. If negative, a value must always be provided by the experimenter. false by default
+#   - tnlcm_input: Optional parameter that only appears when the variable uses values stored in the TNLCM such as other component's metadata or outputs. Frontend asks the experimenter between the desired possibilites using backend readable paths. Conflicts with "choices". "" by default
 
 # output values are a list of empty dictionaries of the variables expected be generated during deployments, mainly from the terraform apply.
-# They may not only be useful for the TNLCM. They can also be used to generate the result files at the end of each deployment
-
-# POSSIBLE FUTURE FEATURE: add version to component dependencies. Currently TNs need to have all components in the same 6G Library version
-
-####################################
-## Component name
-####################################
-name: Component_Name
+# They may not only be useful for the TNLCM, they can also be used to generate the result files at the end of each deployment
+# maybe its value here in the public.yaml could be the value type (str, int...)
 
 ####################################
 ## Component metadata
@@ -63,16 +55,23 @@ name: Component_Name
 metadata:
   maintainers:
     - Full Name <contact@mail.address>
-  needs:
-    - vxlan:         # dependency on a previously deployed vxlan component of any kind prev
-    - k8s_medium:       # dependency on a previously deployed k8s_medium component with input value multus_enabled: "YES"
+  dependencies:
+      # TN must satisfy all 3 dependencies
+    - vxlan:            # dependency on a previously deployed vxlan component of any kind prev
+      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value multus_enabled: "YES"
         with:
           multus_enabled: "YES"
-    - ueransim:         # dependency on a previously deployed ueransim component with input value run_gnb: "YES" ONLY IF this component has input value 'sample_optional_value: "positive"'
+      ueransim:         # dependency on a previously deployed ueransim component with input value run_gnb: "YES" ONLY IF this component has input value 'sample_optional_value: "positive"'
         with:
           run_gnb: "YES"
-        if:
-          sample_optional_value: "positive"
+      if:
+        sample_optional_value: "positive"
+      # TN must satisfy only 2 dependencies
+    - vxlan:            # dependency on a previously deployed vxlan component of any kind prev
+      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value multus_enabled: "NO"
+        with:
+          multus_enabled: "NO"    
+    
   short_description: Short description of a Component Type
   long_description: |
     The long description of a Component Type may span multiple lines
@@ -85,38 +84,62 @@ metadata:
 ####################################
 input:
   sample_optional_variable:
-    description: Description of an optional variable
-    type: "str"
-    value: "PLACEHOLDER VALUE"
-    user_input: true
-    optional: true
-  sample_mandatory_variable:
-    description: Description of a mandatory variable
-    type: "int"
-    value: "1"
-    user_input: true
-    optional: false
-  sample_tnlcm_variable:
-    description: |
-      This description is surely useless as the experimenter should not worry to fill this variable
-    type: "intlist"
+    description: Description of an optional variable. Add 3 different strings
+    type: "strlist"
+    quantity: 3
     value:
+      - "DEFAULT VALUE 1"
+      - "DEFAULT VALUE 2"
+      - "DEFAULT VALUE 3"
+    optional: true
+
+  sample_mandatory_variable:
+    description: Description of a mandatory variable. 1 is a placeholder value, user input is required
+    type: "int"
+    value: 1
+    optional: false
+  sample_choice_variable:
+    description: |
+      Long despription that can span more than one line. Be careful with these ones.
+      2 is just the placeholder value. User input is required
+    type: "int"
+    choices:
       - 1
       - 2
       - 3
-    user_input: false
-  sample_choice_variable:
-    description: Variable with only 2 possible "str" values
-    type: "str"
-    choices:
-      - "YES"
-      - "NO"
-    value: "NO"
-    user_input: true
-    optional: true
+    value: 2       # 2 is just the placeholder value
+    optional: false
+
+  sample_tnlcm_single_variable:
+    description: User sees the different VM IDs and chooses one
+    type: "int"
+    value:
+    optional: false   # no default value (not even placeholder value). User MUST select one.
+    tnlcm_input:
+      paths:      # the paths (not their value) of all component of these types are shown to the experimenter in this order for it to choose ONLY ONE. Then, the value of that path is placed in the manifest
+        - "vm_kvm_extra_large.id"      # would show the "id" output of both "vm_kvm_extra_large-maquina1" and "vm_kvm_extra_large-maquina2"
+        - "vm_kvm_large.id"
+        - "vm_kvm_medium.id"
+        - "vm_kvm_small.id"
+        - "vm_kvm_very_small.id"
+
+  one_component_networks:
+    description: OpenNebula IDs of the VNets the VM will be part of. First one should be the tn_vxlan ID in most cases
+    type: "intlist"
+    quantity: "(1, inf)"   # any number of inputs from 1 to infinite can be provided.
+    value:
+      - 0
+      - tn_vxlan.id
+    optional: true         # if not filled, default values are just a hardcoded 0 and the tn_vxlan ID 
+    tnlcm_input:
+      paths:
+        - tn_vxlan.output.id
+        - vnet.output.id
+      # repeated: false    # maybe this is too much. Option to enable selecting the same path multiple times
+
 
 ####################################
 ## Component output
 ####################################
 output:
-  terraform_output_value:
+  terraform_output_value: # ¿maybe the type of data to expect?

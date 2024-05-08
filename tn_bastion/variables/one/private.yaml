@@ -13,7 +13,7 @@
 
 one_bastion_cpu: 2
 one_bastion_memory: 512
-one_bastion_disk: 5120
+one_bastion_disk: 10240   # Size of the Image. Future plans to downsize it
 
 one_bastion_wireguard_allowedips: "192.168.199.0/24"
 

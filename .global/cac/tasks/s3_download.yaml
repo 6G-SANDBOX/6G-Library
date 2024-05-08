@@ -17,10 +17,10 @@
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"
     mode: get
-    aws_access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
-    aws_secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+    access_key: "{{ ansible_env.AWS_ACCESS_KEY_ID }}"
+    secret_key: "{{ ansible_env.AWS_SECRET_ACCESS_KEY }}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ item }}"
-    dest: "{{ workspace }}/{{ library_component_name }}/private/{{ site_hypervisor }}/iac/{{ item | basename }}"
+    dest: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/{{ item | basename }}"
+  when: item.endswith('.tf')
   with_items: "{{ s3_bucket_items.s3_keys }}"
-  when: not "terraform.tfstate" in item   #tfstate is directly accessed from backend.tf file 

@@ -60,5 +60,5 @@
       src: "{{ workspace }}/{{ library_component_name }}/code/fail_result-{{ library_component_name }}{{
            '-'+entity_name if entity_name is not none else '' }}.json"
     register: tnlcm_post
-    ignore_errors: true 
+    ignore_errors: true
   - debug: var=tnlcm_post

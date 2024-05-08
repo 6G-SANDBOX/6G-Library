@@ -9,14 +9,11 @@
 
     - name: Terraform apply
       community.general.terraform:
-        project_path: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/iac/"
+        project_path: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/"
         state: "present"
         force_init: true
       ignore_errors: true
       register: terraform_apply
-
-    - debug: var=terraform_apply
-
   
 - name: "STAGE 2: Publish execution results"
   hosts: localhost
@@ -25,21 +22,17 @@
     - name: Retrieve terraform output
       ansible.builtin.shell:
       args:
-        chdir: "{{ workspace }}/tn_vxlan/code/{{ site_hypervisor }}/iac/"
+        chdir: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/"
         cmd: "set -o pipefail && terraform output --json"
         executable: /bin/bash
       register: terraform_output
       changed_when: false
       when: not terraform_apply.failed
 
-    - debug: var=terraform_output
-
-    ### execution will fail here
-
-    # - name: Set Terraform outputs as facts
-    #   ansible.builtin.set_fact:
-    #     tn_vxlan_id: "{{ (terraform_output.stdout | from_json)[tn_id + '-tn_vxlan-id'].value }}"
-    #   when: not terraform_apply.failed
+    - name: Set Terraform outputs as facts
+      ansible.builtin.set_fact:
+        tn_vxlan_id: "{{ (terraform_output.stdout | from_json)[tn_id + '-tn_vxlan-id'].value }}"
+      when: not terraform_apply.failed
 
 
     - name: Get Terraform Output

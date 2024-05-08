@@ -6,27 +6,18 @@
 ##
 ## They are contained inside 4 global variables
 ## with all required info:
-##   1. name: name of the component
-##
-##   2. metadata: General information like mantainers,
+##   1. metadata: General information like mantainers,
 ##      component dependencies and allowed platforms
 ##
-##   3. input: Customizable variables for each
+##   2. input: Customizable variables for each
 ##      deployment to be filled by the experimenter
 ##      or the TNLCM
 ##
-##   4. output: Values sent to the TNLCM callback to
+##   3. output: Values sent to the TNLCM callback to
 ##      keep track of the TN deployments
-##
-## File previously found at "public/description.yaml"
 ##
 ######################################################
 
-
-####################################
-## Component name
-####################################
-name: ueransim
 
 ####################################
 ## Component metadata
@@ -36,21 +27,12 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  needs:
-    - open5gs:
-        if:                # dependency aplied if this "AND" list of input value conditions is satisfied
-          run_gnb: "YES"
-    - ueransim:
-        with:              # dependency on an previously deployed ueransim component with input value run_gnb: "YES"
-          run_gnb: "YES"
-        if:                # dependency aplied if this "AND" list of input value conditions is satisfied
-          run_ue: "YES"
-          run_gnb: "NO"
   short_description: This is the component to deploy a UERANSIM instance 
   long_description: |
-    This is the component to deploy a UERANSIM instance into a Trial Network. It can be deployed as:
-    - UE
-    - gNB
+    UERANSIM instance that can be deployed running as a User Equipment, as a gNB, as both or as None.
+    Depending on the chosen mode (With the input values run_gnb and run_ue respectivelly), the following dependencies are aplied:
+    - If this ueransim has run_gnb as "YES", then an open5gs component needs to be previously deployed.
+    - If this ueransim has run_gnb as "NO" and run_ue as "YES", then a a previous ueransim component needs to be previously deployes with run_gnb as "YES".
   hypervisors: [one]
   sites: [uma, athens, fokus]
 
@@ -62,7 +44,6 @@ input:
     description: Unique name to identify the ueransim component inside the Trial Network
     type: "str"
     value: "PLACEHOLDER_VM_NAME"
-    user_input: true
     optional: false
   one_vm_username: 
     description: |
@@ -70,34 +51,42 @@ input:
       NOTE: If no username is provided, the only user will be root and ssh access may not be available (sshd_config: PermitRootLogin without-password)
     type: "str"
     value:
-    user_input: true
     optional: true
   one_vm_password:
     description: Password to access the VM by SSH. Useful only if "one_vm_username" is defined
     type: "str"
     value:
-    user_input: true
     optional: true
   one_vm_ssh_key:
     description: SSH public key loaded into /home/"one_vm_username"/.ssh/authorized_keys. If "one_vm_username" is not defined, it will default to /root/.ssh/authorized_keys
     type: "str"
     value:
-    user_input: true
     optional: true
   one_component_networks:
-    description: OpenNebula IDs of the VNets the VM will be part of. First will be the tn_vxlan ID in most cases
+    description: OpenNebula IDs of the VNets the VM will be part of. First one should be the tn_vxlan ID in most cases
     type: "intlist"
+    quantity: "(1, inf)"
     value:
-    user_input: true
     optional: false
+    tnlcm_input:
+      paths:
+        - tn_vxlan.output.id
+        - vnet.output.id
 
   oneke_vnf:
     description: Proxy address to send the traffic to reach the "gnb_amf_address". The IPv4 address of a OneKE VNF inside your Trial Network
     type: "str"
-    value: "127.0.0.1"
-    user_input: true
+    value:
     optional: true
+    tnlcm_input:
+      paths:
+        - "k8s_medium.output.vnf_ip"       # stablishes dependency with a previously deployed "k8s_medium" component
+      ### blablabla, i could do smth to make it deduce the right "k8s_medium" from the subsequent chosen "open5gs" component but thats too much complexity.
+      ### I expect the experimenter to have more than two fingers of forehead and remember what k8s_medium he chose 1 minute ago.
 
+
+  ### Las dependencias que dependen de varios valores, pueden ir en cualquiera de las variables incluídas en la dependencia
+  ### La otra condición de si run_gnb="NO",run_ue="YES" está donde el "run_ue", pero por ninguna razón en particular, aquí también valdría.
   run_gnb:
     description: |
       Enable ueransim-gnb.service at start. If "YES", requires a functional open5gs appliance previously deployed
@@ -107,25 +96,53 @@ input:
       - "YES"
       - "NO"
     value: "NO"
-    user_input: true
-    optional: true
+    optional: false
+    dependencies:
+      - if_value:     # varias posibles condiciones.
+          - "YES"     # Lista OR de condiciones. Para AND, "'YES' && 'NO'"
+        if_other_variables:   # depende también del valor de otra variable input
+          run_gnb:
+            - "NO"
+        then:
+          - open5gs:   # Hace falta un componente open5gs (sin más requisitos). Frontend pregunta por cual, y con este se van a autocompletar varias variables después.
+              autocompletes:  # igual que el TNLCM pregunte si quiere que se autocompleten estas variables
+                gnb_mcc: "input.plmn_id_mcc"
+                gnb_mnc: "input.plmn_id_mcc"
+                gnb_tac: "input.tac"
+                gnb_amf_address: "input.amf_ip"
+                gnb_slices_sst: "input.s_nssai_sst"
+                gnb_slices_sd: "open5gs.input.s_nssai_sd"
+      - if_value:     # otra vez la misma
+          - "YES"
+        if_other_variables:   # otro valor
+          run_gnb:
+            - "YES"
+        then:
+          - open5gs:
+              autocompletes:
+                gnb_mcc: "input.plmn_id_mcc"
+                gnb_mnc: "input.plmn_id_mcc"
+                gnb_tac: "input.tac"
+                gnb_amf_address: "input.amf_ip"
+                gnb_slices_sst: "input.s_nssai_sst"
+                gnb_slices_sd: "open5gs.input.s_nssai_sd"
+                ue_mcc: "input.plmn_id_mcc"
+                ue_mnc: "input.tac"
+
   gnb_mcc:
     description: In gNB simulation, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
     type: "str"
     value: "999"
-    user_input: true
     optional: true
   gnb_mnc:
     description: In gNB simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
     type: "str"
     value: "70"
-    user_input: true
     optional: true
   gnb_tac:
     description: In gNB simulation, Tracking Area Code in the PLMN
     type: "str"
     value: "1"
-    user_input: true
     optional: true
   gnb_amf_address:
     description: |
@@ -134,7 +151,6 @@ input:
       AMF port is currently hardcoded to always be 38412
     type: "str"
     value: "127.0.0.5"
-    user_input: true
     optional: true
   gnb_slices_sst:
     description: In gNB simulation, Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
@@ -159,7 +175,23 @@ input:
       - "NO"
     value: "NO"
     user_input: true
-    optional: true
+    optional: false
+    dependencies:
+      - if_value:
+          - "YES"
+        if_other_variables:   # depende también del valor de otra variable input
+          run_gnb:
+            - "NO"
+        then:
+          - ueransim:    # necesario un ueransim creado anteriormente
+              with:
+                input.run_gnb:   # el ueransim de antes tiene que tener run_gnb="YES"
+                  - "YES"
+              autocompletes:    # rellena con variables del ueransim
+                ue_mcc: "input.gnb_mcc"
+                ue_mnc: "input.gnb_mnc"
+                ue_gnbSearchList: "output.network_assignments[0]"  # la primera suele ser la accesible
+
   ue_supi:
     description: In UE simulation, IMSI number of the UE. IMSI = [MCC|MNC|MSISDN] (In total 15 digits)
     type: "str"
@@ -211,7 +243,7 @@ input:
   ue_session_sd:
     description: In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established
     type: "int"
-    value:
+    value: 1
     user_input: true
     optional: true
   ue_configured_nssai_sst:
@@ -223,7 +255,7 @@ input:
   ue_configured_nssai_sd:
     description: In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN
     type: "int"
-    value:
+    value: 1
     user_input: true
     optional: true
   ue_default_nssai_sst:
