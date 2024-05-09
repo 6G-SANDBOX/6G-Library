@@ -65,7 +65,7 @@ input:
     optional: true
 
   one_vnet_gw:
-    description: Gateway for VMs that have this VNet as thier main interface. Otherwise, this field is optional
+    description: Gateway for VMs that have this VNet as their main interface. Otherwise, this field is optional
     type: "str"
     value: "192.168.199.1"
     user_input: true
