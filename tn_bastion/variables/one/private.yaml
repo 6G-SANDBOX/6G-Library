@@ -18,5 +18,5 @@ one_bastion_disk: 10240   # Size of the Image. Future plans to downsize it
 one_bastion_wireguard_allowedips: "192.168.199.0/24"
 
 one_component_networks: 
-  - 0           # First one is the default network
-# - VXLAN_ID    # VXLAN SHOULD BE CREATED BEFORE 
+  - "{{ site_networks_id.default }}"           # First one is the default network
+# - VXLAN_ID    # VXLAN SHOULD BE CREATED BEFORE. Add a coherent path to the tn_vxlan as a default
