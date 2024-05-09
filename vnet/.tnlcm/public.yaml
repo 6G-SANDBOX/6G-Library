@@ -4,29 +4,23 @@
 ##
 ## Variables accesible to the experimenter.
 ##
-## They are contained inside 4 global variables
+## They are contained inside 3 global variables
 ## with all required info:
-##   1. name: name of the component
 ##
-##   2. metadata: General information like mantainers,
+##   1. metadata: General information like mantainers,
 ##      component dependencies and allowed platforms
 ##
-##   3. input: Customizable variables for each
+##   2. input: Customizable variables for each
 ##      deployment to be filled by the experimenter
 ##      or the TNLCM
 ##
-##   4. output: Values sent to the TNLCM callback to
+##   3. output: Values sent to the TNLCM callback to
 ##      keep track of the TN deployments
 ##
 ## File previously found at "public/description.yaml"
 ##
 ######################################################
 
-
-####################################
-## Component name
-####################################
-name: vxlan
 
 ####################################
 ## Component metadata
@@ -37,10 +31,11 @@ metadata:
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   needs:
-  short_description: This is the component that creates VXLAN networks inside ONE
+  short_description: This is the component that creates Virtual Networks inside ONE
   long_description: |
     Component to create private Virtual Networks inside the Trial Network.
-    Allows the experimenter to interconnect components using private networks using it instead of using the main tn_vxlan
+    Allows the experimenter to interconnect components using private networks using it instead of using the main "tn_vxlan.output.id"
+    Virtual Networks created are also of type VXLAN.
   hypervisors: [one]
   sites: [uma, athens, fokus]
 
@@ -48,28 +43,34 @@ metadata:
 ## Component input
 ####################################
 input:
-  one_vxlan_first_ip:
+  one_vnet_first_ip:
     description: First IPv4 address of the VNet
     type: "str"
     value: "192.168.199.1"
     user_input: true
-    optional: false
-  one_vxlan_address_size:
+    optional: true
+  one_vnet_netmask:
+    description: Network mask for the VNet
+    type: "str"
+    value: "255.255.255.0"
+    user_input: true
+    optional: true
+  one_vnet_address_size:
     description: |
-      Currently private vnets are hardcoded to IPv4 with netmask 255.255.255.0
-      one_vxlan_first_ip should be filled acording to one_vxlan_first_ip and this limitation (Max value=254)
+      Create a vnet from a range of IPs within the subnet defined with "one_vnet_first_ip" and "one_vnet_netmask"
+      The default value (254) covers a full /24 subnet starting from X.X.X.1
     type: "int"
     value: 254
     user_input: true
-    optional: false
+    optional: true
 
-  one_vxlan_gw:
+  one_vnet_gw:
     description: Gateway for VMs that have this VNet as thier main interface. Otherwise, this field is optional
     type: "str"
     value: "192.168.199.1"
     user_input: true
     optional: true
-  one_vxlan_dns:
+  one_vnet_dns:
     description: Space-separated list of DNS servers for instances that have this VNet as their main interface. Otherwise, this field is optional
     type: "str"
     value: "1.1.1.1 1.0.0.1"

@@ -1,7 +1,7 @@
 # https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
-resource "opennebula_virtual_machine" "tn_bastion" {
-  name        = "{{ tn_id }}-tn_bastion"
+resource "opennebula_virtual_machine" "{{ entity_name }}" {
+  name        = "{{ tn_id }}-{{ entity_name }}"
   template_id = {{ site_one_templates.tn_bastion.id }}
   cpu         = {{ one_bastion_cpu }}
   memory      = {{ one_bastion_memory }}
@@ -32,12 +32,12 @@ resource "opennebula_virtual_machine" "tn_bastion" {
 {% endfor %}
 }
 
-output "tn_bastion-id" {
+output "{{ entity_name }}-id" {
   description = "OpenNebula VM ID"
   value = opennebula_virtual_machine.tn_bastion.id
 }
 
-output "tn_bastion-ips" {
+output "{{ entity_name }}-ips" {
   description = "OpenNebula VM Network Assignments"
   value = { for nic in opennebula_virtual_machine.tn_bastion.nic[*] : nic.network_id => nic.computed_ip }
 }

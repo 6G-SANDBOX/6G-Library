@@ -1,32 +1,49 @@
-# STAGE 1: Prepare manifest from templates
-- name: Generate installation manifest from templates
+---
+- name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
+  gather_facts: false
   tasks:
-    - name: Generate installation manifest from templates
-      ansible.builtin.include_tasks: ./{{ site_hypervisor }}/prepare.yaml
+    - name: Prepare terraform manifests
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/prepare_one_iac.yaml"
+      when: site_hypervisor == "one"
 
-# STAGE 2: Execute manifest
-- name: Infrastructure Tasks
-  hosts: localhost
-  tasks:
-    - name: Download Terraform manifest from previous TN components
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_bucket_content_tasks.yaml"
-
-    - name: Execute terraform apply
+    - name: Terraform apply
       community.general.terraform:
-        project_path: './{{ site_hypervisor }}/iac/'
+        project_path: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
         state: "present"
         force_init: true
-      register: result
+      failed_when: false
+      register: terraform_apply
 
-    - name: Get Terraform Outputs
-      ansible.builtin.debug:
-        msg: "The VXLAN ID is {{ result.outputs[one_vxlan_name + \"-vxlan_id\"].value }}"
-      when: not result.failed
 
-    - name: Publish execution results
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
+- name: "STAGE 2: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Retrieve terraform output
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_output
+      changed_when: false
+      when: not terraform_apply.failed
 
-    - name: Upload Terraform manifest
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-      when: not result.failed
+    - name: Set Terraform outputs as facts
+      ansible.builtin.set_fact:
+        id: "{{ (terraform_output.stdout | from_json)[entity_name + '-id'] }}"
+      when: not terraform_apply.failed
+
+    - name: Merge all component component outputs into one "output" variable
+      ansible.builtin.set_fact:
+        output:
+          id: "{{ id | b64encode }}"
+      when: not terraform_apply.failed
+
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/publish_results.yaml"
+
+    - name: Upload markdown info to S3 storage
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/s3_upload.yaml"
+      when: not terraform_apply.failed
