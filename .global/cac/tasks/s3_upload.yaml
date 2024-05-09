@@ -7,7 +7,7 @@
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/tf-{{ library_component_name }}{{
            '-'+entity_name if entity_name is not none else '' }}.tf"
-    src: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/{{ library_component_name }}{{
+    src: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/tf-{{ library_component_name }}{{
            '-'+entity_name if entity_name is not none else '' }}.tf"
     encrypt: no
 
