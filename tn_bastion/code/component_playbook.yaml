@@ -35,41 +35,59 @@
         id: "{{ (terraform_output.stdout | from_json)['tn_bastion-id'] }}"
       when: not terraform_apply.failed
 
-    - debug: var=id
-
-    - debug: var=ips
-
-    - name: Verify that is correctly loaded
+    - name: Verify that the bastion access IP is correctly loaded
       ansible.builtin.debug:
-        msg: "Network Main Interface is: {{ ips['0'] }}"
+        msg: "Network Main Interface is: {{ ips[one_component_networks[0] | string] | default('----') }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ tn_id }}-{{ one_bastion_name }}"
-        ansible_ssh_host: "{{ vm_ip }}"
-        ansible_ssh_port: "22"
-        ansible_user: "root"
-        #ansible_ssh_pass: "ansible"
+        hostname: "{{ library_component_name }}"
+        ansible_host: "{{ ips[one_component_networks[0] | string] }}"
 
-    - name: Create SSH config file into Jenkins
-      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/create_ssh_config_file.yaml"
+    - name: Create SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/write_ssh_config.yaml"
+      
 
-    - name: Wait for service to be ready
-      wait_for:
-        port: 22
-        host: "{{ vm_ip }}"
+
+    # - name: Wait for service to be ready
+    #   wait_for:
+    #     port: 22
+    #     host: "{{ vm_ip }}"
+    #     connect_timeout: 5
+    #     delay: 20
+    #     timeout: 240
+
+
+
+- name: "STAGE 3: Apply CAC to prepare the component"
+  hosts: "{{ library_component_name }}"
+  gather_facts: false
+  tasks:
+
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
         connect_timeout: 5
         delay: 20
-        timeout: 240
+        timeout: 120
+    
+    - debug: var=hostvars[inventory_hostname]
 
-# STAGE 3: Execute manifest
-- name: Infrastructure Tasks
-  hosts: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_bastion_name'] }}"
-  gather_facts: true
-  tasks:
-    - name: Load Variables into new VM Bastion
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-    - name: Execute Post Configuration
+    - name: Gather facts for first time
+      ansible.builtin.setup:
+
+    - debug: var=hostvars[inventory_hostname]
+
+    - name: Load Variables into new VM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/load_variables.yaml"
+
+    - debug: var=hostvars[inventory_hostname]
+
+    - command: "cat /etc/hostname"
+      register: hostname_out
+
+    - debug: msg="{{ hostname_out | to_json }}"
+
+    - name: Execute Post Configuration   # This will fail
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/get_vpn_client_config.yaml"
       when: "site_hypervisor == 'one'"
 
@@ -82,4 +100,7 @@
 
     - name: Upload Terraform manifest
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-  
+
+
+
+######## en config, crear el user para el experimenter

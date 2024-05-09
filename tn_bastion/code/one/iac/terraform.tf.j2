@@ -4,7 +4,7 @@ resource "opennebula_virtual_machine" "tn_bastion" {
   name        = "{{ tn_id }}-tn_bastion"
   template_id = {{ site_one_templates.tn_bastion.id }}
   cpu         = {{ one_bastion_cpu }}
-  memory      = {{ one_bastion_cpu }}
+  memory      = {{ one_bastion_memory }}
 
   context = {
     NETWORK = "YES"

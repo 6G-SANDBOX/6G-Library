@@ -1,0 +1,9 @@
+- name: Append newly commponent's name and IP into a .ssh/config.d/ file
+  community.general.ssh_config:
+    host: "{{ tn_id }}-{{ library_component_name }}{{'-'+entity_name if entity_name is not none else '' }}"
+    hostname: "{{ ips[one_component_networks[0] | string] | default('ERROR_ASSIGNING_IP') }}"
+    remote_user: "jenkins-master"
+    identity_file: "/var/lib/jenkins/.ssh/id_ed25519"
+    user: jenkins
+    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+    state: present
