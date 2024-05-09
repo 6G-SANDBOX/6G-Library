@@ -23,7 +23,7 @@
       ansible.builtin.shell:
       args:
         chdir: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/"
-        cmd: "set -o pipefail && terraform output --json"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
         executable: /bin/bash
       register: terraform_output
       changed_when: false
@@ -31,20 +31,13 @@
 
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
-        tn_vxlan_id: "{{ (terraform_output.stdout | from_json)[tn_id + '-tn_vxlan-id'].value }}"
+        ips: "{{ (terraform_output.stdout | from_json)['tn_bastion-ips'] }}"
+        id: "{{ (terraform_output.stdout | from_json)['tn_bastion-id'] }}"
       when: not terraform_apply.failed
 
+    - debug: var=id
 
-    - name: Get Terraform Output
-      ansible.builtin.shell:
-      args:
-        chdir: "./{{ site_hypervisor }}/iac/"
-        cmd: "terraform output --json | jq 'with_entries(.value |= .value)'"
-      register: terraform_output
-        
-    - name: Load Terraform Output into execution context
-      ansible.builtin.set_fact:
-        outputs: "{{ terraform_output.stdout | from_json }}"
+    - debug: var=ips
 
     - name: Get VM ip from default site network
       ansible.builtin.set_fact:
