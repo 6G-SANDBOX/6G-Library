@@ -8,7 +8,9 @@
     - name: Add the Trial Network tn_bastion VM to Ansible inventory once created
       ansible.builtin.add_host:
         name: "{{ tn_id }}-tn_bastion"
-      when: (library_component_name != "tn_bastion") or (library_component_name != "tn_vxlan")
+      when:
+        - library_component_name != "tn_bastion"
+        - library_component_name != "tn_vxlan"
 
 - name: Start the component deployment
   ansible.builtin.import_playbook: "{{ workspace }}/{{ library_component_name }}/code/component_playbook.yaml"

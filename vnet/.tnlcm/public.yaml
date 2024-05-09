@@ -80,4 +80,4 @@ input:
 ## Component output
 ####################################
 output:
-  tn_vxlan_id:      # ID from OpenNebula to identify this Network
+  id:      # ID from OpenNebula to identify this Network

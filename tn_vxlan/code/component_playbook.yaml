@@ -12,7 +12,7 @@
         project_path: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/"
         state: "present"
         force_init: true
-      ignore_errors: true
+      failed_when: false
       register: terraform_apply
 
 
@@ -24,7 +24,6 @@
       ansible.builtin.shell:
       args:
         chdir: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/"
-        cmd: "set -o pipefail && terraform output --json"
         cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
         executable: /bin/bash
       register: terraform_output
@@ -33,7 +32,7 @@
 
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
-        tn_vxlan_id: "{{ (terraform_output.stdout | from_json)['tn_vxlan-id'].value }}"
+        id: "{{ (terraform_output.stdout | from_json)['tn_vxlan-id'].value }}"
       when: not terraform_apply.failed
 
     - name: Publish execution results to TNLCM
