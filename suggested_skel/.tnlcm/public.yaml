@@ -16,8 +16,6 @@
 ##   3. output: Values sent to the TNLCM callback to
 ##      keep track of the TN deployments
 ##
-## File previously found at "public/description.yaml"
-##
 ######################################################
 
 
@@ -98,6 +96,7 @@ input:
     type: "int"
     value: 1
     optional: false
+
   sample_choice_variable:
     description: |
       Long despription that can span more than one line. Be careful with these ones.
@@ -108,6 +107,21 @@ input:
       - 2
       - 3
     value: 2       # 2 is just the placeholder value
+    optional: false
+
+  list_with_choices:
+    description: |
+      Order the 3 choices acording to your preferences
+    type: "strlist"
+    quantity: 3
+    choices:
+      - "cat"
+      - "dog"
+      - "duck"
+    value:   # values apear by default in this order
+      - "cat"
+      - "dog"
+      - "duck"    
     optional: false
 
   sample_tnlcm_single_variable:
@@ -136,6 +150,37 @@ input:
         - tn_vxlan.output.id
         - vnet.output.id
       # repeated: false    # maybe this is too much. Option to enable selecting the same path multiple times
+
+  run_gnb:
+    description: |
+      Additional dependencies are added deppending on this variable's value:
+        - If "YES", then an open5gs component needs to be previously deployed.
+        - If "NO" and run_ue as "YES", then a a previous ueransim component needs to be previously deployes with run_gnb as "YES".
+    type: "str"
+    choices:
+      - "YES"
+      - "NO"
+    value: "NO"
+    optional: true
+    dependencies:
+      - if_value:
+          - "YES"
+        if_other_variables:
+          numeric_variable1:   # IDK if this should be OR or AND list
+            - "< 23"           # I dont know how to add numeric conditions
+            - "> 15"
+        then:
+          - open5gs:
+      - if_value:                # dependency aplied if this "AND" list of input value conditions is satisfied
+          - "NO"
+        then:
+          self.input.run_ue: "YES"
+          ueransim.input.run_gnb:
+            with:              # dependency on an previously deployed ueransim component with input value run_gnb: "YES"
+              run_gnb: "YES"
+            autocompletes:
+              variable1: "output.variable1_from_ueransim"
+              variable2: "input.variable2_from_ueransim"
 
 
 ####################################
