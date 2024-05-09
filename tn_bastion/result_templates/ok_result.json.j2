@@ -5,7 +5,10 @@
     "success": "true",
     "markdown": "{{ ok2markdown['content'] }}",
     "output": {
-        "vpm_ip": "{{ vm_ip | b64encode }}",
-        "vpn_client_config": "{{ hostvars[tn_id + '-' + one_bastion_name]['client']['content'] | b64encode }}"
+        "ips": "{{ ips | b64encode }}",
+        "id": "{{ id | b64encode }}",
+        "vpn_client_tunnel": "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}",
+        "ssh_public_key": "{{ hostvars['tn_bastion']['ssh_public_key']['content'] }}",
+        "ssh_private_key": "{{ hostvars['tn_bastion']['ssh_private_key']['content'] }}"
     }
 }

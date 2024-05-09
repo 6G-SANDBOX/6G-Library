@@ -75,10 +75,15 @@ pipeline {
             steps {
                 echo 'Stage 2: Load Jenkins parameters into the workspace'
                 script{
+                    def fullName = "${params.TN_ID}-${params.LIBRARY_COMPONENT_NAME}"
+                    if (params.ENTITY_NAME && params.ENTITY_NAME.trim()) {
+                        fullName += "-${params.ENTITY_NAME}"
+                    }
                     def paramsFile = "${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/pipeline_parameters.yaml"
                     def paramsContent = "tn_id: ${params.TN_ID}\n"
                     paramsContent += "library_component_name: ${params.LIBRARY_COMPONENT_NAME}\n"
                     paramsContent += "entity_name: ${params.ENTITY_NAME}\n"
+                    paramsContent += "full_name: ${fullName}\n"
                     paramsContent += "deployment_site: ${params.DEPLOYMENT_SITE}\n"
                     paramsContent += "tnlcm_callback: ${params.TNLCM_CALLBACK}\n"
                     paramsContent += "debug: ${params.DEBUG}\n"

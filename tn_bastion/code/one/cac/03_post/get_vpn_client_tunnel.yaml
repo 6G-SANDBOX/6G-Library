@@ -1,16 +1,17 @@
+---
 - name: Wait for VPN server ready
   become: true
   ansible.builtin.wait_for:
     path: "/root/client.conf"
     state: present
-  register: result
 
 - name: Get remote VPN config file content
   become: true
   ansible.builtin.slurp:
     src: "/root/client.conf"
-  register: client
+  register: client_tunnel
 
 - name: Debug returned client config
   ansible.builtin.debug:
-    msg: "{{ client['content'] | b64decode }}"      
+    msg: "{{ client_tunnel['content'] | b64decode }}"   
+  when: debug

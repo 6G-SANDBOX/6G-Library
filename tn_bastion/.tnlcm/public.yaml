@@ -67,5 +67,8 @@ input:
 ## Component output
 ####################################
 output:
-  vm_ip:             # Main Network Interface
-  vpn_client_config: # VPN Client config to connect to this Trial Network
+  ips:               # dictionary of VMs: key="vnet ID in OpenNebula", value="the ip"
+  id:                # VM ID in OpenNebula
+  vpn_client_tunnel: # VPN Client config to connect to this Trial Network
+  ssh_public_key:
+  ssh_private_key:

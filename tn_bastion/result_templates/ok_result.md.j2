@@ -1,0 +1,35 @@
+## TN_BASTION: {{ tn_id }}-tn_bastion
+
+The BASTION router and firewall component has been successfully created into the Trial Network {{ tn_id }}
+
+Important information:
+
+* OpenNebula ID: {{id }}
+
+### BASTION NETWORK INTERFACES
+```
+{{ ips }}
+```
+
+        "ips": "{{ ips | b64encode }}",
+        "id": "{{ id | b64encode }}",
+        "vpn_client_tunnel": "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}",
+        "ssh_public_key": "{{ hostvars['tn_bastion']['ssh_public_key']['content'] }}",
+        "ssh_private_key": "{{ hostvars['tn_bastion']['ssh_private_key']['content'] }}"
+
+### VNP WIREGUARD CLIENT CONFIG
+
+```
+{{ hostvars['tn_bastion']['client_tunnel']['content'] | b64decode }}
+```
+
+### SSH KEYPAIR TO ACCESS THE REST OF THE TRIAL NETWORK COMPONENTS
+
+Public key:
+```
+{{ hostvars['tn_bastion']['ssh_public_key']['content'] | b64decode }}
+```
+Private key:
+```
+{{ hostvars['tn_bastion']['ssh_private_key']['content'] | b64decode }}
+```

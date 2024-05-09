@@ -1,0 +1,17 @@
+---
+- name: Generate an ed25519 ssh keypair
+  openssh_keypair:
+    comment: "TrialNetwork@{{ tn_id }}"
+    force: false
+    path: "/tmp/id_ed25519"
+    type: ed25519
+
+- name: Slurp public ssh key
+  ansible.builtin.slurp:
+    src: "/tmp/id_ed25519.pub"
+  register: ssh_public_key
+
+- name: Slurp public ssh key
+  ansible.builtin.slurp:
+    src: "/tmp/id_ed25519.pub"
+  register: ssh_private_key

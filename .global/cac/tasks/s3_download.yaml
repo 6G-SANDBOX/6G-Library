@@ -1,4 +1,4 @@
-# Collection "amazon.aws >= 7.5.0" required in ansible-galawy
+# TODO: Inform collection "amazon.aws >= 7.5.0" is required in ansible-galaxy
 # https://docs.ansible.com/ansible/latest/collections/amazon/aws/index.html#plugins-in-amazon-aws
 # https://docs.ansible.com/ansible/latest/collections/amazon/aws/s3_object_module.html
 

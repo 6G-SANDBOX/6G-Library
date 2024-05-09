@@ -4,6 +4,5 @@
     hostname: "{{ ips[one_component_networks[0] | string] | default('ERROR_ASSIGNING_IP') }}"
     remote_user: "jenkins-master"
     identity_file: "/var/lib/jenkins/.ssh/id_ed25519"
-    user: jenkins
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present

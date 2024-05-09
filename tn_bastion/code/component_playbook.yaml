@@ -15,7 +15,7 @@
       ignore_errors: true
       register: terraform_apply
   
-- name: "STAGE 2: Publish execution results"
+- name: "STAGE 2: Prepare to access the component"
   hosts: localhost
   gather_facts: false
   tasks:
@@ -48,59 +48,40 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/write_ssh_config.yaml"
       
 
-
-    # - name: Wait for service to be ready
-    #   wait_for:
-    #     port: 22
-    #     host: "{{ vm_ip }}"
-    #     connect_timeout: 5
-    #     delay: 20
-    #     timeout: 240
-
-
-
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "{{ library_component_name }}"
   gather_facts: false
   tasks:
-
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
         connect_timeout: 5
         delay: 20
         timeout: 120
-    
-    - debug: var=hostvars[inventory_hostname]
 
-    - name: Gather facts for first time
-      ansible.builtin.setup:
+    ### In theory, fact gathering is not needed for the component configuration
+    # - name: Gather facts for first time
+    #   ansible.builtin.setup:
 
-    - debug: var=hostvars[inventory_hostname]
-
-    - name: Load Variables into new VM
+    ### Calling tasks/load_variables.yaml is also unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
+    ### But it makes the code much MUCH cleaner
+    - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/load_variables.yaml"
 
-    - debug: var=hostvars[inventory_hostname]
+    - name: Execute Post Configuration
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ site_hypervisor }}/cac/03_post/get_vpn_client_tunnel.yaml"
+      when: site_hypervisor == "one"
 
-    - command: "cat /etc/hostname"
-      register: hostname_out
+    # TODO en config de otras VMs, crear el user (privilegiado o no) y accesible con esta ssh-key
+    - name: Create an ed25519 ssh key pair to access the future Trial Network components
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ site_hypervisor }}/cac/03_post/get_vpn_client_tunnel.yaml"
 
-    - debug: msg="{{ hostname_out | to_json }}"
-
-    - name: Execute Post Configuration   # This will fail
-      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/03_post/get_vpn_client_config.yaml"
-      when: "site_hypervisor == 'one'"
-
-# STAGE 4: Execute manifest
-- name: Results
+- name: "STAGE 4: Publish execution results"
   hosts: localhost
+  gather_facts: false
   tasks:
-    - name: Publish execution results
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/publish_results.yaml"
 
-    - name: Upload Terraform manifest
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-
-
-
-######## en config, crear el user para el experimenter
+    - name: Upload markdown info to S3 storage
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/s3_upload.yaml"
+      when: not terraform_apply.failed
