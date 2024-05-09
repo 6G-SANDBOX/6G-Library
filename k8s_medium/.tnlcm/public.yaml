@@ -150,3 +150,5 @@ input:
 ####################################
 output:
   kubeconfig: "Kubeconfig file to access to this cluster"
+
+        # "kubeconfig": "{{ kubeconfig_content | b64encode }}"

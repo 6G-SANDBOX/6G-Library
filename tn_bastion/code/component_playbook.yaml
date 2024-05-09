@@ -56,7 +56,7 @@
       ansible.builtin.wait_for_connection:
         connect_timeout: 5
         delay: 20
-        timeout: 120
+        timeout: 180
 
     ### In theory, fact gathering is not needed for the component configuration
     # - name: Gather facts for first time

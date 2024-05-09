@@ -108,3 +108,13 @@ input:
 ## Component output
 ####################################
 output:
+
+    # "output": {
+    #     "plmn_id_mcc": "{{ plmn_id_mcc | b64encode }}",
+    #     "plmn_id_mcc": "{{ plmn_id_mcc | b64encode }}",
+    #     "tac": "{{ tac | b64encode }}",
+    #     "s_nssai_sst": "{{ s_nssai_sst | b64encode }}",
+    #     "s_nssai_sd": "{{ s_nssai_sd | b64encode }}",
+    #     "amf_ip": "{{ amf_ip | b64encode }}",
+    #     "upf_ip": "{{ upf_ip | b64encode }}"
+    # }
