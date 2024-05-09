@@ -11,20 +11,13 @@ resource "opennebula_virtual_network" "{{ entity_name }}" {
   gateway         = "{{ one_vnet_gw }}"
   network_mask    = "{{ one_vnet_netmask }}"
   dns             = "{{ one_vnet_dns }}"
-
-  template_section {
-   name = "{{ entity_name }}"
-   elements = {
-      TN_ID = "{{ tn_id }}"
-   }
-  }
 }
 
 resource "opennebula_virtual_network_address_range" "{{ entity_name }}" {
   virtual_network_id = opennebula_virtual_network.{{ entity_name }}.id
   ar_type            = "IP4"
-  size               = {{ one_vnet_address_size }}
   ip4                = "{{ one_vnet_first_ip }}"
+  size               = {{ one_vnet_address_size }}
 }
 
 output "{{ entity_name }}-id" {

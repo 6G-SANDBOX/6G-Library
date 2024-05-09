@@ -7,16 +7,10 @@ resource "opennebula_virtual_network" "{{ entity_name }}" {
   automatic_vlan_id = true
   mtu             = {{ one_vxlan_mtu }}
   guest_mtu       = {{ one_vxlan_guest_mtu }}
+
   gateway         = "{{ one_vxlan_gw }}"
   network_mask    = "{{ one_vxlan_netmask }}"
   dns             = "{{ one_vxlan_dns }}"
-
-  template_section {
-    name = "{{ entity_name }}"
-    elements = {
-      TN_ID = "{{ tn_id }}"
-   }
-  }
 }
 
 resource "opennebula_virtual_network_address_range" "{{ entity_name }}" {
