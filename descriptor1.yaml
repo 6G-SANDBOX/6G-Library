@@ -1,5 +1,5 @@
 # TNLCM le manda al jenkins los parámetros implícitos y el file con el resto de variables.
-# Los parámetros explícitos son TN_ID, LIBRARY_COMPONENT_NAME y (salvo en tn_vxlan y tn_bastion) ENTITY_NAME. Los implícitos son:
+# Los parámetros explícitos son TN_ID, COMPONENT_TYPE y (salvo en tn_vxlan y tn_bastion) CUSTOM_NAME. Los implícitos son:
 # - DEPLOYMENT_SITE: definido en el front y el back cuando se crearon.
 # - TNLCM_CALLBACK:
 # el resto LIBRARY_URL, LIBRARY_BRANCH, SITES_URL, SITES_BRANCH y DEBUG ya si eso para users avanzados. Hay que borrar el workspace a mano tras un debug así que...
@@ -22,7 +22,7 @@
 
 # "TN_ID" arriba como comentario. Si aleatorio, más largo. Lógica para ver si ya existe ese tn_id
 trial_network:   
-  - type: "tn_vxlan"      # se pasa como parámetro "LIBRARY_COMPONENT_NAME", no hay "ENTITY_NAME"
+  - type: "tn_vxlan"      # se pasa como parámetro "COMPONENT_TYPE", no hay "CUSTOM_NAME"
     input: {}
 
   - type: "tn_bastion"
@@ -33,7 +33,7 @@ trial_network:
   
   # como en su public.yaml no tiene nada en needs, el TNLCM sabe que va en cualquier lado tras el bastión
   - type: "vnet"         # en needs venía tn_bastion
-    name: "small_net"    # se pasa como parámetro ENTITY_NAME
+    name: "small_net"    # se pasa como parámetro CUSTOM_NAME
     input:  # todas user_input y en un futuro opcionales
       one_vxlan_first_ip: "10.10.10.1"
       one_vxlan_address_size: 254

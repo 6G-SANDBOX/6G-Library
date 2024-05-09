@@ -1,9 +1,9 @@
 # - name: Install NGINX Ingres controller
-#   shell: "helm upgrade --kubeconfig {{ workspace }}/{{ library_component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --set rbac.create=true --set controller.service.type=NodePort --set controller.service.nodePorts.http=32080 --set controller.service.nodePorts.https=32443 --namespace ingress-nginx --create-namespace"
+#   shell: "helm upgrade --kubeconfig {{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --set rbac.create=true --set controller.service.type=NodePort --set controller.service.nodePorts.http=32080 --set controller.service.nodePorts.https=32443 --namespace ingress-nginx --create-namespace"
 
 - name: Install ingress-nginx
   kubernetes.core.helm:
-    kubeconfig: "{{ workspace }}/{{ library_component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
+    kubeconfig: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
     name: ingress-nginx
     chart_repo_url: https://kubernetes.github.io/ingress-nginx
     chart_ref: ingress-nginx

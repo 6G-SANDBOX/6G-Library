@@ -9,8 +9,8 @@
       ansible.builtin.add_host:
         name: "{{ tn_id }}-tn_bastion"
       when:
-        - library_component_name != "tn_bastion"
-        - library_component_name != "tn_vxlan"
+        - component_type != "tn_bastion"
+        - component_type != "tn_vxlan"
 
 - name: Start the component deployment
-  ansible.builtin.import_playbook: "{{ workspace }}/{{ library_component_name }}/code/component_playbook.yaml"
+  ansible.builtin.import_playbook: "{{ workspace }}/{{ component_type }}/code/component_playbook.yaml"

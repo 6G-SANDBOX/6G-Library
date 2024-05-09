@@ -3,29 +3,25 @@
   block:
   - name: Generate OK markdown response
     ansible.builtin.template:
-      src: "{{ workspace }}/{{ library_component_name }}/result_templates/ok_result.md.j2"
-      dest: "{{ workspace }}/{{ library_component_name }}/code/ok_result-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is not none else '' }}.md"
+      src: "{{ workspace }}/{{ component_type }}/result_templates/ok_result.md.j2"
+      dest: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.md"
 
   - name: Encode OK response into base64 
     ansible.builtin.slurp:
-      src: "{{ workspace }}/{{ library_component_name }}/code/ok_result-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is not none else '' }}.md"
+      src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.md"
     register: ok2markdown
 
   - name: Generate OK json response
     ansible.builtin.template:
-      src: "{{ workspace }}/{{ library_component_name }}/result_templates/ok_result.json.j2"
-      dest: "{{ workspace }}/{{ library_component_name }}/code/ok_result-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is not none else '' }}.json"
+      src: "{{ workspace }}/.global/json_templates/ok_result.json.j2"
+      dest: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.json"
 
   - name: Send OK json response to TNLCM
     ansible.builtin.uri:
       url: "{{ tnlcm_callback }}"
       method: POST
       body_format: json
-      src: "{{ workspace }}/{{ library_component_name }}/code/ok_result-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is not none else '' }}.json"
+      src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.json"
     register: tnlcm_post
     ignore_errors: true 
   - debug: var=tnlcm_post
@@ -36,29 +32,25 @@
   block:
   - name: Generate FAIL markdown response
     ansible.builtin.template:
-      src: "{{ workspace }}/{{ library_component_name }}/result_templates/fail_result.md.j2"
-      dest: "{{ workspace }}/{{ library_component_name }}/code/fail_result-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is not none else '' }}.md"
+      src: "{{ workspace }}/{{ component_type }}/result_templates/fail_result.md.j2"
+      dest: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.md"
 
   - name: Encode FAIL markdown response into base64
     ansible.builtin.slurp:
-      src: "{{ workspace }}/{{ library_component_name }}/code/fail_result-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is not none else '' }}.md"
+      src: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.md"
     register: fail2markdown
 
   - name: Generate FAIL json response
     ansible.builtin.template:
-      src: "{{ workspace }}/{{ library_component_name }}/result_templates/fail_result.json.j2"
-      dest: "{{ workspace }}/{{ library_component_name }}/code/fail_result-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is not none else '' }}.json"
+      src: "{{ workspace }}/.global/json_templates/fail_result.json.j2"
+      dest: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.json"
 
   - name: Send FAIL json response to TNLCM
     ansible.builtin.uri:
       url: "{{ tnlcm_callback }}"
       method: POST
       body_format: json
-      src: "{{ workspace }}/{{ library_component_name }}/code/fail_result-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is not none else '' }}.json"
+      src: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.json"
     register: tnlcm_post
     ignore_errors: true
   - debug: var=tnlcm_post

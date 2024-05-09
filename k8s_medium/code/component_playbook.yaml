@@ -96,7 +96,7 @@
     - name: Create kubeconfig
       ansible.builtin.copy:
         content: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] | b64decode }}"
-        dest: "{{ workspace }}/{{ library_component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
+        dest: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
 
     - name: Create data structure with roles->eth0_ips
       ansible.builtin.script:
@@ -124,7 +124,7 @@
 
     - name: Replace kubectl url endpoint
       replace:
-        path: "{{ workspace }}/{{ library_component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
+        path: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
         regexp: "https://127.0.0.1:6443"
         replace: "https://127.0.0.1:{{ result_port.stdout | trim }}"
 

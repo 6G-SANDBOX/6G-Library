@@ -10,8 +10,8 @@ pipeline {
 
     parameters {
         string(name: 'TN_ID', defaultValue: '', description: 'Trial Network Identifier. MANDATORY')
-        string(name: 'LIBRARY_COMPONENT_NAME', defaultValue: '', description: '6G Library Component type. MANDATORY')
-        string(name: 'ENTITY_NAME', defaultValue: '', description: 'Custom name for the component inside the Trian Network. MANDATORY except for tn_vxlan and tn_bastion')
+        string(name: 'COMPONENT_TYPE', defaultValue: '', description: '6G Library Component type. MANDATORY')
+        string(name: 'CUSTOM_NAME', defaultValue: '', description: 'Custom name for the component inside the Trian Network. MANDATORY except for tn_vxlan and tn_bastion')
         choice(name: 'DEPLOYMENT_SITE', choices: ['uma', 'athens', 'fokus'], description: 'Site where the deployment is being made. Choose between uma, athens or fokus. MANDATORY')
         string(name: 'TNLCM_CALLBACK', defaultValue: 'http://tnlcm-ip:5000/tnlcm/callback/', description: 'URL of the TNLCM to notify the results. MANDATORY')
         string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library.git', description: '6G-Library repository HTTPS URL. Leave it as-is unless you want to test your own fork')
@@ -51,13 +51,8 @@ pipeline {
         stage('Stage 1: Import input file into the workspace') {
             steps {
                 script {
-                    if (env.ENTITY_NAME) {
-                        echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} input file into the workspace"
-                    } else {
-                        echo "Stage 1: Import ${TN_ID}-${LIBRARY_COMPONENT_NAME} input file into the workspace"
-                    }
-
-                    def inputFile = "${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/input_file.yaml"
+                    echo "Stage 1: Import input file into the workspace"
+                    def inputFile = "${WORKSPACE}/${params.COMPONENT_TYPE}/variables/input_file.yaml"
 
                     def fileContent = sh (
                         script: 'echo $FILE | base64 -d',
@@ -75,15 +70,15 @@ pipeline {
             steps {
                 echo 'Stage 2: Load Jenkins parameters into the workspace'
                 script{
-                    def fullName = "${params.TN_ID}-${params.LIBRARY_COMPONENT_NAME}"
-                    if (params.ENTITY_NAME && params.ENTITY_NAME.trim()) {
-                        fullName += "-${params.ENTITY_NAME}"
+                    def entityName = "${params.COMPONENT_TYPE}"
+                    if (params.CUSTOM_NAME && params.CUSTOM_NAME.trim()) {
+                        entityName += "-${params.CUSTOM_NAME}"
                     }
-                    def paramsFile = "${WORKSPACE}/${params.LIBRARY_COMPONENT_NAME}/variables/pipeline_parameters.yaml"
+                    def paramsFile = "${WORKSPACE}/${params.COMPONENT_TYPE}/variables/pipeline_parameters.yaml"
                     def paramsContent = "tn_id: ${params.TN_ID}\n"
-                    paramsContent += "library_component_name: ${params.LIBRARY_COMPONENT_NAME}\n"
-                    paramsContent += "entity_name: ${params.ENTITY_NAME}\n"
-                    paramsContent += "full_name: ${fullName}\n"
+                    paramsContent += "component_type: ${params.COMPONENT_TYPE}\n"
+                    paramsContent += "custom_name: ${params.CUSTOM_NAME}\n"
+                    paramsContent += "entity_name: ${entityName}\n"
                     paramsContent += "deployment_site: ${params.DEPLOYMENT_SITE}\n"
                     paramsContent += "tnlcm_callback: ${params.TNLCM_CALLBACK}\n"
                     paramsContent += "debug: ${params.DEBUG}\n"
@@ -107,10 +102,10 @@ pipeline {
         stage('Stage 4: Deploy the selected component') {
             steps {
                 script {
-                    if (env.ENTITY_NAME) {
-                        echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME}-${ENTITY_NAME} in the ${DEPLOYMENT_SITE} site"
+                    if (env.CUSTOM_NAME) {
+                        echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${COMPONENT_TYPE}-${CUSTOM_NAME} in the ${DEPLOYMENT_SITE} site"
                     } else {
-                        echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${LIBRARY_COMPONENT_NAME} in the ${DEPLOYMENT_SITE} site"
+                        echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${COMPONENT_TYPE} in the ${DEPLOYMENT_SITE} site"
                     }
                 } 
                 
@@ -120,7 +115,7 @@ pipeline {
                     credentialsId: 'remote_ssh',
                     extraVars: [
                         workspace: "${WORKSPACE}",
-                        library_component_name: "${params.LIBRARY_COMPONENT_NAME}",
+                        component_type: "${params.COMPONENT_TYPE}",
                         deployment_site: "${params.DEPLOYMENT_SITE}"
                     ],
                     playbook: "${WORKSPACE}/.global/cac/deploy_playbook.yaml"

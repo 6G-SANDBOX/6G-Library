@@ -5,7 +5,7 @@
 ### Added
 
 - Standardized changelog format to fit [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog/blob/main/CHANGELOG.md) rules.
-- New parameters added to the Jenkinsfile: `ENTITY_NAME`, `TNLCM_CALLBACK`, `LIBRARY_URL` and `LIBRARY_BRANCH`
+- New parameters added to the Jenkinsfile: `CUSTOM_NAME`, `TNLCM_CALLBACK`, `LIBRARY_URL` and `LIBRARY_BRANCH`
 - New `.global/hypervisors/` directory replacing `<component>/private/<hypervisor>/prepare.yml` with the steps common to each hypervisor
 - New `.global/cac/deploy_component.yaml` file with ansible tasks common to all components.
 All ansible executions will start from here, to later import its corresponding "component_playbook.yaml" file

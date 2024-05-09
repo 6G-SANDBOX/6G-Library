@@ -1,8 +1,8 @@
 - name: Install Skooner dashboard
   kubernetes.core.helm:
-    kubeconfig: "{{ workspace }}/{{ library_component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
+    kubeconfig: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
     name: skooner
-    chart_ref: "{{ workspace }}/{{ library_component_name }}/private/helm/skooner"
+    chart_ref: "{{ workspace }}/{{ component_type }}/private/helm/skooner"
     namespace: skooner
     create_namespace: yes
     state: present
@@ -18,7 +18,7 @@
                   pathType: Prefix
 
 - name: "Create token for dashboard access"
-  command: 'kubectl create token skooner-sa -n skooner --kubeconfig "{{ workspace }}/{{ library_component_name }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig" --duration=87600h'
+  command: 'kubectl create token skooner-sa -n skooner --kubeconfig "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig" --duration=87600h'
   register: "skooner_token"
 
 - name: "Return token"

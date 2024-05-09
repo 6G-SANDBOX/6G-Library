@@ -9,7 +9,7 @@
 
     - name: Terraform apply
       community.general.terraform:
-        project_path: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/"
+        project_path: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
         state: "present"
         force_init: true
       failed_when: false
@@ -23,7 +23,7 @@
     - name: Retrieve terraform output
       ansible.builtin.shell:
       args:
-        chdir: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/"
+        chdir: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
         cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
         executable: /bin/bash
       register: terraform_output
@@ -33,6 +33,12 @@
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
         id: "{{ (terraform_output.stdout | from_json)['tn_vxlan-id'] }}"
+      when: not terraform_apply.failed
+
+    - name: Merge all component component outputs into one "output" variable
+      ansible.builtin.set_fact:
+        output:
+          id: "{{ id | b64encode }}"
       when: not terraform_apply.failed
 
     - name: Publish execution results to TNLCM

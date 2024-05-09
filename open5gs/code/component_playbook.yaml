@@ -44,7 +44,7 @@
 
     - name: Replace kubectl url endpoint
       ansible.builtin.replace:
-        path: "{{ workspace }}/{{ library_component_name }}/private/{{ tn_id }}-oneke-{{ oneke_cluster_name }}.kubeconfig"
+        path: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ oneke_cluster_name }}.kubeconfig"
         regexp: "https://127.0.0.1:6443"
         replace: "https://127.0.0.1:{{ result_port.stdout | trim }}"
 

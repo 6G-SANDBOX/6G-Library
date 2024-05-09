@@ -9,7 +9,7 @@
 
     - name: Terraform apply
       community.general.terraform:
-        project_path: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/"
+        project_path: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
         state: "present"
         force_init: true
       ignore_errors: true
@@ -22,7 +22,7 @@
     - name: Retrieve terraform output
       ansible.builtin.shell:
       args:
-        chdir: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/"
+        chdir: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
         cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
         executable: /bin/bash
       register: terraform_output
@@ -41,7 +41,7 @@
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ library_component_name }}"
+        hostname: "{{ component_type }}"
         ansible_host: "{{ ips[one_component_networks[0] | string] }}"
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
@@ -49,7 +49,7 @@
       
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ library_component_name }}"
+  hosts: "{{ component_type }}"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -68,17 +68,27 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/load_variables.yaml"
 
     - name: Execute Post Configuration
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ site_hypervisor }}/cac/03_post/get_vpn_client_tunnel.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/get_vpn_client_tunnel.yaml"
       when: site_hypervisor == "one"
 
     # TODO en config de otras VMs, crear el user (privilegiado o no) y accesible con esta ssh-key
     - name: Create an ed25519 ssh key pair to access the future Trial Network components
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ site_hypervisor }}/cac/03_post/get_vpn_client_tunnel.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/get_ssh_keypair.yaml"
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
   tasks:
+    - name: Merge all component component outputs into one "output" variable
+      ansible.builtin.set_fact:
+        output:
+          ips: "{{ ips | b64encode }}"
+          id: "{{ id | b64encode }}"
+          vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"
+          ssh_public_key: "{{ hostvars['tn_bastion']['ssh_public_key']['content'] }}"
+          ssh_private_key: "{{ hostvars['tn_bastion']['ssh_private_key']['content'] }}"
+      when: not terraform_apply.failed
+
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/publish_results.yaml"
 

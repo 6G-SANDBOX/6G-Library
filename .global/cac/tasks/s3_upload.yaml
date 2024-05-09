@@ -5,10 +5,8 @@
     access_key: "{{ ansible_env.AWS_ACCESS_KEY_ID }}"
     secret_key: "{{ ansible_env.AWS_SECRET_ACCESS_KEY }}"
     bucket: "{{ site_s3_server.bucket }}"
-    object: "{{ tn_id }}/tf-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is not none else '' }}.tf"
-    src: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/tf-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is not none else '' }}.tf"
+    object: "{{ tn_id }}/tf-{{ entity_name }}.tf"
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/tf-{{ entity_name }}.tf"
     encrypt: no
 
 
@@ -19,8 +17,6 @@
     access_key: "{{ ansible_env.AWS_ACCESS_KEY_ID }}"
     secret_key: "{{ ansible_env.AWS_SECRET_ACCESS_KEY }}"
     bucket: "{{ site_s3_server.bucket }}"
-    object: "{{ tn_id }}/ok_result-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is not none else '' }}.md"
-    src: "{{ workspace }}/{{ library_component_name }}/code/ok_result-{{ library_component_name }}{{
-           '-'+entity_name if entity_name is not none else '' }}.md"
+    object: "{{ tn_id }}/ok_result-{{ entity_name }}.md"
+    src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.md"
     encrypt: no

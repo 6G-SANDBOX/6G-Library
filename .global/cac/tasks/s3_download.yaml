@@ -21,6 +21,6 @@
     secret_key: "{{ ansible_env.AWS_SECRET_ACCESS_KEY }}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ item }}"
-    dest: "{{ workspace }}/{{ library_component_name }}/code/{{ site_hypervisor }}/iac/{{ item | basename }}"
+    dest: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/{{ item | basename }}"
   when: item.endswith('.tf')
   with_items: "{{ s3_bucket_items.s3_keys }}"
