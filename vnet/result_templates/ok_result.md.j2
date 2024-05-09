@@ -1,14 +1,16 @@
-## VXLAN: {{ one_vxlan_name }}
+## VNET: {{ tn_id }}-{{ entity_name }}
 
-A VXLAN network has been successfully created to service the Trial Network {{ tn_id }}
+A VNET of type VXLAN has been successfully created to service the Trial Network {{ tn_id }}
 
 Important information:
 
-* OPENNEBULA NETWORK ID: {{ result.outputs[one_vxlan_name + "-vxlan_id"].value }}
-* VXLAN NAME: {{ one_vxlan_name }}
-* VXLAN MTU: {{ one_vxlan_mtu }}
-* VXLAN GUEST MTU: {{ one_vxlan_guest_mtu }}
-* VXLAN FIRST IP: {{ one_vxlan_first_ip }}
-* VXLAN ADDRESS SIZE: {{ one_vxlan_address_size }}
-* VXLAN GW: {{ one_vxlan_gw }}
-* VXLAN DNS: {{ one_vxlan_dns }}
+* OPENNEBULA NETWORK ID: `{{ id }}`
+* VNET NAME: `{{ entity_name }}`
+* VNET MTU: `{{ one_vnet_mtu }}`
+* VNET GUEST MTU: `{{ one_vnet_guest_mtu }}`
+* VNET GW: `{{ one_vnet_gw }}`
+* VNET NETMASK: `{{ one_vnet_netmask }}`
+* VNET DNS: `{{ one_vnet_dns }}`
+
+* VNET FIRST IP: `{{ one_vnet_first_ip }}`
+* VNET ADDRESS SIZE: `{{ one_vnet_address_size }}`
