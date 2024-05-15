@@ -14,7 +14,8 @@
         force_init: true
       ignore_errors: true
       register: terraform_apply
-  
+
+
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
   gather_facts: false

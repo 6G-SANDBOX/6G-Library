@@ -1,46 +1,55 @@
-# START MANDATORY BLOCK
-- name: Generate installation manifest from templates
+---
+- name: "STAGE 1: Apply IAC to deploy the component" 
   hosts: localhost
-  gather_facts: true
+  gather_facts: false
   tasks: 
-    # - name: Mix variables from different sources
-    #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-    - name: 'Add bastion hosts to be able to jump'
-      ansible.builtin.add_host:
-        name: "{{ tn_id }}-tn_bastion"      
-# END MANDATORY BLOCK
+    - name: Prepare terraform manifests
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/prepare_one_iac.yaml"
+      when: site_hypervisor == "one"
 
-# STAGE 1: Prepare manifest from templates
-- name: Generate installation manifest from templates
-  hosts: localhost
-  tasks: 
-    - name: Generate installation manifest from templates
-      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/prepare.yaml"
-
-# STAGE 2: Create infrastructure
-- name: Infrastructure Tasks
-  hosts: localhost
-  tasks:
-    - name: Download Terraform manifest from previos TN components
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_bucket_content_tasks.yaml" 
-          
-    - name: Execute terraform apply
+    - name: Terraform apply
       community.general.terraform:
-        project_path: "./{{ site_hypervisor }}/iac/"
+        project_path: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
         state: "present"
         force_init: true
-      register: result 
+      ignore_errors: true
+      register: terraform_apply
 
-    - name: Get Terraform Output
+
+- name: "STAGE 2: Prepare to access the component"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Retrieve terraform output
       ansible.builtin.shell:
       args:
-        chdir: "./{{ site_hypervisor }}/iac/"
-        cmd: "terraform output --json | jq 'with_entries(.value |= .value)'"
+        chdir: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
       register: terraform_output
+      changed_when: false
+      when: not terraform_apply.failed
 
-    - name: Load Terraform Output into execution context
+    - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
-        outputs: "{{ terraform_output.stdout | from_json }}"
+        ips: "{{ (terraform_output.stdout | from_json)['tn_bastion-ips'] }}"
+        id: "{{ (terraform_output.stdout | from_json)['tn_bastion-id'] }}"
+      when: not terraform_apply.failed
+
+    - name: Add new VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "{{ component_type }}"
+        ansible_host: "{{ ips[one_component_networks[0] | string] }}"
+
+### Con el JUMP !!!
+
+    - name: Create SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/write_ssh_config.yaml"
+
+
+
+# a partir de aquí lo nuevo
+
 
     - name: Update SSH Key into Service VMs
       ansible.builtin.script:

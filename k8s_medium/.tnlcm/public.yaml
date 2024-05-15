@@ -64,7 +64,7 @@ input:
     user_input: true
     optional: false
 
-  multus_enabled:
+  one_k8s_multus:
     description: |
       Multus is a CNI (Container Network Interface) that enables attaching multiple network interfaces to pods.
       The Multus CNI is compatible with the primary CNI chosen not a substitute of it
@@ -76,7 +76,7 @@ input:
     value: "YES"
     user_input: true
     optional: true
-  cni_plugin:
+  one_k8s_cni_plugin:
     description: |
       Primary CNI (Container Network Interface) to be enabled inside the OneKE for the connectivity between pods.
       Accepted values are:
@@ -92,7 +92,9 @@ input:
     user_input: true
     optional: true
 
-  longhorn_enabled:
+  one_k8s_cilium_range:  #### COMPLETE!!!!!!!!!
+
+  one_k8s_longhorn:
     description: |
       Longhorn provides highly available persistent storage for Kubernetes
       Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
@@ -104,7 +106,7 @@ input:
     user_input: true
     optional: false   # will be optional in the near future
 
-  metallb_enabled: 
+  one_k8s_metallb: 
     description: |
       Load-balancer implementation for bar metal Kubernetes clusters, using standard routing protocols
       Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
@@ -116,17 +118,17 @@ input:
     user_input: true
     optional: false   # will be optional in the near future
 
-  metallb_range:
+  one_k8s_metallb_range:
     description: |
       Range of IPs available for metalLB to allocate services. Part of the Adress Range from the "internal_vnet_id"
       Syntax is <min_IPv4>-<max_IPv4>
-      Mandatory variable if metallb_enabled is set to "YES"
+      Mandatory variable if one_k8s_metallb is set to "YES"
     type: "str"
     value: "10.10.12.200-10.10.12.240"
     user_input: true
-    optional: false   # will be optional in the near future. It will still be mandatory if metallb_enabled is set to "YES"
+    optional: false   # will be optional in the near future. It will still be mandatory if one_k8s_metallb is set to "YES"
 
-  traefik_enabled:
+  one_k8s_traefik:
     description: |
       Ingress controller that manages access to cluster services.
       Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
@@ -138,7 +140,7 @@ input:
     user_input: true
     optional: false   # will be optional in the near future
 
-  vnf_upstream_dns:
+  one_k8s_dns:
     description: space-separated DNS servers configured in the OneKE VNF
     type: "str"
     value: "1.1.1.1 8.8.8.8"

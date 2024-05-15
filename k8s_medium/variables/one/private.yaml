@@ -10,3 +10,14 @@
 ## File previously found at "private/values.yaml"
 ##
 ######################################################
+
+external_vnet_id: 'tn_vxlan-id'
+
+one_k8s_multus: "YES"          # OnKE default is "NO"
+one_k8s_cni_plugin: "canal"    # OnKE default is "cilium"
+one_k8s_cilium_range: ""       # Required if the cni_plugin is cilium
+one_k8s_metallb: "YES"         # OnKE default is "NO"
+one_k8s_metallb_range: "111.21.1.200-11.21.1.240"    # Required if the metallb is enabled
+one_k8s_longhorn: "NO"        # OnKE default is "NO"
+one_k8s_traefik: "NO"          # OnKE default is "NO"
+one_k8s_dns: "1.1.1.1 8.8.8.8" # OnKE default is "1.1.1.1,8.8.8.8"

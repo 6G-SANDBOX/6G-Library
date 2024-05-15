@@ -20,20 +20,12 @@ Important information about cluster configuration:
 * CLUSTER NAME: {{ service_name }}
 * PUBLIC VIRTUAL NET: {{ external_vnet_id }}
 * PRIVATE VIRTUAL NET: {{ internal_vnet_id }}
-{% if cni_plugin is defined and cni_plugin %}
-* CNI: {{ cni_plugin }}
-{% else %}
-* CNI: "canal"
-{% endif %}
-{% if multus_enabled is defined and multus_enabled %}
-* MULTUS ENABLED: {{ multus_enabled }}
-{% else %}
-* MULTUS ENABLED: "YES"
-{% endif %}
-* METALLB ENABLED: {{ metallb_enabled }}
-* METALLB IP POOL: {{ metallb_range }}
-* TRAEFIK ENABLED: {{ traefik_enabled }}
-* VNF UPSTREAM DNS: {{ vnf_upstream_dns }}
+* CNI: {{ one_k8s_cni_plugin }}
+* MULTUS ENABLED: {{ one_k8s_multus }}
+* METALLB ENABLED: {{ one_k8s_metallb }}
+* METALLB IP POOL: {{ one_k8s_metallb_range }}
+* TRAEFIK ENABLED: {{ one_k8s_traefik }}
+* VNF UPSTREAM DNS: {{ one_k8s_dns }}
 
 If you need detailed information about OneKE you can visit the official documentation: https://github.com/OpenNebula/one-apps/wiki/oneke_ops#operating-oneke
 

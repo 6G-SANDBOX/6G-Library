@@ -86,13 +86,13 @@ input:
     user_input: true
     optional: false
   amf_ip: 
-    description: IPv4 address of the Access Management Function (AMF). Should be placed inside the "metallb_range" of the OneKE
+    description: IPv4 address of the Access Management Function (AMF). Should be placed inside the "one_k8s_metallb_range" of the OneKE
     type: "str"
     value: "11.21.1.200"
     user_input: true
     optional: false
   upf_ip:
-    description: IPv4 address of the User Plane Function (UPF). Should be placed inside the "metallb_range" of the OneKE
+    description: IPv4 address of the User Plane Function (UPF). Should be placed inside the "one_k8s_metallb_range" of the OneKE
     type: "str"
     value: "11.21.1.201"
     user_input: true

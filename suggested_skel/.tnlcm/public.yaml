@@ -56,9 +56,9 @@ metadata:
   dependencies:
       # TN must satisfy all 3 dependencies
     - vxlan:            # dependency on a previously deployed vxlan component of any kind prev
-      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value multus_enabled: "YES"
+      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value one_k8s_multus: "YES"
         with:
-          multus_enabled: "YES"
+          one_k8s_multus:: "YES"
       ueransim:         # dependency on a previously deployed ueransim component with input value run_gnb: "YES" ONLY IF this component has input value 'sample_optional_value: "positive"'
         with:
           run_gnb: "YES"
@@ -66,9 +66,9 @@ metadata:
         sample_optional_value: "positive"
       # TN must satisfy only 2 dependencies
     - vxlan:            # dependency on a previously deployed vxlan component of any kind prev
-      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value multus_enabled: "NO"
+      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value one_k8s_multus: "NO"
         with:
-          multus_enabled: "NO"    
+          one_k8s_multus: "NO"    
     
   short_description: Short description of a Component Type
   long_description: |
