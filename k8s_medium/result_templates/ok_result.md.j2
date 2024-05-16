@@ -1,4 +1,4 @@
-## K8S Cluster Size Medium: {{ service_name }}
+## K8S Cluster Size Medium: {{ tn_id }}-{{ entity_name}}
 
 A Kubernetes cluster han been created into the Trial Network {{ tn_id }}
 
@@ -17,15 +17,18 @@ OneKE Service has four different Roles:
 
 Important information about cluster configuration:
 
-* CLUSTER NAME: {{ service_name }}
-* PUBLIC VIRTUAL NET: {{ external_vnet_id }}
-* PRIVATE VIRTUAL NET: {{ internal_vnet_id }}
-* CNI: {{ one_k8s_cni_plugin }}
-* MULTUS ENABLED: {{ one_k8s_multus }}
-* METALLB ENABLED: {{ one_k8s_metallb }}
-* METALLB IP POOL: {{ one_k8s_metallb_range }}
-* TRAEFIK ENABLED: {{ one_k8s_traefik }}
-* VNF UPSTREAM DNS: {{ one_k8s_dns }}
+* **CLUSTER NAME**: {{ tn_id }}-{{ entity_name}}
+* **PUBLIC VIRTUAL NET**: {{ external_vnet_id }}
+* **PRIVATE VIRTUAL NET**: {{ internal_vnet_id }}
+* **CNI**: {{ one_k8s_cni_plugin }}
+{% if one_k8s_cilium_range is defined and one_k8s_cilium_range %}
+* **CILIUM IP POOL**: {{ one_k8s_cilium_range }}
+{% endif %}
+* **MULTUS ENABLED**: {{ one_k8s_multus }}
+* **METALLB ENABLED**: {{ one_k8s_metallb }}
+* **METALLB IP POOL**: {{ one_k8s_metallb_range }}
+* **TRAEFIK ENABLED**: {{ one_k8s_traefik }}
+* **VNF UPSTREAM DNS**: {{ one_k8s_dns }}
 
 If you need detailed information about OneKE you can visit the official documentation: https://github.com/OpenNebula/one-apps/wiki/oneke_ops#operating-oneke
 
@@ -61,7 +64,7 @@ oneke-ip-172-20-0-105   Ready    control-plane,etcd,master   29m    v1.27.2+rke2
 ## KubeConfig File
 
 ```
-{{ kubeconfig_content_decoded }}
+{{ kubeconfig }}
 ```
 
 ## Skooner - Kubernetes Dashboard
@@ -77,7 +80,7 @@ Skooner is the easiest way to manage your Kubernetes cluster.
 The token that you can use to access into the dashboard is:
 
 ```
-{{ skooner_token['stdout'] }}
+{{ hostvars[entity_name + '-master']['skooner_token']['stdout'] }}
 ```
 
 > The validity of this token is ten years from now. If you need to create another one, use this command:

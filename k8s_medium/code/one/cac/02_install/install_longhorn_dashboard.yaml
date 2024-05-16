@@ -1,7 +1,7 @@
 ---
 - name: Create Ingress type nginx for Longhorn 
-  environment:
-    K8S_AUTH_KUBECONFIG: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
+  #environment:
+  #  K8S_AUTH_KUBECONFIG: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"  /etc/rancher/rke2/rke2.yaml
   kubernetes.core.k8s:
     state: present
     definition:
