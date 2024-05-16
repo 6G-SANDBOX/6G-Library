@@ -1,7 +1,7 @@
 - name: Append newly commponent's name and IP into a .ssh/config.d/ file
   community.general.ssh_config:
     host: "{{ tn_id }}-{{ entity_name }}"
-    hostname: "{{ tn_bastion-ips[one_vm_networks[0] | string] | default('ERROR_ASSIGNING_IP') }}"
+    hostname: "{{ ips[one_bastion_reachable_network] | default('ERROR_ASSIGNING_IP') }}"
     remote_user: "jenkins-master"
     identity_file: "/var/lib/jenkins/.ssh/id_ed25519"
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"

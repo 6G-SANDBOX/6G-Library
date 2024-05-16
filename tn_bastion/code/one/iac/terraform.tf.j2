@@ -32,7 +32,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 {% for network_id in one_vm_networks %}
   nic {
     model           = "virtio"
-    network_id      = "opennebula_virtual_network.{{ network_id }}"
+    network_id      = opennebula_virtual_network.{{ network_id }}
   }
 {% endfor %}
 }
