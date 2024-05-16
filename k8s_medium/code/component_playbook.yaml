@@ -98,11 +98,11 @@
     - name: Upload Kubeconfig to S3 before replacing port
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/kubeconfig_upload.yaml"
 
-    - ansible.builtin.set_fact:
-        kubeconfig_content_decoded: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] | b64decode }}"
+    # - ansible.builtin.set_fact:
+    #     kubeconfig_content_decoded: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] | b64decode }}"
 
-    - ansible.builtin.set_fact:
-        kubeconfig_content: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] }}"
+    # - ansible.builtin.set_fact:
+    #     kubeconfig_content: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] }}"
 
     - name: Replace kubectl url endpoint
       ansible.builtin.replace:

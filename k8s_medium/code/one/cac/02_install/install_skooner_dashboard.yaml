@@ -1,3 +1,4 @@
+---
 - name: Install Skooner dashboard
   kubernetes.core.helm:
     kubeconfig: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"

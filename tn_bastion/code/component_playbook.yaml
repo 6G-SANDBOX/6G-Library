@@ -70,7 +70,7 @@
 
     # TODO en config de otras VMs, crear el user (privilegiado o no) y accesible con esta ssh-key
     - name: Create an ed25519 ssh key pair to access the future Trial Network components
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/get_ssh_keypair.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/set_ssh_keypair.yaml"
 
     - name: Fetch VPN config
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/get_vpn_client_tunnel.yaml"
@@ -81,6 +81,16 @@
   hosts: localhost
   gather_facts: false
   tasks:
+
+    - name: "Set public SSH key as a terraform output"
+      ansible.builtin.copy:
+        content: |
+          output "ssh_public_key" {
+            description = "SSH Public Key"
+            value       = "{{ hostvars['tn_bastion']['ssh_public_key']['content'] }}"
+          }
+        dest: tf-ssh_public_key.tf
+
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
         output:
