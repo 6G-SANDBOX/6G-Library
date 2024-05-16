@@ -1,8 +1,8 @@
 ---
-- name: "STAGE 1: Apply IAC to deploy the component" 
+- name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
   gather_facts: false
-  tasks: 
+  tasks:
     - name: Prepare terraform manifests
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/iac_tasks/prepare_one.yaml"
       when: site_hypervisor == "one"
@@ -33,6 +33,7 @@
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_output.stdout | from_json)['tn_bastion-ips']['0'] }}"
+        ssh_public_key: "{{ (terraform_output.stdout | from_json)['ssh_public_key'] }}"
         id: "{{ (terraform_output.stdout | from_json)[entity_name + '-id'] }}"
         cluster_roles: "{{ (terraform_output.stdout | from_json)[entity_name + '-roles'] }}"
       when: not terraform_apply.failed
@@ -67,8 +68,17 @@
       ansible.builtin.set_fact:
         kubeconfig: "{{ master_metadata.instances[0].attributes.ONEKE_KUBECONFIG }}"
 
+- name: "STAGE 3: Add public SSH key to new hosts"
+  hosts: "{{ entity_name }}-vnf,{{ entity_name }}-master,{{ entity_name }}-worker"
+  gather_facts: false
+  tasks:
+    - name: Set the tn_id ssh key as authorized in the nodes
+      ansible.posix.authorized_key:
+        user: root
+        state: present
+        key: "{{ ssh_public_key }}"
 
-- name: "STAGE 3: Apply CAC to prepare the component"
+- name: "STAGE 4: Apply CAC to prepare the component"
   hosts: localhost
   gather_facts: false
   tasks:

@@ -50,7 +50,7 @@
       
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ entity_name }}"
+  hosts: "{{ hostvars['localhost']['entity_name'] }}"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -81,7 +81,6 @@
   hosts: localhost
   gather_facts: false
   tasks:
-
     - name: "Set public SSH key as a terraform output"
       ansible.builtin.copy:
         content: |
@@ -89,7 +88,14 @@
             description = "SSH Public Key"
             value       = "{{ hostvars[entity_name]['ssh_public_key']['content'] }}"
           }
-        dest: tf-ssh_public_key.tf
+        dest: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/tf-ssh_public_key.tf"
+      when: not terraform_apply.failed
+    - name: Load output in .tfstate
+      community.general.terraform:
+        project_path: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
+        state: "present"
+      ignore_errors: true
+      when: not terraform_apply.failed
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
