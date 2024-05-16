@@ -32,7 +32,7 @@
 
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
-        id: "{{ (terraform_output.stdout | from_json)['tn_vxlan-id'] }}"
+        id: "{{ (terraform_output.stdout | from_json)[entity_name + '-id'] }}"
       when: not terraform_apply.failed
 
     - name: Merge all component component outputs into one "output" variable

@@ -32,8 +32,8 @@
 
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
-        ips: "{{ (terraform_output.stdout | from_json)['tn_bastion-ips'] }}"
-        id: "{{ (terraform_output.stdout | from_json)['tn_bastion-id'] }}"
+        ips: "{{ (terraform_output.stdout | from_json)[entity_name + '-ips'] }}"
+        id: "{{ (terraform_output.stdout | from_json)[entity_name + '-id'] }}"
       when: not terraform_apply.failed
 
     - name: Verify that the bastion access IP is correctly loaded
@@ -87,7 +87,7 @@
         content: |
           output "ssh_public_key" {
             description = "SSH Public Key"
-            value       = "{{ hostvars['tn_bastion']['ssh_public_key']['content'] }}"
+            value       = "{{ hostvars[entity_name]['ssh_public_key']['content'] }}"
           }
         dest: tf-ssh_public_key.tf
 
@@ -96,9 +96,9 @@
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
-          vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"
-          ssh_public_key: "{{ hostvars['tn_bastion']['ssh_public_key']['content'] }}"
-          ssh_private_key: "{{ hostvars['tn_bastion']['ssh_private_key']['content'] }}"
+          vpn_client_tunnel: "{{ hostvars[entity_name]['client_tunnel']['content'] }}"
+          ssh_public_key: "{{ hostvars[entity_name]['ssh_public_key']['content'] }}"
+          ssh_private_key: "{{ hostvars[entity_name]['ssh_private_key']['content'] }}"
       when: not terraform_apply.failed
 
     - name: Publish execution results to TNLCM
