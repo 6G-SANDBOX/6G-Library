@@ -4,7 +4,11 @@
   gather_facts: false
   tasks: 
     - name: Prepare terraform manifests
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/prepare_one_iac.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/iac_tasks/prepare_one.yaml"
+      when: site_hypervisor == "one"
+
+    - name: Load current terraform outputs
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/iac_tasks/load_outputs.yaml"
       when: site_hypervisor == "one"
 
     - name: Terraform apply
@@ -32,21 +36,21 @@
 
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
-        ips: "{{ (terraform_output.stdout | from_json)['tn_bastion-ips'] }}"
-        id: "{{ (terraform_output.stdout | from_json)['tn_bastion-id'] }}"
+        tn_bastion-ips: "{{ (terraform_output.stdout | from_json)['tn_bastion-ips'] }}"
+        tn_bastion-id: "{{ (terraform_output.stdout | from_json)['tn_bastion-id'] }}"
       when: not terraform_apply.failed
 
     - name: Verify that the bastion access IP is correctly loaded
       ansible.builtin.debug:
-        msg: "Network Main Interface is: {{ ips[one_component_networks[0] | string] | default('----') }}"
+        msg: "Network Main Interface is: {{ tn_bastion-ips[one_vm_networks[0] | string] | default('----') }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "{{ component_type }}"
-        ansible_host: "{{ ips[one_component_networks[0] | string] }}"
+        ansible_host: "{{ tn_bastion-ips[one_vm_networks[0] | string] }}"
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/write_ssh_config.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/write_ssh_config.yaml"
       
 
 - name: "STAGE 3: Apply CAC to prepare the component"
@@ -64,9 +68,9 @@
     #   ansible.builtin.setup:
 
     ### Calling tasks/load_variables.yaml is also unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
-    ### But it makes the code much MUCH cleaner
+    ### But it makes the code much MUCH cleaner with almost no extra latency
     - name: Load enviromental variables from different sources inside the component
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/load_variables.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/load_variables.yaml"
 
     - name: Execute Post Configuration
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/get_vpn_client_tunnel.yaml"
@@ -83,16 +87,16 @@
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
         output:
-          ips: "{{ ips | b64encode }}"
-          id: "{{ id | b64encode }}"
+          ips: "{{ tn_bastion-ips | b64encode }}"
+          id: "{{ tn_bastion-id | b64encode }}"
           vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"
           ssh_public_key: "{{ hostvars['tn_bastion']['ssh_public_key']['content'] }}"
           ssh_private_key: "{{ hostvars['tn_bastion']['ssh_private_key']['content'] }}"
       when: not terraform_apply.failed
 
     - name: Publish execution results to TNLCM
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/publish_results.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_results.yaml"
 
     - name: Upload markdown info to S3 storage
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/s3_upload.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_upload.yaml"
       when: not terraform_apply.failed

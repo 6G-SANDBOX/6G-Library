@@ -13,7 +13,7 @@ resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
   }
 
 
-{% for network_id in one_component_networks %}
+{% for network_id in one_vm_networks %}
   nic {
     model           = "virtio"
     network_id      = {{ network_id }}

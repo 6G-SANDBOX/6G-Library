@@ -4,7 +4,7 @@
   gather_facts: false
   tasks:
     - name: Prepare terraform manifests
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/prepare_one_iac.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/iac_tasks/prepare_one.yaml"
       when: site_hypervisor == "one"
 
     - name: Terraform apply
@@ -42,8 +42,8 @@
       when: not terraform_apply.failed
 
     - name: Publish execution results to TNLCM
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/publish_results.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_results.yaml"
 
     - name: Upload markdown info to S3 storage
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/s3_upload.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_upload.yaml"
       when: not terraform_apply.failed

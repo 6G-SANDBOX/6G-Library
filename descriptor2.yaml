@@ -31,7 +31,7 @@ trial_network:
     dependencies:
       - "tn_vxlan"
     input:
-      one_component_networks:     # en public.yaml/input.one_component_networks.type se dijo que aquí va un "strlist"
+      one_vm_networks:     # en public.yaml/input.one_vm_networks.type se dijo que aquí va un "strlist"
         - 0
         - "tn_vxlan.output.id"  # guardado en el backend tras la ejecución anterior.
 
@@ -78,6 +78,6 @@ trial_network:
       one_component_name: "one_vm_kvm_very_small"
       one_vm_username: "test"
       one_vm_password: "test"
-      one_component_networks:
+      one_vm_networks:
         - "tn_vxlan.output.tn_vxlan_id"     # separación componente-output con punto. valor "output" me dices, según facilite procesamiento del json.
         - "vnet-small_net.output.vxlan_id"

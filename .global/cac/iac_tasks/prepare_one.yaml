@@ -10,7 +10,7 @@
     dest: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/backend.tf"
 
 - name: "Get terraform manifests from previous deployed components"
-  ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/s3_download.yaml"
+  ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_download.yaml"
 
 - name: "Prepare {{ component_type }} terraform manifest"
   ansible.builtin.template:

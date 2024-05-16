@@ -4,7 +4,7 @@
   gather_facts: false
   tasks: 
     - name: Prepare terraform manifests
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/prepare_one_iac.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/iac_tasks/prepare_one.yaml"
       when: site_hypervisor == "one"
 
     - name: Terraform apply
@@ -15,6 +15,8 @@
       ignore_errors: true
       register: terraform_apply
 
+
+## Revisar aquí
 
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
@@ -39,12 +41,12 @@
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "{{ component_type }}"
-        ansible_host: "{{ ips[one_component_networks[0] | string] }}"
+        ansible_host: "{{ ips[one_vm_networks[0] | string] }}"
 
 ### Con el JUMP !!!
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tasks/write_ssh_config.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/write_ssh_config.yaml"
 
 
 
@@ -102,6 +104,7 @@
   hosts: localhost
   tasks:
 
+    # https://github.com/OpenNebula/one-apps/wiki/oneke_ops
     - name: Create kubeconfig
       ansible.builtin.copy:
         content: "{{ hostvars[tn_id + '-oneke-' + service_name + '-master']['kubeconfig']['content'] | b64decode }}"

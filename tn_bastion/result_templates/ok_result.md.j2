@@ -4,18 +4,13 @@ The BASTION router and firewall component has been successfully created into the
 
 Important information:
 
-* OpenNebula ID: {{id }}
+* OpenNebula ID: {{ tn_bastion-id }}
 
 ### BASTION NETWORK INTERFACES
 ```
-{{ ips }}
+{{ tn_bastion-ips }}
 ```
 
-        "ips": "{{ ips | b64encode }}",
-        "id": "{{ id | b64encode }}",
-        "vpn_client_tunnel": "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}",
-        "ssh_public_key": "{{ hostvars['tn_bastion']['ssh_public_key']['content'] }}",
-        "ssh_private_key": "{{ hostvars['tn_bastion']['ssh_private_key']['content'] }}"
 
 ### VNP WIREGUARD CLIENT CONFIG
 

@@ -2,9 +2,9 @@
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
-  template_id = {{ site_one_templates.tn_bastion.id }}
-  cpu         = {{ one_bastion_cpu }}
-  memory      = {{ one_bastion_memory }}
+  template_id = {{ site_one_templates.k8s_medium[one_k8s_version].id }}
+  cpu         = {{ one_vm_cpu }}
+  memory      = {{ one_vm_memory }}
 
   context = {
     NETWORK = "YES"
@@ -19,15 +19,15 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 ###  Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
 #  disk {
 #    image_id = {{ site_one_templates.tn_bastion.image_id }}
-#    size     = {{ one_bastion_disk }}
+#    size     = {{ one_vm_disk }}
 #    target   = "vda"
 #    driver   = "qcow2"
 #  }
 
-{% for network_id in one_component_networks %}
+{% for network_id in one_vm_networks %}
   nic {
     model           = "virtio"
-    network_id      = {{ network_id }}
+    network_id      = {{ vars[network_id] }}
   }
 {% endfor %}
 }

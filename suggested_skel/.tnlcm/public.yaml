@@ -137,13 +137,13 @@ input:
         - "vm_kvm_small.id"
         - "vm_kvm_very_small.id"
 
-  one_component_networks:
+  one_vm_networks:
     description: OpenNebula IDs of the VNets the VM will be part of. First one should be the tn_vxlan ID in most cases
     type: "intlist"
     quantity: "(1, inf)"   # any number of inputs from 1 to infinite can be provided.
     value:
       - 0
-      - tn_vxlan.id
+      - tn_vxlan-id
     optional: true         # if not filled, default values are just a hardcoded 0 and the tn_vxlan ID 
     tnlcm_input:
       paths:

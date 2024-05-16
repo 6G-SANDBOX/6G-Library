@@ -48,12 +48,12 @@ metadata:
 ## Component input
 ####################################
 input:
-  one_component_networks:
+  one_vm_networks:
     description: List of VNet IDs the tn_bastion will be part of. Variable to be partially filled by the TNLCM
     type: "strlist"
     value:
       - site_networks_id.default           # Virtual Network accesible to the user and the Jenkins-master
-      - tn_vxlan.id                        # VXLAN SHOULD BE CREATED BEFORE 
+      - tn_vxlan-id                        # VXLAN SHOULD BE CREATED BEFORE 
     optional: true
     user_input: false
 

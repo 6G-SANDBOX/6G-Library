@@ -62,7 +62,7 @@ input:
     value: "password"
     user_input: true
     optional: false
-  one_component_networks:
+  one_vm_networks:
     description: List of Virtual Networks avaiable to the large VM as NICs
     type: "strlist"
     value:

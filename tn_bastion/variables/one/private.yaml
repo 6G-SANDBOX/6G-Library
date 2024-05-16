@@ -11,12 +11,15 @@
 ##
 ######################################################
 
-one_bastion_cpu: 2
-one_bastion_memory: 512
-one_bastion_disk: 10240   # Size of the Image. Future plans to downsize it
+one_vm_cpu: 2
+one_vm_memory: 512
+one_vm_disk: 10240   # Size of the Image. Future plans to downsize it
+
+# By default, In tn_bastion the first VNet is the site default, and the second is the tn_vxlan
+one_vm_networks: 
+  - site_networks_id.default
+  - tn_vxlan-id
 
 one_bastion_wireguard_allowedips: "192.168.199.0/24"
 
-one_component_networks: 
-  - "{{ site_networks_id.default }}"           # First one is the default network
-# - VXLAN_ID    # VXLAN SHOULD BE CREATED BEFORE. Add a coherent path to the tn_vxlan as a default
+

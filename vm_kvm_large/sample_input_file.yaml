@@ -9,6 +9,6 @@ one_vm_username: "maci"
 one_vm_password: "maci"
 
 # FROM PRIVATE VARIABLES SECTION (ONLY FOR ADVANCED USERS)
-one_component_networks: 
+one_vm_networks: 
   - 0           # First one is the default network
   - 47
