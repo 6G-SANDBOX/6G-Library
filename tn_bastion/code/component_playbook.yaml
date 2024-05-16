@@ -7,10 +7,6 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/iac_tasks/prepare_one.yaml"
       when: site_hypervisor == "one"
 
-    - name: Load current terraform outputs
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/iac_tasks/load_outputs.yaml"
-      when: site_hypervisor == "one"
-
     - name: Terraform apply
       community.general.terraform:
         project_path: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"

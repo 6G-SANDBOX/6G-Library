@@ -2,7 +2,7 @@
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
-  template_id = {{ site_one_templates.k8s_medium[one_k8s_version].id }}
+  template_id = {{ site_one_templates.tn_bastion.id }}
   cpu         = {{ one_vm_cpu }}
   memory      = {{ one_vm_memory }}
 
@@ -12,11 +12,11 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     USERNAME = "{{ site_jenkins_user }}"
     SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
     VPN_PUBLIC_IP = "{{ site_public_ip }}"
-    WIREGUARD_ALLOWEDIPS = "{{ one_bastion_wireguard_allowed_networks }}"
+    WIREGUARD_ALLOWEDIPS = "{{ one_bastion_wireguard_allowedips }}"
   }
 
   
-###  Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
 #  disk {
 #    image_id = {{ site_one_templates.tn_bastion.image_id }}
 #    size     = {{ one_vm_disk }}
@@ -24,10 +24,15 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 #    driver   = "qcow2"
 #  }
 
+
+  nic {
+    model           = "virtio"
+    network_id      = "{{ one_bastion_reachable_network }}"
+  }
 {% for network_id in one_vm_networks %}
   nic {
     model           = "virtio"
-    network_id      = {{ vars[network_id] }}
+    network_id      = "opennebula_virtual_network.{{ network_id }}"
   }
 {% endfor %}
 }

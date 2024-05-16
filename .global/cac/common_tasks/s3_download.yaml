@@ -6,8 +6,8 @@
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"
     mode: list
-    access_key: "{{ ansible_env.AWS_ACCESS_KEY_ID }}"
-    secret_key: "{{ ansible_env.AWS_SECRET_ACCESS_KEY }}"
+    access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
+    secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
     bucket: "{{ site_s3_server.bucket }}"
     prefix: "{{ tn_id }}"
     marker: "{{ tn_id }}"
@@ -17,8 +17,8 @@
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"
     mode: get
-    access_key: "{{ ansible_env.AWS_ACCESS_KEY_ID }}"
-    secret_key: "{{ ansible_env.AWS_SECRET_ACCESS_KEY }}"
+    access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
+    secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ item }}"
     dest: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/{{ item | basename }}"
