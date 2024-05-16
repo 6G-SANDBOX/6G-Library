@@ -73,7 +73,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/set_ssh_keypair.yaml"
 
     - name: Fetch VPN config
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/get_vpn_client_tunnel.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/get_vpn_client_tunnel.yaml"
       when: site_hypervisor == "one"
 
 
@@ -81,21 +81,8 @@
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: "Set public SSH key as a terraform output"
-      ansible.builtin.copy:
-        content: |
-          output "ssh_public_key" {
-            description = "SSH Public Key"
-            value       = "{{ hostvars[entity_name]['ssh_public_key']['content'] }}"
-          }
-        dest: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/tf-ssh_public_key.tf"
-      when: not terraform_apply.failed
-    - name: Load output in .tfstate
-      community.general.terraform:
-        project_path: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
-        state: "present"
-      ignore_errors: true
-      when: not terraform_apply.failed
+    - name: Publish SSH key as a terraform output"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/ssh_terraform_output.yaml"
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
