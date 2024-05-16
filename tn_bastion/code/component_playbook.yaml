@@ -42,15 +42,15 @@
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ component_type }}"
+        hostname: "{{ entity_name }}"
         ansible_host: "{{ ips[one_bastion_reachable_network] }}"
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/write_ssh_config.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
       
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ component_type }}"
+  hosts: "{{ entity_name }}"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -68,13 +68,14 @@
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/load_variables.yaml"
 
-    - name: Execute Post Configuration
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/get_vpn_client_tunnel.yaml"
-      when: site_hypervisor == "one"
-
     # TODO en config de otras VMs, crear el user (privilegiado o no) y accesible con esta ssh-key
     - name: Create an ed25519 ssh key pair to access the future Trial Network components
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/get_ssh_keypair.yaml"
+
+    - name: Fetch VPN config
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/get_vpn_client_tunnel.yaml"
+      when: site_hypervisor == "one"
+
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost

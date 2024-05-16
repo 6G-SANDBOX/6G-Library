@@ -38,9 +38,11 @@ pipeline {
         OPENNEBULA_FLOW_ENDPOINT = credentials('OPENNEBULA_FLOW_ENDPOINT')
         OPENNEBULA_INSECURE = credentials('OPENNEBULA_INSECURE')
 
-        // Values used in OpenNebula CLI commands https://docs.opennebula.io/6.8/management_and_operations/references/cli.html#shell-environment
-        ONE_XMLRPC = credentials('ONE_XMLRPC')
+        // Values used by OpenNebula CLI commands https://docs.opennebula.io/6.8/management_and_operations/references/cli.html#shell-environment
+        // And the ansible module https://docs.ansible.com/ansible/latest/collections/community/general/one_vm_module.html
+        ONE_XMLRPC = credentials('ONE_XMLRPC')  // Try to remove
         ONE_AUTH = credentials('ONE_AUTH')
+        ONE_URL = credentials('ONE_URL')  // Add to Jenkins
 
         // AWS Terraform Provider envirmental variables (for the MinIO S3 storage) https://registry.terraform.io/providers/hashicorp/aws/2.54.0/docs#environment-variables
         AWS_ACCESS_KEY_ID = credentials('MINIO_KEY')

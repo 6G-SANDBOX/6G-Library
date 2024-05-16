@@ -42,6 +42,8 @@
       ansible.builtin.shell: "ssh -f -L {{ result_port.stdout | trim }}:localhost:6443 {{ tn_id }}-oneke-{{ oneke_cluster_name }}-master -N"
       when: result_port.stdout | length > 0
 
+    # Descargar el kubeconfig antes!!
+
     - name: Replace kubectl url endpoint
       ansible.builtin.replace:
         path: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ oneke_cluster_name }}.kubeconfig"

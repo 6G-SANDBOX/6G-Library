@@ -1,4 +1,4 @@
-- name: Append newly commponent's name and IP into a .ssh/config.d/ file
+- name: Append new commponent's name and IP into a .ssh/config.d/ file
   community.general.ssh_config:
     host: "{{ tn_id }}-{{ entity_name }}"
     hostname: "{{ ips[one_bastion_reachable_network] | default('ERROR_ASSIGNING_IP') }}"

@@ -13,7 +13,7 @@
 
 external_vnet_id: "tn_vxlan.id"
 
-one_k8s_version: "1_29"        # Or 1_27
+one_k8s_version: "129"        # Or 127
 one_k8s_multus: "YES"          # OnKE default is "NO"
 one_k8s_cni_plugin: "canal"    # OnKE default is "cilium"
 one_k8s_cilium_range: ""       # Required if the cni_plugin is cilium

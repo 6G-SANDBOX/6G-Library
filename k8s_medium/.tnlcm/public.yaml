@@ -64,7 +64,7 @@ input:
     user_input: true
     optional: false
 
-  one_k8s_version: "1_29"   #### COMPLETE!!!!!!!!!!!!!!!! "1_29 (default) or 1_27". 1_29A and 1_27A in the future
+  one_k8s_version: "129"   #### COMPLETE!!!!!!!!!!!!!!!! "129 (default) or 127". 129A and 127A in the future
 
   one_k8s_multus:
     description: |
