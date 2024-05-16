@@ -12,9 +12,6 @@
 - name: "Get terraform manifests from previous deployed components"
   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_download.yaml"
 
-# - name: Load current terraform outputs
-#   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/iac_tasks/load_outputs.yaml"
-
 - name: "Prepare {{ component_type }} terraform manifest"
   ansible.builtin.template:
     src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/terraform.tf.j2"

@@ -11,7 +11,7 @@
 ##
 ######################################################
 
-external_vnet_id: 'tn_vxlan-id'
+external_vnet_id: "tn_vxlan.id"
 
 one_k8s_version: "1_29"        # Or 1_27
 one_k8s_multus: "YES"          # OnKE default is "NO"
