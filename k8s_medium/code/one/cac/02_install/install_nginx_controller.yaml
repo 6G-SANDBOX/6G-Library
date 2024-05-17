@@ -1,7 +1,12 @@
 ---
+- name: Install helm diff plugin
+  kubernetes.core.helm_plugin:
+    plugin_path: https://github.com/databus23/helm-diff
+    state: present
+
 - name: Install nginx ingress controller
   kubernetes.core.helm:
-    # kubeconfig: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"  /etc/rancher/rke2/rke2.yaml
+    kubeconfig: /etc/rancher/rke2/rke2.yaml
     name: ingress-nginx
     chart_repo_url: https://kubernetes.github.io/ingress-nginx
     chart_ref: ingress-nginx

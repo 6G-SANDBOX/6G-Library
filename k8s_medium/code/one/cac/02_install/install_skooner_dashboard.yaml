@@ -1,9 +1,15 @@
 ---
+- name: Copy Skooner chart to remote host
+  ansible.builtin.copy:
+    src: "{{ workspace }}/{{ component_type }}/code/all/helm_charts/skooner"
+    dest: /tmp/
+    remote_src: no
+
 - name: Install Skooner dashboard
   kubernetes.core.helm:
-    # kubeconfig: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"  /etc/rancher/rke2/rke2.yaml
+    kubeconfig: /etc/rancher/rke2/rke2.yaml
     name: skooner
-    chart_ref: "{{ workspace }}/{{ component_type }}/code/all/helm_charts/skooner"
+    chart_ref: /tmp/skooner
     namespace: skooner
     create_namespace: yes
     state: present
@@ -13,14 +19,13 @@
           enabled: true
           className: nginx
           hosts:
-            - host: "skooner.{{ tn_id }}.{{ site_domain }}"
+            - host: "skooner.{{ hostvars['localhost']['tn_id'] }}.{{ hostvars['localhost']['site_domain'] }}"
               paths:
                 - path: /
                   pathType: Prefix
 
 - name: "Create token for dashboard access"
-  #command: 'kubectl create token skooner-sa -n skooner --kubeconfig "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig" --duration=87600h'
-  command: 'kubectl create token skooner-sa -n skooner --duration=87600h'
+  command: 'kubectl create token skooner-sa -n skooner --kubeconfig "/etc/rancher/rke2/rke2" --duration=87600h'
   register: "skooner_token"
 
 - name: "Return token"

@@ -1,7 +1,7 @@
 ---
 - name: Create Ingress type nginx for Longhorn 
-  #environment:
-  #  K8S_AUTH_KUBECONFIG: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"  /etc/rancher/rke2/rke2.yaml
+  environment:
+    K8S_AUTH_KUBECONFIG: /etc/rancher/rke2/rke2.yaml
   kubernetes.core.k8s:
     state: present
     definition:
@@ -13,7 +13,7 @@
       spec:
         ingressClassName: nginx
         rules:
-        - host: "longhorn.{{ tn_id }}.{{ site_domain }}"
+        - host: "longhorn.{{ hostvars['localhost']['tn_id'] }}.{{ hostvars['localhost']['site_domain'] }}"
           http:
             paths:
             - pathType: Prefix

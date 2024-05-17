@@ -109,16 +109,16 @@
     #     replace: "https://127.0.0.1:{{ result_port.stdout | trim }}"
 
     - name: Apply extra Helm charts
-      when: inventory_hostname == hostvars['localhost']['entity_name'] + '-vnf'
+      when: inventory_hostname == hostvars['localhost']['entity_name'] + '-master'
       block:
-        - name: Post Actions ingress-nginx
-          ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/install_nginx_controller.yaml"
+        - name: Apply ingress-nginx helm chart
+          ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_nginx_controller.yaml"
 
-        - name: Post Actions Skooner dashboard
-          ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/install_skooner_dashboard.yaml"
+        - name: Apply Skooner helm chart
+          ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_skooner_dashboard.yaml"
 
-        - name: Post Actions Longhorn dashboard
-          ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/install_longhorn_dashboard.yaml"
+        - name: Apply nginx Ingress for the longhorn dashboard
+          ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_longhorn_dashboard.yaml"
 
     # - name: Delete previous SSH tunnel
     #   ansible.builtin.shell: "bash {{ workspace }}/.global/scripts/kill_ssh_jenkins.sh {{ result_port.stdout | trim }}"
@@ -127,11 +127,8 @@
 # STAGE 5: Generate Responses and save manifest a config files
 - name: Finishing deployment
   hosts: localhost
+  gather_facts: false
   tasks:
-
-    # Borrar
-    # - name: Upload Kubeconfig to S3
-    #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/kubeconfig_upload.yaml"
     - name: Upload kubeconfig to S3
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
@@ -150,7 +147,7 @@
           cluster_roles: "{{ cluster_roles | b64encode }}"
           node_ids: "{{ node_ids | b64encode }}"
           node_ips: "{{ node_ips | b64encode }}"
-          kubeconfig: "{{ kubeconfig }}"
+          kubeconfig: "{{ kubeconfig | b64encode }}"
           skooner_token: "{{ hostvars[entity_name + '-master']['skooner_token']['stdout'] | b64encode }}"
       when: not terraform_apply.failed
 
