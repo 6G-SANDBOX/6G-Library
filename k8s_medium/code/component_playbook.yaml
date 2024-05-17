@@ -129,6 +129,7 @@
   hosts: localhost
   tasks:
 
+    # Borrar
     # - name: Upload Kubeconfig to S3
     #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/kubeconfig_upload.yaml"
     - name: Upload kubeconfig to S3
@@ -138,7 +139,7 @@
         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
         bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/tf-{{ entity_name }}.tf"
+        object: "{{ tn_id }}/kconf-{{ entity_name }}.kubeconfig"
         src: "{{ workspace }}/{{ component_type }}/code//{{ entity_name }}.kubeconfig"
         encrypt: no
 
