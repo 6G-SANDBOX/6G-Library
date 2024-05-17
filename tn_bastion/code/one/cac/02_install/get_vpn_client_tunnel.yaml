@@ -1,5 +1,5 @@
 ---
-- name: Wait for VPN server ready
+- name: Wait for VPN server to be ready
   become: true
   ansible.builtin.wait_for:
     path: "/root/client.conf"

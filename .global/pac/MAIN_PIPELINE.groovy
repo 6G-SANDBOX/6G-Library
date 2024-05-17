@@ -53,6 +53,7 @@ pipeline {
         stage('Stage 1: Import input file into the workspace') {
             steps {
                 script {
+                    echo("DEPLOYING DEPLOYMENT: ${TN_ID}-${COMPONENT_TYPE}-${CUSTOM_NAME}")
                     echo "Stage 1: Import input file into the workspace"
                     def inputFile = "${WORKSPACE}/${params.COMPONENT_TYPE}/variables/input_file.yaml"
 

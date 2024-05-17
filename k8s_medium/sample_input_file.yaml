@@ -1,7 +1,7 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
 external_vnet_id: "tn_vxlan.id"
-internal_vnet_id: "vnet-custom_name.id"   # Modify with the name of a previously deployed vnet
+internal_vnet_id: "vnet-custom_name.id"   # REQUIRED. Modify with the custom_name of a previously deployed vnet
 
 one_k8s_version: "129"        # Or 127
 one_k8s_multus: "YES"          # OnKE default is "NO"
