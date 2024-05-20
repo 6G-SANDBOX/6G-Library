@@ -19,6 +19,4 @@
   when: terraform_template | default(false)
 
 - name: terraform init
-  community.general.terraform:
-    project_path: "{{ workspace }}/.terraform/"
-    state: "present"
+  ansible.builtin.command: "terraform -chdir={{ workspace }}/.terraform/ init"
