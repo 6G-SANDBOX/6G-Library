@@ -1,0 +1,29 @@
+---
+- name: Generate FAIL markdown response
+  ansible.builtin.template:
+    src: "{{ workspace }}/{{ component_type }}/result_templates/fail_result.md.j2"
+    dest: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.md"
+
+- name: Encode FAIL markdown response into base64
+  ansible.builtin.slurp:
+    src: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.md"
+  register: fail2markdown
+
+- name: Generate FAIL json response
+  ansible.builtin.template:
+    src: "{{ workspace }}/.global/json_templates/fail_result.json.j2"
+    dest: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.json"
+
+- name: Debug FAIL json response
+  ansible.builtin.debug:
+    msg: "{{ workspace }}/.global/json_templates/fail_result.json.j2"
+  when: debug
+
+- name: Send FAIL json response to TNLCM
+  ansible.builtin.uri:
+    url: "{{ tnlcm_callback }}"
+    method: POST
+    body_format: json
+    src: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.json"
+  register: tnlcm_post
+  ignore_errors: true

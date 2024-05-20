@@ -11,6 +11,9 @@
 ##
 ######################################################
 
+### Component includes a terraform template
+terraform_template: true
+
 ### opennebula_virtual_network resource
 one_vxlan_physical_device: "{{ site_vxlan_if }}"
 one_vxlan_mtu: 1500

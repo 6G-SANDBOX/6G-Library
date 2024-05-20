@@ -2,25 +2,30 @@
 - name: "STAGE 1: Apply IAC to deploy the component" 
   hosts: localhost
   gather_facts: false
+  connection: local
   tasks: 
-    - name: Prepare terraform working directory
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/prepare_terraform.yaml"
-      vars:
-        terraform_template: true
-
     - name: Terraform apply
       community.general.terraform:
         project_path: "{{ workspace }}/.terraform/"
         state: "present"
         force_init: true
       ignore_errors: true
-      register: component_apply
+      register: terraform_apply
+
+    - name: Check if terraform apply return code
+      block:
+        - name: Publish stderr terraform output to TNLCM
+          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
+
+        - name: Stop pipeline execution
+          ansible.builtin.meta: end_play
+      when: terraform_apply.failed
 
 
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
-  when: not component_apply.failed
   gather_facts: false
+  connection: local
   tasks:
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
@@ -51,7 +56,6 @@
 
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "{{ hostvars['localhost']['entity_name'] }}"
-  when: not component_apply.failed
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -60,11 +64,7 @@
         delay: 20
         timeout: 180
 
-    ### In theory, fact gathering is not needed for the component configuration
-    # - name: Gather facts for first time
-    #   ansible.builtin.setup:
-
-    ### Calling tasks/load_variables.yaml is also unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
+    ### Calling tasks/load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
     ### But it makes the code much MUCH cleaner with almost no extra latency
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/load_variables.yaml"
@@ -81,11 +81,11 @@
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
+  connection: local
   tasks:
     # TODO: Generalize this task to inclue any variable as a terraform output. Specially oneKE IPs
     - name: Publish SSH key as a terraform output"
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/ssh_terraform_output.yaml"
-      when: not component_apply.failed
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
@@ -95,11 +95,9 @@
           vpn_client_tunnel: "{{ hostvars[entity_name]['client_tunnel']['content'] }}"
           ssh_public_key: "{{ hostvars[entity_name]['ssh_public_key']['content'] }}"
           ssh_private_key: "{{ hostvars[entity_name]['ssh_private_key']['content'] }}"
-      when: not component_apply.failed
 
     - name: Publish execution results to TNLCM
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_results.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
 
     - name: Upload markdown info to S3 storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_upload.yaml"
-      when: not component_apply.failed

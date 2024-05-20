@@ -2,24 +2,30 @@
 - name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
   gather_facts: false
+  connection: local
   tasks:
-    - name: Prepare terraform working directory
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/prepare_terraform.yaml"
-      vars:
-        terraform_template: true
-
     - name: Terraform apply
       community.general.terraform:
         project_path: "{{ workspace }}/.terraform/"
         state: "present"
         force_init: true
       failed_when: false
-      register: component_apply
+      register: terraform_apply
+
+    - name: Check if terraform apply return code
+      block:
+        - name: Publish stderr terraform output to TNLCM
+          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
+
+        - name: Stop pipeline execution
+          ansible.builtin.meta: end_play
+      when: terraform_apply.failed
 
 
 - name: "STAGE 2: Publish execution results"
   hosts: localhost
   gather_facts: false
+  connection: local
   tasks:
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
@@ -29,22 +35,18 @@
         executable: /bin/bash
       register: terraform_outputs
       changed_when: false
-      when: not component_apply.failed
 
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-      when: not component_apply.failed
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
         output:
           id: "{{ id | b64encode }}"
-      when: not component_apply.failed
 
     - name: Publish execution results to TNLCM
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_results.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
 
     - name: Upload markdown info to S3 storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_upload.yaml"
-      when: not component_apply.failed

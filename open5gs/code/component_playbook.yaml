@@ -1,13 +1,9 @@
 ---
-- name: "STAGE 1: Apply IAC to deploy the component"
+- name: "STAGE 1: Prepare to access a previous target component"
   hosts: localhost
   gather_facts: false
+  connection: local  
   tasks:
-    - name: Prepare terraform working directory
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/prepare_terraform.yaml"
-      vars:
-        terraform_template: false
-
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
       args:
@@ -16,6 +12,15 @@
         executable: /bin/bash
       register: terraform_outputs
       changed_when: false
+
+    - name: Check if terraform apply return code
+      block:
+        - name: Publish stderr terraform output to TNLCM
+          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
+
+        - name: Stop pipeline execution
+          ansible.builtin.meta: end_play
+      when: terraform_apply.failed
 
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
@@ -55,7 +60,7 @@
   gather_facts: false
   tasks:
 
-    # sacar un component_apply de algún lado, comprobando si el helm fue bien
+    # sacar un terraform_apply de algún lado, comprobando si el helm fue bien
 
 
     # TODO: Ver si json falla sin output, o hay que definir la variable vacía explícitamente
@@ -68,12 +73,12 @@
     #       node_ips: "{{ node_ips | b64encode }}"
     #       kubeconfig: "{{ kubeconfig | b64encode }}"
     #       skooner_token: "{{ hostvars[entity_name + '-master']['skooner_token']['stdout'] | b64encode }}"
-    #   when: not component_apply.failed
+    #   when: not terraform_apply.failed
 
-    # TODO: Ver si publish falla sin "component_apply.failed", o hay que definir la variable vacía explícitamente
+    # TODO: Ver si publish falla sin "terraform_apply.failed", o hay que definir la variable vacía explícitamente
     - name: Publish execution results to TNLCM
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_results.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
 
     - name: Upload markdown info to S3 storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_upload.yaml"
-      when: not component_apply.failed
+      when: not terraform_apply.failed

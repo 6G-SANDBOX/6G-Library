@@ -1,15 +1,19 @@
 - name: Prepare the workspace with necessary enviromental variables
   hosts: localhost
+  connection: local
   gather_facts: false
   tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/load_variables.yaml"
+
     - name: Create directory for terraform manifests
       ansible.builtin.file:
         path: "{{ workspace }}/.terraform"
         state: directory
         mode: '0755'
 
-    - name: Load enviromental variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/load_variables.yaml"
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/prepare_terraform.yaml"
 
 - name: Start the component deployment
   ansible.builtin.import_playbook: "{{ workspace }}/{{ component_type }}/code/component_playbook.yaml"

@@ -11,6 +11,9 @@
 ##
 ######################################################
 
+### Component includes a terraform template
+terraform_template: true
+
 one_k8s_external_vnet: "tn_vxlan"
 
 one_k8s_version: "129"         # Or 127

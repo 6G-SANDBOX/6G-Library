@@ -2,25 +2,30 @@
 - name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
   gather_facts: false
+  connection: local  
   tasks:
-    - name: Prepare terraform working directory
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/prepare_terraform.yaml"
-      vars:
-        terraform_template: true
-
     - name: Terraform apply
       community.general.terraform:
         project_path: "{{ workspace }}/.terraform/"
         state: "present"
         force_init: true
       ignore_errors: true
-      register: component_apply
+      register: terraform_apply
+
+    - name: Check if terraform apply return code
+      block:
+        - name: Publish stderr terraform output to TNLCM
+          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
+
+        - name: Stop pipeline execution
+          ansible.builtin.meta: end_play
+      when: terraform_apply.failed
 
 
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
-  when: not component_apply.failed
   gather_facts: false
+  connection: local
   tasks:
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
@@ -76,7 +81,6 @@
 
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "{{ hostvars['localhost']['entity_name'] }}-vnf,{{ hostvars['localhost']['entity_name'] }}-master,{{ hostvars['localhost']['entity_name'] }}-worker"
-  when: not component_apply.failed
   gather_facts: false
   tasks:
     - name: Set the tn_id ssh key as authorized in the nodes
@@ -100,6 +104,7 @@
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
+  connection: local
   tasks:
     - name: Upload kubeconfig to S3
       amazon.aws.s3_object:
@@ -111,7 +116,6 @@
         object: "{{ tn_id }}/kconf-{{ entity_name }}.kubeconfig"
         src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
         encrypt: no
-      when: not component_apply.failed
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
@@ -122,11 +126,9 @@
           node_ips: "{{ node_ips | b64encode }}"
           kubeconfig: "{{ kubeconfig | b64encode }}"
           skooner_token: "{{ hostvars[entity_name + '-master']['skooner_token']['stdout'] | b64encode }}"
-      when: not component_apply.failed
 
     - name: Publish execution results to TNLCM
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_results.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
 
     - name: Upload markdown info to S3 storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_upload.yaml"
-      when: not component_apply.failed
