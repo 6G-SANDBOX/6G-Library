@@ -117,6 +117,18 @@
         src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
         encrypt: no
 
+    - name: Publish node IDs and IPs as a terraform outputs"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }} + '-node_ids'"
+            value: "{{ node_ids }}"
+            description: "OpenNebula VM IDs from {{ entity_name }}"
+
+          - key: "{{ entity_name }} + '-node_ips'"
+            value: "{{ node_ips }}"
+            description: "VM IPs from from {{ entity_name }}"
+
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
         output:

@@ -83,9 +83,13 @@
   gather_facts: false
   connection: local
   tasks:
-    # TODO: Generalize this task to inclue any variable as a terraform output. Specially oneKE IPs
     - name: Publish SSH key as a terraform output"
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/ssh_terraform_output.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "common_ssh_public_key"
+            value: "{{ hostvars[entity_name]['ssh_public_key']['content'] | b64decode | trim }}"
+            description: "SSH Public Key"
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:

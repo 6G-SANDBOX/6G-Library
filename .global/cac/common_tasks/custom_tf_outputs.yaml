@@ -1,13 +1,19 @@
 ---
 - name: "Set public SSH key as a terraform output"
-  ansible.builtin.copy:
-    content: |
-      output "ssh_public_key" {
-        description = "SSH Public Key"
-        value       = "{{ hostvars[entity_name]['ssh_public_key']['content'] | b64decode | trim }}"
+  ansible.builtin.blockinfile:
+    path: "{{ workspace }}/.terraform/tf-custom_outputs.tf"
+    create: true
+    append_newline: true
+    prepend_newline: true
+    block: |
+{% for item in custom_outputs %}
+      output "{{ item.key }}" {
+        description = "{{ item.description }}"
+        value       = "{{ item.value }}"
       }
-    dest: "{{ workspace }}/.terraform/tf-ssh_public_key.tf"
-- name: Load output into the .tfstate
+{% endfor %}
+
+- name: Load outputs into the .tfstate
   community.general.terraform:
     project_path: "{{ workspace }}/.terraform/"
     state: "present"
@@ -19,6 +25,6 @@
     access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
     secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
     bucket: "{{ site_s3_server.bucket }}"
-    object: "{{ tn_id }}/tf-ssh_public_key.tf"
-    src: "{{ workspace }}/.terraform/tf-ssh_public_key.tf"
+    object: "{{ tn_id }}/tf-custom_outputs.tf"
+    src: "{{ workspace }}/.terraform/tf-custom_outputs.tf"
     encrypt: no

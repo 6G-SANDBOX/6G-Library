@@ -1,6 +1,9 @@
 {
     "yaml.schemas": {
-        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks": "file:///Users/hi03114/Developer/_PROYECTOS/_REPOS/6G-Library/.global/cac/common_tasks/publish_ok_results.yaml",
+        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/tasks": [
+            "file:///Users/hi03114/Developer/_PROYECTOS/_REPOS/6G-Library/.global/cac/common_tasks/publish_ok_results.yaml",
+            "file:///Users/hi03114/Developer/_PROYECTOS/_REPOS/6G-Library/.global/cac/common_tasks/custom_tf_outputs.yaml"
+        ],
         "https://json.schemastore.org/helmfile.json": "file:///Users/hi03114/Developer/_PROYECTOS/_REPOS/6G-Library/open5gs/code/all/helm_install/helm_values_template.yaml"
     }
 }
