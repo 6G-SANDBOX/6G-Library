@@ -19,6 +19,7 @@
 
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
+  when: not component_apply.failed
   gather_facts: false
   tasks:
     - name: Retrieve terraform outputs
@@ -29,13 +30,11 @@
         executable: /bin/bash
       register: terraform_outputs
       changed_when: false
-      when: not component_apply.failed
 
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-      when: not component_apply.failed
 
     - name: Verify that the bastion access IP is correctly loaded
       ansible.builtin.debug:
@@ -45,15 +44,14 @@
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}"
         ansible_host: "{{ ips[one_bastion_reachable_network] }}"
-      when: not component_apply.failed
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
-      when: not component_apply.failed
       
 
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  when: not component_apply.failed
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -86,7 +84,7 @@
   tasks:
     # TODO: Generalize this task to inclue any variable as a terraform output. Specially oneKE IPs
     - name: Publish SSH key as a terraform output"
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/ssh_terraform_outputs.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/ssh_terraform_output.yaml"
       when: not component_apply.failed
 
     - name: Merge all component component outputs into one "output" variable

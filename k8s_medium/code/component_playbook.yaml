@@ -19,6 +19,7 @@
 
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
+  when: not component_apply.failed
   gather_facts: false
   tasks:
     - name: Retrieve terraform outputs
@@ -29,7 +30,6 @@
         executable: /bin/bash
       register: terraform_outputs
       changed_when: false
-      when: not component_apply.failed
 
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
@@ -37,7 +37,6 @@
         ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['ssh_public_key'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         cluster_roles: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-roles'] }}"
-      when: not component_apply.failed
 
     - name: Fetch cluster node IDs
       ansible.builtin.set_fact:
@@ -77,6 +76,7 @@
 
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "{{ hostvars['localhost']['entity_name'] }}-vnf,{{ hostvars['localhost']['entity_name'] }}-master,{{ hostvars['localhost']['entity_name'] }}-worker"
+  when: not component_apply.failed
   gather_facts: false
   tasks:
     - name: Set the tn_id ssh key as authorized in the nodes
@@ -111,6 +111,7 @@
         object: "{{ tn_id }}/kconf-{{ entity_name }}.kubeconfig"
         src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
         encrypt: no
+      when: not component_apply.failed
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:

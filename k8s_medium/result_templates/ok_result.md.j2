@@ -18,7 +18,7 @@ OneKE Service has four different Roles:
 Important information about cluster configuration:
 
 * **CLUSTER NAME**: {{ tn_id }}-{{ entity_name}}
-* **PUBLIC VIRTUAL NET**: {{ external_vnet }}
+* **PUBLIC VIRTUAL NET**: {{ one_k8s_external_vnet }}
 * **PRIVATE VIRTUAL NET**: {{ one_k8s_internal_vnet }}
 * **CNI**: {{ one_k8s_cni_plugin }}
 {% if one_k8s_cilium_range is defined and one_k8s_cilium_range %}

@@ -4,7 +4,7 @@
     content: |
       output "ssh_public_key" {
         description = "SSH Public Key"
-        value       = "{{ hostvars[entity_name]['ssh_public_key']['content'] | b64decode }}"
+        value       = "{{ hostvars[entity_name]['ssh_public_key']['content'] | b64decode | trim }}"
       }
     dest: "{{ workspace }}/.terraform/tf-ssh_public_key.tf"
 - name: Load output into the .tfstate
