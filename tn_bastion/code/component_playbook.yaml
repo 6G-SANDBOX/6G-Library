@@ -3,9 +3,10 @@
   hosts: localhost
   gather_facts: false
   tasks: 
-    - name: Prepare terraform manifests
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/iac_tasks/prepare_one.yaml"
-      when: site_hypervisor == "one"
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/prepare_terraform.yaml"
+      vars:
+        terraform_template: true
 
     - name: Terraform apply
       community.general.terraform:
@@ -13,28 +14,28 @@
         state: "present"
         force_init: true
       ignore_errors: true
-      register: terraform_apply
+      register: component_apply
 
 
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Retrieve terraform output
+    - name: Retrieve terraform outputs
       ansible.builtin.shell:
       args:
         chdir: "{{ workspace }}/.terraform/"
         cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
         executable: /bin/bash
-      register: terraform_output
+      register: terraform_outputs
       changed_when: false
-      when: not terraform_apply.failed
+      when: not component_apply.failed
 
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
-        ips: "{{ (terraform_output.stdout | from_json)[entity_name + '-ips'] }}"
-        id: "{{ (terraform_output.stdout | from_json)[entity_name + '-id'] }}"
-      when: not terraform_apply.failed
+        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+      when: not component_apply.failed
 
     - name: Verify that the bastion access IP is correctly loaded
       ansible.builtin.debug:
@@ -44,9 +45,11 @@
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}"
         ansible_host: "{{ ips[one_bastion_reachable_network] }}"
+      when: not component_apply.failed
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+      when: not component_apply.failed
       
 
 - name: "STAGE 3: Apply CAC to prepare the component"
@@ -68,7 +71,7 @@
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/load_variables.yaml"
 
-    # TODO en config de otras VMs, crear el user (privilegiado o no) y accesible con esta ssh-key
+    # TODO Add the ssh public key to any VM created from now. 
     - name: Create an ed25519 ssh key pair to access the future Trial Network components
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/set_ssh_keypair.yaml"
 
@@ -81,8 +84,10 @@
   hosts: localhost
   gather_facts: false
   tasks:
+    # TODO: Generalize this task to inclue any variable as a terraform output. Specially oneKE IPs
     - name: Publish SSH key as a terraform output"
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/ssh_terraform_output.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/ssh_terraform_outputs.yaml"
+      when: not component_apply.failed
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
@@ -92,11 +97,11 @@
           vpn_client_tunnel: "{{ hostvars[entity_name]['client_tunnel']['content'] }}"
           ssh_public_key: "{{ hostvars[entity_name]['ssh_public_key']['content'] }}"
           ssh_private_key: "{{ hostvars[entity_name]['ssh_private_key']['content'] }}"
-      when: not terraform_apply.failed
+      when: not component_apply.failed
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_results.yaml"
 
     - name: Upload markdown info to S3 storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_upload.yaml"
-      when: not terraform_apply.failed
+      when: not component_apply.failed

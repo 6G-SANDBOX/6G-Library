@@ -20,17 +20,17 @@
         force_init: true
       register: result
 
-    - name: Retrieve terraform output
+    - name: Retrieve terraform outputs
       ansible.builtin.shell:
       args:
         chdir: "{{ workspace }}/.terraform/"
         cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
         executable: /bin/bash
-      register: terraform_output
+      register: terraform_outputs
       changed_when: false
     - name: Load terraform output as an ansible fact
       ansible.builtin.set_fact:
-        outputs: "{{ terraform_output.stdout | ansible.builtin.from_json }}"
+        outputs: "{{ terraform_outputs.stdout | ansible.builtin.from_json }}"
     - name: DEBUG new terraform output fact
       ansible.builtin.debug:
         msg: "{{ outputs }}"

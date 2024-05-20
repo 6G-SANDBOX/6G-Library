@@ -40,11 +40,11 @@
       args:
         chdir: "./{{ site_hypervisor }}/iac/"
         cmd: "terraform output --json | jq 'with_entries(.value |= .value)'"
-      register: terraform_output
+      register: terraform_outputs
 
     - name: Load Terraform Output into execution context
       ansible.builtin.set_fact:
-        outputs: "{{ terraform_output.stdout | from_json }}"
+        outputs: "{{ terraform_outputs.stdout | from_json }}"
 
     - name: Get VM ip from default site network
       ansible.builtin.set_fact:

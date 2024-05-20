@@ -187,4 +187,4 @@ input:
 ## Component output
 ####################################
 output:
-  terraform_output_value: # ¿maybe the type of data to expect?
+  terraform_outputs_value: # ¿maybe the type of data to expect?

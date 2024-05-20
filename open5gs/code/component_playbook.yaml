@@ -3,61 +3,77 @@
   hosts: localhost
   gather_facts: false
   tasks:
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/prepare_terraform.yaml"
+      vars:
+        terraform_template: false
 
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
 
-    - name: Add the corresponding k8s master to Ansible Inventory
+    - name: Set Terraform outputs as facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips']['0'] }}"
+        cluster_roles: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_k8s + '-roles'] }}"
+
+    # TODO: Set cluster IPs as outputs in the respecting component so I don't have to format them now again
+    - name: Fetch cluster node IDs
+      ansible.builtin.set_fact:
+        node_ids: "{{ node_ids | default({}) | combine({item.name: item.nodes[0]}) }}"
+      loop: "{{ cluster_roles }}"
+      when: item.nodes | length > 0
+
+    - name: Fetch cluster node IPs
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/node_ip.yaml"
+      loop: "{{ node_ids | dict2items }}"
+
+    - name: Add the k8s master to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}-{{ item.key }}-master"
-        ansible_host: "{{ item.value }}"
-        ansible_ssh_common_args: "-J {{ site_jenkins_user }}@{{ bastion_ip }}{% if item.key != 'vnf' %},root@{{ node_ips.vnf }}{% else %}{% endif %}"
+        hostname: "{{ one_open5gs_k8s }}-master"
+        ansible_host: "{{ node_ips.master }}"
+        ansible_ssh_common_args: "-J {{ site_jenkins_user }}@{{ bastion_ip }},root@{{ node_ips.vnf }}"
         ansible_user: "root"
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# STAGE 3: Task on oneKE Master
-
-# STAGE 4: Execute manifest
-- name: Setup Jenkins to access oneKE Cluster
-  hosts: localhost
+- name: "STAGE 2: Apply CAC to prepare the component"
+  hosts: "{{ hostvars['localhost']['one_open5gs_k8s'] }}-master"
+  gather_facts: false
   tasks:
-
     - name: Helm install
       ansible.builtin.include_tasks: "./cac/helm_install.yaml"
 
 
-
-# STAGE 5: Generate Responses and save manifest a config files
-- name: Finishing deployment
+- name: "STAGE 4: Publish execution results"
   hosts: localhost
+  gather_facts: false
   tasks:
 
-      # "output": {
-    #     "one_open5gs_mcc": "{{ one_open5gs_mcc | b64encode }}",
-    #     "one_open5gs_mnc": "{{ one_open5gs_mnc | b64encode }}",
-    #     "one_open5gs_tac": "{{ one_open5gs_tac | b64encode }}",
-    #     "one_open5gs_s_nssai_sst": "{{ one_open5gs_s_nssai_sst | b64encode }}",
-    #     "one_open5gs_s_nssai_sd": "{{ one_open5gs_s_nssai_sd | b64encode }}",
-    #     "one_open5gs_amf_ip": "{{ one_open5gs_amf_ip | b64encode }}",
-    #     "one_open5gs_upf_ip": "{{ one_open5gs_upf_ip | b64encode }}"
-    # }
+    # sacar un component_apply de algún lado, comprobando si el helm fue bien
 
 
+    # TODO: Ver si json falla sin output, o hay que definir la variable vacía explícitamente
+    # - name: Merge all component component outputs into one "output" variable
+    #   ansible.builtin.set_fact:
+    #     output: ""
+    #       id: "{{ id | b64encode }}"
+    #       cluster_roles: "{{ cluster_roles | b64encode }}"
+    #       node_ids: "{{ node_ids | b64encode }}"
+    #       node_ips: "{{ node_ips | b64encode }}"
+    #       kubeconfig: "{{ kubeconfig | b64encode }}"
+    #       skooner_token: "{{ hostvars[entity_name + '-master']['skooner_token']['stdout'] | b64encode }}"
+    #   when: not component_apply.failed
 
-    - name: Publish execution results
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
+    # TODO: Ver si publish falla sin "component_apply.failed", o hay que definir la variable vacía explícitamente
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_results.yaml"
 
-    - name: Upload deployment manifest
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
+    - name: Upload markdown info to S3 storage
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_upload.yaml"
+      when: not component_apply.failed

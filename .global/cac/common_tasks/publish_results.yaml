@@ -1,5 +1,5 @@
 - name: Generate responses for success scenario
-  when: not terraform_apply.failed
+  when: not component_apply.failed
   block:
   - name: Generate OK markdown response
     ansible.builtin.template:
@@ -32,7 +32,7 @@
 
 
 - name: Generate responses for failed scenario
-  when: terraform_apply.failed
+  when: component_apply.failed
   block:
   - name: Generate FAIL markdown response
     ansible.builtin.template:

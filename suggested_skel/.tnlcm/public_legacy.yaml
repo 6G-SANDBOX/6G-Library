@@ -119,4 +119,4 @@ input:
 ## Component output
 ####################################
 output:
-  terraform_output_value:
+  terraform_outputs_value:

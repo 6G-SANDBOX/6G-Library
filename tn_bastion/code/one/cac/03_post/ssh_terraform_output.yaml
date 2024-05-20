@@ -7,13 +7,11 @@
         value       = "{{ hostvars[entity_name]['ssh_public_key']['content'] | b64decode }}"
       }
     dest: "{{ workspace }}/.terraform/tf-ssh_public_key.tf"
-  when: not terraform_apply.failed
 - name: Load output into the .tfstate
   community.general.terraform:
     project_path: "{{ workspace }}/.terraform/"
     state: "present"
   ignore_errors: true
-  when: not terraform_apply.failed
 - name: Upload terraform manifest to S3
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"

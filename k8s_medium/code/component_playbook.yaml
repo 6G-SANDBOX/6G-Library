@@ -3,9 +3,10 @@
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Prepare terraform manifests
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/iac_tasks/prepare_one.yaml"
-      when: site_hypervisor == "one"
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/prepare_terraform.yaml"
+      vars:
+        terraform_template: true
 
     - name: Terraform apply
       community.general.terraform:
@@ -13,30 +14,30 @@
         state: "present"
         force_init: true
       ignore_errors: true
-      register: terraform_apply
+      register: component_apply
 
 
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Retrieve terraform output
+    - name: Retrieve terraform outputs
       ansible.builtin.shell:
       args:
         chdir: "{{ workspace }}/.terraform/"
         cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
         executable: /bin/bash
-      register: terraform_output
+      register: terraform_outputs
       changed_when: false
-      when: not terraform_apply.failed
+      when: not component_apply.failed
 
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
-        bastion_ip: "{{ (terraform_output.stdout | from_json)['tn_bastion-ips']['0'] }}"
-        ssh_public_key: "{{ (terraform_output.stdout | from_json)['ssh_public_key'] }}"
-        id: "{{ (terraform_output.stdout | from_json)[entity_name + '-id'] }}"
-        cluster_roles: "{{ (terraform_output.stdout | from_json)[entity_name + '-roles'] }}"
-      when: not terraform_apply.failed
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips']['0'] }}"
+        ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['ssh_public_key'] }}"
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+        cluster_roles: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-roles'] }}"
+      when: not component_apply.failed
 
     - name: Fetch cluster node IDs
       ansible.builtin.set_fact:
@@ -47,7 +48,6 @@
     - name: Fetch cluster node IPs
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/node_ip.yaml"
       loop: "{{ node_ids | dict2items }}"
-
 
     - name: Add new VMs to Ansible Inventory
       ansible.builtin.add_host:
@@ -121,11 +121,11 @@
           node_ips: "{{ node_ips | b64encode }}"
           kubeconfig: "{{ kubeconfig | b64encode }}"
           skooner_token: "{{ hostvars[entity_name + '-master']['skooner_token']['stdout'] | b64encode }}"
-      when: not terraform_apply.failed
+      when: not component_apply.failed
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_results.yaml"
 
     - name: Upload markdown info to S3 storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_upload.yaml"
-      when: not terraform_apply.failed
+      when: not component_apply.failed

@@ -3,9 +3,10 @@
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Prepare terraform manifests
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/iac_tasks/prepare_one.yaml"
-      when: site_hypervisor == "one"
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/prepare_terraform.yaml"
+      vars:
+        terraform_template: true
 
     - name: Terraform apply
       community.general.terraform:
@@ -13,37 +14,37 @@
         state: "present"
         force_init: true
       failed_when: false
-      register: terraform_apply
+      register: component_apply
 
 
 - name: "STAGE 2: Publish execution results"
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Retrieve terraform output
+    - name: Retrieve terraform outputs
       ansible.builtin.shell:
       args:
         chdir: "{{ workspace }}/.terraform/"
         cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
         executable: /bin/bash
-      register: terraform_output
+      register: terraform_outputs
       changed_when: false
-      when: not terraform_apply.failed
+      when: not component_apply.failed
 
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
-        id: "{{ (terraform_output.stdout | from_json)[entity_name + '-id'] }}"
-      when: not terraform_apply.failed
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+      when: not component_apply.failed
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
         output:
           id: "{{ id | b64encode }}"
-      when: not terraform_apply.failed
+      when: not component_apply.failed
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_results.yaml"
 
     - name: Upload markdown info to S3 storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_upload.yaml"
-      when: not terraform_apply.failed
+      when: not component_apply.failed
