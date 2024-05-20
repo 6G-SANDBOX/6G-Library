@@ -13,30 +13,10 @@
       register: terraform_outputs
       changed_when: false
 
-    - name: Check if terraform apply return code
-      block:
-        - name: Publish stderr terraform output to TNLCM
-          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
-
-        - name: Stop pipeline execution
-          ansible.builtin.meta: end_play
-      when: terraform_apply.failed
-
     - name: Set Terraform outputs as facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips']['0'] }}"
-        cluster_roles: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_k8s + '-roles'] }}"
-
-    # TODO: Set cluster IPs as outputs in the respecting component so I don't have to format them now again
-    - name: Fetch cluster node IDs
-      ansible.builtin.set_fact:
-        node_ids: "{{ node_ids | default({}) | combine({item.name: item.nodes[0]}) }}"
-      loop: "{{ cluster_roles }}"
-      when: item.nodes | length > 0
-
-    - name: Fetch cluster node IPs
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/node_ip.yaml"
-      loop: "{{ node_ids | dict2items }}"
+        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_k8s + '-roles'] }}"
 
     - name: Add the k8s master to Ansible Inventory
       ansible.builtin.add_host:
@@ -47,22 +27,20 @@
 
 
 
-- name: "STAGE 2: Apply CAC to prepare the component"
+- name: "STAGE 2: Apply IAC to deploy the component"
   hosts: "{{ hostvars['localhost']['one_open5gs_k8s'] }}-master"
   gather_facts: false
   tasks:
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/load_variables.yaml"
+
     - name: Helm install
-      ansible.builtin.include_tasks: "./cac/helm_install.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_install.yaml"
 
-
-- name: "STAGE 4: Publish execution results"
+- name: "STAGE 3: Publish execution results"
   hosts: localhost
   gather_facts: false
   tasks:
-
-    # sacar un terraform_apply de algún lado, comprobando si el helm fue bien
-
-
     # TODO: Ver si json falla sin output, o hay que definir la variable vacía explícitamente
     # - name: Merge all component component outputs into one "output" variable
     #   ansible.builtin.set_fact:
@@ -74,8 +52,6 @@
     #       kubeconfig: "{{ kubeconfig | b64encode }}"
     #       skooner_token: "{{ hostvars[entity_name + '-master']['skooner_token']['stdout'] | b64encode }}"
     #   when: not terraform_apply.failed
-
-    # TODO: Ver si publish falla sin "terraform_apply.failed", o hay que definir la variable vacía explícitamente
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
 

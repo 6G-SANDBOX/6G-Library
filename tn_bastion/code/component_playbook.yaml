@@ -69,7 +69,6 @@
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/load_variables.yaml"
 
-    # TODO Add the ssh public key to any VM created from now. 
     - name: Create an ed25519 ssh key pair to access the future Trial Network components
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/set_ssh_keypair.yaml"
 
