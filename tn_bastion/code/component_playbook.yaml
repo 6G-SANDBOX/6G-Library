@@ -83,7 +83,7 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: Publish SSH key as a terraform output"
+    - name: Publish SSH key as a terraform output
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/custom_tf_outputs.yaml"
       vars:
         custom_outputs:

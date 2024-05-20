@@ -1,17 +1,17 @@
 ---
-- name: "Set public SSH key as a terraform output"
+- name: "Write terraform manifest with the custom outputs"
   ansible.builtin.blockinfile:
     path: "{{ workspace }}/.terraform/tf-custom_outputs.tf"
     create: true
     append_newline: true
     prepend_newline: true
     block: |
-{% for item in custom_outputs %}
+      {% for item in custom_outputs %}
       output "{{ item.key }}" {
         description = "{{ item.description }}"
         value       = "{{ item.value }}"
       }
-{% endfor %}
+      {% endfor %}
 
 - name: Load outputs into the .tfstate
   community.general.terraform:
