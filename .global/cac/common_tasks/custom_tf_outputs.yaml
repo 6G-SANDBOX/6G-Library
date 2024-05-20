@@ -14,11 +14,6 @@
     state: present
     create: true
 
-- name: Load outputs into the .tfstate
-  community.general.terraform:
-    project_path: "{{ workspace }}/.terraform/"
-    state: "present"
-
 - name: Upload terraform manifest to S3
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"
