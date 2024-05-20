@@ -98,8 +98,9 @@
         - name: Apply Skooner helm chart
           ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_skooner_dashboard.yaml"
 
-        # - name: Apply nginx Ingress for the longhorn dashboard
-        #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_longhorn_dashboard.yaml"
+        - name: Apply nginx Ingress for the longhorn dashboard
+          ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_longhorn_dashboard.yaml"
+          when: one_k8s_longhorn == "YES"
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
