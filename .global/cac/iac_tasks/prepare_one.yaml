@@ -2,12 +2,12 @@
 - name: Prepare opennebula provider terraform manifest
   ansible.builtin.copy:
     src: "{{ workspace }}/.global/iac/{{ site_hypervisor }}/opennebula_provider_v1.4.tf"
-    dest: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/opennebula_provider_v1.4.tf"
+    dest: "{{ workspace }}/.terraform/opennebula_provider_v1.4.tf"
 
 - name: Prepare AWS s3 backend terraform manifest
   ansible.builtin.template:
     src: "{{ workspace }}/.global/iac/backend.tf.j2"
-    dest: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/backend.tf"
+    dest: "{{ workspace }}/.terraform/backend.tf"
 
 - name: "Get terraform manifests from previous deployed components"
   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_download.yaml"
@@ -15,4 +15,4 @@
 - name: "Prepare {{ component_type }} terraform manifest"
   ansible.builtin.template:
     src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/terraform.tf.j2"
-    dest: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/tf-{{ entity_name }}.tf"
+    dest: "{{ workspace }}/.terraform/tf-{{ entity_name }}.tf"

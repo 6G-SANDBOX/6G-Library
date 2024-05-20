@@ -49,55 +49,55 @@ metadata:
 ## Component input
 ####################################
 input:
-  oneke_cluster_name:
+  one_open5gs_k8s:
     description: Unique name to identify the OneKE cluster inside the Trial Network. OneKE cluster where the open5gs helm chart will be deployed
     type: "str"
     value: "cluster_xxxxx"
     user_input: true
     optional: false
-  plmn_id_mcc:
+  one_open5gs_mcc:
     description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
     type: "str"
     value: "001"
     user_input: true
     optional: false
-  plmn_id_mnc:
+  one_open5gs_mnc:
     description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
     type: "str"
     value: "01"
     user_input: true
     optional: false
-  tac:
+  one_open5gs_tac:
     description: Tracking Area Code in the PLMN
     type: "str"
     value: "200"
     user_input: true
     optional: false
-  s_nssai_sst:
+  one_open5gs_s_nssai_sst:
     description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
     type: "str"
     value: "1"
     user_input: true
     optional: false
-  s_nssai_sd:
+  one_open5gs_s_nssai_sd:
     description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
     type: "str"
     value: "1"
     user_input: true
     optional: false
-  amf_ip: 
+  one_open5gs_amf_ip: 
     description: IPv4 address of the Access Management Function (AMF). Should be placed inside the "one_k8s_metallb_range" of the OneKE
     type: "str"
     value: "11.21.1.200"
     user_input: true
     optional: false
-  upf_ip:
+  one_open5gs_upf_ip:
     description: IPv4 address of the User Plane Function (UPF). Should be placed inside the "one_k8s_metallb_range" of the OneKE
     type: "str"
     value: "11.21.1.201"
     user_input: true
     optional: false
-  subdomain_webui_dashboard:
+  one_open5gs_webui_subdomain:
     descrption: Name for the open5gs webui dashboard inside the TN subdomain.
     type: "str"
     value: "open5gs-dashboard"
@@ -108,13 +108,3 @@ input:
 ## Component output
 ####################################
 output:
-
-    # "output": {
-    #     "plmn_id_mcc": "{{ plmn_id_mcc | b64encode }}",
-    #     "plmn_id_mcc": "{{ plmn_id_mcc | b64encode }}",
-    #     "tac": "{{ tac | b64encode }}",
-    #     "s_nssai_sst": "{{ s_nssai_sst | b64encode }}",
-    #     "s_nssai_sd": "{{ s_nssai_sd | b64encode }}",
-    #     "amf_ip": "{{ amf_ip | b64encode }}",
-    #     "upf_ip": "{{ upf_ip | b64encode }}"
-    # }

@@ -6,8 +6,8 @@ resource "opennebula_service" "{{ entity_name }}" {
 
   extra_template = jsonencode({
       networks_values = [
-          { Public = { id = opennebula_virtual_network.{{ external_vnet_id }} } },
-          { Private = { id = opennebula_virtual_network.{{ internal_vnet_id }} } },
+          { Public = { id = opennebula_virtual_network.{{ one_k8s_external_vnet }}.id } },
+          { Private = { id = opennebula_virtual_network.{{ one_k8s_internal_vnet }}.id } },
       ]
       custom_attrs_values = {
         "ONEAPP_VROUTER_ETH0_VIP0": "",

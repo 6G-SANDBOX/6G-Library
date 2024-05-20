@@ -11,4 +11,12 @@
 ##
 ######################################################
 
-subdomain_webui_dashboard: "open5gs-dashboard"
+one_open5gs_webui_subdomain: "open5gs-dashboard"
+
+one_open5gs_mcc: "001"
+one_open5gs_mnc: "01"
+one_open5gs_tac: "200"
+one_open5gs_s_nssai_sst: "1"
+one_open5gs_s_nssai_sd: "1"
+one_open5gs_amf_ip: "10.21.12.200"
+one_open5gs_upf_ip: "10.21.12.201"

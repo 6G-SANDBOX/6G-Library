@@ -56,8 +56,8 @@ trial_network:
   - type: "k8s_medium"
     name: "oneKE_1_27a"   # caracteres prohibidos son "-" ó "."
     input:
-      external_vnet_id: "tn_vxlan.output.tn_vxlan_id"
-      internal_vnet_id: "vnet-small_net.output.vxlan_id"
+      one_k8s_external_vnet: "tn_vxlan.output.tn_vxlan_id"
+      one_k8s_internal_vnet: "vnet-small_net.output.vxlan_id"
       service_name: "oneKE_1_27a"
       one_k8s_multus: "YES"
       one_k8s_cni_plugin: "canal"

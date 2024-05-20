@@ -1,6 +1,6 @@
 ## Helm Open5Gs:
 
-Open5GS, an open-source 5G SA core network implementation, has been successfully deployed on the Kubernetes cluster **{{ oneke_cluster_name }}** using Helm. This cluster is part of the Trial Network **{{ tn_id }}**.
+Open5GS, an open-source 5G SA core network implementation, has been successfully deployed on the Kubernetes cluster **{{ one_open5gs_k8s }}** using Helm. This cluster is part of the Trial Network **{{ tn_id }}**.
 
 <img src="https://open5gs.org/assets/img/open5gs-logo.png" />
 
@@ -24,13 +24,13 @@ If you need detailed information about Open5GS you can visit the official docume
 
 Find here important information about the deployment:
 
-* PLMN ID (MCC): {{ plmn_id_mcc }}
-* PLMN ID (MNC): {{ plmn_id_mnc }}
-* TAC: {{ tac }}
-* S-NSSAI (SST): {{ s_nssai_sst }}
-* S-NSSAI (SD): {{ s_nssai_sd }}
-* AMF_IP: {{ amf_ip }}
-* UPF_IP: {{ upf_ip }}
-* WEB_UI DASHBOARD: {{ subdomain_webui_dashboard }}.{{ tn_id }}.{{ site_domain }}
+* PLMN ID (MCC): {{ one_open5gs_mcc }}
+* PLMN ID (MNC): {{ one_open5gs_mnc }}
+* TAC: {{ one_open5gs_tac }}
+* S-NSSAI (SST): {{ one_open5gs_s_nssai_sst }}
+* S-NSSAI (SD): {{ one_open5gs_s_nssai_sd }}
+* AMF_IP: {{ one_open5gs_amf_ip }}
+* UPF_IP: {{ one_open5gs_upf_ip }}
+* WEB_UI DASHBOARD: {{ one_open5gs_webui_subdomain }}.{{ tn_id }}.{{ site_domain }}
 
 Note: To access the dashboard, you must add the domain to the /etc/hosts file of your machine mapping it with the IP address of your VNF Machine.

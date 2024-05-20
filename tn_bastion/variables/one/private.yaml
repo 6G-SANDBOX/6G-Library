@@ -21,4 +21,4 @@ one_bastion_wireguard_allowedips: "192.168.199.0/24"
 # By default, In tn_bastion the first VNet is hardcoded to be the site default (one_bastion_reachable_network)
 # The following ones are appended here (tn_vxlan.id)
 one_vm_networks: 
-  - tn_vxlan.id
+  - tn_vxlan

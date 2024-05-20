@@ -9,7 +9,7 @@
 
     - name: Terraform apply
       community.general.terraform:
-        project_path: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
+        project_path: "{{ workspace }}/.terraform/"
         state: "present"
         force_init: true
       ignore_errors: true
@@ -23,7 +23,7 @@
     - name: Retrieve terraform output
       ansible.builtin.shell:
       args:
-        chdir: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
+        chdir: "{{ workspace }}/.terraform/"
         cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
         executable: /bin/bash
       register: terraform_output
@@ -72,7 +72,7 @@
     - name: Create kubeconfig
       ansible.builtin.copy:
         content: "{{ kubeconfig | b64decode }}"
-        dest: "{{ workspace }}/{{ component_type }}/code//{{ entity_name }}.kubeconfig"
+        dest: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
         mode: "644"
 
 - name: "STAGE 3: Apply CAC to prepare the component"
@@ -85,29 +85,6 @@
         state: present
         key: "{{ hostvars['localhost']['ssh_public_key'] }}"
 
-    # - name: Find a free TCP port
-    #   ansible.builtin.script:
-    #     cmd: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/find_free_tcp_port.py"
-    #     executable: /usr/bin/python3
-    #   register: result_port
-
-    # - name: Verify if port is empty
-    #   ansible.builtin.assert:
-    #     that: result_port.stdout | length > 0
-    #     fail_msg: "There is not empty port"
-
-
-### CONTINUE HERE. Conseguir que llegue al master sin ssh-config O!!! ejecutar los install directamente desde el master, when: inventory_hostname == hostvars['localhost']['entity_name'] + '-vnf'
-    # - name: Start SSH tunnel if is not open
-    #   ansible.builtin.shell: "ssh -f -L {{ result_port.stdout | trim }}:localhost:6443 {{ entity_name }}-master -N"
-    #   when: result_port.stdout | length > 0
-
-    # - name: Replace kubectl url endpoint
-    #   ansible.builtin.replace:
-    #     path: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ service_name }}.kubeconfig"
-    #     regexp: "https://127.0.0.1:6443"
-    #     replace: "https://127.0.0.1:{{ result_port.stdout | trim }}"
-
     - name: Apply extra Helm charts
       when: inventory_hostname == hostvars['localhost']['entity_name'] + '-master'
       block:
@@ -117,15 +94,10 @@
         - name: Apply Skooner helm chart
           ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_skooner_dashboard.yaml"
 
-        - name: Apply nginx Ingress for the longhorn dashboard
-          ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_longhorn_dashboard.yaml"
+        # - name: Apply nginx Ingress for the longhorn dashboard
+        #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_longhorn_dashboard.yaml"
 
-    # - name: Delete previous SSH tunnel
-    #   ansible.builtin.shell: "bash {{ workspace }}/.global/scripts/kill_ssh_jenkins.sh {{ result_port.stdout | trim }}"
-    #   ignore_errors: true
-
-# STAGE 5: Generate Responses and save manifest a config files
-- name: Finishing deployment
+- name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
   tasks:
@@ -137,7 +109,7 @@
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
         bucket: "{{ site_s3_server.bucket }}"
         object: "{{ tn_id }}/kconf-{{ entity_name }}.kubeconfig"
-        src: "{{ workspace }}/{{ component_type }}/code//{{ entity_name }}.kubeconfig"
+        src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
         encrypt: no
 
     - name: Merge all component component outputs into one "output" variable

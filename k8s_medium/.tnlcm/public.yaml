@@ -50,14 +50,14 @@ metadata:
 ## Component input
 ####################################
 input:
-  external_vnet_id:
+  one_k8s_external_vnet:
     description: Name of the VNet used to access the OneKE cluster. Most cases will use the Trial Network tn_vxlan
     type: "int"
     value: ""
     user_input: true
     optional: false
 
-  internal_vnet_id:
+  one_k8s_internal_vnet:
     description: Name of the VNet used to interconnect the OneKE nodes. A vxlan component
     type: "int"
     value: ""
@@ -122,7 +122,7 @@ input:
 
   one_k8s_metallb_range:
     description: |
-      Range of IPs available for metalLB to allocate services. Part of the Adress Range from the "internal_vnet_id"
+      Range of IPs available for metalLB to allocate services. Part of the Adress Range from the "one_k8s_internal_vnet"
       Syntax is <min_IPv4>-<max_IPv4>
       Mandatory variable if one_k8s_metallb is set to "YES"
     type: "str"

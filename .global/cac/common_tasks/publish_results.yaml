@@ -16,6 +16,11 @@
       src: "{{ workspace }}/.global/json_templates/ok_result.json.j2"
       dest: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.json"
 
+  - name: Debug OK json response
+    ansible.builtin.debug:
+      msg: "{{ workspace }}/.global/json_templates/ok_result.json.j2"
+    when: debug
+
   - name: Send OK json response to TNLCM
     ansible.builtin.uri:
       url: "{{ tnlcm_callback }}"
@@ -23,8 +28,7 @@
       body_format: json
       src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.json"
     register: tnlcm_post
-    ignore_errors: true 
-  - debug: var=tnlcm_post
+    ignore_errors: true
 
 
 - name: Generate responses for failed scenario
@@ -45,6 +49,11 @@
       src: "{{ workspace }}/.global/json_templates/fail_result.json.j2"
       dest: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.json"
 
+  - name: Debug FAIL json response
+    ansible.builtin.debug:
+      msg: "{{ workspace }}/.global/json_templates/fail_result.json.j2"
+    when: debug
+
   - name: Send FAIL json response to TNLCM
     ansible.builtin.uri:
       url: "{{ tnlcm_callback }}"
@@ -53,4 +62,3 @@
       src: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.json"
     register: tnlcm_post
     ignore_errors: true
-  - debug: var=tnlcm_post

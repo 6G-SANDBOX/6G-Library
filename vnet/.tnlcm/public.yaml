@@ -58,9 +58,9 @@ input:
   one_vnet_address_size:
     description: |
       Create a vnet from a range of IPs within the subnet defined with "one_vnet_first_ip" and "one_vnet_netmask"
-      The default value (254) covers a full /24 subnet starting from X.X.X.1
+      The maximum value for a full /24 subnet starting from X.X.X.1 should be 254
     type: "int"
-    value: 254
+    value: 100
     user_input: true
     optional: true
 

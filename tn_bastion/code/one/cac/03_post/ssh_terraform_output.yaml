@@ -6,11 +6,11 @@
         description = "SSH Public Key"
         value       = "{{ hostvars[entity_name]['ssh_public_key']['content'] | b64decode }}"
       }
-    dest: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/tf-ssh_public_key.tf"
+    dest: "{{ workspace }}/.terraform/tf-ssh_public_key.tf"
   when: not terraform_apply.failed
 - name: Load output into the .tfstate
   community.general.terraform:
-    project_path: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
+    project_path: "{{ workspace }}/.terraform/"
     state: "present"
   ignore_errors: true
   when: not terraform_apply.failed
@@ -22,5 +22,5 @@
     secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/tf-ssh_public_key.tf"
-    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/tf-ssh_public_key.tf"
+    src: "{{ workspace }}/.terraform/tf-ssh_public_key.tf"
     encrypt: no

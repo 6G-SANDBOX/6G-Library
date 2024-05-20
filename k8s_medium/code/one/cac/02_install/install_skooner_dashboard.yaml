@@ -31,3 +31,4 @@
 - name: "Return token"
   ansible.builtin.debug:
     var: skooner_token.stdout_lines
+  when: hostvars['localhost']['debug']

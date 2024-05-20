@@ -1,23 +1,30 @@
-# START MANDATORY BLOCK
-- name: Generate installation manifest from templates
+---
+- name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
-  gather_facts: true
+  gather_facts: false
   tasks:
-    # - name: Mix variables from different sources
-    #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-    - name: 'Add bastion hosts to be able to jump'
+
+
+    - name: Add the corresponding k8s master to Ansible Inventory
       ansible.builtin.add_host:
-        name: "{{ tn_id }}-tn_bastion"
-# END MANDATORY BLOCK
+        hostname: "{{ entity_name }}-{{ item.key }}-master"
+        ansible_host: "{{ item.value }}"
+        ansible_ssh_common_args: "-J {{ site_jenkins_user }}@{{ bastion_ip }}{% if item.key != 'vnf' %},root@{{ node_ips.vnf }}{% else %}{% endif %}"
+        ansible_user: "root"
 
-# STAGE 1: Prepare manifest from templates
 
-# STAGE 2: Create infrastructure
-- name: Infrastructure Tasks
-  hosts: localhost
-  tasks:
-    - name: Download Kubeconfig from previous k8s_medium deployment
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/download_kubeconfig_tasks.yaml"
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # STAGE 3: Task on oneKE Master
@@ -27,41 +34,28 @@
   hosts: localhost
   tasks:
 
-    - name: Find free tcp ports
-      ansible.builtin.script:
-        cmd: "{{ workspace }}/.global/scripts/find_free_tcp_port.py"
-        executable: /usr/bin/python3
-      register: result_port
-
-    - name: Verify if port is empty
-      ansible.builtin.assert:
-        that: result_port.stdout | length > 0
-        fail_msg: "There is not empty port"
-
-    - name: Start SSH tunnel if is not open
-      ansible.builtin.shell: "ssh -f -L {{ result_port.stdout | trim }}:localhost:6443 {{ tn_id }}-oneke-{{ oneke_cluster_name }}-master -N"
-      when: result_port.stdout | length > 0
-
-    # Descargar el kubeconfig antes!!
-
-    - name: Replace kubectl url endpoint
-      ansible.builtin.replace:
-        path: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ oneke_cluster_name }}.kubeconfig"
-        regexp: "https://127.0.0.1:6443"
-        replace: "https://127.0.0.1:{{ result_port.stdout | trim }}"
-
     - name: Helm install
       ansible.builtin.include_tasks: "./cac/helm_install.yaml"
 
-    - name: Delete previous SSH tunnel
-      ansible.builtin.shell: "bash {{ workspace }}/.global/scripts/kill_ssh_jenkins.sh {{ result_port.stdout | trim }}"
-      ignore_errors: true
 
 
 # STAGE 5: Generate Responses and save manifest a config files
 - name: Finishing deployment
   hosts: localhost
   tasks:
+
+      # "output": {
+    #     "one_open5gs_mcc": "{{ one_open5gs_mcc | b64encode }}",
+    #     "one_open5gs_mnc": "{{ one_open5gs_mnc | b64encode }}",
+    #     "one_open5gs_tac": "{{ one_open5gs_tac | b64encode }}",
+    #     "one_open5gs_s_nssai_sst": "{{ one_open5gs_s_nssai_sst | b64encode }}",
+    #     "one_open5gs_s_nssai_sd": "{{ one_open5gs_s_nssai_sd | b64encode }}",
+    #     "one_open5gs_amf_ip": "{{ one_open5gs_amf_ip | b64encode }}",
+    #     "one_open5gs_upf_ip": "{{ one_open5gs_upf_ip | b64encode }}"
+    # }
+
+
+
     - name: Publish execution results
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"
 

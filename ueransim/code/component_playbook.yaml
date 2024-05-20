@@ -15,7 +15,7 @@
 
     - name: Execute terraform apply
       community.general.terraform:
-        project_path: "./{{ site_hypervisor }}/iac/"
+        project_path: "{{ workspace }}/.terraform/"
         state: "present"
         force_init: true
       register: result
@@ -23,7 +23,7 @@
     - name: Retrieve terraform output
       ansible.builtin.shell:
       args:
-        chdir: "{{ workspace }}/{{ component_type }}/private/{{ site_hypervisor }}/iac/"
+        chdir: "{{ workspace }}/.terraform/"
         cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
         executable: /bin/bash
       register: terraform_output

@@ -30,20 +30,20 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     model           = "virtio"
     network_id      = "{{ one_bastion_reachable_network }}"
   }
-{% for network_id in one_vm_networks %}
+{% for network in one_vm_networks %}
   nic {
     model           = "virtio"
-    network_id      = opennebula_virtual_network.{{ network_id }}
+    network_id      = opennebula_virtual_network.{{ network }}.id
   }
 {% endfor %}
 }
 
 output "{{ entity_name }}-id" {
   description = "OpenNebula VM ID"
-  value = opennebula_virtual_machine.tn_bastion.id
+  value = opennebula_virtual_machine.{{ entity_name }}.id
 }
 
 output "{{ entity_name }}-ips" {
   description = "OpenNebula VM Network Assignments"
-  value = { for nic in opennebula_virtual_machine.tn_bastion.nic[*] : nic.network_id => nic.computed_ip }
+  value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
 }

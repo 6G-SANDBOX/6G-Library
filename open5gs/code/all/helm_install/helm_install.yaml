@@ -5,7 +5,7 @@
 
 - name: Deploy Open5Gs helm
   kubernetes.core.helm:
-    kubeconfig: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ oneke_cluster_name }}.kubeconfig"
+    kubeconfig: "{{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ one_open5gs_k8s }}.kubeconfig"
     name: open5gs
     chart_ref: oci://registry-1.docker.io/gradiant/open5gs
     chart_version: 2.2.2
@@ -17,4 +17,4 @@
 
 - name: Wait for the pods to come up with status 'Running'
   shell: >
-    kubectl wait pod --all --for=condition=Ready -n open5gs --kubeconfig {{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ oneke_cluster_name }}.kubeconfig --timeout=1200s
+    kubectl wait pod --all --for=condition=Ready -n open5gs --kubeconfig {{ workspace }}/{{ component_type }}/private/{{ tn_id }}-oneke-{{ one_open5gs_k8s }}.kubeconfig --timeout=1200s

@@ -18,8 +18,8 @@ OneKE Service has four different Roles:
 Important information about cluster configuration:
 
 * **CLUSTER NAME**: {{ tn_id }}-{{ entity_name}}
-* **PUBLIC VIRTUAL NET**: {{ external_vnet_id }}
-* **PRIVATE VIRTUAL NET**: {{ internal_vnet_id }}
+* **PUBLIC VIRTUAL NET**: {{ external_vnet }}
+* **PRIVATE VIRTUAL NET**: {{ one_k8s_internal_vnet }}
 * **CNI**: {{ one_k8s_cni_plugin }}
 {% if one_k8s_cilium_range is defined and one_k8s_cilium_range %}
 * **CILIUM IP POOL**: {{ one_k8s_cilium_range }}
@@ -61,7 +61,7 @@ oneke-ip-172-20-0-104   Ready    control-plane,etcd,master   31m    v1.27.2+rke2
 oneke-ip-172-20-0-105   Ready    control-plane,etcd,master   29m    v1.27.2+rke2r1
 ```
 
-## KubeConfig File
+## base64 encoded KubeConfig File
 
 ```
 {{ kubeconfig }}
