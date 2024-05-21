@@ -1,0 +1,13 @@
+####################################
+##
+## Component changelog
+##
+####################################
+
+releases:
+  0.0.1":
+    release_date: '2024-21-05'
+    changes:
+      release_summary: This is the initial release
+      major_changes:
+        - TSN component ready

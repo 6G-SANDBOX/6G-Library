@@ -1,0 +1,39 @@
+####################################
+##
+## Component metadata
+## 
+####################################
+
+component_name: tsn
+metadata:
+  family: network
+  maintainers: 
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Francisco Luque Schempp <schempp@uma.es>
+  version: 0.0.1
+  depends:
+  short_description: This is the component that enable the capability of use TSN endpoints in the Trial Network.
+  long_description: |
+    This is the component that enable the capability of use TSN endpoints in the Trial Network.
+  platforms: [one]
+  sites: [uma]
+
+###################################################
+##
+## Public component variables that 
+## should be filled by the experimenter or 
+## the TNLCM. Some of them could be optional
+##
+## If component is optional, value is the default one
+## If component is not optional, value is an example one
+## 
+###################################################
+public:
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:
