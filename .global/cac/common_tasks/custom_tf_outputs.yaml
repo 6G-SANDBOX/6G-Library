@@ -1,18 +1,15 @@
 ---
-  # TODO: Find a way to make this block have idempotency
 - name: "Write terraform manifest with the custom outputs"
-  ansible.builtin.lineinfile:
+  ansible.builtin.blockinfile:
     path: "{{ workspace }}/.terraform/tf-custom_outputs.tf"
-    line: |
-      {% for item in custom_outputs %}
+    block: |
       output "{{ item.key }}" {
         description = "{{ item.description }}"
         value       = "{{ item.value }}"
       }
-      {% endfor %}
-    insertafter: EOF
-    state: present
+    marker: "# {mark} ANSIBLE MANAGED BLOCK FOR OUTPUT {{ item.key }}"
     create: true
+  loop: "{{ custom_outputs }}"
 
 - name: Upload terraform manifest to S3
   amazon.aws.s3_object:

@@ -61,9 +61,9 @@
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}-{{ item.key }}"
         ansible_host: "{{ item.value }}"
-        ansible_ssh_common_args: "-J {{ site_jenkins_user }}@{{ bastion_ip }}{% if item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
+        ansible_ssh_common_args: "-J {{ site_jenkins_user }}@{{ bastion_ip }}{% if not item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
         ansible_user: "root"
-        groups: "{{ entity_name }}"
+        groups: "{{ entity_name | replace('-', '_') }}"
       loop: "{{ node_ips | dict2items }}"
 
     - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
@@ -85,7 +85,7 @@
         mode: "644"
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "{{ hostvars['localhost']['entity_name'] | replace('-', '_') }}"
   gather_facts: false
   tasks:
     - name: Set the tn_id ssh key as authorized in the nodes
@@ -143,7 +143,7 @@
           node_ids: "{{ node_ids | b64encode }}"
           node_ips: "{{ node_ips | b64encode }}"
           kubeconfig: "{{ kubeconfig | b64encode }}"
-          skooner_token: "{{ hostvars[entity_name + '-master']['skooner_token']['stdout'] | b64encode }}"
+          skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
