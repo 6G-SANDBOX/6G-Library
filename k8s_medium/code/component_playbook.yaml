@@ -45,9 +45,13 @@
 
     - name: Fetch cluster node IDs
       ansible.builtin.set_fact:
-        node_ids: "{{ node_ids | default({}) | combine({item.name: item.nodes[0]}) }}"
-      loop: "{{ cluster_roles }}"
-      when: item.nodes | length > 0
+        node_ids: >-
+          {{
+            node_ids | default({}) | combine({
+              (item.0.name + '_' + item.0.nodes.index(item.1) | string): item.1 | string
+            })
+          }}
+      loop: "{{ cluster_roles | subelements('nodes', skip_missing=True) }}"
 
     - name: Fetch cluster node IPs
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/node_ip.yaml"
@@ -57,8 +61,9 @@
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}-{{ item.key }}"
         ansible_host: "{{ item.value }}"
-        ansible_ssh_common_args: "-J {{ site_jenkins_user }}@{{ bastion_ip }}{% if item.key != 'vnf' %},root@{{ node_ips.vnf }}{% else %}{% endif %}"
+        ansible_ssh_common_args: "-J {{ site_jenkins_user }}@{{ bastion_ip }}{% if item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
         ansible_user: "root"
+        groups: "{{ entity_name }}"
       loop: "{{ node_ips | dict2items }}"
 
     - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
@@ -67,7 +72,7 @@
 
     - name: Fetch master metadata
       community.general.one_vm:
-        instance_ids: "{{ node_ids.master | int }}"
+        instance_ids: "{{ node_ids.master_0 | int }}"
       register: master_metadata
     - name: Extract kubeconfig file from master metadata
       ansible.builtin.set_fact:
@@ -80,7 +85,7 @@
         mode: "644"
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}-vnf,{{ hostvars['localhost']['entity_name'] }}-master,{{ hostvars['localhost']['entity_name'] }}-worker"
+  hosts: "{{ hostvars['localhost']['entity_name'] }}"
   gather_facts: false
   tasks:
     - name: Set the tn_id ssh key as authorized in the nodes
@@ -90,7 +95,7 @@
         key: "{{ hostvars['localhost']['ssh_public_key'] }}"
 
     - name: Apply extra Helm charts
-      when: inventory_hostname == hostvars['localhost']['entity_name'] + '-master'
+      when: inventory_hostname == hostvars['localhost']['entity_name'] + '-master_0'
       block:
         - name: Apply ingress-nginx helm chart
           ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_nginx_controller.yaml"
@@ -100,7 +105,7 @@
 
         - name: Apply nginx Ingress for the longhorn dashboard
           ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_longhorn_dashboard.yaml"
-          when: one_k8s_longhorn == "YES"
+          when: hostvars['localhost']['one_k8s_longhorn']  == "YES"
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
