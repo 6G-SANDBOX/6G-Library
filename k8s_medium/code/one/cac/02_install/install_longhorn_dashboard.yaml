@@ -1,11 +1,4 @@
 ---
-- name: Install Python and pip
-  ansible.builtin.apt:
-    name: 
-      - python3
-      - python3-pip
-    update_cache: true
-
 - name: Install k8s python plugin
   ansible.builtin.pip:
     name:

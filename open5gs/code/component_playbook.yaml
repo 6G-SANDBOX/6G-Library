@@ -20,15 +20,15 @@
 
     - name: Add the k8s master to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ one_open5gs_k8s }}-master"
-        ansible_host: "{{ node_ips.master }}"
-        ansible_ssh_common_args: "-J {{ site_jenkins_user }}@{{ bastion_ip }},root@{{ node_ips.vnf }}"
+        hostname: "{{ one_open5gs_k8s }}-master_0"
+        ansible_host: "{{ node_ips.master_0 }}"
+        ansible_ssh_common_args: "-J {{ site_jenkins_user }}@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
         ansible_user: "root"
 
 
 
 - name: "STAGE 2: Apply IAC to deploy the component"
-  hosts: "{{ hostvars['localhost']['one_open5gs_k8s'] }}-master"
+  hosts: "{{ hostvars['localhost']['one_open5gs_k8s'] }}-master_0"
   gather_facts: false
   tasks:
     - name: Load enviromental variables from different sources inside the component
@@ -41,17 +41,6 @@
   hosts: localhost
   gather_facts: false
   tasks:
-    # TODO: Ver si json falla sin output, o hay que definir la variable vacía explícitamente
-    # - name: Merge all component component outputs into one "output" variable
-    #   ansible.builtin.set_fact:
-    #     output: ""
-    #       id: "{{ id | b64encode }}"
-    #       cluster_roles: "{{ cluster_roles | b64encode }}"
-    #       node_ids: "{{ node_ids | b64encode }}"
-    #       node_ips: "{{ node_ips | b64encode }}"
-    #       kubeconfig: "{{ kubeconfig | b64encode }}"
-    #       skooner_token: "{{ hostvars[entity_name + '-master']['skooner_token']['stdout'] | b64encode }}"
-    #   when: not terraform_apply.failed
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
 
