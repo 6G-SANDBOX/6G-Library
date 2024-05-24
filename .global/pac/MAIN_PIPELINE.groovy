@@ -121,7 +121,7 @@ pipeline {
                         component_type: "${params.COMPONENT_TYPE}",
                         deployment_site: "${params.DEPLOYMENT_SITE}"
                     ],
-                    playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/component_playbook.yaml"
+                    playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"
                 )
             }
         }    
