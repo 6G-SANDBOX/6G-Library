@@ -15,7 +15,7 @@
 terraform_template: true
 
 one_vm_cpu: 2
-one_vm_memory: 512
+one_vm_memory: 1024
 one_vm_disk: 10240   # Size of the Image. Future plans to downsize it
 
 one_bastion_reachable_network: "{{ site_networks_id.default }}"

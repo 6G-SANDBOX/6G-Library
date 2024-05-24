@@ -4,6 +4,12 @@
   gather_facts: false
   connection: local  
   tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/prepare_terraform.yaml"
+
     - name: Terraform apply
       community.general.terraform:
         project_path: "{{ workspace }}/.terraform/"
@@ -13,13 +19,13 @@
       register: terraform_apply
 
     - name: Check if terraform apply return code
+      when: terraform_apply.failed
       block:
         - name: Publish stderr terraform output to TNLCM
-          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
+          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
 
         - name: Stop pipeline execution
           ansible.builtin.meta: end_play
-      when: terraform_apply.failed
 
 
 - name: "STAGE 2: Prepare to access the component"
@@ -124,7 +130,7 @@
         encrypt: no
 
     - name: Publish node IDs and IPs as a terraform outputs"
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/custom_tf_outputs.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-node_ids"
@@ -146,7 +152,7 @@
           skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"
 
     - name: Publish execution results to TNLCM
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/publish_ok_results.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
 
     - name: Upload markdown info to S3 storage
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/common_tasks/s3_upload.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/s3_upload.yaml"
