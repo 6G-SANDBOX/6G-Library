@@ -4,5 +4,5 @@
     "custom_name": "{{ custom_name | b64encode }}",
     "success": "true",
     "markdown": "{{ ok2markdown['content'] }}",
-    "output": {{ output | to_nice_json(indent=8) }}
+    "output": {{ output | default({}) | to_nice_json(indent=8) }}
 }

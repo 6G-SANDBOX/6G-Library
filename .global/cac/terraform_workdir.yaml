@@ -18,11 +18,5 @@
 - name: "Get terraform manifests from previous deployed components"
   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/s3_download.yaml"
 
-- name: "Prepare {{ component_type }} terraform manifest"
-  ansible.builtin.template:
-    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/{{ component_type }}.tf.j2"
-    dest: "{{ workspace }}/.terraform/tf-{{ entity_name }}.tf"
-  when: terraform_template | default(false)
-
 - name: terraform init
   ansible.builtin.command: "terraform -chdir={{ workspace }}/.terraform/ init"

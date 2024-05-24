@@ -1,118 +1,78 @@
-resource "opennebula_virtual_machine" "{{ tn_id }}-{{ one_component_name }}" {
-  name        = "{{ tn_id }}-{{ one_component_name }}"
-  description = "{{ tn_id }} UERANSIM"
-  template_id = "{{ site_one_templates.ueransim }}"
-  group       = "{{ one_group }}"
-  permissions = "660"
+# https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
+# https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
+resource "opennebula_virtual_machine" "{{ entity_name }}" {
+  name        = "{{ tn_id }}-{{ entity_name }}"
+  template_id = {{ site_one_templates.ueransim.id }}
+  cpu         = {{ one_vm_cpu }}
+  vcpu        = {{ one_vm_cpu }}
+  memory      = {{ one_vm_memory }}
 
   context = {
+    NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
-{% if one_vm_username is defined and one_vm_username %}
-    USERNAME = "{{ one_vm_username }}"
-{% endif %}
-{% if one_vm_password is defined and one_vm_password %}
-    PASSWORD = "{{ one_vm_password }}"
-{% endif %}
-{% if one_vm_ssh_key  is defined and one_vm_ssh_key %}
-    SSH_PUBLIC_KEY = "{{ one_vm_ssh_key }}"
-{% endif %}
-{# comes from site. STEPS: 1.creates ssh rsa key for the VM (necessary? ed25519 type better) 2.allows ssh with password (should only be done if password is provided) 3. writes ssh public key from jenkins in /root/.ssh/authorized_keys (should be defined in SSH_PUBLIC_KEY context value) #}
-{% if site_jenkins_script_base64 is defined and site_jenkins_script_base64 %}
-    START_SCRIPT_BASE64 = "{{ site_jenkins_script_base64 }}"
-{% endif %}
-{# UERANSIM variables #}
-{% if run_gnb is defined and run_gnb %}
+    USERNAME = "{{ site_jenkins_user }}"
+    SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
     RUN_GNB = "{{ run_gnb }}"
-{% endif %}
-{% if run_ue  is defined and run_ue %}
     RUN_UE = "{{ run_ue }}"
-{% endif %}
-{% if oneke_vnf is defined and oneke_vnf %}
-    ONEKE_VNF = "{{ oneke_vnf }}"
-{% endif %}
-{% if gnb_amf_address is defined and gnb_amf_address %}
+ {# ojo con esta, está mal, y hay que referenciar variable one_ueransim_k8s #}
+    ONEKE_VNF = {{ opennebula_virtual_network.{{ one_k8s_external_vnet }}.ip }}
+    ONEKE_VNF = "${output.k8s_medium-{{ one_k8s_external_vnet }}-node_ips}"
+
+    GNB_MCC = "{{ gnb_mcc }}"
+    GNB_MNC = "{{ gnb_mnc }}"
+    GNB_TAC = "{{ gnb_tac }}"
     GNB_AMF_ADDRESS = "{{ gnb_amf_address }}"
-{% endif %}
-{% if gnb_gtpIp       is defined and gnb_gtpIp %}
+    GNB_SLICES_SST = "{{ gnb_slices_sst }}"
+    GNB_SLICES_SD = "{{ gnb_slices_sd }}"
+
+{# {% if gnb_gtpIp       is defined and gnb_gtpIp %}
     GNB_GTPIP = "{{ gnb_gtpIp }}"
 {% endif %}
 {% if gnb_linkIp      is defined and gnb_linkIp %}
     GNB_LINKIP = "{{ gnb_linkIp }}"
 {% endif %}
-{% if gnb_mcc         is defined and gnb_mcc %}
-    GNB_MCC = "{{ gnb_mcc }}"
-{% endif %}
-{% if gnb_mnc         is defined and gnb_mnc %}
-    GNB_MNC = "{{ gnb_mnc }}"
-{% endif %}
 {% if gnb_ngapIp      is defined and gnb_ngapIp %}
     GNB_NGAPIP = "{{ gnb_ngapIp }}"
-{% endif %}
-{% if gnb_slices_sd   is defined and gnb_slices_sd %}
-    GNB_SLICES_SD = "{{ gnb_slices_sd }}"
-{% endif %}
-{% if gnb_slices_sst  is defined and gnb_slices_sst %}
-   GNB_SLICES_SST = "{{ gnb_slices_sst }}"
-{% endif %}
-{% if gnb_tac         is defined and gnb_tac %}
-    GNB_TAC = "{{ gnb_tac }}"
-{% endif %}
-{% if ue_configured_nssai_sd  is defined and ue_configured_nssai_sd %}
-    UE_CONFIGURED_NSSAI_SD = "{{ ue_configured_nssai_sd }}"
-{% endif %}
-{% if ue_configured_nssai_sst is defined and ue_configured_nssai_sst %}
-    UE_CONFIGURED_NSSAI_SST = "{{ ue_configured_nssai_sst }}"
-{% endif %}
-{% if ue_default_nssai_sd     is defined and ue_default_nssai_sd %}
-    UE_DEFAULT_NSSAI_SD = "{{ ue_default_nssai_sd }}"
-{% endif %}
-{% if ue_default_nssai_sst    is defined and ue_default_nssai_sst %}
-    UE_DEFAULT_NSSAI_SST = "{{ ue_default_nssai_sst }}"
-{% endif %}
-{% if ue_gnbSearchList        is defined and ue_gnbSearchList %}
-    UE_GNBSEARCHLIST = "{{ ue_gnbSearchList }}"
-{% endif %}
-{% if ue_key                  is defined and ue_key %}
-    UE_KEY = "{{ ue_key }}"
-{% endif %}
-{% if ue_mcc                  is defined and ue_mcc %}
-    UE_MCC = "{{ ue_mcc }}"
-{% endif %}
-{% if ue_mnc                  is defined and ue_mnc %}
-    UE_MNC = "{{ ue_mnc }}"
-{% endif %}
-{% if ue_op                   is defined and ue_op %}
-    UE_OP = "{{ ue_op }}"
-{% endif %}
-{% if ue_session_apn          is defined and ue_session_apn %}
-    UE_SESSION_APN = "{{ ue_session_apn }}"
-{% endif %}
-{% if ue_session_sd is defined and ue_session_sd %}
-    UE_SESSION_SD = "{{ ue_session_sd }}"
-{% endif %}
-{% if ue_session_sst is defined and ue_session_sst %}
-    UE_SESSION_SST = "{{ ue_session_sst }}"
-{% endif %}
-{% if ue_supi is defined and ue_supi %}
+{% endif %} #}
+
     UE_SUPI = "{{ ue_supi }}"
-{% endif %}
+    UE_MCC = "{{ ue_mcc }}"
+    UE_MNC = "{{ ue_mnc }}"
+    UE_KEY = "{{ ue_key }}"
+    UE_OP = "{{ ue_op }}"
+    UE_GNBSEARCHLIST = "{{ ue_gnbSearchList }}"
+    UE_SESSION_APN = "{{ ue_session_apn }}"
+    UE_SESSION_SST = "{{ ue_session_sst }}"
+    UE_SESSION_SD = "{{ ue_session_sd }}"
+    UE_CONFIGURED_NSSAI_SST = "{{ ue_configured_nssai_sst }}"
+    UE_CONFIGURED_NSSAI_SD = "{{ ue_configured_nssai_sd }}"
+    UE_DEFAULT_NSSAI_SST = "{{ ue_default_nssai_sst }}"
+    UE_DEFAULT_NSSAI_SD = "{{ ue_default_nssai_sd }}"
   }
 
+{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+  disk {
+    image_id = {{ site_one_templates.tn_bastion.image_id }}
+    size     = {{ one_vm_disk }}
+    target   = "vda"
+    driver   = "qcow2"
+  } #}
 
-{% for network_id in one_vm_networks %}
+
+{% for network in one_vm_networks %}
   nic {
     model           = "virtio"
-    network_id      = {{ network_id }}
+    network_id      = opennebula_virtual_network.{{ network }}.id
   }
 {% endfor %}
 }
 
-output "{{ one_component_name }}-network_assignments" {
-  description = "OpenNebula VM Network Assignments"
-  value = { for nic in opennebula_virtual_machine.{{ tn_id }}-{{ one_component_name }}.nic[*] : nic.network_id => nic.computed_ip }
+output "{{ entity_name }}-id" {
+  description = "OpenNebula VM ID"
+  value = opennebula_virtual_machine.{{ entity_name }}.id
 }
 
-output "{{ one_component_name }}-VM_ID" {
-  description = "OpenNebula VM ID"
-  value = opennebula_virtual_machine.{{ tn_id }}-{{ one_component_name }}.id
+output "{{ entity_name }}-ips" {
+  description = "OpenNebula VM Network Assignments"
+  value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
 }

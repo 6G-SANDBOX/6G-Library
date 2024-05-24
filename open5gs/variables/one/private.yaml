@@ -11,9 +11,6 @@
 ##
 ######################################################
 
-### Component includes a terraform template
-terraform_template: false
-
 one_open5gs_webui_subdomain: "open5gs-dashboard"
 
 one_open5gs_mcc: "001"

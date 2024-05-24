@@ -28,7 +28,7 @@ one_vm_networks:
 ### The variables run_gnb and run_ue don't modify the config files. They are to tell the VM if it should start with the gNB or UE (respectivelly) running already.
 
 # If defined, proxy address to send the traffic to reach the "gnb_amf_address". In a TRIAL NETWORK, it's the OneKE's vnf address
-oneke_vnf: '127.0.0.1'
+one_ueransim_k8s: '127.0.0.1'
 
 ############### open5gs-gnb.yaml ################################
 ### Overrides https://github.com/aligungr/UERANSIM/blob/master/config/open5gs-gnb.yaml values

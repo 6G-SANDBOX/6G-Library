@@ -11,9 +11,6 @@
 ##
 ######################################################
 
-### Component includes a terraform template
-terraform_template: true
-
 one_vm_cpu: 2
 one_vm_memory: 1024
 one_vm_disk: 10240   # Size of the Image. Future plans to downsize it

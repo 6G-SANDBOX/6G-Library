@@ -8,7 +8,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
     - name: Prepare terraform working directory
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/prepare_terraform.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
@@ -31,8 +31,6 @@
         ansible_ssh_common_args: "-J {{ site_jenkins_user }}@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
         ansible_user: "root"
 
-
-
 - name: "STAGE 2: Apply IAC to deploy the component"
   hosts: "{{ hostvars['localhost']['one_open5gs_k8s'] }}-master_0"
   gather_facts: false
@@ -50,6 +48,3 @@
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
 
-    - name: Upload markdown info to S3 storage
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/s3_upload.yaml"
-      when: not terraform_apply.failed

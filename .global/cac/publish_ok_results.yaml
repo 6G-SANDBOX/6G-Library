@@ -1,4 +1,16 @@
 ---
+- name: Upload terraform manifest to S3
+  amazon.aws.s3_object:
+    endpoint_url: "{{ site_s3_server.endpoint }}"
+    mode: put
+    access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
+    secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
+    bucket: "{{ site_s3_server.bucket }}"
+    object: "{{ tn_id }}/tf-{{ entity_name }}.tf"
+    src: "{{ workspace }}/.terraform/tf-{{ entity_name }}.tf"
+    encrypt: no
+  when: terraform_apply.failed is defined and terraform_apply.failed == false
+
 - name: Generate OK markdown response
   ansible.builtin.template:
     src: "{{ workspace }}/{{ component_type }}/result_templates/ok_result.md.j2"
@@ -27,3 +39,14 @@
     src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.json"
   register: tnlcm_post
   ignore_errors: true
+
+- name: Send OK markdown response to S3
+  amazon.aws.s3_object:
+    endpoint_url: "{{ site_s3_server.endpoint }}"
+    mode: put
+    access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
+    secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
+    bucket: "{{ site_s3_server.bucket }}"
+    object: "{{ tn_id }}/ok_result-{{ entity_name }}.md"
+    src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.md"
+    encrypt: no

@@ -73,7 +73,7 @@ input:
         - tn_vxlan.output.id
         - vnet.output.id
 
-  oneke_vnf:
+  one_ueransim_k8s:
     description: Proxy address to send the traffic to reach the "gnb_amf_address". The IPv4 address of a OneKE VNF inside your Trial Network
     type: "str"
     value:
@@ -147,7 +147,7 @@ input:
   gnb_amf_address:
     description: |
       In gNB simulation, IPv4 address of the Access Management Function (AMF).
-      If "oneke_vnf" is defined, this address is expected to be behind it, so the necessary routing rules will be automatically defined
+      If "one_ueransim_k8s" is defined, this address is expected to be behind it, so the necessary routing rules will be automatically defined
       AMF port is currently hardcoded to always be 38412
     type: "str"
     value: "127.0.0.5"

@@ -11,8 +11,36 @@
 ##
 ######################################################
 
-one_group: "oneadmin"   # change to "6G-Sandbox" in the future
+one_vm_cpu: 2
+one_vm_memory: 2048
+one_vm_disk: 3072
+one_vm_networks: 
+  - tn_vxlan
 
-# Hardware requirements for the UERANSIM are not mutable by the experimenter
-# vcpu: 4
-# memory: 4G
+oneke_vnf: ""
+run_gnb: "NO"
+run_UE: "NO"
+
+gnb_mcc: ""
+gnb_mnc: ""
+gnb_tac: ""
+gnb_amf_address: ""
+gnb_slices_sst: ""
+gnb_slices_sd: ""
+# gnb_gtpIp: ""
+# gnb_linkIp: ""
+# gnb_ngapIp: ""
+
+ue_supi: ""
+ue_mcc: ""
+ue_mnc: ""
+ue_key: ""
+ue_op: ""
+ue_gnbSearchList: ""
+ue_session_apn: ""
+ue_session_sst: ""
+ue_session_sd: ""
+ue_configured_nssai_sst: ""
+ue_configured_nssai_sd: ""
+ue_default_nssai_sst: ""
+ue_default_nssai_sd: ""
