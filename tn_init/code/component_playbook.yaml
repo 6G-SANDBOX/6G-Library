@@ -14,7 +14,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
 
-- name: "STAGE 2: Prepare to access the component"
+- name: "STAGE 2: Prepare to access the tn_bastion"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -30,24 +30,25 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
-        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
-        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+        tn_vxlan_id: "{{ (terraform_outputs.stdout | from_json)[tn_vxlan + '-ips'] }}"
+        tn_bastion_ips: "{{ (terraform_outputs.stdout | from_json)[tn_bastion + '-ips'] }}"
+        tn_bastion_id: "{{ (terraform_outputs.stdout | from_json)[tn_bastion + '-id'] }}"
 
     - name: Verify that the bastion access IP is correctly loaded
       ansible.builtin.debug:
-        msg: "Network Main Interface is: {{ ips[one_bastion_reachable_network] | default('----') }}"
+        msg: "Network Main Interface is: {{ tn_bastion_ips[one_bastion_reachable_network] | default('----') }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[one_bastion_reachable_network] }}"
+        hostname: "tn_bastion"
+        ansible_host: "{{ tn_bastion_ips[one_bastion_reachable_network] }}"
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
-      
+
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "tn_bastion"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -57,7 +58,7 @@
         timeout: 180
 
     ### Calling tasks/load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
-    ### But it makes the code much MUCH cleaner with almost no extra latency
+    ### But it makes the code much MUCH cleaner with almost no extra latency
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
@@ -79,17 +80,18 @@
       vars:
         custom_outputs:
           - key: "ssh_public_key"
-            value: "{{ hostvars[entity_name]['ssh_public_key']['content'] | b64decode | trim }}"
+            value: "{{ hostvars['tn_bastion']['ssh_public_key']['content'] | b64decode | trim }}"
             description: "SSH Public Key"
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
         output:
-          ips: "{{ ips | b64encode }}"
-          id: "{{ id | b64encode }}"
-          vpn_client_tunnel: "{{ hostvars[entity_name]['client_tunnel']['content'] }}"
-          ssh_public_key: "{{ hostvars[entity_name]['ssh_public_key']['content'] }}"
-          ssh_private_key: "{{ hostvars[entity_name]['ssh_private_key']['content'] }}"
+          tn_vxlan_id: "{{ tn_vxlan_id | b64encode }}"
+          tn_bastion_ips: "{{ tn_bastion_ips | b64encode }}"
+          tn_bastion_id: "{{ tn_bastion_id | b64encode }}"
+          vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"
+          ssh_public_key: "{{ hostvars['tn_bastion']['ssh_public_key']['content'] }}"
+          ssh_private_key: "{{ hostvars['tn_bastion']['ssh_private_key']['content'] }}"
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

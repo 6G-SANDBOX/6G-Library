@@ -6,9 +6,10 @@
     access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
     secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
     bucket: "{{ site_s3_server.bucket }}"
-    object: "{{ tn_id }}/tf-{{ entity_name }}.tf"
-    src: "{{ workspace }}/.terraform/tf-{{ entity_name }}.tf"
+    object: "{{ tn_id }}/tf-{{ item.dest | basename }}.tf"
+    src: "{{ item.dest }}.tf"
     encrypt: no
+  loop: "{{ terraform_manifests.results }}"
   when: terraform_apply.failed is defined and terraform_apply.failed == false
 
 - name: Generate OK markdown response

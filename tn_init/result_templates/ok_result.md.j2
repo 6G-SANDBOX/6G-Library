@@ -1,0 +1,49 @@
+# TN_INIT
+The Trial Network `{{ tn_id }}` has been successfully created with the following components:
+
+## TN_VXLAN: {{ tn_id }}-tn_vxlan
+
+The Trial Network's main VXLAN.
+
+Important information:
+
+* **OPENNEBULA VIRTUAL NETWORK ID**: {{ id }}
+* **VXLAN NAME**: {{ tn_id }}-tn_vxlan
+* **VXLAN FIRST IP**: {{ one_vxlan_first_ip }}
+* **VXLAN ADDRESS SIZE**: {{ one_vxlan_address_size }}
+* **VXLAN GW**: {{ one_vxlan_gw }}
+* **VXLAN DNS**: {{ one_vxlan_dns }}
+* **VXLAN MTU**: {{ one_vxlan_mtu }}
+* **VXLAN GUEST MTU**: {{ one_vxlan_guest_mtu }}
+
+
+## {{ tn_id }}-tn_bastion
+
+TheTrial Network's BASTION ,router and firewall.
+
+Important information:
+
+* OpenNebula ID: {{ id }}
+
+### BASTION NETWORK INTERFACES
+```
+{{ ips }}
+```
+
+
+### VNP WIREGUARD CLIENT CONFIG
+
+```
+{{ hostvars['tn_bastion']['client_tunnel']['content'] | b64decode }}
+```
+
+### SSH KEYPAIR TO ACCESS THE REST OF THE TRIAL NETWORK COMPONENTS
+
+Public key:
+```
+{{ hostvars['tn_bastion']['ssh_public_key']['content'] | b64decode }}
+```
+Private key:
+```
+{{ hostvars['tn_bastion']['ssh_private_key']['content'] | b64decode }}
+```

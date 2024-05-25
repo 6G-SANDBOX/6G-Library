@@ -11,10 +11,10 @@
 ##
 ######################################################
 
-one_vm_cpu: 2
-one_vm_memory: 2048
-one_vm_disk: 3072
-one_vm_networks: 
+one_ueransim_cpu: 2
+one_ueransim_memory: 2048
+one_ueransim_disk: 3072
+one_ueransim_networks: 
   - tn_vxlan
 
 oneke_vnf: ""

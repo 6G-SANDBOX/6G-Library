@@ -5,10 +5,10 @@
     state: directory
     mode: '0755'
 
-- name: Prepare opennebula provider terraform manifest
+- name: "Prepare {{ site_hypervisor }} provider terraform manifest"
   ansible.builtin.copy:
-    src: "{{ workspace }}/.global/iac/{{ site_hypervisor }}/opennebula_provider_v1.4.tf"
-    dest: "{{ workspace }}/.terraform/opennebula_provider_v1.4.tf"
+    src: "{{ workspace }}/.global/iac/{{ site_hypervisor }}/provider.tf"
+    dest: "{{ workspace }}/.terraform/{{ site_hypervisor }}_provider.tf"
 
 - name: Prepare AWS s3 backend terraform manifest
   ansible.builtin.template:

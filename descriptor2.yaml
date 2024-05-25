@@ -31,7 +31,7 @@ trial_network:
     dependencies:
       - "tn_vxlan"
     input:
-      one_vm_networks:     # en public.yaml/input.one_vm_networks.type se dijo que aquí va un "strlist"
+      one_bastion_networks:     # en public.yaml/input.one_bastion_networks.type se dijo que aquí va un "strlist"
         - 0
         - "tn_vxlan.output.id"  # guardado en el backend tras la ejecución anterior.
 

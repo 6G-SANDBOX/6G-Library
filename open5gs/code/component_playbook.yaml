@@ -19,7 +19,7 @@
       register: terraform_outputs
       changed_when: false
 
-    - name: Set Terraform outputs as facts
+    - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips']['0'] }}"
         node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_k8s + '-node_ips'] }}"

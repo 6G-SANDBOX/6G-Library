@@ -1,0 +1,45 @@
+######################################################
+##
+## Component private variables
+##
+## Advanced variables required for the deployment, 
+## but unavailable by default to the experimenter
+## in the TNLCM. 
+## Currently only modifiable manually from the manifest
+##
+## File previously found at "private/values.yaml"
+##
+######################################################
+
+##########################
+### tn_vxlan variables ###
+##########################
+
+# opennebula_virtual_network resource
+one_vxlan_physical_device: "{{ site_vxlan_if }}"
+one_vxlan_mtu: 1500
+one_vxlan_guest_mtu: 1450
+one_vxlan_gw: "192.168.199.1"
+one_vxlan_netmask: "255.255.255.0"
+one_vxlan_dns: "1.1.1.1 1.0.0.1"
+
+# opennebula_virtual_network_address_range resource
+one_vxlan_first_ip: "192.168.199.1"
+one_vxlan_address_size: 254
+
+
+############################
+### tn_bastion variables ###
+############################
+
+one_bastion_cpu: 2
+one_bastion_memory: 1024
+one_bastion_disk: 10240   # Size of the Image. Future plans to downsize it
+
+one_bastion_reachable_network: "{{ site_networks_id.default }}"
+one_bastion_wireguard_allowedips: "192.168.199.0/24"
+
+# By default, In tn_bastion the first VNet is hardcoded to be the site default (variable one_bastion_reachable_network)
+# The following ones are appended here (tn_vxlan)
+one_bastion_networks: 
+  - tn_vxlan

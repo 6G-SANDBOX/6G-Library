@@ -1,9 +1,16 @@
 ---
-- name: "Prepare {{ component_type }} terraform manifest"
+- name: Register all template files from the component
+  ansible.builtin.find:
+    paths: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
+    patterns: "*.tf.j2"
+  register: terraform_templates
+
+- name: "Prepare {{ entity_name}} terraform manifests"
   ansible.builtin.template:
-    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/{{ component_type }}.tf.j2"
-    dest: "{{ workspace }}/.terraform/tf-{{ entity_name }}.tf"
-  when: terraform_template | default(false)
+    src: "{{ item.path }}"
+    dest: "{{ workspace }}/.terraform/{{ item.path | basename | regex_replace('.tf.j2', '.tf') }}"
+  loop: "{{ terraform_templates.files }}"
+  register: terraform_manifests
   
 - name: Terraform apply
   community.general.terraform:

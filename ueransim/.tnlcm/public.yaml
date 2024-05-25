@@ -62,7 +62,7 @@ input:
     type: "str"
     value:
     optional: true
-  one_vm_networks:
+  one_ueransim_networks:
     description: OpenNebula IDs of the VNets the VM will be part of. First one should be the tn_vxlan ID in most cases
     type: "intlist"
     quantity: "(1, inf)"

@@ -3,9 +3,9 @@
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
   template_id = {{ site_one_templates.ueransim.id }}
-  cpu         = {{ one_vm_cpu }}
-  vcpu        = {{ one_vm_cpu }}
-  memory      = {{ one_vm_memory }}
+  cpu         = {{ one_ueransim_cpu }}
+  vcpu        = {{ one_ueransim_cpu }}
+  memory      = {{ one_ueransim_memory }}
 
   context = {
     NETWORK = "YES"
@@ -53,13 +53,13 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
   disk {
     image_id = {{ site_one_templates.tn_bastion.image_id }}
-    size     = {{ one_vm_disk }}
+    size     = {{ one_ueransim_disk }}
     target   = "vda"
     driver   = "qcow2"
   } #}
 
 
-{% for network in one_vm_networks %}
+{% for network in one_ueransim_networks %}
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
