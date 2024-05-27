@@ -1,9 +1,9 @@
- https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
+# https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
 resource "opennebula_virtual_machine" "tn_bastion" {
   name        = "{{ tn_id }}-tn_bastion"
   template_id = {{ site_one_templates.tn_bastion.id }}
-  cpu         = {{ one_bastion_cpune_vm_cpu }}
+  cpu         = {{ one_bastion_cpu }}
   vcpu        = {{ one_bastion_cpu }}
   memory      = {{ one_bastion_memory }}
 
@@ -16,12 +16,13 @@ resource "opennebula_virtual_machine" "tn_bastion" {
     WIREGUARD_ALLOWEDIPS = "{{ one_bastion_wireguard_allowedips }}"
   }
 
+{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
   disk {
     image_id = {{ site_one_templates.tn_bastion.image_id }}
     size     = {{ one_bastion_disk }}
     target   = "vda"
     driver   = "qcow2"
-  }
+  } #}
 
   nic {
     model           = "virtio"

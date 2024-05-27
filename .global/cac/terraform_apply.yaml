@@ -8,7 +8,7 @@
 - name: "Prepare {{ entity_name}} terraform manifests"
   ansible.builtin.template:
     src: "{{ item.path }}"
-    dest: "{{ workspace }}/.terraform/{{ item.path | basename | regex_replace('.tf.j2', '.tf') }}"
+    dest: "{{ workspace }}/.terraform/tf-{{ item.path | basename | regex_replace('.tf.j2', '.tf') }}"
   loop: "{{ terraform_templates.files }}"
   register: terraform_manifests
   
@@ -40,7 +40,7 @@
 
     - name: Debug FAIL json response
       ansible.builtin.debug:
-        msg: "{{ workspace }}/.global/json_templates/fail_result.json.j2"
+        msg: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/json_templates/fail_result.json.j2') }}"
       when: debug
 
     - name: Send FAIL json response to TNLCM

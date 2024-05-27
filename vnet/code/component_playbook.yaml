@@ -15,6 +15,7 @@
 
 
 - name: "STAGE 2: Publish execution results"
+  when: not terraform_apply.failed
   hosts: localhost
   gather_facts: false
   connection: local

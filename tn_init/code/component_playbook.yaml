@@ -1,5 +1,5 @@
 ---
-- name: "STAGE 1: Apply IAC to deploy the component" 
+- name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -15,6 +15,7 @@
 
 
 - name: "STAGE 2: Prepare to access the tn_bastion"
+  when: not terraform_apply.failed
   hosts: localhost
   gather_facts: false
   connection: local
@@ -30,9 +31,9 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
-        tn_vxlan_id: "{{ (terraform_outputs.stdout | from_json)[tn_vxlan + '-ips'] }}"
-        tn_bastion_ips: "{{ (terraform_outputs.stdout | from_json)[tn_bastion + '-ips'] }}"
-        tn_bastion_id: "{{ (terraform_outputs.stdout | from_json)[tn_bastion + '-id'] }}"
+        tn_vxlan_id: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-ips'] }}"
+        tn_bastion_ips: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'] }}"
+        tn_bastion_id: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-id'] }}"
 
     - name: Verify that the bastion access IP is correctly loaded
       ansible.builtin.debug:
@@ -48,6 +49,7 @@
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
+  when: "not {{ hostvars['localhost']['terraform_apply'].failed }}"
   hosts: "tn_bastion"
   gather_facts: false
   tasks:
@@ -57,7 +59,7 @@
         delay: 20
         timeout: 180
 
-    ### Calling tasks/load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
+    ### Calling load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
     ### But it makes the code much MUCH cleaner with almost no extra latency
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
@@ -71,6 +73,7 @@
 
 
 - name: "STAGE 4: Publish execution results"
+  when: not terraform_apply.failed
   hosts: localhost
   gather_facts: false
   connection: local

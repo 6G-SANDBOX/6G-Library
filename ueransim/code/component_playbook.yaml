@@ -17,6 +17,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
 - name: "STAGE 2: Prepare to access the component"
+  when: not terraform_apply.failed
   hosts: localhost
   gather_facts: false
   connection: local
@@ -123,6 +124,7 @@
 
 
 - name: Results
+  when: not terraform_apply.failed
   hosts: localhost
   tasks:
     - name: Publish execution results
