@@ -80,7 +80,6 @@
         custom_outputs:
           - key: "ssh_public_key"
             value: "{{ hostvars[entity_name]['ssh_public_key']['content'] | b64decode | trim }}"
-            description: "SSH Public Key"
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:

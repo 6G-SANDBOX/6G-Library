@@ -30,9 +30,9 @@ metadata:
   short_description: This is the component to deploy a UERANSIM instance 
   long_description: |
     UERANSIM instance that can be deployed running as a User Equipment, as a gNB, as both or as None.
-    Depending on the chosen mode (With the input values run_gnb and run_ue respectivelly), the following dependencies are aplied:
-    - If this ueransim has run_gnb as "YES", then an open5gs component needs to be previously deployed.
-    - If this ueransim has run_gnb as "NO" and run_ue as "YES", then a a previous ueransim component needs to be previously deployes with run_gnb as "YES".
+    Depending on the chosen mode (With the input values one_ueransim_run_gnb and one_ueransim_run_ue respectivelly), the following dependencies are aplied:
+    - If this ueransim has one_ueransim_run_gnb as "YES", then an open5gs component needs to be previously deployed.
+    - If this ueransim has one_ueransim_run_gnb as "NO" and one_ueransim_run_ue as "YES", then a a previous ueransim component needs to be previously deployes with one_ueransim_run_gnb as "YES".
   hypervisors: [one]
   sites: [uma, athens, fokus]
 
@@ -73,8 +73,8 @@ input:
         - tn_vxlan.output.id
         - vnet.output.id
 
-  one_ueransim_k8s:
-    description: Proxy address to send the traffic to reach the "gnb_amf_address". The IPv4 address of a OneKE VNF inside your Trial Network
+  one_ueransim_gnb_proxy:
+    description: Proxy address to send the traffic to reach the "one_ueransim_gnb_amf_address". The IPv4 address of a OneKE VNF inside your Trial Network
     type: "str"
     value:
     optional: true
@@ -86,8 +86,8 @@ input:
 
 
   ### Las dependencias que dependen de varios valores, pueden ir en cualquiera de las variables incluídas en la dependencia
-  ### La otra condición de si run_gnb="NO",run_ue="YES" está donde el "run_ue", pero por ninguna razón en particular, aquí también valdría.
-  run_gnb:
+  ### La otra condición de si one_ueransim_run_gnb="NO",one_ueransim_run_ue="YES" está donde el "one_ueransim_run_ue", pero por ninguna razón en particular, aquí también valdría.
+  one_ueransim_run_gnb:
     description: |
       Enable ueransim-gnb.service at start. If "YES", requires a functional open5gs appliance previously deployed
       Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
@@ -101,73 +101,73 @@ input:
       - if_value:     # varias posibles condiciones.
           - "YES"     # Lista OR de condiciones. Para AND, "'YES' && 'NO'"
         if_other_variables:   # depende también del valor de otra variable input
-          run_gnb:
+          one_ueransim_run_gnb:
             - "NO"
         then:
           - open5gs:   # Hace falta un componente open5gs (sin más requisitos). Frontend pregunta por cual, y con este se van a autocompletar varias variables después.
               autocompletes:  # igual que el TNLCM pregunte si quiere que se autocompleten estas variables
-                gnb_mcc: "input.plmn_id_mcc"
-                gnb_mnc: "input.plmn_id_mcc"
-                gnb_tac: "input.tac"
-                gnb_amf_address: "input.amf_ip"
-                gnb_slices_sst: "input.s_nssai_sst"
-                gnb_slices_sd: "open5gs.input.s_nssai_sd"
+                one_ueransim_gnb_mcc: "input.plmn_id_mcc"
+                one_ueransim_gnb_mnc: "input.plmn_id_mcc"
+                one_ueransim_gnb_tac: "input.tac"
+                one_ueransim_gnb_amf_address: "input.amf_ip"
+                one_ueransim_gnb_slices_sst: "input.s_nssai_sst"
+                one_ueransim_gnb_slices_sd: "open5gs.input.s_nssai_sd"
       - if_value:     # otra vez la misma
           - "YES"
         if_other_variables:   # otro valor
-          run_gnb:
+          one_ueransim_run_gnb:
             - "YES"
         then:
           - open5gs:
               autocompletes:
-                gnb_mcc: "input.plmn_id_mcc"
-                gnb_mnc: "input.plmn_id_mcc"
-                gnb_tac: "input.tac"
-                gnb_amf_address: "input.amf_ip"
-                gnb_slices_sst: "input.s_nssai_sst"
-                gnb_slices_sd: "open5gs.input.s_nssai_sd"
-                ue_mcc: "input.plmn_id_mcc"
-                ue_mnc: "input.tac"
+                one_ueransim_gnb_mcc: "input.plmn_id_mcc"
+                one_ueransim_gnb_mnc: "input.plmn_id_mcc"
+                one_ueransim_gnb_tac: "input.tac"
+                one_ueransim_gnb_amf_address: "input.amf_ip"
+                one_ueransim_gnb_slices_sst: "input.s_nssai_sst"
+                one_ueransim_gnb_slices_sd: "open5gs.input.s_nssai_sd"
+                one_ueransim_ue_mcc: "input.plmn_id_mcc"
+                one_ueransim_ue_mnc: "input.tac"
 
-  gnb_mcc:
+  one_ueransim_gnb_mcc:
     description: In gNB simulation, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
     type: "str"
     value: "999"
     optional: true
-  gnb_mnc:
+  one_ueransim_gnb_mnc:
     description: In gNB simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
     type: "str"
     value: "70"
     optional: true
-  gnb_tac:
+  one_ueransim_gnb_tac:
     description: In gNB simulation, Tracking Area Code in the PLMN
     type: "str"
     value: "1"
     optional: true
-  gnb_amf_address:
+  one_ueransim_gnb_amf_address:
     description: |
       In gNB simulation, IPv4 address of the Access Management Function (AMF).
-      If "one_ueransim_k8s" is defined, this address is expected to be behind it, so the necessary routing rules will be automatically defined
+      If "one_ueransim_gnb_proxy" is defined, this address is expected to be behind it, so the necessary routing rules will be automatically defined
       AMF port is currently hardcoded to always be 38412
     type: "str"
     value: "127.0.0.5"
     optional: true
-  gnb_slices_sst:
+  one_ueransim_gnb_slices_sst:
     description: In gNB simulation, Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
     type: "int"
     value: 1
     user_input: true
     optional: true
-  gnb_slices_sd:
+  one_ueransim_gnb_slices_sd:
     description: In gNB simulation, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
     type: "int"
     value: 1
     user_input: true
     optional: true
 
-  run_ue:
+  one_ueransim_run_ue:
     description: |
-      Enable ueransim-ue.service at start. If "YES", requires either to set run_gnb="YES", or to have a functional ueransim with run_gnb="YES" previously deployed.
+      Enable ueransim-ue.service at start. If "YES", requires either to set one_ueransim_run_gnb="YES", or to have a functional ueransim with one_ueransim_run_gnb="YES" previously deployed.
       Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
     type: "str"
     choices:
@@ -180,91 +180,91 @@ input:
       - if_value:
           - "YES"
         if_other_variables:   # depende también del valor de otra variable input
-          run_gnb:
+          one_ueransim_run_gnb:
             - "NO"
         then:
           - ueransim:    # necesario un ueransim creado anteriormente
               with:
-                input.run_gnb:   # el ueransim de antes tiene que tener run_gnb="YES"
+                input.one_ueransim_run_gnb:   # el ueransim de antes tiene que tener one_ueransim_run_gnb="YES"
                   - "YES"
               autocompletes:    # rellena con variables del ueransim
-                ue_mcc: "input.gnb_mcc"
-                ue_mnc: "input.gnb_mnc"
-                ue_gnbSearchList: "output.network_assignments[0]"  # la primera suele ser la accesible
+                one_ueransim_ue_mcc: "input.one_ueransim_gnb_mcc"
+                one_ueransim_ue_mnc: "input.one_ueransim_gnb_mnc"
+                one_ueransim_ue_gnbSearchList: "output.network_assignments[0]"  # la primera suele ser la accesible
 
-  ue_supi:
+  one_ueransim_ue_supi:
     description: In UE simulation, IMSI number of the UE. IMSI = [MCC|MNC|MSISDN] (In total 15 digits)
     type: "str"
     value: 'imsi-999700000000001'
     user_input: true
     optional: true
-  ue_mcc:
+  one_ueransim_ue_mcc:
     description: In UE simulation, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
     type: "str"
     value: "999"
     user_input: true
     optional: true
-  ue_mnc:
+  one_ueransim_ue_mnc:
     description: In UE simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
     type: "str"
     value: "70"
     user_input: true
     optional: true
-  ue_key:
+  one_ueransim_ue_key:
     description: In UE simulation, Permanent subscription key
     type: "str"
     value: 465B5CE8B199B49FAA5F0A2EE238A6BC
     user_input: true
     optional: true
-  ue_op:
+  one_ueransim_ue_op:
     description: In UE simulation, Operator code (OP or OPC) of the UE
     type: "str"
     value: E8ED289DEBA952E4283B54E88E6183CA
     user_input: true
     optional: true
-  ue_gnbSearchList:
+  one_ueransim_ue_gnbSearchList:
     description: In UE simulation, IP address for Radio Link Simulation
     type: "str"
     value: "127.0.0.1"
     user_input: true
     optional: true
-  ue_session_apn:
+  one_ueransim_ue_session_apn:
     description: In UE simulation, Access Point Name (APN) of the initial PDU session to be established
     type: "str"
     value: internet
     user_input: true
     optional: true
-  ue_session_sst:
+  one_ueransim_ue_session_sst:
     description: In UE simulation, Slice/Service Type (SST) of the initial PDU session to be established
     type: "int"
     value: 1
     user_input: true
     optional: true
-  ue_session_sd:
+  one_ueransim_ue_session_sd:
     description: In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established
     type: "int"
     value: 1
     user_input: true
     optional: true
-  ue_configured_nssai_sst:
+  one_ueransim_ue_configured_nssai_sst:
     description: In UE simulation, Slice/Service Type (SST) of the configured NSSAI by HPLMN
     type: "int"
     value: 1
     user_input: true
     optional: true
-  ue_configured_nssai_sd:
+  one_ueransim_ue_configured_nssai_sd:
     description: In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN
     type: "int"
     value: 1
     user_input: true
     optional: true
-  ue_default_nssai_sst:
+  one_ueransim_ue_default_nssai_sst:
     description: In UE simulation, Slice/Service Type (SST) of the default NSSAI
     type: "int"
     value: 1
     user_input: true
     optional: true
-  ue_default_nssai_sd:
+  one_ueransim_ue_default_nssai_sd:
     description: In UE simulation, Slice Differentiator (SD) of the default NSSAI
     type: "int"
     value: 1

@@ -10,44 +10,36 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   context = {
     NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
-    USERNAME = "{{ site_jenkins_user }}"
-    SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
-    RUN_GNB = "{{ run_gnb }}"
-    RUN_UE = "{{ run_ue }}"
- {# ojo con esta, está mal, y hay que referenciar variable one_ueransim_k8s #}
+    USERNAME = "{{ site_ssh_user }}"
+    SSH_PUBLIC_KEY = "{{ site_ssh_public_key }}"
+    RUN_GNB = "{{ one_ueransim_run_gnb }}"
+    RUN_UE = "{{ one_ueransim_run_ue }}"
+ {# ojo con esta, está mal, y hay que referenciar variable one_ueransim_gnb_proxy #}
     ONEKE_VNF = {{ opennebula_virtual_network.{{ one_k8s_external_vnet }}.ip }}
     ONEKE_VNF = "${output.k8s_medium-{{ one_k8s_external_vnet }}-node_ips}"
 
-    GNB_MCC = "{{ gnb_mcc }}"
-    GNB_MNC = "{{ gnb_mnc }}"
-    GNB_TAC = "{{ gnb_tac }}"
-    GNB_AMF_ADDRESS = "{{ gnb_amf_address }}"
-    GNB_SLICES_SST = "{{ gnb_slices_sst }}"
-    GNB_SLICES_SD = "{{ gnb_slices_sd }}"
-
-{# {% if gnb_gtpIp       is defined and gnb_gtpIp %}
-    GNB_GTPIP = "{{ gnb_gtpIp }}"
-{% endif %}
-{% if gnb_linkIp      is defined and gnb_linkIp %}
-    GNB_LINKIP = "{{ gnb_linkIp }}"
-{% endif %}
-{% if gnb_ngapIp      is defined and gnb_ngapIp %}
-    GNB_NGAPIP = "{{ gnb_ngapIp }}"
-{% endif %} #}
-
-    UE_SUPI = "{{ ue_supi }}"
-    UE_MCC = "{{ ue_mcc }}"
-    UE_MNC = "{{ ue_mnc }}"
-    UE_KEY = "{{ ue_key }}"
-    UE_OP = "{{ ue_op }}"
-    UE_GNBSEARCHLIST = "{{ ue_gnbSearchList }}"
-    UE_SESSION_APN = "{{ ue_session_apn }}"
-    UE_SESSION_SST = "{{ ue_session_sst }}"
-    UE_SESSION_SD = "{{ ue_session_sd }}"
-    UE_CONFIGURED_NSSAI_SST = "{{ ue_configured_nssai_sst }}"
-    UE_CONFIGURED_NSSAI_SD = "{{ ue_configured_nssai_sd }}"
-    UE_DEFAULT_NSSAI_SST = "{{ ue_default_nssai_sst }}"
-    UE_DEFAULT_NSSAI_SD = "{{ ue_default_nssai_sd }}"
+    GNB_MCC = "{{ one_ueransim_gnb_mcc }}"
+    GNB_MNC = "{{ one_ueransim_gnb_mnc }}"
+    GNB_TAC = "{{ one_ueransim_gnb_tac }}"
+    GNB_AMF_ADDRESS = "{{ one_ueransim_gnb_amf_address }}"
+    GNB_SLICES_SST = "{{ one_ueransim_gnb_slices_sst }}"
+    GNB_SLICES_SD = "{{ one_ueransim_gnb_slices_sd }}"
+    GNB_GTPIP = "{{ one_ueransim_gnb_gtpIp }}"
+    GNB_LINKIP = "{{ one_ueransim_gnb_linkIp }}"
+    GNB_NGAPIP = "{{ one_ueransim_gnb_ngapIp }}"
+    UE_SUPI = "{{ one_ueransim_ue_supi }}"
+    UE_MCC = "{{ one_ueransim_ue_mcc }}"
+    UE_MNC = "{{ one_ueransim_ue_mnc }}"
+    UE_KEY = "{{ one_ueransim_ue_key }}"
+    UE_OP = "{{ one_ueransim_ue_op }}"
+    UE_GNBSEARCHLIST = "{{ one_ueransim_ue_gnbSearchList }}"
+    UE_SESSION_APN = "{{ one_ueransim_ue_session_apn }}"
+    UE_SESSION_SST = "{{ one_ueransim_ue_session_sst }}"
+    UE_SESSION_SD = "{{ one_ueransim_ue_session_sd }}"
+    UE_CONFIGURED_NSSAI_SST = "{{ one_ueransim_ue_configured_nssai_sst }}"
+    UE_CONFIGURED_NSSAI_SD = "{{ one_ueransim_ue_configured_nssai_sd }}"
+    UE_DEFAULT_NSSAI_SST = "{{ one_ueransim_ue_default_nssai_sst }}"
+    UE_DEFAULT_NSSAI_SD = "{{ one_ueransim_ue_default_nssai_sd }}"
   }
 
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error

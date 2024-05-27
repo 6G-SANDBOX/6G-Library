@@ -11,7 +11,7 @@ populate:
     pullPolicy: IfNotPresent
   initCommands: #[]
   # example of initCommands:
-  - open5gs-dbctl add_ue_with_slice {{ one_open5gs_mcc }}{{ one_open5gs_mnc }}0000000001 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA internet {{ one_open5gs_s_nssai_sst }} {{ one_open5gs_s_nssai_sd }}
+  - open5gs-dbctl add_ue_with_slice {{ one_open5gs_mcc }}{{ one_open5gs_mnc }}{{ one_open5gs_msin }} {{ one_open5gs_key }} {{ one_open5gs_opc }} {{ one_open5gs_one_open5gs_apn }} {{ one_open5gs_s_nssai_sst }} {{ one_open5gs_s_nssai_sd }}
 
 # Common
 mongodb:

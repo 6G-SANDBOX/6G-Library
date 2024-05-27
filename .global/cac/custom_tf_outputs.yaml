@@ -4,12 +4,13 @@
     path: "{{ workspace }}/.terraform/tf-custom_outputs.tf"
     block: |
       output "{{ item.key }}" {
-        description = "{{ item.description }}"
         value       = "{{ item.value }}"
       }
     marker: "# {mark} ANSIBLE MANAGED BLOCK FOR OUTPUT {{ item.key }}"
     create: true
-  loop: "{{ custom_outputs }}"
+  loop: "{{ custom_outputs | dict2items }}"
+  # loop_control:
+  #   label: "{{ item.key }}"
 
 - name: Upload terraform manifest to S3
   amazon.aws.s3_object:

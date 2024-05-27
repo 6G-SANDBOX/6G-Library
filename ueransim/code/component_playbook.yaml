@@ -10,13 +10,32 @@
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
+    - name: Overwrite defaults with correct values
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/variable_autocompletion.yaml"
+
     - name: Terraform apply
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
+- name: "STAGE 2: Prepare to access the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
 
 
-
-# crear user tn-user con la clave ssh provista
 
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
@@ -46,6 +65,11 @@
     # Polemic step. Might be deleted in the future
     - name: Add new VM into the ssh-config of the Jenkins host
       ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/01_ssh_config_file.yaml"
+
+
+
+
+###### crear user tn-user con la clave ssh provista
 
 
     # - name: DEBUG proxy IP

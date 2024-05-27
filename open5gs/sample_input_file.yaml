@@ -1,7 +1,7 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
 one_open5gs_k8s: "k8s_medium-custom_name"        # REQUIRED. Modify with the custom_name of a previously deployed k8s_medium component
-one_open5gs_webui_subdomain: "open5gs-dashboard"
+one_open5gs_webui_subdomain: "open5gs"
 
 one_open5gs_mcc: "001"
 one_open5gs_mnc: "01"

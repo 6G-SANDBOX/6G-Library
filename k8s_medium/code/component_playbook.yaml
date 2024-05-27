@@ -53,7 +53,7 @@
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}-{{ item.key }}"
         ansible_host: "{{ item.value }}"
-        ansible_ssh_common_args: "-J {{ site_jenkins_user }}@{{ bastion_ip }}{% if not item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
+        ansible_ssh_common_args: "-J {{ site_ssh_user }}@{{ bastion_ip }}{% if not item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
         ansible_user: "root"
         groups: "{{ entity_name | replace('-', '_') }}"
       loop: "{{ node_ips | dict2items }}"
@@ -119,13 +119,8 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-node_ids"
-            value: "{{ node_ids }}"
-            description: "OpenNebula VM IDs from {{ entity_name }}"
-
-          - key: "{{ entity_name }}-node_ips"
-            value: "{{ node_ips }}"
-            description: "VM IPs from from {{ entity_name }}"
+          "{{ entity_name }}-node_ids": "{{ node_ids }}"
+          "{{ entity_name }}-node_ips": "{{ node_ips }}"
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:

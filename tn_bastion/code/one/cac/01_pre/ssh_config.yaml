@@ -2,7 +2,7 @@
   community.general.ssh_config:
     host: "{{ tn_id }}-{{ entity_name }}"
     hostname: "{{ ips[one_bastion_reachable_network] | default('ERROR_ASSIGNING_IP') }}"
-    remote_user: "jenkins-master"
+    remote_user: "{{ site_ssh_user }}"
     identity_file: "/var/lib/jenkins/.ssh/id_ed25519"
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present

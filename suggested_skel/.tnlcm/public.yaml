@@ -59,9 +59,9 @@ metadata:
       k8s_medium:       # dependency on a previously deployed k8s_medium component with input value one_k8s_multus: "YES"
         with:
           one_k8s_multus:: "YES"
-      ueransim:         # dependency on a previously deployed ueransim component with input value run_gnb: "YES" ONLY IF this component has input value 'sample_optional_value: "positive"'
+      ueransim:         # dependency on a previously deployed ueransim component with input value one_ueransim_run_gnb: "YES" ONLY IF this component has input value 'sample_optional_value: "positive"'
         with:
-          run_gnb: "YES"
+          one_ueransim_run_gnb: "YES"
       if:
         sample_optional_value: "positive"
       # TN must satisfy only 2 dependencies
@@ -151,11 +151,11 @@ input:
         - vnet.output.id
       # repeated: false    # maybe this is too much. Option to enable selecting the same path multiple times
 
-  run_gnb:
+  one_ueransim_run_gnb:
     description: |
       Additional dependencies are added deppending on this variable's value:
         - If "YES", then an open5gs component needs to be previously deployed.
-        - If "NO" and run_ue as "YES", then a a previous ueransim component needs to be previously deployes with run_gnb as "YES".
+        - If "NO" and one_ueransim_run_ue as "YES", then a a previous ueransim component needs to be previously deployes with one_ueransim_run_gnb as "YES".
     type: "str"
     choices:
       - "YES"
@@ -174,10 +174,10 @@ input:
       - if_value:                # dependency aplied if this "AND" list of input value conditions is satisfied
           - "NO"
         then:
-          self.input.run_ue: "YES"
-          ueransim.input.run_gnb:
-            with:              # dependency on an previously deployed ueransim component with input value run_gnb: "YES"
-              run_gnb: "YES"
+          self.input.one_ueransim_run_ue: "YES"
+          ueransim.input.one_ueransim_run_gnb:
+            with:              # dependency on an previously deployed ueransim component with input value one_ueransim_run_gnb: "YES"
+              one_ueransim_run_gnb: "YES"
             autocompletes:
               variable1: "output.variable1_from_ueransim"
               variable2: "input.variable2_from_ueransim"

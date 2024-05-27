@@ -10,21 +10,18 @@ resource "opennebula_virtual_machine" "tn_bastion" {
   context = {
     NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
-    USERNAME = "{{ site_jenkins_user }}"
-    SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
+    USERNAME = "{{ site_ssh_user }}"
+    SSH_PUBLIC_KEY = "{{ site_ssh_public_key }}"
     VPN_PUBLIC_IP = "{{ site_public_ip }}"
     WIREGUARD_ALLOWEDIPS = "{{ one_bastion_wireguard_allowedips }}"
   }
 
-  
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
   disk {
     image_id = {{ site_one_templates.tn_bastion.image_id }}
     size     = {{ one_bastion_disk }}
     target   = "vda"
     driver   = "qcow2"
-  } #}
-
+  }
 
   nic {
     model           = "virtio"

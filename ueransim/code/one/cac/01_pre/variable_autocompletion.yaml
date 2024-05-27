@@ -1,0 +1,42 @@
+---
+- name: Retrieve terraform outputs from previous components
+  ansible.builtin.shell:
+  args:
+    chdir: "{{ workspace }}/.terraform/"
+    cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+    executable: /bin/bash
+  register: terraform_outputs
+  changed_when: false
+
+- name: "Overwrite gNB defaults with {{ one_ueransim_gnb_linked_open5gs }} values"
+  ansible.builtin.set_fact:
+    one_ueransim_gnb_proxy: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-proxy'] }}"
+    one_ueransim_gnb_mcc: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-mcc'] }}"
+    one_ueransim_gnb_mnc: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-mnc'] }}"
+    one_ueransim_gnb_tac: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-tac'] }}"
+    one_ueransim_gnb_s_nssai_sst: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-s_nssai_sst'] }}"
+    one_ueransim_gnb_s_nssai_sd: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-s_nssai_sd'] }}"
+    one_ueransim_gnb_amf_ip: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-amf_ip'] }}"
+  when: (one_ueransim_run_gnb == 'YES') 
+  
+- name: "Overwrite UE defaults with {{ one_ueransim_ue_linked_gnb }} values"
+  ansible.builtin.set_fact:
+    one_ueransim_ue_supi: >-
+      imsi-
+      {{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_mcc'] }}
+      {{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_mnc'] }}
+      0000000001
+    one_ueransim_ue_mcc: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_mcc'] }}"
+    one_ueransim_ue_mnc: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_mnc'] }}"
+    one_ueransim_ue_gnbSearchList: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-ip'] }}"
+    one_ueransim_ue_session_sst: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_s_nssai_sst'] }}"
+    one_ueransim_ue_session_sd: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_s_nssai_sd'] }}"
+    one_ueransim_ue_configured_nssai_sst: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_s_nssai_sst'] }}"
+    one_ueransim_ue_configured_nssai_sd: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_s_nssai_sd'] }}"
+    one_ueransim_ue_default_nssai_sst: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_s_nssai_sst'] }}"
+    one_ueransim_ue_default_nssai_sd: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_s_nssai_sd'] }}"
+  when: (one_ueransim_run_ue == 'YES') 
+  
+- name: Overwrite again with explicit values from the input file
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/{{ component_type }}/variables/input_file.yaml"
