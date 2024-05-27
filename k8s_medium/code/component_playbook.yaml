@@ -15,7 +15,6 @@
 
 
 - name: "STAGE 2: Prepare to access the component"
-  when: not terraform_apply.failed
   hosts: localhost
   gather_facts: false
   connection: local
@@ -78,7 +77,6 @@
         mode: "644"
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  when: "not {{ hostvars['localhost']['terraform_apply'].failed }}"
   hosts: "{{ hostvars['localhost']['entity_name'] | replace('-', '_') }}"
   gather_facts: false
   tasks:
@@ -102,7 +100,6 @@
           when: hostvars['localhost']['one_k8s_longhorn']  == "YES"
 
 - name: "STAGE 4: Publish execution results"
-  when: not terraform_apply.failed
   hosts: localhost
   gather_facts: false
   connection: local

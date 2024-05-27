@@ -52,5 +52,6 @@
       register: tnlcm_post
       ignore_errors: true
 
-    - name: Stop pipeline execution
-      ansible.builtin.meta: end_play
+    - name: Stop playbook execution
+      ansible.builtin.fail:
+        msg: "The Execution of 'terraform apply' failed. Check generated markdown file for more debugging information."
