@@ -15,3 +15,12 @@
   ansible.builtin.slurp:
     src: "/tmp/id_ed25519"
   register: ssh_private_key
+
+- name: Set ssh keys as authorized in the nodes
+  ansible.posix.authorized_key:
+    user: "{{ site_jenkins_ssh_user }}"
+    state: present
+    key: "{{ item }}"
+  loop:
+    - "{{ site_admin_ssh_public_key }}"
+    - "{{ ssh_public_key }}"

@@ -10,8 +10,8 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   context = {
     NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
-    USERNAME = "{{ site_ssh_user }}"
-    SSH_PUBLIC_KEY = "{{ site_ssh_public_key }}"
+    USERNAME = "{{ site_jenkins_ssh_user }}"
+    SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
     RUN_GNB = "{{ one_ueransim_run_gnb }}"
     RUN_UE = "{{ one_ueransim_run_ue }}"
  {# ojo con esta, está mal, y hay que referenciar variable one_ueransim_gnb_proxy #}

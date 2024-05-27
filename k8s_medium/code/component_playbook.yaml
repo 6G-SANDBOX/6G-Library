@@ -53,7 +53,7 @@
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}-{{ item.key }}"
         ansible_host: "{{ item.value }}"
-        ansible_ssh_common_args: "-J {{ site_ssh_user }}@{{ bastion_ip }}{% if not item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
+        ansible_ssh_common_args: "-J {{ site_jenkins_ssh_user }}@{{ bastion_ip }}{% if not item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
         ansible_user: "root"
         groups: "{{ entity_name | replace('-', '_') }}"
       loop: "{{ node_ips | dict2items }}"
@@ -80,11 +80,14 @@
   hosts: "{{ hostvars['localhost']['entity_name'] | replace('-', '_') }}"
   gather_facts: false
   tasks:
-    - name: Set the tn_id ssh key as authorized in the nodes
+    - name: Set the ssh keys as authorized in the nodes
       ansible.posix.authorized_key:
         user: root
         state: present
-        key: "{{ hostvars['localhost']['ssh_public_key'] }}"
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost']['site_admin_ssh_public_key'] }}"
+        - "{{ hostvars['localhost']['ssh_public_key'] }}"
 
     - name: Apply extra Helm charts
       when: inventory_hostname == hostvars['localhost']['entity_name'] + '-master_0'
