@@ -6,8 +6,8 @@
     access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
     secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
     bucket: "{{ site_s3_server.bucket }}"
-    object: "{{ tn_id }}/tf-{{ item.dest | basename }}.tf"
-    src: "{{ item.dest }}.tf"
+    object: "{{ tn_id }}/{{ item.dest | basename }}"
+    src: "{{ item.dest }}"
     encrypt: no
   loop: "{{ terraform_manifests.results }}"
   when: terraform_apply.failed is defined and terraform_apply.failed == false

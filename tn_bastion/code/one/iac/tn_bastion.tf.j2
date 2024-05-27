@@ -36,6 +36,8 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     network_id      = opennebula_virtual_network.{{ network }}.id
   }
 {% endfor %}
+
+  depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
 }
 
 output "{{ entity_name }}-id" {

@@ -7,7 +7,7 @@ The Trial Network's main VXLAN.
 
 Important information:
 
-* **OPENNEBULA VIRTUAL NETWORK ID**: {{ id }}
+* **OPENNEBULA VIRTUAL NETWORK ID**: {{ tn_vxlan_id }}
 * **VXLAN NAME**: {{ tn_id }}-tn_vxlan
 * **VXLAN FIRST IP**: {{ one_vxlan_first_ip }}
 * **VXLAN ADDRESS SIZE**: {{ one_vxlan_address_size }}
@@ -23,11 +23,11 @@ TheTrial Network's BASTION ,router and firewall.
 
 Important information:
 
-* OpenNebula ID: {{ id }}
+* OpenNebula ID: {{ tn_bastion_id }}
 
 ### BASTION NETWORK INTERFACES
 ```
-{{ ips }}
+{{ tn_bastion_ips }}
 ```
 
 

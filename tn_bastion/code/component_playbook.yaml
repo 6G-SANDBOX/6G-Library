@@ -1,5 +1,5 @@
 ---
-- name: "STAGE 1: Apply IAC to deploy the component" 
+- name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -39,15 +39,16 @@
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
+        hostname: "tn_bastion"
         ansible_host: "{{ ips[one_bastion_reachable_network] }}"
+        ansible_user: "{{ site_jenkins_ssh_user }}"
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
       
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "tn_bastion"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -78,8 +79,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "ssh_public_key"
-            value: "{{ hostvars[entity_name]['ssh_public_key']['content'] | b64decode | trim }}"
+          ssh_public_key: "{{ hostvars['tn_bastion']['ssh_public_key']['content'] | b64decode | trim }}"
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
