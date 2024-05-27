@@ -122,8 +122,10 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          "{{ entity_name }}-node_ids": "{{ node_ids }}"
-          "{{ entity_name }}-node_ips": "{{ node_ips }}"
+          - key: "{{ entity_name }}-node_ids"
+            value: "{{ node_ids }}"
+          - key: "{{ entity_name }}-node_ips"
+            value: "{{ node_ips }}"
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:

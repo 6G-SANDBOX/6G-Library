@@ -79,7 +79,8 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          ssh_public_key: "{{ hostvars['tn_bastion']['ssh_public_key']['content'] | b64decode | trim }}"
+          - key: "ssh_public_key"
+            value: "{{ hostvars['tn_bastion']['ssh_public_key']['content'] | b64decode | trim }}"
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:

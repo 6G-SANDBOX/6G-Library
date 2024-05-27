@@ -8,7 +8,7 @@
       }
     marker: "# {mark} ANSIBLE MANAGED BLOCK FOR OUTPUT {{ item.key }}"
     create: true
-  loop: "{{ custom_outputs | dict2items }}"
+  loop: "{{ custom_outputs }}"
   # loop_control:
   #   label: "{{ item.key }}"
 
