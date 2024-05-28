@@ -41,7 +41,7 @@
     one_ueransim_ue_mnc: "{{ terraform_outputs_gnb_dict.mnc }}"
     one_ueransim_ue_key: "{{ terraform_outputs_gnb_dict.key }}"
     one_ueransim_ue_op: "{{ terraform_outputs_gnb_dict.opc }}"
-    one_ueransim_ue_gnbSearchList: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-ips'] }}"      # TODO: fix
+    one_ueransim_ue_gnbSearchList: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-ips'][ vnet_id ] }}"
     one_ueransim_ue_session_apn: "{{ terraform_outputs_gnb_dict.apn}}"
     one_ueransim_ue_session_sst: "{{ terraform_outputs_gnb_dict.sst }}"
     one_ueransim_ue_session_sd: "{{ terraform_outputs_gnb_dict.sd }}"

@@ -2,7 +2,7 @@
 - name: Append new commponent's name and IP into a .ssh/config.d/ file
   community.general.ssh_config:
     host: "{{ tn_id }}-{{ enitty_name }}"
-    hostname:  "{{ ips[one_ueransim_networks] | default('ERROR_ASSIGNING_IP') }}"
+    hostname:  "{{ ips[vnet_id] | default('ERROR_ASSIGNING_IP') }}"
     proxyjump: "{{ tn_id }}-tn_bastion"
     remote_user: "{{ site_jenkins_ssh_user }}"
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
