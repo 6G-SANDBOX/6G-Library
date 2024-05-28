@@ -32,102 +32,114 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default] }}"
+        ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
 
+    - name: Add new VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "{{ entity_name }}"
+        ansible_host: "{{ ips[one_ueransim_networks] }}"     ### falla aquí fijo
+        ansible_ssh_common_args: "-J {{ site_jenkins_ssh_user }}@{{ bastion_ip }}"
+        ansible_user: "{{ site_jenkins_ssh_user }}"
 
 
-    - name: Retrieve terraform outputs
-      ansible.builtin.shell:
-      args:
-        chdir: "{{ workspace }}/.terraform/"
-        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
-        executable: /bin/bash
-      register: terraform_outputs
-      changed_when: false
-    - name: Load terraform output as an ansible fact
-      ansible.builtin.set_fact:
-        outputs: "{{ terraform_outputs.stdout | ansible.builtin.from_json }}"
-    - name: DEBUG new terraform output fact
-      ansible.builtin.debug:
-        msg: "{{ outputs }}"
+    - name: Create SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
 
 
-    - name: Get VM IP from the site default network
-      ansible.builtin.set_fact:
-        vm_internal_ip: "{{ item.value }}"
-      loop: "{{ lookup('ansible.builtin.dict', outputs[one_component_name + \"-network_assignments\"], wantlist=True) }}"
-      when: not result.failed and item.key | int != 0
-    - name: Verify IP is correctly loaded
-      ansible.builtin.debug:
-        msg: "Appliance reachable at address: {{ vm_internal_ip | default('----') }}"
-
-    # Polemic step. Might be deleted in the future
-    - name: Add new VM into the ssh-config of the Jenkins host
-      ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/01_ssh_config_file.yaml"
-
-
-
-
-###### crear user tn-user con la clave ssh provista
-
-
-    # - name: DEBUG proxy IP
-    #   ansible.builtin.debug:
-    #     msg: "{{ outputs['tn_bastion-network_assignments']['0'] }}"
-
-    # - name: Add new VM to Ansible Inventory
-    #   ansible.builtin.add_host:
-    #     hostname: "{{ tn_id }}-{{ one_component_name }}"
-    #     ansible_host: "{{ vm_internal_ip }}"
-    #     ansible_user: "root"
-    #     ansible_ssh_common_args: "-J root@{{ outputs['tn_bastion-network_assignments']['0'] }}"
-
-    # DELETE IN NEAR FUTURE, AS WELL AS THE YAML FILE
-    # - name: Add new VM into the ssh-config of the Jenkins host
-    #   ansible.builtin.include_tasks: "./{{ site_hypervisor }}/cac/01_ssh_config_file.yaml"
-
-    # - name: Wait for VM to be ready
-    #   ansible.builtin.wait_for:
-    #     port: 22
-    #     host: "{{ vm_internal_ip }}"
-    #     connect_timeout: 5
-    #     delay: 5
-    #     timeout: 120
-
-
-# # Configuration Inside the VM. USELESS, COMMENT AFTER TESTING
-# - name: "Configuration inside {{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }} Appliance"
-#   hosts: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['one_component_name'] }}"
-#   gather_facts: false
-#   tasks:
-
-#     - name: Wait for system to become reachable
-#       ansible.builtin.wait_for_connection:
-#         connect_timeout: 5
-#         delay: 5
-#         timeout: 120
-
-#     - name: Gather facts for first time
-#       ansible.builtin.setup:
-
-#     - name: Load Variables into new VM
-#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/mix_variables_tasks.yaml"
-
-    # - command: "cat /etc/hostname"
-    #   register: hostname_out
-
-    # - name: "DEBUG"
-    #   ansible.builtin.debug:
-    #     msg: "{{ hostname_out | to_json }}"
-
-
-- name: Results
-  hosts: localhost
+- name: "STAGE 3: Apply CAC to prepare the component"
+  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  gather_facts: false
   tasks:
-    - name: Publish execution results
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results_tasks.yaml"
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        delay: 20
+        timeout: 180
 
-    - name: Upload Terraform manifest
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/upload_manifest_to_folder_tasks.yaml"
-      when: not result.failed
+    - name: Set site ssh key as authorized in jenkins user
+      ansible.posix.authorized_key:
+        user: "{{ site_jenkins_ssh_user }}"
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost']['site_admin_ssh_public_key'] }}"
+
+    - name: Create new user for experimenter access
+      ansible.builtin.user:
+        name: tnuser
+        shell: /bin/bash
+        groups: wheel
+
+    - name: Set TN ssh key as authorized in new user
+      ansible.posix.authorized_key:
+        user: tnuser
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost']['ssh_public_key'] }}"
+
+
+- name: "STAGE 4: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Publish gNB metadata as terraform outputs
+      when: one_ueransim_run_gnb == 'YES'
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-gnb_metadata"
+            value: "{{ gnb_metadata_dict }}"
+        gnb_metadata_dict: >
+          {
+            'mcc': '{{ one_ueransim_gnb_mcc }}',
+            'mnc': '{{ one_ueransim_gnb_mnc }}',
+            'msin': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].msin }}',
+            'key': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].key }}',
+            'opc': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].opc }}',
+            'apn': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].apn }}',
+            'tac': '{{ one_ueransim_gnb_tac }}',
+            'sst': '{{ one_ueransim_gnb_slices_sst }}',
+            'sd': '{{ one_ueransim_gnb_slices_sd }}'
+          }
+
+    - name: Publish UE metadata as terraform outputs
+      when: one_ueransim_run_ue == 'YES'
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-ue_metadata"
+            value: "{{ ue_metadata_dict }}"
+        ue_metadata_dict: >
+          {
+            'supi': '{{ one_ueransim_ue_supi }}',
+            'mcc': '{{ one_ueransim_ue_mcc }}',
+            'mnc': '{{ one_ueransim_ue_mnc }}',
+            'msin': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + 'gnb-metadata'].msin }}',
+            'key': '{{ one_ueransim_ue_key }}',
+            'opc': '{{ one_ueransim_ue_op }}',
+            'apn': '{{ one_ueransim_ue_session_apn }}',
+            'sst': '{{ one_ueransim_ue_session_sst }}',
+            'sd': '{{ one_ueransim_ue_session_sd }}'
+          }
+
+    - name: Merge all component component outputs into one "output" variable
+      ansible.builtin.set_fact:
+        output:
+          ips: "{{ ips | b64encode }}"
+          id: "{{ id | b64encode }}"
+
+
+          tn_vxlan_id: "{{ tn_vxlan_id | b64encode }}"
+          tn_bastion_ips: "{{ tn_bastion_ips | b64encode }}"
+          tn_bastion_id: "{{ tn_bastion_id | b64encode }}"
+          vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"
+          ssh_public_key: "{{ hostvars['tn_bastion']['ssh_public_key']['content'] }}"
+          ssh_private_key: "{{ hostvars['tn_bastion']['ssh_private_key']['content'] }}"
+
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

@@ -108,3 +108,15 @@ input:
 ## Component output
 ####################################
 output:
+  proxy:
+  mcc:
+  mnc:
+  msin:
+  key:
+  opc:
+  apn:
+  tac:
+  s_nssai_sst:
+  s_nssai_sd:
+  amf_ip:
+  upf_ip:

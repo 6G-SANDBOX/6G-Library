@@ -61,8 +61,9 @@ input:
 ## Component output
 ####################################
 output:
-  ips:               # dictionary of VMs: key="vnet ID in OpenNebula", value="the ip"
-  id:                # VM ID in OpenNebula
+  tn_vxlan_id:       # VNET ID in OpenNebula
+  tn_bastion_ips:    # dictionary of VMs: key="vnet ID in OpenNebula", value="the ip"
+  tn_bastion_id:     # VM ID in OpenNebula
   vpn_client_tunnel: # VPN Client config to connect to this Trial Network
   ssh_public_key:
   ssh_private_key:

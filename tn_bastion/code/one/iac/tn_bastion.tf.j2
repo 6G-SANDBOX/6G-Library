@@ -28,7 +28,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 
   nic {
     model           = "virtio"
-    network_id      = "{{ one_bastion_reachable_network }}"
+    network_id      = "{{ site_networks_id.default }}"
   }
 {% for network in one_bastion_networks %}
   nic {

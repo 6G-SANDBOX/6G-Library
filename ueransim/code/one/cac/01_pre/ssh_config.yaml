@@ -1,8 +1,9 @@
+---
 - name: Append new commponent's name and IP into a .ssh/config.d/ file
   community.general.ssh_config:
-    host: "{{ tn_id }}-tn_bastion"
-    hostname: "{{ ips[site_networks_id.default] | default('ERROR_ASSIGNING_IP') }}"
+    host: "{{ tn_id }}-{{ enitty_name }}"
+    hostname:  "{{ ips[one_ueransim_networks] | default('ERROR_ASSIGNING_IP') }}"
+    proxyjump: "{{ tn_id }}-tn_bastion"
     remote_user: "{{ site_jenkins_ssh_user }}"
-    identity_file: "/var/lib/jenkins/.ssh/id_ed25519"
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present

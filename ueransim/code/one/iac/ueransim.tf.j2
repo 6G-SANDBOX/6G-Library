@@ -14,10 +14,8 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
     RUN_GNB = "{{ one_ueransim_run_gnb }}"
     RUN_UE = "{{ one_ueransim_run_ue }}"
- {# ojo con esta, está mal, y hay que referenciar variable one_ueransim_gnb_proxy #}
-    ONEKE_VNF = {{ opennebula_virtual_network.{{ one_k8s_external_vnet }}.ip }}
-    ONEKE_VNF = "${output.k8s_medium-{{ one_k8s_external_vnet }}-node_ips}"
 
+    ONEKE_VNF = "{{ one_ueransim_gnb_proxy }}"
     GNB_MCC = "{{ one_ueransim_gnb_mcc }}"
     GNB_MNC = "{{ one_ueransim_gnb_mnc }}"
     GNB_TAC = "{{ one_ueransim_gnb_tac }}"
@@ -57,6 +55,8 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     network_id      = opennebula_virtual_network.{{ network }}.id
   }
 {% endfor %}
+
+  depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
 }
 
 output "{{ entity_name }}-id" {

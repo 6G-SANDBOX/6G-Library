@@ -153,6 +153,9 @@ input:
 ## Component output
 ####################################
 output:
-  kubeconfig: "Kubeconfig file to access to this cluster"
-
-        # "kubeconfig": "{{ kubeconfig_content | b64encode }}"
+  id:
+  cluster_roles:
+  node_ids:
+  node_ips:
+  kubeconfig:   #"Kubeconfig file to access to this cluster"
+  skooner_token:

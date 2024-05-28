@@ -10,6 +10,12 @@
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
+    - name: Terraform apply to load custom outputs previously created
+      community.general.terraform:
+        project_path: "{{ workspace }}/.terraform/"
+        state: "present"
+        force_init: true
+
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
       args:
@@ -21,7 +27,7 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
-        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips']['0'] }}"
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default] }}"
         node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_k8s + '-node_ips'] }}"
 
     - name: Add the k8s master to Ansible Inventory
@@ -49,32 +55,24 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-k8s"
-            value: "{{ one_open5gs_k8s }}"
-          - key: "{{ entity_name }}-proxy"
-            value: "{{ node_ips.vnf_0 }}"
-          - key: "{{ entity_name }}-mcc"
-            value: "{{ one_open5gs_mcc }}"
-          - key: "{{ entity_name }}-mnc"
-            value: "{{ one_open5gs_mnc }}"
-          - key: "{{ entity_name }}-msin"
-            value: "{{ one_open5gs_msin }}"
-          - key: "{{ entity_name }}-key"
-            value: "{{ one_open5gs_key }}"
-          - key: "{{ entity_name }}-opc"
-            value: "{{ one_open5gs_opc }}"
-          - key: "{{ entity_name }}-apn"
-            value: "{{ one_open5gs_apn }}"
-          - key: "{{ entity_name }}-tac"
-            value: "{{ one_open5gs_tac }}"
-          - key: "{{ entity_name }}-s_nssai_sst"
-            value: "{{ one_open5gs_s_nssai_sst }}"
-          - key: "{{ entity_name }}-s_nssai_sd"
-            value: "{{ one_open5gs_s_nssai_sd }}"
-          - key: "{{ entity_name }}-amf_ip"
-            value: "{{ one_open5gs_amf_ip }}"
-          - key: "{{ entity_name }}-upf_ip"
-            value: "{{ one_open5gs_upf_ip }}"
+          - key: "{{ entity_name }}-metadata"
+            value: "{{ metadata_dict }}"
+        metadata_dict: >
+          {
+            'k8s': '{{ one_open5gs_k8s }}',
+            'proxy': '{{ node_ips.vnf_0 }}',
+            'mcc': '{{ one_open5gs_mcc }}',
+            'mnc': '{{ one_open5gs_mnc }}',
+            'msin': '{{ one_open5gs_msin }}',
+            'key': '{{ one_open5gs_key }}',
+            'opc': '{{ one_open5gs_opc }}',
+            'apn': '{{ one_open5gs_mcc }}',
+            'tac': '{{ one_open5gs_mcc }}',
+            's_nssai_sst': '{{ one_open5gs_s_nssai_sst }}',
+            's_nssai_sd': '{{ one_open5gs_s_nssai_sd }}',
+            'amf_ip': '{{ one_open5gs_amf_ip }}',
+            'upf_ip': '{{ one_open5gs_amf_ip }}'
+          }
 
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
