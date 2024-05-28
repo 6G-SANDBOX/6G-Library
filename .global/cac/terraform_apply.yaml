@@ -8,7 +8,12 @@
 - name: "Prepare {{ entity_name}} terraform manifests"
   ansible.builtin.template:
     src: "{{ item.path }}"
-    dest: "{{ workspace }}/.terraform/tf-{{ item.path | basename | regex_replace('.tf.j2', '.tf') }}"
+    dest: >-
+      {{
+        workspace + '/.terraform/tf-' + item.path | basename | regex_replace('.tf.j2', '') +
+        (('-' + custom_name) if component_type not in ['tn_vxlan', 'tn_bastion', 'tn_init'] else '') +
+        '.tf'
+      }}
   loop: "{{ terraform_templates.files }}"
   register: terraform_manifests
   
