@@ -32,7 +32,7 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
-        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default] }}"
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
@@ -43,7 +43,6 @@
         ansible_host: "{{ ips[one_ueransim_networks] }}"     ### falla aquí fijo
         ansible_ssh_common_args: "-J {{ site_jenkins_ssh_user }}@{{ bastion_ip }}"
         ansible_user: "{{ site_jenkins_ssh_user }}"
-
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
@@ -87,59 +86,62 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: Publish gNB metadata as terraform outputs
-      when: one_ueransim_run_gnb == 'YES'
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
-      vars:
-        custom_outputs:
-          - key: "{{ entity_name }}-gnb_metadata"
-            value: "{{ gnb_metadata_dict }}"
-        gnb_metadata_dict: >
-          {
-            'mcc': '{{ one_ueransim_gnb_mcc }}',
-            'mnc': '{{ one_ueransim_gnb_mnc }}',
-            'msin': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].msin }}',
-            'key': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].key }}',
-            'opc': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].opc }}',
-            'apn': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].apn }}',
-            'tac': '{{ one_ueransim_gnb_tac }}',
-            'sst': '{{ one_ueransim_gnb_slices_sst }}',
-            'sd': '{{ one_ueransim_gnb_slices_sd }}'
-          }
-
-    - name: Publish UE metadata as terraform outputs
-      when: one_ueransim_run_ue == 'YES'
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
-      vars:
-        custom_outputs:
-          - key: "{{ entity_name }}-ue_metadata"
-            value: "{{ ue_metadata_dict }}"
-        ue_metadata_dict: >
-          {
-            'supi': '{{ one_ueransim_ue_supi }}',
-            'mcc': '{{ one_ueransim_ue_mcc }}',
-            'mnc': '{{ one_ueransim_ue_mnc }}',
-            'msin': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + 'gnb-metadata'].msin }}',
-            'key': '{{ one_ueransim_ue_key }}',
-            'opc': '{{ one_ueransim_ue_op }}',
-            'apn': '{{ one_ueransim_ue_session_apn }}',
-            'sst': '{{ one_ueransim_ue_session_sst }}',
-            'sd': '{{ one_ueransim_ue_session_sd }}'
-          }
-
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
 
+    - name: Tasks for UERANSIM as gNB
+      when: one_ueransim_run_gnb == 'YES'
+      block:
+        - name: Define gnb_metadata dictionary
+          ansible.builtin.set_fact:
+            gnb_metadata_dict: >
+              {
+                'mcc': '{{ one_ueransim_gnb_mcc }}',
+                'mnc': '{{ one_ueransim_gnb_mnc }}',
+                'msin': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].msin }}',
+                'key': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].key }}',
+                'opc': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].opc }}',
+                'apn': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].apn }}',
+                'tac': '{{ one_ueransim_gnb_tac }}',
+                'sst': '{{ one_ueransim_gnb_slices_sst }}',
+                'sd': '{{ one_ueransim_gnb_slices_sd }}'
+              }
+            output: "{{ output | combine({'gnb_metadata_dict': gnb_metadata_dict | b64encode}) }}"
 
-          tn_vxlan_id: "{{ tn_vxlan_id | b64encode }}"
-          tn_bastion_ips: "{{ tn_bastion_ips | b64encode }}"
-          tn_bastion_id: "{{ tn_bastion_id | b64encode }}"
-          vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"
-          ssh_public_key: "{{ hostvars['tn_bastion']['ssh_public_key']['content'] }}"
-          ssh_private_key: "{{ hostvars['tn_bastion']['ssh_private_key']['content'] }}"
+        - name: Publish gNB metadata as terraform outputs
+          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+          vars:
+            custom_outputs:
+              - key: "{{ entity_name }}-gnb_metadata"
+                value: "{{ gnb_metadata_dict }}"
+
+    - name: Tasks for UERANSIM as UE
+      when: one_ueransim_run_ue == 'YES'
+      block:
+        - name: Define ue_metadata dictionary
+          ansible.builtin.set_fact:
+            ue_metadata_dict: >
+              {
+                'supi': '{{ one_ueransim_ue_supi }}',
+                'mcc': '{{ one_ueransim_ue_mcc }}',
+                'mnc': '{{ one_ueransim_ue_mnc }}',
+                'key': '{{ one_ueransim_ue_key }}',
+                'opc': '{{ one_ueransim_ue_op }}',
+                'apn': '{{ one_ueransim_ue_session_apn }}',
+                'sst': '{{ one_ueransim_ue_session_sst }}',
+                'sd': '{{ one_ueransim_ue_session_sd }}'
+              }
+            output: "{{ output | combine({'ue_metadata_dict': ue_metadata_dict | b64encode}) }}"
+
+        - name: Publish UE metadata as terraform outputs
+          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+          vars:
+            custom_outputs:
+              - key: "{{ entity_name }}-ue_metadata"
+                value: "{{ ue_metadata_dict }}"
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

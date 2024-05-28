@@ -1,7 +1,7 @@
 ---
 - name: Generate an ed25519 ssh keypair
   openssh_keypair:
-    comment: "TrialNetwork@{{ tn_id }}"
+    comment: "tnuser@{{ tn_id }}"
     force: false
     path: "/tmp/id_ed25519"
     type: ed25519

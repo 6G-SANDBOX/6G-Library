@@ -30,7 +30,7 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
-        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default] }}"
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['ssh_public_key'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         cluster_roles: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-roles'] }}"
@@ -80,13 +80,26 @@
   hosts: "{{ hostvars['localhost']['entity_name'] | replace('-', '_') }}"
   gather_facts: false
   tasks:
-    - name: Set the ssh keys as authorized in the nodes
+    - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
-        user: root
+        user: "root"
         state: present
         key: "{{ item }}"
       loop:
         - "{{ hostvars['localhost']['site_admin_ssh_public_key'] }}"
+
+    - name: Create new user for experimenter access
+      ansible.builtin.user:
+        name: tnuser
+        shell: /bin/bash
+        groups: wheel
+
+    - name: Set TN ssh key as authorized in new user
+      ansible.posix.authorized_key:
+        user: tnuser
+        state: present
+        key: "{{ item }}"
+      loop:
         - "{{ hostvars['localhost']['ssh_public_key'] }}"
 
     - name: Apply extra Helm charts

@@ -27,7 +27,7 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
-        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default] }}"
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_k8s + '-node_ips'] }}"
 
     - name: Add the k8s master to Ansible Inventory

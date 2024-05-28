@@ -36,12 +36,12 @@
 
     - name: Verify that the bastion access IP is correctly loaded
       ansible.builtin.debug:
-        msg: "Network Main Interface is: {{ tn_bastion_ips[site_networks_id.default] | default('----') }}"
+        msg: "Network Main Interface is: {{ tn_bastion_ips[site_networks_id.default | string] | default('----') }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "tn_bastion"
-        ansible_host: "{{ tn_bastion_ips[site_networks_id.default] }}"
+        ansible_host: "{{ tn_bastion_ips[site_networks_id.default | string] }}"
         ansible_user: "{{ site_jenkins_ssh_user }}"
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
