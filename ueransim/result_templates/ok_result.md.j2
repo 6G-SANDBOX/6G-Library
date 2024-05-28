@@ -27,11 +27,11 @@ Important information about the deployment
 {% if one_ueransim_run_gnb is defined and one_ueransim_run_gnb == 'YES' %}
 ## gNB Runtime
 Values used to launch the ueransim_gnb.service:
+* **proxy**: `{{ one_ueransim_gnb_proxy }}`
+* **amf_address**: `{{ one_ueransim_gnb_amf_address}}`
 * **mcc**: `{{ one_ueransim_gnb_mcc}}`
 * **mnc**: `{{ one_ueransim_gnb_mnc}}`
 * **tac**: `{{ one_ueransim_gnb_mcc}}`
-* **proxy**: `{{ one_ueransim_gnb_proxy }}`
-* **amf_address**: `{{ one_ueransim_gnb_amf_address}}`
 * **slices_sst**: `{{ one_ueransim_gnb_slices_sst }}`
 * **slices_sd**: `{{ one_ueransim_gnb_slices_sd }}`
 * **gtpIp**: `{{ one_ueransim_gnb_gtpIp}}`
