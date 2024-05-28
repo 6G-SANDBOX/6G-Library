@@ -93,14 +93,14 @@
         name: tnuser
         shell: /bin/bash
         groups: wheel
-      when: "vnf" in inventory_hostname
+      when: "'vnf' in inventory_hostname"
 
     - name: Create new user for experimenter access in ubuntu
       ansible.builtin.user:
         name: tnuser
         shell: /bin/bash
         groups: sudo
-      when: "vnf" not in inventory_hostname
+      when: "'vnf' not in inventory_hostname"
 
     - name: Set TN ssh key as authorized in new user
       ansible.posix.authorized_key:
