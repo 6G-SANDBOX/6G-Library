@@ -43,11 +43,7 @@
 
     - name: "Overwrite UE defaults with {{ one_ueransim_ue_linked_gnb }} values"
       ansible.builtin.set_fact:
-        one_ueransim_ue_supi: >-
-          imsi-
-          {{ terraform_outputs_gnb_dict.mcc }}
-          {{ terraform_outputs_gnb_dict.mnc }}
-          {{ terraform_outputs_gnb_dict.msin }}
+        one_ueransim_ue_supi: "imsi-{{ terraform_outputs_gnb_dict.mcc }}{{ terraform_outputs_gnb_dict.mnc }}{{ terraform_outputs_gnb_dict.msin }}"
         one_ueransim_ue_mcc: "{{ terraform_outputs_gnb_dict.mcc }}"
         one_ueransim_ue_mnc: "{{ terraform_outputs_gnb_dict.mnc }}"
         one_ueransim_ue_key: "{{ terraform_outputs_gnb_dict.key }}"
@@ -69,11 +65,7 @@
   block:
     - name: "Overwrite UE defaults with {{ one_ueransim_gnb_linked_open5gs }} values"
       ansible.builtin.set_fact:
-        one_ueransim_ue_supi: >-
-          imsi-
-          {{ terraform_outputs_open5gs_dict.mcc }}
-          {{ terraform_outputs_open5gs_dict.mnc }}
-          {{ terraform_outputs_open5gs_dict.msin }}
+        one_ueransim_ue_supi: "imsi-{{ terraform_outputs_open5gs_dict.mcc }}{{ terraform_outputs_open5gs_dict.mnc }}{{ terraform_outputs_open5gs_dict.msin }}"
         one_ueransim_ue_mcc: "{{ terraform_outputs_open5gs_dict.mcc }}"
         one_ueransim_ue_mnc: "{{ terraform_outputs_open5gs_dict.mnc }}"
         one_ueransim_ue_key: "{{ terraform_outputs_open5gs_dict.key }}"
