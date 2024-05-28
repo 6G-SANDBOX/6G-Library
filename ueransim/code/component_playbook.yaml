@@ -112,7 +112,8 @@
                 'apn': '{{ terraform_outputs_open5gs_dict.apn }}',
                 'tac': '{{ one_ueransim_gnb_tac }}',
                 'sst': '{{ one_ueransim_gnb_slices_sst }}',
-                'sd': '{{ one_ueransim_gnb_slices_sd }}'
+                'sd': '{{ one_ueransim_gnb_slices_sd }}',
+                'gnb_address': '{{ ips[ vnet_id ] }}'
               }
         - name: Append gnb_metadata to the output
           ansible.builtin.set_fact:
