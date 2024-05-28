@@ -61,19 +61,21 @@
 
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
-        user: "{{ site_jenkins_ssh_user }}"
+        user: "{{ hostvars['localhost']['site_jenkins_ssh_user'] }}"
         state: present
         key: "{{ item }}"
       loop:
         - "{{ hostvars['localhost']['site_admin_ssh_public_key'] }}"
 
     - name: Create new user for experimenter access
+      become: true
       ansible.builtin.user:
         name: tnuser
         shell: /bin/bash
-        groups: wheel
+        groups: sudo
 
     - name: Set TN ssh key as authorized in new user
+      become: true
       ansible.posix.authorized_key:
         user: tnuser
         state: present
@@ -100,16 +102,20 @@
           ansible.builtin.set_fact:
             gnb_metadata_dict: >
               {
+                'proxy': '{{ one_ueransim_gnb_proxy }}',
+                'amf_address': '{{ one_ueransim_gnb_amf_address }}',
                 'mcc': '{{ one_ueransim_gnb_mcc }}',
                 'mnc': '{{ one_ueransim_gnb_mnc }}',
-                'msin': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].msin }}',
-                'key': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].key }}',
-                'opc': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].opc }}',
-                'apn': '{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'].apn }}',
+                'msin': '{{ terraform_outputs_open5gs_dict.msin }}',
+                'key': '{{ terraform_outputs_open5gs_dict.key }}',
+                'opc': '{{ terraform_outputs_open5gs_dict.opc  }}',
+                'apn': '{{ terraform_outputs_open5gs_dict.apn }}',
                 'tac': '{{ one_ueransim_gnb_tac }}',
                 'sst': '{{ one_ueransim_gnb_slices_sst }}',
                 'sd': '{{ one_ueransim_gnb_slices_sd }}'
               }
+        - name: Append gnb_metadata to the output
+          ansible.builtin.set_fact:
             output: "{{ output | combine({'gnb_metadata_dict': gnb_metadata_dict | b64encode}) }}"
 
         - name: Publish gNB metadata as terraform outputs
@@ -131,10 +137,13 @@
                 'mnc': '{{ one_ueransim_ue_mnc }}',
                 'key': '{{ one_ueransim_ue_key }}',
                 'opc': '{{ one_ueransim_ue_op }}',
+                'ngbSearchList': '{{ one_ueransim_ue_gnbSearchList }}',
                 'apn': '{{ one_ueransim_ue_session_apn }}',
                 'sst': '{{ one_ueransim_ue_session_sst }}',
                 'sd': '{{ one_ueransim_ue_session_sd }}'
               }
+        - name: Append ue_metadata to the output
+          ansible.builtin.set_fact:
             output: "{{ output | combine({'ue_metadata_dict': ue_metadata_dict | b64encode}) }}"
 
         - name: Publish UE metadata as terraform outputs

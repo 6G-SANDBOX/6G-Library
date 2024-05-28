@@ -1,6 +1,5 @@
-## UERANSIM
-
-The *UERANSIM* appliance with the name **{{ tn_id }}-{{ one_component_name }}** has been succesfully deployed as part of the Trial Network: **{{ tn_id }}**
+# UERANSIM
+The *UERANSIM* appliance with the name **{{ tn_id }}-{{ entity_name }}** has been succesfully deployed as part of the Trial Network: **{{ tn_id }}**
 
 <img src="https://artifacthub.io/image/48ac05fa-1ef2-4d8f-8fba-1d67cb236335@3x"/>
 
@@ -15,26 +14,45 @@ Component configuration logs can be foud at `/var/log/post-ueransim.log`
 # Deployment
 Important information about the deployment
 
-* **VM ID**: {{ outputs[one_component_name + "-VM_ID"] }}
-{% if one_vm_username is defined and one_vm_username %}
-* **VM USER**: "{{ one_vm_username }}"
-{% endif %}
-{% if one_vm_password is defined and one_vm_password %}
-* **VM PASSWORD**: "{{ one_vm_password }}"
-{% endif %}
-{% if one_vm_ssh_key is defined and one_vm_ssh_key %}
-* **ALLOWED SSH PUBLIC KEY**: "{{ one_vm_ssh_key }}"
-{% endif %}
-* **MEMORY**: 2 GiB
-* **VCPU**: 2
-* **STORAGE**: 3 GiB
+* **VM ID**: {{ id }}
+* **MEMORY**: {{ one_ueransim_memory}} MiB
+* **VCPU**: `{{ one_ueransim_cpu }}
+* **STORAGE**: {{ 3072 }} GiB
 
 ### VIRTUAL MACHINE NETWORK INTERFACES
 ```
-{{ outputs[one_component_name + "-network_assignments"] }}
+{{ ips}}
 ```
 
-### INPUT VALUES
-```
-{{  lookup("file", "{{ workspace }}/{{ component_type }}/private/tnlcm_vars.yaml") | safe }}
-```
+{% if one_ueransim_run_gnb is defined and one_ueransim_run_gnb == 'YES' %}
+## gNB Runtime
+Values used to launch the ueransim_gnb.service:
+* **mcc**: `{{ one_ueransim_gnb_mcc}}`
+* **mnc**: `{{ one_ueransim_gnb_mnc}}`
+* **tac**: `{{ one_ueransim_gnb_mcc}}`
+* **proxy**: `{{ one_ueransim_gnb_proxy }}`
+* **amf_address**: `{{ one_ueransim_gnb_amf_address}}`
+* **slices_sst**: `{{ one_ueransim_gnb_slices_sst }}`
+* **slices_sd**: `{{ one_ueransim_gnb_slices_sd }}`
+* **gtpIp**: `{{ one_ueransim_gnb_gtpIp}}`
+* **linkIp**: `{{ one_ueransim_gnb_linkIp }}`
+* **ngapIp**: `{{ one_ueransim_gnb_ngapIp }}`
+
+{% endif %}
+{% if one_ueransim_run_ue is defined and one_ueransim_run_ue == 'YES' %}
+## UE Runtime
+Values used to launch the ueransim_ue.service:
+* **supi**: `{{ one_ueransim_ue_supi }}`
+* **mcc**: `{{ one_ueransim_ue_mcc}}`
+* **mnc**: `{{ one_ueransim_ue_mnc}}`
+* **key**: `{{ one_ueransim_ue_key}}`
+* **op**: `{{ one_ueransim_ue_op }}`
+* **ngbSearchList**: `{{ one_ueransim_ue_gnbSearchList }}`
+* **session_apn**: `{{ one_ueransim_ue_session_apn }}`
+* **session_sst**: `{{ one_ueransim_ue_session_sst }}`
+* **session_sd**: `{{ one_ueransim_ue_session_sd }}`
+* **configured_nssai_sst**: `{{ one_ueransim_ue_configured_nssai_sst }}`
+* **configured_nssai_sd**: `{{ one_ueransim_ue_configured_nssai_sd }}`
+* **default_nssai_sst**: `{{ one_ueransim_ue_default_nssai_sst }}`
+* **default_nssai_sd**: `{{ one_ueransim_ue_default_nssai_sd }}`
+{% endif %}
