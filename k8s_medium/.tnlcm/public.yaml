@@ -36,8 +36,8 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  needs:
-    - vxlan:
+  dependencies:
+    - vnet:
   short_description: This is a component to deploy a K8S cluster medium size.
   long_description: |
     This component deploy a K8S cluster using the oneKE service created by OpenNebula.
@@ -58,7 +58,7 @@ input:
     optional: false
 
   one_k8s_internal_vnet:
-    description: Name of the VNet used to interconnect the OneKE nodes. A vxlan component
+    description: Name of the VNet used to interconnect the OneKE nodes. A vxlan component # Modify with the custom_name of a previously deployed vnet
     type: "int"
     value: ""
     user_input: true
@@ -86,7 +86,7 @@ input:
         * calico: Popular CNI with advanced network policies, flat Layer 3 network and NAT for outbound traffic.
         * canal: combines Flannel and Calico, Flannel for pod traffic between hosts and Calico for network polico enforcement and pod to pod traffic. Canal CNI will not be supported after OneKE 1.27
     type: "str"
-    choices::
+    choices:
       - "cilium"
       - "calico"
       - "canal"

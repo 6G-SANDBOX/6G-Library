@@ -50,7 +50,7 @@ metadata:
 ####################################
 input:
   one_open5gs_k8s:
-    description: Unique name to identify the OneKE cluster inside the Trial Network. OneKE cluster where the open5gs helm chart will be deployed
+    description: Unique name to identify the OneKE cluster inside the Trial Network. OneKE cluster where the open5gs helm chart will be deployed # Modify with the custom_name of a previously deployed k8s_medium component
     type: "str"
     value: "cluster_xxxxx"
     user_input: true

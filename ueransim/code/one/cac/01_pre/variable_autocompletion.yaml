@@ -70,7 +70,7 @@
         one_ueransim_ue_mnc: "{{ terraform_outputs_open5gs_dict.mnc }}"
         one_ueransim_ue_key: "{{ terraform_outputs_open5gs_dict.key }}"
         one_ueransim_ue_op: "{{ terraform_outputs_open5gs_dict.opc }}"
-        one_ueransim_ue_gnbSearchList: "127.0.0.1"
+        one_ueransim_ue_gnbSearchList: null
         one_ueransim_ue_session_apn: "{{ terraform_outputs_open5gs_dict.apn }}"
         one_ueransim_ue_session_sst: "{{ terraform_outputs_open5gs_dict.s_nssai_sst }}"
         one_ueransim_ue_session_sd: "{{ terraform_outputs_open5gs_dict.s_nssai_sd }}"

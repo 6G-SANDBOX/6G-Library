@@ -30,7 +30,7 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  needs:
+  dependencies:
   short_description: This is a VM that acts as bastion for a Trial Network
   long_description: |
     It is the component that will host various network services and manage external access to the Trial Network:
@@ -42,20 +42,12 @@ metadata:
     - VPN Server
     In this version the only service available is VPN Server
   hypervisors: [one]
-  sites: [uma, athens, fokus]
+  sites: [uma, athens, fokus, oulu]
 
 ####################################
 ## Component input
 ####################################
 input:
-  one_bastion_networks:
-    description: List of VNet IDs the tn_bastion will be part of. Variable to be partially filled by the TNLCM
-    type: "strlist"
-    value:
-      - site_networks_id.default           # Virtual Network accesible to the user and the Jenkins-master
-      - tn_vxlan-id                        # VXLAN SHOULD BE CREATED BEFORE 
-    optional: true
-    user_input: false
 
 ####################################
 ## Component output

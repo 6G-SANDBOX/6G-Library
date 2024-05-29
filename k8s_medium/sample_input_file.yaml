@@ -1,14 +1,14 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
-one_k8s_external_vnet: "tn_vxlan"
-one_k8s_internal_vnet: "vnet-custom_name"   # REQUIRED. Modify with the custom_name of a previously deployed vnet
+#one_k8s_external_vnet: "tn_vxlan"
+one_k8s_internal_vnet: "vnet-custom_name"
 
-one_k8s_version: "129"        # Or 127
-one_k8s_multus: "YES"          # OnKE default is "NO"
-one_k8s_cni_plugin: "canal"    # OnKE default is "cilium"
-one_k8s_cilium_range: ""       # Required if the cni_plugin is cilium
-one_k8s_metallb: "YES"         # OnKE default is "NO"
-one_k8s_metallb_range: "111.21.1.200-11.21.1.240"    # Required if the metallb is enabled
-one_k8s_longhorn: "YES"        # OnKE default is "YES"
-one_k8s_traefik: "NO"          # OnKE default is "NO"
-one_k8s_dns: "1.1.1.1 8.8.8.8" # OnKE default is "1.1.1.1,8.8.8.8"
+#one_k8s_version: "129"
+#one_k8s_multus: "YES"
+#one_k8s_cni_plugin: "canal"
+#one_k8s_cilium_range: ""
+#one_k8s_metallb: "YES"
+#one_k8s_metallb_range: "111.21.1.200-11.21.1.240"
+#one_k8s_longhorn: "YES"
+#one_k8s_traefik: "NO"
+#one_k8s_dns: "1.1.1.1 8.8.8.8"

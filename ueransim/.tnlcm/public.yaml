@@ -87,7 +87,7 @@ input:
 
   ### Las dependencias que dependen de varios valores, pueden ir en cualquiera de las variables incluídas en la dependencia
   ### La otra condición de si one_ueransim_run_gnb="NO",one_ueransim_run_ue="YES" está donde el "one_ueransim_run_ue", pero por ninguna razón en particular, aquí también valdría.
-  one_ueransim_run_gnb:
+  one_ueransim_run_gnb:    # stablishes dependency with an open5gs component and makes one_ueransim_run_gnb_* variables required
     description: |
       Enable ueransim-gnb.service at start. If "YES", requires a functional open5gs appliance previously deployed
       Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
@@ -169,7 +169,7 @@ input:
     description: |
       Enable ueransim-ue.service at start. If "YES", requires either to set one_ueransim_run_gnb="YES", or to have a functional ueransim with one_ueransim_run_gnb="YES" previously deployed.
       Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
-    type: "str"
+    type: "str"     # stablishes dependency with an ueransim with run_gnb component and makes one_ueransim_run_ue_* variables required
     choices:
       - "YES"
       - "NO"
@@ -267,9 +267,8 @@ input:
   one_ueransim_ue_default_nssai_sd:
     description: In UE simulation, Slice Differentiator (SD) of the default NSSAI
     type: "int"
-    value: 1
-    user_input: true
-    optional: true
+    default:
+    required_when: one_ueransim_run_ue == 'YES'
 
 ####################################
 ## Component output

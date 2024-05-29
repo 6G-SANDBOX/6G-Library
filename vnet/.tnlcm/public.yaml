@@ -30,7 +30,7 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  needs:
+  dependencies:
   short_description: This is the component that creates Virtual Networks inside ONE
   long_description: |
     Component to create private Virtual Networks inside the Trial Network.
