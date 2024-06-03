@@ -27,12 +27,16 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  dependencies:
+    - vnet
+    - open5gs if run_gnb='YES'
+    - ueransim with run_gnb='YES' if run_ue='YES'
   short_description: This is the component to deploy a UERANSIM instance 
   long_description: |
     UERANSIM instance that can be deployed running as a User Equipment, as a gNB, as both or as None.
     Depending on the chosen mode (With the input values one_ueransim_run_gnb and one_ueransim_run_ue respectivelly), the following dependencies are aplied:
-    - If this ueransim has one_ueransim_run_gnb as "YES", then an open5gs component needs to be previously deployed.
-    - If this ueransim has one_ueransim_run_gnb as "NO" and one_ueransim_run_ue as "YES", then a a previous ueransim component needs to be previously deployes with one_ueransim_run_gnb as "YES".
+    - If this ueransim has one_ueransim_run_gnb as "YES", an open5gs component needs to be previously deployed.
+    - If this ueransim has one_ueransim_run_gnb as "NO" and one_ueransim_run_ue as "YES", a previous ueransim component needs to be previously deployed with one_ueransim_run_gnb as "YES".
   hypervisors: [one]
   sites: [uma, athens, fokus]
 

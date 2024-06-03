@@ -77,6 +77,7 @@
     - name: Merge all component component outputs into one "output" variable
       ansible.builtin.set_fact:
         output:
+          k8s: "{{ one_open5gs_k8s | b64encode }}"
           proxy: "{{ node_ips.vnf_0 | b64encode }}"
           mcc: "{{ one_open5gs_mcc | b64encode }}"
           mnc: "{{ one_open5gs_mnc | b64encode }}"

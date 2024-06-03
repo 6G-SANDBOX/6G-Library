@@ -38,10 +38,10 @@ metadata:
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   needs:
     - k8s_medium:
-  short_description: This is a component to deploy an Open5Gs on a K8S cluster.
+  short_description: Deployment of a 5G Core inside a Kubernetes cluster 
   long_description: |
-    This component deploys a 5G SA Core (Open5Gs) using Helm charts.
-    More info in this url: https:// ....
+    The open5gs deploys a 5G SA Core inside a Kubernetes cluster as a Helm Chart.
+    Documentation can be found at https://open5gs.org/open5gs/docs/
   hypervisors: [one]
   sites: [uma, athens, fokus]
 

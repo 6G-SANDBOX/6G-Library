@@ -6,6 +6,7 @@
 ##
 ## They are contained inside 4 global variables
 ## with all required info:
+##
 ##   1. metadata: General information like mantainers,
 ##      component dependencies and allowed platforms
 ##
@@ -20,11 +21,11 @@
 
 
 # "name" has been removed, "input" was "public" and "output" was "outputs"
-# The public.yaml file is unused in component deployments and serves the TNLCM to gather data about the component.
-# 
-# "metadata.needs" and "input" serve the TNLCM on how to order the component deployments. "output" serves it telling it the values to save.
+# The public.yaml file is unused in component deployments and serves to inform the TNLCM about the component.
+# "metadata" includes general information about the component, "input" describes the modifiable parameters, and "output" the return values reachable from other components.
 
-# metadata gives the TNLCM some general information to help it understand how to process and order the different components. Fields:
+### metadata
+# Gives the TNLCM some general information to help it understand how to process and order the different components. Fields:
 #   - mantainers: Unordered list of active component mantainers
 #   - needs: Ordered "OR" list of dictionaries with conditions to satisfy. It one dictionary is not satisfied, the TNLCM checks the next one successively until at least one is.
 #            Used by the backend to validate if the manifest is acceptable. If it is not, it tells the frontend the possible conditions to satisfy.
@@ -52,24 +53,7 @@
 ####################################
 metadata:
   maintainers:
-    - Full Name <contact@mail.address>
-  dependencies:
-      # TN must satisfy all 3 dependencies
-    - vxlan:            # dependency on a previously deployed vxlan component of any kind prev
-      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value one_k8s_multus: "YES"
-        with:
-          one_k8s_multus:: "YES"
-      ueransim:         # dependency on a previously deployed ueransim component with input value one_ueransim_run_gnb: "YES" ONLY IF this component has input value 'sample_optional_value: "positive"'
-        with:
-          one_ueransim_run_gnb: "YES"
-      if:
-        sample_optional_value: "positive"
-      # TN must satisfy only 2 dependencies
-    - vxlan:            # dependency on a previously deployed vxlan component of any kind prev
-      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value one_k8s_multus: "NO"
-        with:
-          one_k8s_multus: "NO"    
-    
+    - Full Name <contact@mail.address>    
   short_description: Short description of a Component Type
   long_description: |
     The long description of a Component Type may span multiple lines
