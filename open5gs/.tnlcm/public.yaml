@@ -4,29 +4,21 @@
 ##
 ## Variables accesible to the experimenter.
 ##
-## They are contained inside 4 global variables
+## They are contained inside 3 global variables
 ## with all required info:
-##   1. name: name of the component
 ##
-##   2. metadata: General information like mantainers,
+##   1. metadata: General information like mantainers,
 ##      component dependencies and allowed platforms
 ##
-##   3. input: Customizable variables for each
+##   2. input: Customizable variables for each
 ##      deployment to be filled by the experimenter
 ##      or the TNLCM
 ##
-##   4. output: Values sent to the TNLCM callback to
+##   3. output: Values sent to the TNLCM callback to
 ##      keep track of the TN deployments
-##
-## File previously found at "public/description.yaml"
 ##
 ######################################################
 
-
-####################################
-## Component name
-####################################
-name: open5gs
 
 ####################################
 ## Component metadata
@@ -36,76 +28,96 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  needs:
-    - oneKE:
-  short_description: Deployment of a 5G Core inside a Kubernetes cluster 
+  short_description: Deploys a 5G Core inside a Kubernetes cluster 
   long_description: |
-    The open5gs deploys a 5G SA Core inside a Kubernetes cluster as a Helm Chart.
-    Documentation can be found at https://open5gs.org/open5gs/docs/
+    Helm Chart deploying a 5G SA Core inside a Kubernetes cluster
+    More info in the official documentation: https://open5gs.org/open5gs/docs/
   hypervisors: [one]
-  sites: [uma, athens, fokus]
+  sites: [uma, athens, fokus, oulu]
 
 ####################################
 ## Component input
 ####################################
 input:
   one_open5gs_oneKE:
-    description: Unique name to identify the OneKE cluster inside the Trial Network. OneKE cluster where the open5gs helm chart will be deployed # Modify with the custom_name of a previously deployed oneKE component
-    type: "str"
-    value: "cluster_xxxxx"
-    user_input: true
-    optional: false
+    description: Name of the oneKE cluster used to deploy the Helm Chart
+    type: "oneKE"
+    required_when: true
+
+  one_open5gs_webui_subdomain:
+    descrption: Subdomain of the open5gs dashboard Web App
+    type: str
+    default_value: "open5gs"
+    required_when: false
+
   one_open5gs_mcc:
     description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
-    type: "str"
-    value: "001"
-    user_input: true
-    optional: false
+    type: str
+    default_value: "001"
+    required_when: false
+
   one_open5gs_mnc:
     description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
-    type: "str"
-    value: "01"
-    user_input: true
-    optional: false
+    type: str
+    default_value: "01"
+    required_when: false
+
+  one_open5gs_msin:
+    description: Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 10 digits inside quotes.
+    type: str
+    default_value: "0000000001"
+    required_when: false
+
+  one_open5gs_key:
+    description: Permanent Subscription Key
+    type: str
+    default_value: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+    required_when: false
+
+  one_open5gs_opc:
+    description: Operator Code
+    type: str
+    default_value: "E8ED289DEBA952E4283B54E88E6183CA"
+    required_when: false
+
+  one_open5gs_apn:
+    description: Access Point Name (APN) of the initial PDU session to be stablished
+    type: str
+    default_value: "internet"
+    required_when: false
+
   one_open5gs_tac:
     description: Tracking Area Code in the PLMN
-    type: "str"
-    value: "200"
-    user_input: true
-    optional: false
+    type: str
+    default_value: "200"
+    required_when: false
+
   one_open5gs_s_nssai_sst:
     description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
-    type: "str"
-    value: "1"
-    user_input: true
-    optional: false
+    type: str
+    default_value: "1"
+    required_when: false
+
   one_open5gs_s_nssai_sd:
     description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
-    type: "str"
-    value: "1"
-    user_input: true
-    optional: false
-  one_open5gs_amf_ip: 
-    description: IPv4 address of the Access Management Function (AMF). Should be placed inside the "one_oneKE_metallb_range" of the OneKE
-    type: "str"
-    value: "11.21.1.200"
-    user_input: true
-    optional: false
+    type: str
+    default_value: "1"
+    required_when: false
+
+  one_open5gs_amf_ip:
+    description: Address to expose the Core Access and Mobility Management Function (AMF). Requires to be part of the oneKE's one_oneKE_metallb_range
+    type: str
+    default_value: "10.21.12.200"
+    required_when: false
+
   one_open5gs_upf_ip:
-    description: IPv4 address of the User Plane Function (UPF). Should be placed inside the "one_oneKE_metallb_range" of the OneKE
-    type: "str"
-    value: "11.21.1.201"
-    user_input: true
-    optional: false
-  one_open5gs_webui_subdomain:
-    descrption: Name for the open5gs webui dashboard inside the TN subdomain.
-    type: "str"
-    value: "open5gs-dashboard"
-    user_input: true
-    optional: false
+    description: Address to expose the Core User Plane Function (UPF). Requires to be part of the oneKE's one_oneKE_metallb_range
+    type: str
+    default_value: "10.21.12.201"
+    required_when: false
 
 ####################################
 ## Component output
 ####################################
 output:
-  open5gs_metadata_dict:
+  open5gs_metadata_dict: Dictionary with multiple parameters used in the core bootstrap

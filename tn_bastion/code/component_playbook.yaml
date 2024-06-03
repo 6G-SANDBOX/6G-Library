@@ -7,6 +7,10 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
+    - name: Overwrite "entity_name" with only tn_bastion
+      ansible.builtin.set_fact:
+        entity_name: "tn_bastion"
+
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 

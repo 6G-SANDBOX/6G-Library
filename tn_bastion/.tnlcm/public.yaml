@@ -17,8 +17,6 @@
 ##   3. output: Values sent to the TNLCM callback to
 ##      keep track of the TN deployments
 ##
-## File previously found at "public/description.yaml"
-##
 ######################################################
 
 
@@ -30,39 +28,31 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  needs:
   short_description: This is a VM that acts as bastion for a Trial Network
   long_description: |
-    It is the component that will host various network services and manage external access to the Trial Network:
+    Bootstrap VM in any Trial Network managing external access to the TN and hosting various networking services such as:
     - DHCP server
     - NTP server
     - Public network masquerading
     - Port forwarding
     - DNS server
     - VPN Server
-    In this version the only service available is VPN Server
+
+    NOTE: Current tn_bastion only hosts the VPN Server
   hypervisors: [one]
-  sites: [uma, athens, fokus]
+  sites: [uma, athens, fokus, oulu]
 
 ####################################
 ## Component input
 ####################################
 input:
-  one_bastion_networks:
-    description: List of VNet IDs the tn_bastion will be part of. Variable to be partially filled by the TNLCM
-    type: "strlist"
-    value:
-      - site_networks_id.default           # Virtual Network accesible to the user and the Jenkins-master
-      - tn_vxlan-id                        # VXLAN SHOULD BE CREATED BEFORE 
-    optional: true
-    user_input: false
 
 ####################################
 ## Component output
 ####################################
 output:
-  ips:               # dictionary of VMs: key="vnet ID in OpenNebula", value="the ip"
-  id:                # VM ID in OpenNebula
-  vpn_client_tunnel: # VPN Client config to connect to this Trial Network
-  ssh_public_key:
-  ssh_private_key:
+  ips: "dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
+  id: VM ID in OpenNebula
+  vpn_client_tunnel: VPN Client config to connect to this Trial Network
+  ssh_public_key: SSH public key present in the TN VMs for the user tnuser
+  ssh_private_key: SSH public key to access the TN VMs with the user tnuser

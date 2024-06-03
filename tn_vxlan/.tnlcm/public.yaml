@@ -4,29 +4,21 @@
 ##
 ## Variables accesible to the experimenter.
 ##
-## They are contained inside 4 global variables
+## They are contained inside 3 global variables
 ## with all required info:
-##   1. name: name of the component
 ##
-##   2. metadata: General information like mantainers,
+##   1. metadata: General information like mantainers,
 ##      component dependencies and allowed platforms
 ##
-##   3. input: Customizable variables for each
+##   2. input: Customizable variables for each
 ##      deployment to be filled by the experimenter
 ##      or the TNLCM
 ##
-##   4. output: Values sent to the TNLCM callback to
+##   3. output: Values sent to the TNLCM callback to
 ##      keep track of the TN deployments
-##
-## File previously found at "public/description.yaml"
 ##
 ######################################################
 
-
-####################################
-## Component name
-####################################
-name: tn_vxlan
 
 ####################################
 ## Component metadata
@@ -36,20 +28,45 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  needs:
-  short_description: This is the component that creates VXLAN network for TN Bootstrap
+  short_description: Bootstraps the Trial Network with an initial Virtual Network (tn_vxlan)
   long_description: |
-    This is the component that creates VXLAN network for TN Bootstrap
+    Legacy first component of any Trial Network
+    Main vnet of the Trial Network and accessible through the tn_bastion VPN
   hypervisors: [one]
-  sites: [uma, athens, fokus]
+  sites: [uma, athens, fokus, oulu]
 
 ####################################
 ## Component input
 ####################################
 input:
-    
+  one_vxlan_gw:
+    description: Default gateway of the tn_vxlan subnet
+    type: str
+    default_value: "192.168.199.1"
+    required_when: false
+  one_vxlan_netmask:
+    description: Network mask of the tn_vxlan subnet
+    type: str
+    default_value: "255.255.255.0"
+    required_when: false
+  one_vxlan_dns:
+    description: Space-separated list of DNS servers configured in VMs with tn_vxlan as their main Network Interface
+    type: str
+    default_value: "1.1.1.1 1.0.0.1"
+    required_when: false
+  one_vxlan_first_ip:
+    description: First IP address of the VNet range
+    type: str
+    default_value: "192.168.199.1"
+    required_when: false
+  one_vxlan_address_size:
+    description: Amount of IP addresses that compose the VNet range
+    type: int
+    default_value: 254
+    required_when: false
+
 ####################################
 ## Component output
 ####################################
 output:
-  id:      # ID from OpenNebula to identify this Network
+  id: VNet ID in OpenNebula

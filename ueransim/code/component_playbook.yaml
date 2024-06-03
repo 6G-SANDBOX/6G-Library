@@ -93,7 +93,9 @@
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
+          run_gnb: "{{ one_ueransim_run_gnb | b64encode }}"
           gnb_metadata_dict: "{{ {} | to_json | b64encode }}"
+          run_ue: "{{ one_ueransim_run_ue | b64encode }}"
           ue_metadata_dict: "{{ {} | to_json | b64encode }}"
 
     - name: Tasks for UERANSIM as gNB
@@ -126,6 +128,8 @@
             custom_outputs:
               - key: "{{ entity_name }}-gnb_metadata"
                 value: "{{ gnb_metadata_dict }}"
+              - key: "{{ entity_name }}-run_gnb"
+                value: "YES"
 
     - name: Tasks for UERANSIM as UE
       when: one_ueransim_run_ue == 'YES'
@@ -154,6 +158,8 @@
             custom_outputs:
               - key: "{{ entity_name }}-ue_metadata"
                 value: "{{ ue_metadata_dict }}"
+              - key: "{{ entity_name }}-run_ue"
+                value: "YES"
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

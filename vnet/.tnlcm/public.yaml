@@ -28,55 +28,52 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  dependencies:
-  short_description: This is the component that creates Virtual Networks inside ONE
+  short_description: Creates a Virtual Network inside OpenNebula
   long_description: |
-    Component to create private Virtual Networks inside the Trial Network.
-    Allows the experimenter to interconnect components using private networks using it instead of using the main "tn_vxlan.output.id"
-    Virtual Networks created are also of type VXLAN.
+    Private Virtual Network inside the Trial Network.
+    Allows the experimenter to interconnect different components using private networks instead of the main tn_vxlan
+    The Virtual Network is of type VXLAN, and spans the subnet formed with one_vnet_first_ip and one_vnet_netmask
+    A Virtual Network ranges "one_vnet_address_size" successive IPs starting from "one_vnet_first_ip"
+    The maximum value for a full /24 subnet starting from X.X.X.1 should be 254
   hypervisors: [one]
-  sites: [uma, athens, fokus]
+  sites: [uma, athens, fokus, oulu]
 
 ####################################
 ## Component input
 ####################################
 input:
-  one_vnet_first_ip:
-    description: First IPv4 address of the VNet
-    type: "str"
-    value: "192.168.199.1"
-    user_input: true
-    optional: true
-  one_vnet_netmask:
-    description: Network mask for the VNet
-    type: "str"
-    value: "255.255.255.0"
-    user_input: true
-    optional: true
-  one_vnet_address_size:
-    description: |
-      Create a vnet from a range of IPs within the subnet defined with "one_vnet_first_ip" and "one_vnet_netmask"
-      The maximum value for a full /24 subnet starting from X.X.X.1 should be 254
-    type: "int"
-    value: 100
-    user_input: true
-    optional: true
-
   one_vnet_gw:
-    description: Gateway for VMs that have this VNet as their main interface. Otherwise, this field is optional
-    type: "str"
-    value: "192.168.199.1"
-    user_input: true
-    optional: true
+    description: Default gateway of the Virtual Network subnet
+    type: str
+    default_value: "10.21.12.1"
+    required_when: false
+
+  one_vnet_netmask:
+    description: Network mask of the Virtual Network subnet
+    type: str
+    default_value: "255.255.255.0"
+    required_when: false
+
   one_vnet_dns:
-    description: Space-separated list of DNS servers for instances that have this VNet as their main interface. Otherwise, this field is optional
-    type: "str"
-    value: "1.1.1.1 1.0.0.1"
-    user_input: true
-    optional: true
+    description: Space-separated list of DNS servers configured in VMs with tn_vxlan as their main Network Interface
+    type: str
+    default_value: "1.1.1.1 1.0.0.1"
+    required_when: false
+
+  one_vnet_first_ip:
+    description: First IP address of the Virtual Network range
+    type: str
+    default_value: "10.21.12.1"
+    required_when: false
+
+  one_vnet_address_size:
+    description: Amount of IP addresses that compose the Virtual Network range
+    type: int
+    default_value: 100
+    required_when: false
 
 ####################################
 ## Component output
 ####################################
 output:
-  id:      # ID from OpenNebula to identify this Network
+  id: VNet ID in OpenNebula

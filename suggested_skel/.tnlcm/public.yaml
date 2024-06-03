@@ -19,31 +19,30 @@
 ##
 ######################################################
 
-
 # "name" has been removed, "input" was "public" and "output" was "outputs"
-# The public.yaml file is unused in component deployments and serves to inform the TNLCM about the component.
+# The public.yaml file informs the TNLCM about the component behaviour and how to integrate it inside a Trial Network
 # "metadata" includes general information about the component, "input" describes the modifiable parameters, and "output" the return values reachable from other components.
 
-### metadata
-# Gives the TNLCM some general information to provide the experimenter with some useful information about the component's behaviour. Fields:
+### metadata:
+# Gives the TNLCM some general information to provide the experimenter with some useful information about the component's behaviour. Fields are shown in the TNLCM Frontend:
 #   - mantainers: Unordered list of active component mantainers
-#   - short_description: One sentence long description. Shown in THLCM
-#   - long_description: Description that can span multiple lines. Can serve to describe dependencies with other components. Shown in TNLCM
-#   - hypervisors: Unordered list of compatible hypervisors. Orientative variable, does not apply to any check, as the sites themselves can only have one specific hypervisor (variable site_hypervisor)
+#   - short_description: One sentence long description.
+#   - long_description: Description that can span multiple lines. Can serve to component dependencies.
+#   - hypervisors: Unordered list of compatible hypervisors for the component. Currently only OpenNebula (one)
 #   - sites: Unordered list of sites where the component is avaiable. Useful for hardware-dependent components
 
-# input describes all variables needed in a TN descriptor. Each variable containers the following fields:
+### input:
+# Describes all variables needed in a TN descriptor. Each variable containers the following fields:
 #   - description; A general description of the variable. It appears in the TNLCM Frontend. "" by default
 #   - type: Expected data format. Avaiable types are "str", "int", "strlist" and "intlist". "str" by default
-#quantity
 #   - choices: Optional parameter that only appears in variables with limited possible values. Conflicts with "tnlcm_input". free choice by default
 #   - value: Placeholder value that appears in the TNLCM. "" by default
 #   - optional: Indicates whether the placeholder ("value") serves as a default value or not. If negative, a value must always be provided by the experimenter. false by default
 #   - tnlcm_input: Optional parameter that only appears when the variable uses values stored in the TNLCM such as other component's metadata or outputs. Frontend asks the experimenter between the desired possibilites using backend readable paths. Conflicts with "choices". "" by default
 
-# output values are a list of empty dictionaries of the variables expected be generated during deployments, mainly from the terraform apply.
-# They may not only be useful for the TNLCM, they can also be used to generate the result files at the end of each deployment
-# maybe its value here in the public.yaml could be the value type (str, int...)
+### output:
+# Structure of the dictionary "output" the TNLCM expects to receive after the component deployment
+# Only keys are checked, the value shown here is a short description only seen in this file
 
 ####################################
 ## Component metadata
@@ -57,7 +56,7 @@ metadata:
     and provide a more in depth outline of it's purpose.
     This imaginary component needs a previous "X" component to be previously deployed and referrenced in input: "sampleVariable"
   hypervisors: [one]
-  sites: [uma, athens, fokus]
+  sites: [uma, athens, fokus, oulu]
 
 ####################################
 ## Component input
@@ -169,4 +168,4 @@ input:
 ## Component output
 ####################################
 output:
-  terraform_outputs_value: # ¿maybe the type of data to expect?
+  sample_output_variable: Short description of what the expected value is

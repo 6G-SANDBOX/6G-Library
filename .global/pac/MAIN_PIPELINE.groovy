@@ -73,15 +73,12 @@ pipeline {
             steps {
                 echo 'Stage 2: Load Jenkins parameters into the workspace'
                 script{
-                    def entityName = "${params.COMPONENT_TYPE}"
-                    if (!(params.COMPONENT_TYPE == "tn_bastion" || params.COMPONENT_TYPE == "tn_vxlan" || params.COMPONENT_TYPE == "tn_init")) {
-                        entityName += "-${params.CUSTOM_NAME}"
-                    }
                     def paramsFile = "${WORKSPACE}/${params.COMPONENT_TYPE}/variables/pipeline_parameters.yaml"
                     def paramsContent = "tn_id: ${params.TN_ID}\n"
                     paramsContent += "component_type: ${params.COMPONENT_TYPE}\n"
                     paramsContent += "custom_name: ${params.CUSTOM_NAME}\n"
                     paramsContent += "entity_name: ${entityName}\n"
+                    paramsContent += "entity_name: ${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}\n"
                     paramsContent += "deployment_site: ${params.DEPLOYMENT_SITE}\n"
                     paramsContent += "tnlcm_callback: ${params.TNLCM_CALLBACK}\n"
                     paramsContent += "debug: ${params.DEBUG}\n"

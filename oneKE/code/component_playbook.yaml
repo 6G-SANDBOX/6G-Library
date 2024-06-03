@@ -152,7 +152,6 @@
       ansible.builtin.set_fact:
         output:
           id: "{{ id | b64encode }}"
-          cluster_roles: "{{ cluster_roles | b64encode }}"
           node_ids: "{{ node_ids | b64encode }}"
           node_ips: "{{ node_ips | b64encode }}"
           kubeconfig: "{{ kubeconfig | b64encode }}"

@@ -1,39 +1,47 @@
-####################################
+######################################################
 ##
-## Component metadata
-## 
-####################################
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
 
-component_name: tsn
+
+####################################
+## Component metadata
+####################################
 metadata:
-  family: network
-  maintainers: 
+  maintainers:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Francisco Luque Schempp <schempp@uma.es>
-  version: 0.0.1
-  depends:
-  short_description: This is the component that enable the capability of use TSN endpoints in the Trial Network.
+  short_description: Enables the capability of using TSN endpoints in the Trial Network.
   long_description: |
-    This is the component that enable the capability of use TSN endpoints in the Trial Network.
-  platforms: [one]
+    Component that enables the capability of using TSN endpoints in the Trial Network
+
+    NOTE: Currently tsn is only available in the site "uma"
+  hypervisors: [one]
   sites: [uma]
 
-###################################################
-##
-## Public component variables that 
-## should be filled by the experimenter or 
-## the TNLCM. Some of them could be optional
-##
-## If component is optional, value is the default one
-## If component is not optional, value is an example one
-## 
-###################################################
-public:
+####################################
+## Component input
+####################################
+input:
 
-###################################################
-##
-## Output component variables that 
-## should be keeped by the TNLCM 
-## 
-###################################################
-outputs:
+####################################
+## Component output
+####################################
+output:
+  id: VNet ID in OpenNebula
