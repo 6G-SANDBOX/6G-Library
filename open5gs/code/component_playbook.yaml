@@ -30,7 +30,7 @@
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_oneKE + '-node_ips'] }}"
 
-    - name: Add the k8s master to Ansible Inventory
+    - name: Add the oneKE master to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "{{ one_open5gs_oneKE }}-master_0"
         ansible_host: "{{ node_ips.master_0 }}"
@@ -55,7 +55,7 @@
       ansible.builtin.set_fact:
         open5gs_metadata_dict: >
           {
-            'k8s': '{{ one_open5gs_oneKE }}',
+            'oneKE': '{{ one_open5gs_oneKE }}',
             'proxy': '{{ node_ips.vnf_0 }}',
             'mcc': '{{ one_open5gs_mcc }}',
             'mnc': '{{ one_open5gs_mnc }}',
