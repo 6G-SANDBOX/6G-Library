@@ -12,7 +12,7 @@ The Time-Sentive Networking (TSN) Trial Network (TN) architecture is shown below
 
 The TSN configuration can be performed via SSH (cli) using a terminal or dashboard (gui) using a browser. Details on how to configure the different TSN features can be found in the [TSN configuration guide](#annex-a-relyum-tsn-bridge-cli-configuration). For example, the following command is used to configure the Time Aware Shaper (IEEE 802.1Qbv):
 
-```sh
+```bash
 spt_config_reg -n 0 -w qbv_config_file.json
 ```
 
@@ -22,13 +22,13 @@ In this case, the specific parameters are defined in [qbv_config_file.json](#ann
 
 The TSN configuration can also be checked using the command:
 
-```sh
+```bash
 spt_qbv_config -n 0 -r
 ```
 
 Note that only the administrative values are shown. However, the operative values will be the same and are also shown in the command output:
 
-```sh
+```bash
 -------------------------------------------------------------
 Port ID: 0
 Gate Enabled: 0
@@ -389,13 +389,13 @@ Suported List Max: 256
     
 2.2. Write QBV config
 
-```
+```basj
 $ spt_qbv_config -w qbv_config_file_test.json
 ```
 
 **qbv_config_file_test.json**
 
-```
+```kspm
 {
    "qbv_gate_parameters":{
       "gate_enabled":false,
