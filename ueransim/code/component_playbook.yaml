@@ -93,8 +93,8 @@
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
-          gnb_metadata_dict: {}
-          ue_metadata_dict: {}
+          gnb_metadata_dict: "{{ {} | to_json | b64encode }}"
+          ue_metadata_dict: "{{ {} | to_json | b64encode }}"
 
     - name: Tasks for UERANSIM as gNB
       when: one_ueransim_run_gnb == 'YES'

@@ -25,13 +25,10 @@
 # "metadata" includes general information about the component, "input" describes the modifiable parameters, and "output" the return values reachable from other components.
 
 ### metadata
-# Gives the TNLCM some general information to help it understand how to process and order the different components. Fields:
+# Gives the TNLCM some general information to provide the experimenter with some useful information about the component's behaviour. Fields:
 #   - mantainers: Unordered list of active component mantainers
-#   - needs: Ordered "OR" list of dictionaries with conditions to satisfy. It one dictionary is not satisfied, the TNLCM checks the next one successively until at least one is.
-#            Used by the backend to validate if the manifest is acceptable. If it is not, it tells the frontend the possible conditions to satisfy.
-#            Dependencies consist on different component types + maybe specific provided input values, either in the other component ("with") or in this component ()"if"). See examples
-#   - short_description: Shown in THLCM
-#   - long_description: Shown in TNLCM
+#   - short_description: One sentence long description. Shown in THLCM
+#   - long_description: Description that can span multiple lines. Can serve to describe dependencies with other components. Shown in TNLCM
 #   - hypervisors: Unordered list of compatible hypervisors. Orientative variable, does not apply to any check, as the sites themselves can only have one specific hypervisor (variable site_hypervisor)
 #   - sites: Unordered list of sites where the component is avaiable. Useful for hardware-dependent components
 
@@ -53,28 +50,12 @@
 ####################################
 metadata:
   maintainers:
-    - Full Name <contact@mail.address>
-  dependencies:
-      # TN must satisfy all 3 dependencies
-    - vxlan:            # dependency on a previously deployed vxlan component of any kind prev
-      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value one_k8s_multus: "YES"
-        with:
-          one_k8s_multus:: "YES"
-      ueransim:         # dependency on a previously deployed ueransim component with input value one_ueransim_run_gnb: "YES" ONLY IF this component has input value 'sample_optional_value: "positive"'
-        with:
-          one_ueransim_run_gnb: "YES"
-      if:
-        sample_optional_value: "positive"
-      # TN must satisfy only 2 dependencies
-    - vxlan:            # dependency on a previously deployed vxlan component of any kind prev
-      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value one_k8s_multus: "NO"
-        with:
-          one_k8s_multus: "NO"    
-    
+    - Full Name <contact@mail.address>    
   short_description: Short description of a Component Type
   long_description: |
     The long description of a Component Type may span multiple lines
-    and provide a more in depth outline of it's purpose
+    and provide a more in depth outline of it's purpose.
+    This imaginary component needs a previous "X" component to be previously deployed and referrenced in input: "sampleVariable"
   hypervisors: [one]
   sites: [uma, athens, fokus]
 
