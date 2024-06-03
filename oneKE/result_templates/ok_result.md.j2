@@ -18,17 +18,17 @@ OneKE Service has four different Roles:
 Important information about cluster configuration:
 
 * **CLUSTER NAME**: {{ tn_id }}-{{ entity_name}}
-* **PUBLIC VIRTUAL NET**: {{ one_k8s_external_vnet }}
-* **PRIVATE VIRTUAL NET**: {{ one_k8s_internal_vnet }}
-* **CNI**: {{ one_k8s_cni_plugin }}
-{% if one_k8s_cilium_range is defined and one_k8s_cilium_range %}
-* **CILIUM IP POOL**: {{ one_k8s_cilium_range }}
+* **PUBLIC VIRTUAL NET**: {{ one_oneKE_external_vnet }}
+* **PRIVATE VIRTUAL NET**: {{ one_oneKE_internal_vnet }}
+* **CNI**: {{ one_oneKE_cni_plugin }}
+{% if one_oneKE_cilium_range is defined and one_oneKE_cilium_range %}
+* **CILIUM IP POOL**: {{ one_oneKE_cilium_range }}
 {% endif %}
-* **MULTUS ENABLED**: {{ one_k8s_multus }}
-* **METALLB ENABLED**: {{ one_k8s_metallb }}
-* **METALLB IP POOL**: {{ one_k8s_metallb_range }}
-* **TRAEFIK ENABLED**: {{ one_k8s_traefik }}
-* **VNF UPSTREAM DNS**: {{ one_k8s_dns }}
+* **MULTUS ENABLED**: {{ one_oneKE_multus }}
+* **METALLB ENABLED**: {{ one_oneKE_metallb }}
+* **METALLB IP POOL**: {{ one_oneKE_metallb_range }}
+* **TRAEFIK ENABLED**: {{ one_oneKE_traefik }}
+* **VNF UPSTREAM DNS**: {{ one_oneKE_dns }}
 
 If you need detailed information about OneKE you can visit the official documentation: https://github.com/OpenNebula/one-apps/wiki/oneke_ops#operating-oneke
 

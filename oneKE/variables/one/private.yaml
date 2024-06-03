@@ -1,0 +1,24 @@
+######################################################
+##
+## Component private variables
+##
+## Advanced variables required for the deployment, 
+## but unavailable by default to the experimenter
+## in the TNLCM. 
+## Currently only modifiable manually from the manifest
+##
+## File previously found at "private/values.yaml"
+##
+######################################################
+
+one_oneKE_external_vnet: "tn_vxlan"
+
+one_oneKE_version: "129"         # Or 127
+one_oneKE_multus: "YES"          # OneKE default is "NO"
+one_oneKE_cni_plugin: "canal"    # OneKE default is "cilium"
+one_oneKE_cilium_range: ""       # Required if the cni_plugin is cilium
+one_oneKE_metallb: "YES"         # OneKE default is "NO"
+one_oneKE_metallb_range: "10.21.12.200-10.21.12.240"    # Required if the metallb is enabled
+one_oneKE_longhorn: "YES"         # OneKE default is "NO"
+one_oneKE_traefik: "NO"          # OneKE default is "NO"
+one_oneKE_dns: "1.1.1.1 8.8.8.8" # OneKE default is "1.1.1.1,8.8.8.8"

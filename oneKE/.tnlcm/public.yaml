@@ -18,15 +18,8 @@
 ##   4. output: Values sent to the TNLCM callback to
 ##      keep track of the TN deployments
 ##
-## File previously found at "public/description.yaml"
-##
 ######################################################
 
-
-####################################
-## Component name
-####################################
-name: k8s_medium
 
 ####################################
 ## Component metadata
@@ -50,23 +43,23 @@ metadata:
 ## Component input
 ####################################
 input:
-  one_k8s_external_vnet:
+  one_oneKE_external_vnet:
     description: Name of the VNet used to access the OneKE cluster. Most cases will use the Trial Network tn_vxlan
     type: "int"
     value: ""
     user_input: true
     optional: false
 
-  one_k8s_internal_vnet:
+  one_oneKE_internal_vnet:
     description: Name of the VNet used to interconnect the OneKE nodes. A vxlan component # Modify with the custom_name of a previously deployed vnet
     type: "int"
     value: ""
     user_input: true
     optional: false
 
-  one_k8s_version: "129"   #### COMPLETE!!!!!!!!!!!!!!!! "129 (default) or 127". 129A and 127A in the future
+  one_oneKE_version: "129"   #### COMPLETE!!!!!!!!!!!!!!!! "129 (default) or 127". 129A and 127A in the future
 
-  one_k8s_multus:
+  one_oneKE_multus:
     description: |
       Multus is a CNI (Container Network Interface) that enables attaching multiple network interfaces to pods.
       The Multus CNI is compatible with the primary CNI chosen not a substitute of it
@@ -78,7 +71,7 @@ input:
     value: "YES"
     user_input: true
     optional: true
-  one_k8s_cni_plugin:
+  one_oneKE_cni_plugin:
     description: |
       Primary CNI (Container Network Interface) to be enabled inside the OneKE for the connectivity between pods.
       Accepted values are:
@@ -94,9 +87,9 @@ input:
     user_input: true
     optional: true
 
-  one_k8s_cilium_range:  #### COMPLETE!!!!!!!!!
+  one_oneKE_cilium_range:  #### COMPLETE!!!!!!!!!
 
-  one_k8s_longhorn:
+  one_oneKE_longhorn:
     description: |
       Longhorn provides highly available persistent storage for Kubernetes
       Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
@@ -108,7 +101,7 @@ input:
     user_input: true
     optional: false   # will be optional in the near future
 
-  one_k8s_metallb: 
+  one_oneKE_metallb: 
     description: |
       Load-balancer implementation for bar metal Kubernetes clusters, using standard routing protocols
       Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
@@ -120,17 +113,17 @@ input:
     user_input: true
     optional: false   # will be optional in the near future
 
-  one_k8s_metallb_range:
+  one_oneKE_metallb_range:
     description: |
-      Range of IPs available for metalLB to allocate services. Part of the Adress Range from the "one_k8s_internal_vnet"
+      Range of IPs available for metalLB to allocate services. Part of the Adress Range from the "one_oneKE_internal_vnet"
       Syntax is <min_IPv4>-<max_IPv4>
-      Mandatory variable if one_k8s_metallb is set to "YES"
+      Mandatory variable if one_oneKE_metallb is set to "YES"
     type: "str"
     value: "10.10.12.200-10.10.12.240"
     user_input: true
-    optional: false   # will be optional in the near future. It will still be mandatory if one_k8s_metallb is set to "YES"
+    optional: false   # will be optional in the near future. It will still be mandatory if one_oneKE_metallb is set to "YES"
 
-  one_k8s_traefik:
+  one_oneKE_traefik:
     description: |
       Ingress controller that manages access to cluster services.
       Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
@@ -142,7 +135,7 @@ input:
     user_input: true
     optional: false   # will be optional in the near future
 
-  one_k8s_dns:
+  one_oneKE_dns:
     description: space-separated DNS servers configured in the OneKE VNF
     type: "str"
     value: "1.1.1.1 8.8.8.8"

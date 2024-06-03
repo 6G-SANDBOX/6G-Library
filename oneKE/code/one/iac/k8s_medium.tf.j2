@@ -2,12 +2,12 @@
 # https://github.com/OpenNebula/one-apps/wiki/oneke_deploy
 resource "opennebula_service" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
-  template_id = {{ site_one_templates.k8s_medium[one_k8s_version|int].id }}
+  template_id = {{ site_one_templates.oneKE[one_oneKE_version|int].id }}
 
   extra_template = jsonencode({
       networks_values = [
-          { Public = { id = opennebula_virtual_network.{{ one_k8s_external_vnet }}.id } },
-          { Private = { id = opennebula_virtual_network.{{ one_k8s_internal_vnet }}.id } },
+          { Public = { id = opennebula_virtual_network.{{ one_oneKE_external_vnet }}.id } },
+          { Private = { id = opennebula_virtual_network.{{ one_oneKE_internal_vnet }}.id } },
       ]
       custom_attrs_values = {
         "ONEAPP_VROUTER_ETH0_VIP0": "",
@@ -15,18 +15,18 @@ resource "opennebula_service" "{{ entity_name }}" {
         "ONEAPP_RKE2_SUPERVISOR_EP": "ep0.eth0.vr:9345",
         "ONEAPP_K8S_CONTROL_PLANE_EP": "ep0.eth0.vr:6443",
         "ONEAPP_K8S_EXTRA_SANS": "localhost,127.0.0.1,ep0.eth0.vr,$${vnf.TEMPLATE.CONTEXT.ETH0_IP}",
-        "ONEAPP_K8S_MULTUS_ENABLED": "{{ one_k8s_multus }}",
+        "ONEAPP_K8S_MULTUS_ENABLED": "{{ one_oneKE_multus }}",
         "ONEAPP_K8S_MULTUS_CONFIG": "",
-        "ONEAPP_K8S_CNI_PLUGIN": "{{ one_k8s_cni_plugin }}",
+        "ONEAPP_K8S_CNI_PLUGIN": "{{ one_oneKE_cni_plugin }}",
         "ONEAPP_K8S_CNI_CONFIG": "",
-        "ONEAPP_K8S_CILIUM_RANGE": "{% if one_k8s_cni_plugin == 'cilium' %}{{ one_k8s_cilium_range }}{% else %}{% endif %}",
-        "ONEAPP_K8S_METALLB_ENABLED": "{{ one_k8s_metallb }}",
-        "ONEAPP_K8S_METALLB_RANGE": "{% if one_k8s_metallb == 'YES' %}{{ one_k8s_metallb_range }}{% else %}{% endif %}",
+        "ONEAPP_K8S_CILIUM_RANGE": "{% if one_oneKE_cni_plugin == 'cilium' %}{{ one_oneKE_cilium_range }}{% else %}{% endif %}",
+        "ONEAPP_K8S_METALLB_ENABLED": "{{ one_oneKE_metallb }}",
+        "ONEAPP_K8S_METALLB_RANGE": "{% if one_oneKE_metallb == 'YES' %}{{ one_oneKE_metallb_range }}{% else %}{% endif %}",
         "ONEAPP_K8S_METALLB_CONFIG": "",
-        "ONEAPP_K8S_LONGHORN_ENABLED": "{{ one_k8s_longhorn }}",
+        "ONEAPP_K8S_LONGHORN_ENABLED": "{{ one_oneKE_longhorn }}",
         "ONEAPP_STORAGE_DEVICE": "/dev/vdb",
         "ONEAPP_STORAGE_FILESYSTEM": "xfs",
-        "ONEAPP_K8S_TRAEFIK_ENABLED": "{{ one_k8s_traefik }}",      
+        "ONEAPP_K8S_TRAEFIK_ENABLED": "{{ one_oneKE_traefik }}",      
         "ONEAPP_VNF_HAPROXY_INTERFACES": "eth0",
         "ONEAPP_VNF_HAPROXY_REFRESH_RATE": "30",
         "ONEAPP_VNF_HAPROXY_LB0_PORT": "9345",
@@ -35,7 +35,7 @@ resource "opennebula_service" "{{ entity_name }}" {
         "ONEAPP_VNF_HAPROXY_LB3_PORT": "80",
         "ONEAPP_VNF_DNS_ENABLED": "YES",
         "ONEAPP_VNF_DNS_INTERFACES": "eth1",
-        "ONEAPP_VNF_DNS_NAMESERVERS": "{{ one_k8s_dns }}",
+        "ONEAPP_VNF_DNS_NAMESERVERS": "{{ one_oneKE_dns }}",
         "ONEAPP_VNF_NAT4_ENABLED": "YES",
         "ONEAPP_VNF_NAT4_INTERFACES_OUT": "eth0",
         "ONEAPP_VNF_ROUTER4_ENABLED": "YES",

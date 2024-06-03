@@ -84,9 +84,9 @@ input:
     optional: true
     tnlcm_input:
       paths:
-        - "k8s_medium.output.vnf_ip"       # stablishes dependency with a previously deployed "k8s_medium" component
-      ### blablabla, i could do smth to make it deduce the right "k8s_medium" from the subsequent chosen "open5gs" component but thats too much complexity.
-      ### I expect the experimenter to have more than two fingers of forehead and remember what k8s_medium he chose 1 minute ago.
+        - "oneKE.output.vnf_ip"       # stablishes dependency with a previously deployed "oneKE" component
+      ### blablabla, i could do smth to make it deduce the right "oneKE" from the subsequent chosen "open5gs" component but thats too much complexity.
+      ### I expect the experimenter to have more than two fingers of forehead and remember what oneKE he chose 1 minute ago.
 
 
   ### Las dependencias que dependen de varios valores, pueden ir en cualquiera de las variables incluídas en la dependencia
