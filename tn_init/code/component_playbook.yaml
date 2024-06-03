@@ -55,8 +55,7 @@
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
         connect_timeout: 5
-        delay: 20
-        timeout: 180
+        timeout: 200
 
     ### Calling load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
     ### But it makes the code much MUCH cleaner with almost no extra latency

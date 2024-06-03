@@ -53,7 +53,24 @@
 ####################################
 metadata:
   maintainers:
-    - Full Name <contact@mail.address>    
+    - Full Name <contact@mail.address>
+  dependencies:
+      # TN must satisfy all 3 dependencies
+    - vxlan:            # dependency on a previously deployed vxlan component of any kind prev
+      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value one_k8s_multus: "YES"
+        with:
+          one_k8s_multus:: "YES"
+      ueransim:         # dependency on a previously deployed ueransim component with input value one_ueransim_run_gnb: "YES" ONLY IF this component has input value 'sample_optional_value: "positive"'
+        with:
+          one_ueransim_run_gnb: "YES"
+      if:
+        sample_optional_value: "positive"
+      # TN must satisfy only 2 dependencies
+    - vxlan:            # dependency on a previously deployed vxlan component of any kind prev
+      k8s_medium:       # dependency on a previously deployed k8s_medium component with input value one_k8s_multus: "NO"
+        with:
+          one_k8s_multus: "NO"    
+    
   short_description: Short description of a Component Type
   long_description: |
     The long description of a Component Type may span multiple lines
