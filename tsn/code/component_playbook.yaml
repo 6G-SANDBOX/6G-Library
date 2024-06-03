@@ -15,7 +15,7 @@
     - name: Simulate result of previous Infra deployment
       ansible.builtin.set_fact:
         result:
-          failed: False
+          failed: false
 
     - name: Publish execution results
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_results_tasks.yaml"

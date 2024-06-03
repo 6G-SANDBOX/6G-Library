@@ -82,6 +82,5 @@
         output:
           open5gs_metadata_dict: "{{ open5gs_metadata_dict | b64encode }}"
 
-
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

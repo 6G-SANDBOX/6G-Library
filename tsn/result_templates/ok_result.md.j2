@@ -1,6 +1,6 @@
 # TSN
 
-TSN capability has been successfully adddes to the Trial Network {{ tn_id }}
+TSN capability has been successfully addded to the Trial Network {{ tn_id }}
 
 # Time-Sentive Networking Trial Network
 
@@ -295,20 +295,20 @@ Examples:
 
 1.2. Read operations
 
-```
+```bash
 $ spt_config_reg -f CORE:field_name -r
 
-Example: 
+# Example: 
 
 $ spt_config_reg -f INTERNAL_PORT:tx_frames -r Read value: 42465 (HEX: 0x0000A5E1) 
 ```
 
 1.3. Write operations
 
-```
+```bash
 $ spt_config_reg -f CORE:field_name -w value
 
-Example:
+# Example:
 
 $ spt_config_reg -f SWITCH:tsn_cbs -w 1 Operation successful
 ```
@@ -317,7 +317,7 @@ $ spt_config_reg -f SWITCH:tsn_cbs -w 1 Operation successful
 
 2.1.  Read current QBV config
 
-```
+```bash
 $ spt_qbv_config -r
 
 Operation completed 
@@ -389,13 +389,13 @@ Suported List Max: 256
     
 2.2. Write QBV config
 
-```basj
+```bash
 $ spt_qbv_config -w qbv_config_file_test.json
 ```
 
 **qbv_config_file_test.json**
 
-```kspm
+```json
 {
    "qbv_gate_parameters":{
       "gate_enabled":false,
@@ -435,7 +435,7 @@ $ spt_qbv_config -w qbv_config_file_test.json
 
 3.1. Read current QAV config
 
-```
+```bash
 $ spt_qav_config -r
 
 ------------------------------------------------------------- 
@@ -450,13 +450,13 @@ CBS enable: 0
 
   3.2.  Write QAV config
 
-```
+```bash
 $ spt_qav_config -w qav_config_file_test.json 
 ```
 
 **qav_config_file_test.json**
 
-```
+```json
 {
   "cbs_params" : {
     "cbs_enable": false,
@@ -467,7 +467,7 @@ $ spt_qav_config -w qav_config_file_test.json
 
 # ANNEX B: qvb_config_file.json
 
-```
+```json
 {
     "qbv_gate_parameters": {
         "gate_enabled": true,
