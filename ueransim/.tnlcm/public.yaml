@@ -272,7 +272,7 @@ input:
     description: In UE simulation, Slice Differentiator (SD) of the default NSSAI
     type: "int"
     default:
-    required_when: one_ueransim_run_ue == 'YES'
+    required_when: "one_ueransim_run_ue == 'YES' and one_ueransim_run_gnb == 'NO'"
 
 ####################################
 ## Component output
@@ -280,5 +280,5 @@ input:
 output:
   ips:        # OpenNebula VM Network Assignments
   id:         # OpenNebula VM ID
-  gnb_metadata_dict: "if one_ueransim_run_gnb == 'YES'"
-  ue_metadata_dict: "if one_ueransim_run_ue == 'YES'"
+  gnb_metadata_dict:
+  ue_metadata_dict:
