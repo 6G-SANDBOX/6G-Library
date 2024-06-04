@@ -15,7 +15,7 @@ pipeline {
         string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library.git', description: '6G-Library repository HTTPS URL. Leave it as-is unless you want to test your own fork')
         string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: 'LIBRARY_URL branch to use. Leave it as-is unless you want to test your own branch')
         string(name: 'SITES_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git', description: '6G-Library-Sites repository HTTP URL. Leave it as-is unless you want to test your own fork')
-        string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: 'SITES_URL branch to use. Leave it as-is unless you want to test your own branch')
+        string(name: 'SITES_BRANCH', defaultValue: 'main', description: 'SITES_URL branch to use. Leave it as-is unless you want to test your own branch')
         booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG. Files will not be purged after the pipeline execution')
     }
 
@@ -46,13 +46,13 @@ pipeline {
     }
 
     stages {
-        stage('Stage 3: Clone 6G-Sandbox-Sites repository') {
+        stage('Stage 1: Clone 6G-Sandbox-Sites repository') {
             steps {
                 echo("PURGING TRIAL NETWORK: ${TN_ID}") 
                 echo 'Stage 1: Clone 6G-Sandbox-Sites repository'
                 script {
                     def gitUrlWithoutGitAt = "${params.SITES_URL}".replace('https://', '')
-                    def gitUrlWithToken = "https://${GITHUB_JENKINS}@${gitUrlWithoutGitAt}"
+                    def gitUrlWithToken = "https://$GITHUB_JENKINS@${gitUrlWithoutGitAt}"
                     sh "git clone -b ${params.SITES_BRANCH} $gitUrlWithToken"
                 }
             }
