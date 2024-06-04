@@ -24,7 +24,7 @@ pipeline {
         // URL, branch and github token to clone the 6G-Sandbox-Sites repository
         // SITES_URL="${params.SITES_URL}"
         // SITES_BRANCH="${params.SITES_BRANCH}"
-        GITHUB_JENKINS = credentials('GITHUB_JENKINS')
+        // GITHUB_JENKINS = credentials('GITHUB_JENKINS')
 
         // Opennebula Terraform Provider envorimental variables https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs#environment-variables
         // OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
@@ -52,7 +52,7 @@ pipeline {
                 echo 'Stage 1: Clone 6G-Sandbox-Sites repository'
                 script {
                     def gitUrlWithoutGitAt = "${params.SITES_URL}".replace('https://', '')
-                    def gitUrlWithToken = "https://${GITHUB_JENKINS}@${gitUrlWithoutGitAt}"
+                    def gitUrlWithToken = "https://${credentials('GITHUB_JENKINS')}@${gitUrlWithoutGitAt}"
                     sh "git clone -b ${params.SITES_BRANCH} $gitUrlWithToken"
                 }
             }
@@ -67,7 +67,7 @@ pipeline {
                     extraVars: [
                         tn_id: "${params.TN_ID}",
                         deployment_site: "${params.DEPLOYMENT_SITE}",
-                        tnlcm_callback: "${${params.TNLCM_CALLBACK}}",
+                        tnlcm_callback: "${params.TNLCM_CALLBACK}}",
                         debug: "${params.DEBUG}",
                         workspace: "${WORKSPACE}",
                     ],
