@@ -52,7 +52,7 @@ pipeline {
                 echo 'Stage 1: Clone 6G-Sandbox-Sites repository'
                 script {
                     def gitUrlWithoutGitAt = "${params.SITES_URL}".replace('https://', '')
-                    def gitUrlWithToken = "https://$GITHUB_JENKINS@${gitUrlWithoutGitAt}"
+                    def gitUrlWithToken = "https://${GITHUB_JENKINS}@${gitUrlWithoutGitAt}"
                     sh "git clone -b ${params.SITES_BRANCH} $gitUrlWithToken"
                 }
             }
