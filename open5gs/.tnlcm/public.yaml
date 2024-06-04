@@ -45,7 +45,7 @@ input:
     required_when: true
 
   one_open5gs_webui_subdomain:
-    descrption: Subdomain of the open5gs dashboard Web App
+    description: Subdomain of the open5gs dashboard Web App
     type: str
     default_value: "open5gs"
     required_when: false
