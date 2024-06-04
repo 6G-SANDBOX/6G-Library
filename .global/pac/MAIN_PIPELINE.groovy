@@ -12,7 +12,7 @@ pipeline {
         string(name: 'TN_ID', defaultValue: '', description: 'Trial Network Identifier. MANDATORY')
         string(name: 'COMPONENT_TYPE', defaultValue: '', description: '6G Library Component type. MANDATORY')
         string(name: 'CUSTOM_NAME', defaultValue: '', description: 'Custom name for the component inside the Trian Network. MANDATORY except for tn_vxlan and tn_bastion')
-        choice(name: 'DEPLOYMENT_SITE', choices: ['uma', 'athens', 'fokus'], description: 'Site where the deployment is being made. Choose between uma, athens or fokus. MANDATORY')
+        choice(name: 'DEPLOYMENT_SITE', choices: ['uma', 'athens', 'fokus', 'oulu'], description: 'Site where the deployment is being made. Choose between uma, athens, fokus or oulu. MANDATORY')
         string(name: 'TNLCM_CALLBACK', defaultValue: 'http://tnlcm-ip:5000/tnlcm/callback/', description: 'URL of the TNLCM to notify the results. MANDATORY')
         string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library.git', description: '6G-Library repository HTTPS URL. Leave it as-is unless you want to test your own fork')
         string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: 'LIBRARY_URL branch to use. Leave it as-is unless you want to test your own branch')
@@ -40,7 +40,7 @@ pipeline {
 
         // Values used by OpenNebula CLI commands https://docs.opennebula.io/6.8/management_and_operations/references/cli.html#shell-environment
         // And the ansible module https://docs.ansible.com/ansible/latest/collections/community/general/one_vm_module.html
-        ONE_XMLRPC = credentials('ONE_XMLRPC')  // Try to remove
+        // ONE_XMLRPC = credentials('ONE_XMLRPC')  // Try to remove
         ONE_AUTH = credentials('ONE_AUTH')
         ONE_URL = credentials('ONE_URL')  // Add to Jenkins
 

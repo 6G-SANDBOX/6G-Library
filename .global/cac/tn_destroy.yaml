@@ -1,0 +1,45 @@
+---
+- name: "STAGE 1: Apply IAC to deploy the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Create directory for terraform manifests
+      ansible.builtin.file:
+        path: "{{ workspace }}/.terraform"
+        state: directory
+        mode: "640"
+
+    - name: "Prepare terraform manifest for provider: {{ site_hypervisor }}"
+      ansible.builtin.copy:
+        src: "{{ workspace }}/.global/iac/{{ site_hypervisor }}/provider.tf"
+        dest: "{{ workspace }}/.terraform/{{ site_hypervisor }}_provider.tf"
+        mode: "640"
+
+    - name: Prepare AWS s3 backend terraform manifest
+      ansible.builtin.template:
+        src: "{{ workspace }}/.global/iac/backend.tf.j2"
+        dest: "{{ workspace }}/.terraform/backend.tf"
+        mode: "640"
+
+    - name: Run 'terraform init'
+      ansible.builtin.command: "terraform -chdir={{ workspace }}/.terraform/ init"
+      changed_when: false
+
+    # - name: Terraform apply
+    #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
+    # - name: Run 'terraform apply' a first time. Command will fail
+    #   community.general.terraform:
+    #     project_path: "{{ workspace }}/.terraform/"
+    #     state: "present"
+    #     force_init: true
+    #   ignore_errors: true
+
+    # - name: Run 'terraform apply' a second time. Command should now succeed
+    #   community.general.terraform:
+    #     project_path: "{{ workspace }}/.terraform/"
+    #     state: "present"
+    #     force_init: true
+    #   ignore_errors: true
+    #   register: terraform_apply
