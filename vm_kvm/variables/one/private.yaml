@@ -2,15 +2,35 @@
 ##
 ## Component private variables
 ##
-## Advanced variables required for the deployment, 
-## but unavailable by default to the experimenter
-## in the TNLCM. 
-## Currently only modifiable manually from the manifest
-##
-## File previously found at "private/values.yaml"
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
 ##
 ######################################################
 
-artifact_url: "https://marketplace.opennebula.io/appliance/84bd27fe-5d14-4e70-a79a-eb3fdd0072ae"
-artifact_name: "UBUNTU XL"
-one_group: "oneadmin"   # change to "6G-Sandbox" in the future
+one_vm_kvm_cpu: 4
+one_vm_kvm_memory: 9192
+one_vm_kvm_disk: 25600
+one_vm_kvm_networks: 
+  - tn_vxlan
+
+one_vm_kvm_extra_large:
+  cpu:
+  memory:
+  disk:
+one_vm_kvm_large:
+  cpu:
+  memory:
+  disk:
+one_vm_kvm_medium:
+  cpu:
+  memory:
+  disk:
+one_vm_kvm_small:
+  cpu:
+  memory:
+  disk:
+one_vm_kvm_very_small:
+  cpu:
+  memory:
+  disk:

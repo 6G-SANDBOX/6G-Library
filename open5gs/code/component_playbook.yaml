@@ -53,7 +53,7 @@
   tasks:
     - name: Define open5gs metadata dictionary
       ansible.builtin.set_fact:
-        open5gs_metadata_dict: >
+        open5gs_metadata_dict: >-
           {
             'oneKE': '{{ one_open5gs_oneKE }}',
             'proxy': '{{ node_ips.vnf_0 }}',

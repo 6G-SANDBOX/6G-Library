@@ -135,7 +135,7 @@ input:
 
   one_oneKE_dns:
     description: Space-separated list of DNS servers configured in the OneKE VNF
-    type: "str"
+    type: str
     default_value: "1.1.1.1 8.8.8.8"
     required_when: false
 

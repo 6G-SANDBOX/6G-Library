@@ -16,6 +16,7 @@
     - name: Terraform apply
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
+
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
   gather_facts: false
@@ -103,7 +104,7 @@
       block:
         - name: Define gnb_metadata dictionary
           ansible.builtin.set_fact:
-            gnb_metadata_dict: >
+            gnb_metadata_dict: >-
               {
                 'proxy': '{{ one_ueransim_gnb_proxy }}',
                 'amf_address': '{{ one_ueransim_gnb_amf_address }}',
@@ -136,7 +137,7 @@
       block:
         - name: Define ue_metadata dictionary
           ansible.builtin.set_fact:
-            ue_metadata_dict: >
+            ue_metadata_dict: >-
               {
                 'supi': '{{ one_ueransim_ue_supi }}',
                 'mcc': '{{ one_ueransim_ue_mcc }}',

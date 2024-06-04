@@ -77,7 +77,6 @@ pipeline {
                     def paramsContent = "tn_id: ${params.TN_ID}\n"
                     paramsContent += "component_type: ${params.COMPONENT_TYPE}\n"
                     paramsContent += "custom_name: ${params.CUSTOM_NAME}\n"
-                    paramsContent += "entity_name: ${entityName}\n"
                     paramsContent += "entity_name: ${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}\n"
                     paramsContent += "deployment_site: ${params.DEPLOYMENT_SITE}\n"
                     paramsContent += "tnlcm_callback: ${params.TNLCM_CALLBACK}\n"

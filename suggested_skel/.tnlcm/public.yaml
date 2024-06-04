@@ -32,13 +32,15 @@
 #   - sites: Unordered list of sites where the component is avaiable. Useful for hardware-dependent components
 
 ### input:
-# Describes all variables needed in a TN descriptor. Each variable containers the following fields:
-#   - description; A general description of the variable. It appears in the TNLCM Frontend. "" by default
-#   - type: Expected data format. Avaiable types are "str", "int", "strlist" and "intlist". "str" by default
-#   - choices: Optional parameter that only appears in variables with limited possible values. Conflicts with "tnlcm_input". free choice by default
-#   - value: Placeholder value that appears in the TNLCM. "" by default
-#   - optional: Indicates whether the placeholder ("value") serves as a default value or not. If negative, a value must always be provided by the experimenter. false by default
-#   - tnlcm_input: Optional parameter that only appears when the variable uses values stored in the TNLCM such as other component's metadata or outputs. Frontend asks the experimenter between the desired possibilites using backend readable paths. Conflicts with "choices". "" by default
+# Describes variables shown in the TNLCM to be filled by the experimenter and included in a TN descriptor. 
+# Most variables just serve to overwrite a private value, but others (mainly mandatory ones) serve to define dependencies between componentes.
+# Each variable can contain the following fields:
+#   - description; A general description of the variable shown in the TNLCM Frontend. "" by default
+#   - type: Expected python built-in data type https://www.w3schools.com/python/python_datatypes.asp, but it can also be a component name. "str" by default
+#   - default_value: In optional variables, the value existing in privates.yaml that the variable can overwrite. "" by default
+#   - choices: List of possible input values. [] by default
+#   - required_when: Condition to satisfy to make the variable mandatory to fill by the experimenter. Values can be a simple true/false, or a boolean condition https://www.w3schools.com/python/python_booleans.asp
+#                    Conditions can include the value of other input variables of the same comopnent. false by default
 
 ### output:
 # Structure of the dictionary "output" the TNLCM expects to receive after the component deployment
@@ -62,107 +64,49 @@ metadata:
 ## Component input
 ####################################
 input:
-  sample_optional_variable:
-    description: Description of an optional variable. Add 3 different strings
-    type: "strlist"
-    quantity: 3
-    value:
-      - "DEFAULT VALUE 1"
-      - "DEFAULT VALUE 2"
-      - "DEFAULT VALUE 3"
-    optional: true
+  simple_text_variable:
+    description: Description of an optional text variable.
+    #type: str
+    default_value: "Default string"
+    #choices: []
+    required_when: false
 
-  sample_mandatory_variable:
-    description: Description of a mandatory variable. 1 is a placeholder value, user input is required
-    type: "int"
-    value: 1
-    optional: false
+  mandatory_list_of_strings:
+    description: |
+      Variable has not default and requires a list of mandatory_list_of_strings
+      A sample valid input would be ["one", "two", "three"]
+    type: list[str]
+    #default_value: ""
+    #choices: []
+    required_when: true
+
+  choose_a_number:
+    description: Select a numeric value from the list of choices. First choice by default.
+    type: int
+    default_value: 1
+    choices: [1,2,3]
+    required_when: false
 
   sample_choice_variable:
     description: |
-      Long despription that can span more than one line. Be careful with these ones.
-      2 is just the placeholder value. User input is required
-    type: "int"
-    choices:
-      - 1
-      - 2
-      - 3
-    value: 2       # 2 is just the placeholder value
-    optional: false
+      Mandatory variable taht stablishes a dependency with another component.
+      Through the previous component output, other variables from this component can be autocompleted 
+    type: vnet
+    #default_value: ""
+    #choices: []
+    required_when: true
 
-  list_with_choices:
+  autocompleted_variable:
     description: |
-      Order the 3 choices acording to your preferences
+      The value will be overwritten in this order:
+        1. Initial value is in the private.yaml file (a.k.a. the value shown in default_value)
+        2. If another component was referrenced in "sample_choice_variable" a playbook step will overwrite the value with one of its output variables.
+        3. If this optional variable is filled, the final value will always be this one.
+      Most cases will be OK simply leaving the default_value for it to be automatically overwritten
     type: "strlist"
-    quantity: 3
-    choices:
-      - "cat"
-      - "dog"
-      - "duck"
-    value:   # values apear by default in this order
-      - "cat"
-      - "dog"
-      - "duck"    
+    default_value: "255.255.255.0"
+    #choices: []
     optional: false
-
-  sample_tnlcm_single_variable:
-    description: User sees the different VM IDs and chooses one
-    type: "int"
-    value:
-    optional: false   # no default value (not even placeholder value). User MUST select one.
-    tnlcm_input:
-      paths:      # the paths (not their value) of all component of these types are shown to the experimenter in this order for it to choose ONLY ONE. Then, the value of that path is placed in the manifest
-        - "vm_kvm_extra_large.id"      # would show the "id" output of both "vm_kvm_extra_large-maquina1" and "vm_kvm_extra_large-maquina2"
-        - "vm_kvm_large.id"
-        - "vm_kvm_medium.id"
-        - "vm_kvm_small.id"
-        - "vm_kvm_very_small.id"
-
-  one_bastion_networks:
-    description: OpenNebula IDs of the VNets the VM will be part of. First one should be the tn_vxlan ID in most cases
-    type: "intlist"
-    quantity: "(1, inf)"   # any number of inputs from 1 to infinite can be provided.
-    value:
-      - 0
-      - tn_vxlan-id
-    optional: true         # if not filled, default values are just a hardcoded 0 and the tn_vxlan ID 
-    tnlcm_input:
-      paths:
-        - tn_vxlan.output.id
-        - vnet.output.id
-      # repeated: false    # maybe this is too much. Option to enable selecting the same path multiple times
-
-  one_ueransim_run_gnb:
-    description: |
-      Additional dependencies are added deppending on this variable's value:
-        - If "YES", then an open5gs component needs to be previously deployed.
-        - If "NO" and one_ueransim_run_ue as "YES", then a a previous ueransim component needs to be previously deployes with one_ueransim_run_gnb as "YES".
-    type: "str"
-    choices:
-      - "YES"
-      - "NO"
-    value: "NO"
-    optional: true
-    dependencies:
-      - if_value:
-          - "YES"
-        if_other_variables:
-          numeric_variable1:   # IDK if this should be OR or AND list
-            - "< 23"           # I dont know how to add numeric conditions
-            - "> 15"
-        then:
-          - open5gs:
-      - if_value:                # dependency aplied if this "AND" list of input value conditions is satisfied
-          - "NO"
-        then:
-          self.input.one_ueransim_run_ue: "YES"
-          ueransim.input.one_ueransim_run_gnb:
-            with:              # dependency on an previously deployed ueransim component with input value one_ueransim_run_gnb: "YES"
-              one_ueransim_run_gnb: "YES"
-            autocompletes:
-              variable1: "output.variable1_from_ueransim"
-              variable2: "input.variable2_from_ueransim"
-
 
 ####################################
 ## Component output

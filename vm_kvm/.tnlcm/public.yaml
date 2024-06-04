@@ -4,29 +4,21 @@
 ##
 ## Variables accesible to the experimenter.
 ##
-## They are contained inside 4 global variables
+## They are contained inside 3 global variables
 ## with all required info:
-##   1. name: name of the component
 ##
-##   2. metadata: General information like mantainers,
+##   1. metadata: General information like mantainers,
 ##      component dependencies and allowed platforms
 ##
-##   3. input: Customizable variables for each
+##   2. input: Customizable variables for each
 ##      deployment to be filled by the experimenter
 ##      or the TNLCM
 ##
-##   4. output: Values sent to the TNLCM callback to
+##   3. output: Values sent to the TNLCM callback to
 ##      keep track of the TN deployments
-##
-## File previously found at "public/description.yaml"
 ##
 ######################################################
 
-
-####################################
-## Component name
-####################################
-name: vm_kvm_extra_large
 
 ####################################
 ## Component metadata
@@ -36,44 +28,31 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  needs:
-  short_description: VM with a extra_large amount of compute resources 
+  short_description: Deploys a general-purpose Virtual Machine
   long_description: |
-    This image is based on an Ubuntu 22.04 with:
-    - 32 GiB of memory
-    - 8 vCPU
-    - 100 GiB of storage
+    A general-purpose Virtual Machine based on Ubuntu 22.04 lTS.
+    Through variable "one_vm_kvm_size", five different types of instances can be deployed
+    - **extra_large**: 32 GiB of memory, 8 vCPU and 100GiB of storage
+    - **large**: 16 GiB of memory, 4 vCPU and 50GiB of storage
+    - **medium**: 8 GiB of memory, 4 vCPU and 25GiB of storage
+    - **small**: 4 GiB of memory, 2 vCPU and 15GiB of storage
+    - **very_small**: 2 GiB of memory, 1 vCPU and 10GiB of storage
   hypervisors: [one]
-  sites: [uma, athens, fokus]
+  sites: [uma, athens, fokus, oulu]
 
 ####################################
 ## Component input
 ####################################
 input:
-  one_vm_username:
-    description: Username to log into the extra_large VM
-    type: "str"
-    value: "username"
-    user_input: true
-    optional: false
-  one_vm_password:
-    description: Password to log into the extra_large VM
-    type: "str"
-    value: "password"
-    user_input: true
-    optional: false
-  one_vm_networks:
-    description: List of Virtual Networks avaiable to the extra_large VM as NICs
-    type: "strlist"
-    value:
-    user_input: true
-    optional: false
+  one_vm_kvm_networks:
+    description: Ordered list of Virtual Network names the VM will be part of. In most cases first one should always be the tn_vxlan
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
+    required_when: false
 
 ####################################
 ## Component output
 ####################################
 output:
-  vm_ip:          # Main Network Interface
-  # "vpm_ip": "{{ vm_ip | b64encode }}",
-  # "user": "{{ one_vm_username | b64encode }}",
-  # "password": "{{ one_vm_password | b64encode }}"
+  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
+  id: VM ID in OpenNebula
