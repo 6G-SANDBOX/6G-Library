@@ -31,14 +31,13 @@
         project_path: "{{ workspace }}/.terraform/"
         state: "present"
         force_init: true
-      failed_when: false
+      ignore_errors: true
 
     - name: Run 'terraform apply' a second time. Command should now succeed
       community.general.terraform:
         project_path: "{{ workspace }}/.terraform/"
         state: "present"
         force_init: true
-      failed_when: false
 
     - name: Remove the Trial Network .ssh/config.d/ file
       ansible.builtin.file:
@@ -59,8 +58,6 @@
         src: "{{ workspace }}/.global/json_templates/ok_result.json.j2"
         dest: "{{ workspace }}/ok_result-tn_destroy.json"
         mode: "640"
-      vars:
-        ok2markdown: ""
 
     - name: Send OK json response to TNLCM
       ansible.builtin.uri:
@@ -69,4 +66,4 @@
         body_format: json
         src: "{{ workspace }}/ok_result-tn_destroy.json"
       register: tnlcm_post
-      failed_when: false
+      ignore_errors: true

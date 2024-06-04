@@ -39,7 +39,7 @@
     body_format: json
     src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.json"
   register: tnlcm_post
-  failed_when: false
+  ignore_errors: true
 
 - name: Send OK markdown response to S3
   amazon.aws.s3_object:

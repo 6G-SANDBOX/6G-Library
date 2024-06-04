@@ -22,7 +22,7 @@
     project_path: "{{ workspace }}/.terraform/"
     state: "present"
     force_init: true
-  failed_when: false
+  ignore_errors: true
   register: terraform_apply
 
 - name: Check terraform apply return code
@@ -55,7 +55,7 @@
         body_format: json
         src: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.json"
       register: tnlcm_post
-      failed_when: false
+      ignore_errors: true
 
     - name: Stop playbook execution
       ansible.builtin.fail:
