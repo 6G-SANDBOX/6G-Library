@@ -1,7 +1,7 @@
 {
     "tn_id": "{{ tn_id | b64encode }}",
-    "component_type": "{{ component_type | b64encode }}",
-    "custom_name": "{{ custom_name | b64encode }}",
+    "component_type": "{{ component_type | default() | b64encode }}",
+    "custom_name": "{{ custom_name | default() | b64encode }}",
     "success": "false",
     "markdown": "{{ fail2markdown['content'] }}",
     "output": {}
