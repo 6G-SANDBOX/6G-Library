@@ -8,7 +8,7 @@
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/{{ item.dest | basename }}"
     src: "{{ item.dest }}"
-    encrypt: no
+    encrypt: false
   loop: "{{ terraform_manifests.results }}"
   when: terraform_apply.failed is defined and terraform_apply.failed == false
 
@@ -17,7 +17,7 @@
     src: "{{ workspace }}/{{ component_type }}/result_templates/ok_result.md.j2"
     dest: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.md"
 
-- name: Encode OK response into base64 
+- name: Encode OK response into base64
   ansible.builtin.slurp:
     src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.md"
   register: ok2markdown
@@ -39,15 +39,15 @@
     body_format: json
     src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.json"
   register: tnlcm_post
-  ignore_errors: true
+  failed_when: false
 
 - name: Send OK markdown response to S3
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"
     mode: put
-    access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
-    secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
+    access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+    secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/ok_result-{{ entity_name }}.md"
     src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.md"
-    encrypt: no
+    encrypt: false

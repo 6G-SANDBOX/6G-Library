@@ -26,24 +26,46 @@
         dest: "{{ workspace }}/.terraform/backend.tf"
         mode: "640"
 
-    - name: Run 'terraform init'
-      ansible.builtin.command: "terraform -chdir={{ workspace }}/.terraform/ init"
-      changed_when: false
+    - name: Run 'terraform apply' a first time. Command will fail
+      community.general.terraform:
+        project_path: "{{ workspace }}/.terraform/"
+        state: "present"
+        force_init: true
+      failed_when: false
 
-    # - name: Terraform apply
-    #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+    - name: Run 'terraform apply' a second time. Command should now succeed
+      community.general.terraform:
+        project_path: "{{ workspace }}/.terraform/"
+        state: "present"
+        force_init: true
+      failed_when: false
 
-    # - name: Run 'terraform apply' a first time. Command will fail
-    #   community.general.terraform:
-    #     project_path: "{{ workspace }}/.terraform/"
-    #     state: "present"
-    #     force_init: true
-    #   ignore_errors: true
+    - name: Remove the Trial Network .ssh/config.d/ file
+      ansible.builtin.file:
+        path: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+        state: absent
 
-    # - name: Run 'terraform apply' a second time. Command should now succeed
-    #   community.general.terraform:
-    #     project_path: "{{ workspace }}/.terraform/"
-    #     state: "present"
-    #     force_init: true
-    #   ignore_errors: true
-    #   register: terraform_apply
+    - name: Delete S3 bucket
+      amazon.aws.s3_bucket:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        name: "{{ site_s3_server.bucket }}"
+        state: absent
+        force: true
+
+    - name: Generate OK json response
+      ansible.builtin.template:
+        src: "{{ workspace }}/.global/json_templates/ok_result.json.j2"
+        dest: "{{ workspace }}/ok_result-tn_destroy.json"
+      vars:
+        ok2markdown: ""
+
+    - name: Send OK json response to TNLCM
+      ansible.builtin.uri:
+        url: "{{ tnlcm_callback }}"
+        method: POST
+        body_format: json
+        src: "{{ workspace }}/ok_result-tn_destroy.json"
+      register: tnlcm_post
+      failed_when: false
