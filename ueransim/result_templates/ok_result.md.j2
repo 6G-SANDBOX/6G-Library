@@ -11,21 +11,20 @@ stopped and disabled by default:
 If you need detailed information about what each parameter in the input files mean, check the [official documentation](https://github.com/aligungr/UERANSIM/wiki/Configuration)
 Component configuration logs can be foud at `/var/log/post-ueransim.log` 
 
-# Deployment
+### Deployment
 Important information about the deployment
 
 * **VM ID**: {{ id }}
 * **MEMORY**: {{ one_ueransim_memory}} MiB
 * **VCPU**: {{ one_ueransim_cpu }}
 * **STORAGE**: 5 GiB
-
-### VIRTUAL MACHINE NETWORK INTERFACES
-```
-{{ ips }}
-```
+* **Network Interfaces**:
+    ```json
+    {{ ips }}
+    ```
 
 {% if one_ueransim_run_gnb is defined and one_ueransim_run_gnb == 'YES' %}
-## gNB Runtime
+### gNB Runtime
 Values used to launch the ueransim_gnb.service:
 * **proxy**: `{{ one_ueransim_gnb_proxy }}`
 * **amf_address**: `{{ one_ueransim_gnb_amf_address}}`
@@ -37,7 +36,7 @@ Values used to launch the ueransim_gnb.service:
 
 {% endif %}
 {% if one_ueransim_run_ue is defined and one_ueransim_run_ue == 'YES' %}
-## UE Runtime
+### UE Runtime
 Values used to launch the ueransim_ue.service:
 * **supi**: `{{ one_ueransim_ue_supi }}`
 * **mcc**: `{{ one_ueransim_ue_mcc}}`
