@@ -12,7 +12,7 @@
       ansible.builtin.file:
         path: "{{ workspace }}/.terraform"
         state: directory
-        mode: "640"
+        mode: "755"
 
     - name: "Prepare terraform manifest for provider: {{ site_hypervisor }}"
       ansible.builtin.copy:
