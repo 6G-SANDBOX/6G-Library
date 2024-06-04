@@ -4,6 +4,10 @@
   gather_facts: false
   connection: local
   tasks:
+    - name: Load site-specific variables
+      ansible.builtin.include_vars:
+        file: "{{ workspace }}/6G-Sandbox-Sites/.sites/{{ deployment_site }}/values.yaml"
+
     - name: Create directory for terraform manifests
       ansible.builtin.file:
         path: "{{ workspace }}/.terraform"

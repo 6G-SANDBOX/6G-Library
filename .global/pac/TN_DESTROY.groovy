@@ -1,7 +1,7 @@
 
 // 'Pipeline: Declarative' jenkins plugin required: https://plugins.jenkins.io/pipeline-model-definition/ https://www.jenkins.io/doc/pipeline/steps/pipeline-model-definition/
 pipeline {
-
+    
     agent any
 
     options {
@@ -10,7 +10,7 @@ pipeline {
 
     parameters {
         string(name: 'TN_ID', defaultValue: '', description: 'Trial Network Identifier. MANDATORY')
-        string(name: 'SITE_HYPERVISOR', defaultValue: 'one', choices: ['one'], description: 'Hypervisor used in the current site.')
+        choice(name: 'DEPLOYMENT_SITE', choices: ['uma', 'athens', 'fokus', 'oulu'], description: 'Site where the deployment is being made. Choose between uma, athens, fokus or oulu. MANDATORY')
         string(name: 'TNLCM_CALLBACK', defaultValue: 'http://tnlcm-ip:5000/tnlcm/callback/', description: 'URL of the TNLCM to notify the results. MANDATORY')
         string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library.git', description: '6G-Library repository HTTPS URL. Leave it as-is unless you want to test your own fork')
         string(name: 'LIBRARY_BRANCH', defaultValue: 'main', description: 'LIBRARY_URL branch to use. Leave it as-is unless you want to test your own branch')
@@ -19,6 +19,11 @@ pipeline {
 
     // Enviromental variables inherited from Jenkins Credentials
     environment {
+        // URL, branch and github token to clone the 6G-Sandbox-Sites repository
+        // SITES_URL="${params.SITES_URL}"
+        // SITES_BRANCH="${params.SITES_BRANCH}"
+        GITHUB_JENKINS = credentials('GITHUB_JENKINS')
+
         // Opennebula Terraform Provider envorimental variables https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs#environment-variables
         // OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
         OPENNEBULA_USERNAME = credentials('OPENNEBULA_TNLCM_USERNAME')
@@ -39,16 +44,27 @@ pipeline {
     }
 
     stages {
-        stage('Stage 1: Run playbook to destroy the selected Trial Network') {
-            steps {   
-                echo("PURGINT TRIAL NETWORK: ${TN_ID}")             
+        stage('Stage 3: Clone 6G-Sandbox-Sites repository') {
+            steps {
+                echo("PURGING TRIAL NETWORK: ${TN_ID}") 
+                echo 'Stage 1: Clone 6G-Sandbox-Sites repository'
+                script {
+                    def gitUrlWithoutGitAt = "${params.SITES_URL}".replace('https://', '')
+                    def gitUrlWithToken = "https://${GITHUB_JENKINS}@${gitUrlWithoutGitAt}"
+                    sh "git clone -b ${params.SITES_BRANCH} $gitUrlWithToken"
+                }
+            }
+        }
+
+        stage('Stage 2: Run playbook to destroy the selected Trial Network') {
+            steps {               
               // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
               // "SSH credentials" plugin required: https://plugins.jenkins.io/ssh-credentials/
                 ansiblePlaybook(
                     credentialsId: 'remote_ssh',
                     extraVars: [
                         tn_id: "${params.TN_ID}",
-                        site_hypervisor: "${params.SITE_HYPERVISOR}",
+                        deployment_site: "${params.DEPLOYMENT_SITE}",
                         tnlcm_callback: "${${params.TNLCM_CALLBACK}}",
                         debug: "${params.DEBUG}",
                         workspace: "${WORKSPACE}",
