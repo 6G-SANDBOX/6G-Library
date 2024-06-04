@@ -3,6 +3,6 @@
     "component_type": "{{ component_type | default() | b64encode }}",
     "custom_name": "{{ custom_name | default() | b64encode }}",
     "success": "true",
-    "markdown": "{{ ok2markdown['content'] }}",
+    "markdown": "{{ ok2markdown['content'] | default() }}",
     "output": {{ output | default({}) | to_nice_json(indent=8) }}
 }
