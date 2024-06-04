@@ -24,7 +24,7 @@ pipeline {
         // URL, branch and github token to clone the 6G-Sandbox-Sites repository
         // SITES_URL="${params.SITES_URL}"
         // SITES_BRANCH="${params.SITES_BRANCH}"
-        // GITHUB_JENKINS = credentials('GITHUB_JENKINS')
+        GITHUB_JENKINS = credentials('GITHUB_JENKINS')
 
         // Opennebula Terraform Provider envorimental variables https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs#environment-variables
         // OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
@@ -52,7 +52,7 @@ pipeline {
                 echo 'Stage 1: Clone 6G-Sandbox-Sites repository'
                 script {
                     def gitUrlWithoutGitAt = "${params.SITES_URL}".replace('https://', '')
-                    def gitUrlWithToken = "https://${credentials('GITHUB_JENKINS')}@${gitUrlWithoutGitAt}"
+                    def gitUrlWithToken = "https://${env.GITHUB_JENKINS}@${gitUrlWithoutGitAt}"
                     sh "git clone -b ${params.SITES_BRANCH} $gitUrlWithToken"
                 }
             }
@@ -85,7 +85,7 @@ pipeline {
         cleanup{
             // script step required to execute "Scripted Pipeline" syntax blocks into Declarative Pipelines
             script {
-                if (env.DEBUG == 'false') {
+                if (params.DEBUG == 'false') {
                     echo 'Clean up Workspace'
                     deleteDir()
                 
