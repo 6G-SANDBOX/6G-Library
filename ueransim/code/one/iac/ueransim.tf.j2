@@ -39,7 +39,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
   disk {
-    image_id = {{ site_one_templates.tn_bastion.image_id }}
+    image_id = {{ site_one_templates.ueransim.image_id }}
     size     = {{ one_ueransim_disk }}
     target   = "vda"
     driver   = "qcow2"

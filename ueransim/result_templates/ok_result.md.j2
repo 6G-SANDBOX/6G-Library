@@ -1,5 +1,5 @@
-# UERANSIM
-The *UERANSIM* appliance with the name **{{ tn_id }}-{{ entity_name }}** has been succesfully deployed as part of the Trial Network: **{{ tn_id }}**
+# {{ tn_id }}-{{ entity_name}}
+An *UERANSIM* appliance has been succesfully created as part of the Trial Network: **{{ tn_id }}**
 
 <img src="https://artifacthub.io/image/48ac05fa-1ef2-4d8f-8fba-1d67cb236335@3x"/>
 
@@ -16,12 +16,12 @@ Important information about the deployment
 
 * **VM ID**: {{ id }}
 * **MEMORY**: {{ one_ueransim_memory}} MiB
-* **VCPU**: `{{ one_ueransim_cpu }}
-* **STORAGE**: {{ 3072 }} GiB
+* **VCPU**: {{ one_ueransim_cpu }}
+* **STORAGE**: 5 GiB
 
 ### VIRTUAL MACHINE NETWORK INTERFACES
 ```
-{{ ips}}
+{{ ips }}
 ```
 
 {% if one_ueransim_run_gnb is defined and one_ueransim_run_gnb == 'YES' %}
