@@ -21,9 +21,7 @@ pipeline {
 
     // Enviromental variables inherited from Jenkins Credentials
     environment {
-        // URL, branch and github token to clone the 6G-Sandbox-Sites repository
-        // SITES_URL="${params.SITES_URL}"
-        // SITES_BRANCH="${params.SITES_BRANCH}"
+        // Github token to clone the 6G-Sandbox-Sites repository
         GITHUB_JENKINS = credentials('GITHUB_JENKINS')
 
         // Opennebula Terraform Provider envorimental variables https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs#environment-variables
