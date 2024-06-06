@@ -1,6 +1,9 @@
 # UERANSIM
 
-The **UERANSIM** 6G-Library component allows the experimenters to test and deploy their own Appliance of a 5G-SA UE and gNodeB.
+The **UERANSIM** 6G-Library component allows the experimenters to test and deploy their own Appliance of a 5G-SA UE and gNodeB. It can be used as a 5G User Equipment, a gNB, as both or as None.
+Depending on the chosen behaviour (with input values "one_ueransim_run_gnb" and "one_ueransim_run_ue" respectivelly), the following dependencies are aplied:
+- If one_ueransim_run_gnb == "YES", a previously deployed open5gs component needs to be selected at "one_ueransim_gnb_linked_open5gs"
+- If one_ueransim_run_gnb == "NO" and one_ueransim_run_ue == "YES", a previously deployed ueransim with run_gnb == "YES" needs to be selected at "one_ueransim_ue_linked_gnb"
 
 This component is based on an Ubuntu 22.04 minimal image with the latest UERANSIM binaries (v3.2.6): `nr-cli`, `nr-gnb`, `nr-ue` and `nroff`.
 
@@ -37,4 +40,3 @@ On the other hand, UERANSIM does not fully provide physical layer. 5G-NR radio i
 <img src="https://img.shields.io/badge/Control%20Plane-functional-green" alt="OS Linux"/>  
 <img src="https://img.shields.io/badge/User%20Plane-functional-green" alt="OS Linux"/>
 </p>
-

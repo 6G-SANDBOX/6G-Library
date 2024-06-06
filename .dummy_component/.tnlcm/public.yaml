@@ -104,7 +104,7 @@ input:
         3. If this optional variable is filled, the final value will always be this one.
       Most cases will be OK simply leaving the default_value for it to be automatically overwritten
     type: "strlist"
-    default_value: "255.255.255.0"
+    default_value: ["255.255.255.0"]
     #choices: []
     optional: false
 
@@ -112,4 +112,5 @@ input:
 ## Component output
 ####################################
 output:
-  sample_output_variable: Short description of what the expected value is
+  sample_output_variable: Short description of what the output value is.
+  another_output_variable: Description is optional. For now, it is unused by the TNLCM. TNLCM only checks the key name.

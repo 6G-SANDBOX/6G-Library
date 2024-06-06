@@ -10,12 +10,6 @@
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
-    - name: Terraform apply to load custom outputs previously created
-      community.general.terraform:
-        project_path: "{{ workspace }}/.terraform/"
-        state: "present"
-        force_init: true
-
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
       args:
@@ -77,10 +71,8 @@
           - key: "{{ entity_name }}-metadata"
             value: "{{ open5gs_metadata_dict }}"
 
-    - name: Merge all component component outputs into one "output" variable
-      ansible.builtin.set_fact:
-        output:
-          open5gs_metadata_dict: "{{ open5gs_metadata_dict | b64encode }}"
-
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        output:
+          open5gs_metadata_dict: "{{ open5gs_metadata_dict | b64encode }}"

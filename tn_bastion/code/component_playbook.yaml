@@ -85,14 +85,12 @@
           - key: "ssh_public_key"
             value: "{{ hostvars['tn_bastion']['ssh_public_key']['content'] | b64decode | trim }}"
 
-    - name: Merge all component component outputs into one "output" variable
-      ansible.builtin.set_fact:
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
           vpn_client_tunnel: "{{ hostvars[entity_name]['client_tunnel']['content'] }}"
           ssh_public_key: "{{ hostvars[entity_name]['ssh_public_key']['content'] }}"
           ssh_private_key: "{{ hostvars[entity_name]['ssh_private_key']['content'] }}"
-
-    - name: Publish execution results to TNLCM
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

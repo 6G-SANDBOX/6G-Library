@@ -1,14 +1,13 @@
 # Changelog
 
-## [Unreleased]
-
-### Added
-
-- Standardized changelog format to fit [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog/blob/main/CHANGELOG.md) rules.
+## [v0.2.0] - 2024-06-06
 
 ### Changed
 
-- Radical repository reorganization as explained in the main changelog
+- Component follows the new architecture.
+- Component renamed from `k8s_medium`
+- Cluster configuration now made directly through the master node. No tunneling
+- OneKE v1.29 with three storage nodes is the new default.
 
 
 ## [v0.1.0] - 2024-04-29
@@ -16,18 +15,15 @@
 Initial release of the 6G Library. Changes will be kept on track for now on.
 
 
-
-[unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.1.1...HEAD
-<!--
-Format for next release
-[v0.1.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.1.1
--->
+<!-- Change latest version value at every release -->
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...HEAD
+[v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.1.0
 
 
-<!--
-FIELDS PER VERSION:
 
+<!-- FIELDS PER VERSION -->
+<!--
 ### Added
 
 - New features

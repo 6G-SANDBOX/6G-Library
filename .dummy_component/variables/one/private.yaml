@@ -8,8 +8,6 @@
 ##
 ######################################################
 
-# All private variables can be overwritten by the input file in Jenkins
-# Most private variables are intended to overwrite values in the OpenNebula templates for the specific component
-# Beware some of the variables here can overwrite others from .SITES or even JENKINS
-
-# POSSIBLE FUTURE FEATURE: ACLs to give experimenter the capabilities to overwrite all, some or none of the values from private.yaml
+# Private variables define for each virtualization platform (hypervisor) a set of default values.
+# Some private variables are just defaults to be overwritten by the input_file.yaml, while others are not intended to be overwritten.
+# Fact is, with input_file.yaml you can technically overwrite any value shown here, but the TNLCM will only let you to modify the ones in public.yaml

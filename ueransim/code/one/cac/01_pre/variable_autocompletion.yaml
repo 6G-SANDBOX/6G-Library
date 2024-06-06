@@ -1,10 +1,4 @@
 ---
-- name: Terraform apply to load custom outputs previously created
-  community.general.terraform:
-    project_path: "{{ workspace }}/.terraform/"
-    state: "present"
-    force_init: true
-
 - name: Retrieve terraform outputs from previous components
   ansible.builtin.shell:
   args:

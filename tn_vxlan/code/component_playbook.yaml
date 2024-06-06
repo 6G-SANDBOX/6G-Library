@@ -36,10 +36,8 @@
       ansible.builtin.set_fact:
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
 
-    - name: Merge all component component outputs into one "output" variable
-      ansible.builtin.set_fact:
-        output:
-          id: "{{ id | b64encode }}"
-
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        output:
+          id: "{{ id | b64encode }}"

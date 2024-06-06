@@ -88,11 +88,9 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: Merge all component component outputs into one "output" variable
-      ansible.builtin.set_fact:
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
-
-    - name: Publish execution results to TNLCM
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

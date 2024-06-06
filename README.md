@@ -70,7 +70,7 @@ These are the selected tools used to automate how to create and configure a comp
 + **[Jenkins](https://www.jenkins.io/)**: To execute and orchestrate a component deployment.
 + **[Bash](https://www.gnu.org/software/bash/)**: To allow scripting on standalone operations.
 
-### Directory Structure
+### Component Directory Structure
 ```
 Component_Name
 ├── .tnlcm/
@@ -105,28 +105,27 @@ Information used by the TNLCM to integrate the component into Trial Network desc
 
 #### code/
 
++ **component_playbook.yaml**: Ansible playbook that starts the deployment with the variables passed by the TNLCM. Task files imported to its workflow can be unique to the component or common to all of them.
 
-+ **manifest.yaml (file)**: It contains the flow that must be followed to deploy the component
++ **`site_hypervisor`/**: Directory with CaC and IaC files adapted to a specific cloud provider (`one/`, `vmware/`, etc.) or to any of them (`all/`).
 
-+ **cloud_provider(folder)**: One folder per cloud provider where the component will be available
-
-    + **cac(folder)**: Contains files related to configuration automation
-        + **pre(folder)**: Contains files related to configuration that should be done in advance. For example, gather some information from cloud provider.
-        + **install(folder)**: Contains files related to component configuration
-        + **post(folder)**: Contains files related to configuration that should be done after component set-up. For example, test execution.
-    + **iac(folder)**: Contains files related to infrastructure definition
+    + **cac/**: Files related to configuration automation. Ideally only Ansible files. Complex configurations can distinguish different phases:
+        + **pre/**: Preliminary tasks related to the configuration of the environment that deploys the component.
+        + **install/**: Tasks to be executed during the component configuration
+        + **post/**: Colorary tasks to be executed after the compoent is already configured.
+    + **iac/**: Files related to infrastructure definition. Ideally only jinja2 templates of Terraform manifests. 
 
 #### result_templates/
 
-It contains, detailed information about the component in MarkDown format. That enables direct integration between third parties and the catalog.
-
-Documentation will be always update with new component versions.
+Two jinja2 templates of markdown files related to two possible scenarios:
+- **fail_result.md.j2**: Templated and sent to the TNLCM when the component deployment was failed. Includes the corresponding stderr.
+- **ok_result.md.j2**: Templated and sent to the TNLCM when the component deployment was successful. Includes detailed information for the experimenter about the component.
 
 #### variables/
 
-Contains the component private files with information and automation that will be used to deploy the component in a 6G-SANDBOX site
+Variable files sepparated by the cloud provider used by each site.
 
-+ **values.yaml (file)**: It contains variables needed by automation tools to accomplish deployment and configuration
++ **private.yaml**: Default variables and their value. Their value depends on the selected site, and some of them can be overwritten by the TNLCM input.
 
 ## Links
 
@@ -134,13 +133,13 @@ Contains the component private files with information and automation that will b
 
 
 <!-- Urls, Shields and Badges -->
-[contributors-shield]: https://img.shields.io/github/contributors/6G-SANDBOX/6G--Library.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/6G-SANDBOX/6G-Library.svg?style=for-the-badge
 [contributors-url]: https://github.com/6G-SANDBOX/6G-Library/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/6G-SANDBOX/6G--Library.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/6G-SANDBOX/6G-Library.svg?style=for-the-badge
 [forks-url]: https://github.com/6G-SANDBOX/6G-Library/network/members
-[stars-shield]: https://img.shields.io/github/stars/6G-SANDBOX/6G--Library.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/6G-SANDBOX/6G-Library.svg?style=for-the-badge
 [stars-url]: https://github.com/6G-SANDBOX/6G-Library/stargazers
-[issues-shield]: https://img.shields.io/github/issues/6G-SANDBOX/6G--Library.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/6G-SANDBOX/6G-Library.svg?style=for-the-badge
 [issues-url]: https://github.com/6G-SANDBOX/6G-Library/issues
 
 [6glibrary-badge]: https://img.shields.io/badge/6G--Library-v0.2.0-blue

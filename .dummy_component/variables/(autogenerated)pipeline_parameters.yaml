@@ -1,0 +1,2 @@
+# The pipeline parameters sent by the TNLCM will appear here in a file before starting the Ansible Playbook.
+# These include values like the Trial Network ID, the custom name or the chosen site.

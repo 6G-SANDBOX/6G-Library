@@ -2,7 +2,7 @@
 - name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
   gather_facts: false
-  connection: local  
+  connection: local
   tasks:
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
@@ -121,7 +121,7 @@
 
         - name: Apply nginx Ingress for the longhorn dashboard
           ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_longhorn_dashboard.yaml"
-          when: hostvars['localhost']['one_oneKE_longhorn']  == "YES"
+          when: hostvars['localhost']['one_oneKE_longhorn'] == "YES"
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
@@ -132,12 +132,12 @@
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put
-        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
-        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
         object: "{{ tn_id }}/kconf-{{ entity_name }}.kubeconfig"
         src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
-        encrypt: no
+        encrypt: false
 
     - name: Publish node IDs and IPs as a terraform outputs"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
@@ -148,14 +148,12 @@
           - key: "{{ entity_name }}-node_ips"
             value: "{{ node_ips }}"
 
-    - name: Merge all component component outputs into one "output" variable
-      ansible.builtin.set_fact:
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
         output:
           id: "{{ id | b64encode }}"
           node_ids: "{{ node_ids | b64encode }}"
           node_ips: "{{ node_ips | b64encode }}"
           kubeconfig: "{{ kubeconfig | b64encode }}"
           skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"
-
-    - name: Publish execution results to TNLCM
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

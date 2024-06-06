@@ -1,3 +1,5 @@
-Replaces the "index.md" file also with general component info and metadata
-May have duplicate info with variables/public.yaml, but all info the experimenter should know about the component should be here
-This includes all info previously found in metadata, as the "description", the "maintainers" and the component "version"
+# .dummy_component
+
+Placeholder component to serve as a template on how to develop your own.
+The playbook may be invalid, but every file will ve over-commented to inform the future component develop about how to configure any file.
+Do not hesitate to write to us about any doubdt or suggesting any change for clarity sake.
