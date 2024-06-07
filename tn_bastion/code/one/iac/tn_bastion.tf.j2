@@ -2,7 +2,7 @@
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
-  template_id = {{ site_one_templates.tn_bastion.id }}
+  template_id = {{ site_available_components.tn_bastion.template_id }}
   cpu         = {{ one_bastion_cpu }}
   vcpu        = {{ one_bastion_cpu }}
   memory      = {{ one_bastion_memory }}
@@ -19,7 +19,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
   disk {
-    image_id = {{ site_one_templates.tn_bastion.image_id }}
+    image_id = {{ site_available_components.tn_bastion.image_id }}
     size     = {{ one_bastion_disk }}
     target   = "vda"
     driver   = "qcow2"
