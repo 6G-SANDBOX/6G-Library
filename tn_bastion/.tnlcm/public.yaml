@@ -41,7 +41,6 @@ metadata:
 
     NOTE: Current tn_bastion only hosts the VPN Server
   hypervisors: [one]
-  sites: [uma, athens, fokus, oulu]
 
 ####################################
 ## Component input

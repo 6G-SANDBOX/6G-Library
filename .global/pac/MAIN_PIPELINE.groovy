@@ -91,7 +91,10 @@ pipeline {
                 script {
                     def gitUrlWithoutGitAt = "${params.SITES_URL}".replace('https://', '')
                     def gitUrlWithToken = "https://${GITHUB_JENKINS}@${gitUrlWithoutGitAt}"
-                    sh "git clone -b ${params.SITES_BRANCH} $gitUrlWithToken"
+                    sh "git clone --no-checkout $gitUrlWithToken"
+                    dir(gitUrlWithToken.tokenize('/').last().replace('.git', '')) {
+                        sh "git checkout ${params.SITES_BRANCH}"
+                    }
                 }
             }
         }

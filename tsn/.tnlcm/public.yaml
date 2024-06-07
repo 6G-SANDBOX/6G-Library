@@ -33,7 +33,6 @@ metadata:
 
     NOTE: Currently tsn is only available in the site "uma"
   hypervisors: [one]
-  sites: [uma]
 
 ####################################
 ## Component input

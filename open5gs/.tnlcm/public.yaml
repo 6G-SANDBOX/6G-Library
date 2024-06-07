@@ -33,7 +33,6 @@ metadata:
     Helm Chart deploying a 5G SA Core inside a Kubernetes cluster
     More info in the official documentation: https://open5gs.org/open5gs/docs/
   hypervisors: [one]
-  sites: [uma, athens, fokus, oulu]
 
 ####################################
 ## Component input

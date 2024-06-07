@@ -29,7 +29,6 @@
 #   - short_description: One sentence long description.
 #   - long_description: Description that can span multiple lines. Can serve to component dependencies.
 #   - hypervisors: Unordered list of compatible hypervisors for the component. Currently only OpenNebula (one)
-#   - sites: Unordered list of sites where the component is avaiable. Useful for hardware-dependent components
 
 ### input:
 # Describes variables shown in the TNLCM to be filled by the experimenter and included in a TN descriptor. 
@@ -58,7 +57,6 @@ metadata:
     and provide a more in depth outline of it's purpose.
     This imaginary component needs a previous "X" component to be previously deployed and referrenced in input: "sampleVariable"
   hypervisors: [one]
-  sites: [uma, athens, fokus, oulu]
 
 ####################################
 ## Component input

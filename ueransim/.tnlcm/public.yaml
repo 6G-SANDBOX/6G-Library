@@ -35,7 +35,6 @@ metadata:
     - If one_ueransim_run_gnb == "YES", a previously deployed open5gs component needs to be selected at "one_ueransim_gnb_linked_open5gs"
     - If one_ueransim_run_gnb == "NO" and one_ueransim_run_ue == "YES", a previously deployed ueransim with run_gnb == "YES" needs to be selected at "one_ueransim_ue_linked_gnb"
   hypervisors: [one]
-  sites: [uma, athens, fokus, oulu]
 
 ####################################
 ## Component input

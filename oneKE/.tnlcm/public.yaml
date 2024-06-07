@@ -36,7 +36,6 @@ metadata:
 
     NOTE: Cluster customization will be progresivelly incorporated ad the OpenNebula Terraform provider gets more functionalities
   hypervisors: [one]
-  sites: [uma, athens, fokus, oulu]
 
 ####################################
 ## Component input
