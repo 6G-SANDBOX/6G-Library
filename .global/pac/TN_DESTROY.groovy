@@ -13,9 +13,9 @@ pipeline {
         choice(name: 'DEPLOYMENT_SITE', choices: ['uma', 'athens', 'fokus', 'oulu'], description: 'Site where the deployment was made. Choose between uma, athens, fokus or oulu. MANDATORY')
         string(name: 'TNLCM_CALLBACK', defaultValue: 'http://tnlcm-ip:5000/tnlcm/callback/', description: 'URL of the TNLCM to notify the results. MANDATORY')
         string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library.git', description: '6G-Library repository HTTPS URL. Leave it as-is unless you want to test your own fork')
-        string(name: 'LIBRARY_BRANCH', defaultValue: 'refs/tags/main', description: 'LIBRARY_URL branch to use. Leave it as-is unless you want to test your own branch')
+        string(name: 'LIBRARY_BRANCH', defaultValue: 'refs/heads/main', description: 'LIBRARY_URL checkout to use. Valid inputs can be refs/heads/<branchName>, refs/tags/<tagName> or <commitId>. Default value can purge TNs from previous 6G-Library version.')
         string(name: 'SITES_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git', description: '6G-Library-Sites repository HTTP URL. Leave it as-is unless you want to test your own fork')
-        string(name: 'SITES_BRANCH', defaultValue: 'refs/tags/main', description: 'SITES_URL branch to use. Leave it as-is unless you want to test your own branch')
+        string(name: 'SITES_BRANCH', defaultValue: 'main', description: 'SITES_URL checkout to use. Valid inputs can be <branchName>, <tagName> or <commitId>. Leave it as-is unless you want to test alternative releases/branches/commits.')
         booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG. Files will not be purged after the pipeline execution')
     }
 
@@ -50,7 +50,7 @@ pipeline {
                 echo 'Stage 1: Clone 6G-Sandbox-Sites repository'
                 script {
                     def gitUrlWithoutGitAt = "${params.SITES_URL}".replace('https://', '')
-                    def gitUrlWithToken = "https://${env.GITHUB_JENKINS}@${gitUrlWithoutGitAt}"
+                    def gitUrlWithToken = "https://${GITHUB_JENKINS}@${gitUrlWithoutGitAt}"
                     sh "git clone --no-checkout $gitUrlWithToken"
                     dir(gitUrlWithToken.tokenize('/').last().replace('.git', '')) {
                         sh "git checkout ${params.SITES_BRANCH}"
