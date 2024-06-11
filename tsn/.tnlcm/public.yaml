@@ -43,4 +43,3 @@ input:
 ## Component output
 ####################################
 output:
-  id: VNet ID in OpenNebula
