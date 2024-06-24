@@ -1,0 +1,47 @@
+####################################
+##
+## Component metadata
+## 
+####################################
+component_name: openran_RIC
+metadata:
+  maintainers: 
+    - Adam Flizikowski  <a.flizikowski@is-wireless.com>
+    - Piotr Kulesza <p.kulesza@is-wireless.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  version: 0.0.1
+  depends:
+    - openran_CUDU:
+        version: ">=0.0.1"
+  short_description: IS-Wirelss Near-RT RIC .
+  long_description: |
+    Component responsible for Near-RT RIC deployment from IS-Wireless.
+  platforms: [one]
+  sites: [uma]
+
+###################################################
+##
+## Public component variables that 
+## should be filled by the experimenter or 
+## the TNLCM. Some of them could be optional
+##
+## If component is optional, value is the default one
+## If component is not optional, value is an example one
+## 
+###################################################
+public:
+  xApp_deploy_list:
+    description: List of xApps to use.
+    type: "strlist"
+    value: ["KPM_MONITOR"]
+    user_input: true
+    optional: false
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:
+  RIC_IP: "RIC IP. Format IPv4 (xxx.xxx.xxx.xxx)."
