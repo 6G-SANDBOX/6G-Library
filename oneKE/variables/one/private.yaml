@@ -1,0 +1,21 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_oneKE_external_vnet: "tn_vxlan"
+
+one_oneKE_version: "129"
+one_oneKE_multus: "YES"          # OneKE default is "NO"
+one_oneKE_cni_plugin: "canal"    # OneKE default is "cilium"
+one_oneKE_cilium_range: ""       # Required if the cni_plugin is cilium
+one_oneKE_metallb: "YES"         # OneKE default is "NO"
+one_oneKE_metallb_range: "10.21.12.200-10.21.12.240"    # Required if the metallb is enabled
+one_oneKE_longhorn: "YES"         # OneKE default is "NO"
+one_oneKE_traefik: "NO"
+one_oneKE_dns: "1.1.1.1 8.8.8.8" # OneKE default is "1.1.1.1,8.8.8.8"

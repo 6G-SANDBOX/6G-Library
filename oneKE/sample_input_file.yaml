@@ -1,0 +1,14 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+#one_oneKE_external_vnet: "tn_vxlan"
+one_oneKE_internal_vnet: "vnet-custom_name"
+
+#one_oneKE_version: "129"
+#one_oneKE_multus: "YES"
+#one_oneKE_cni_plugin: "canal"
+#one_oneKE_cilium_range: ""
+#one_oneKE_metallb: "YES"
+#one_oneKE_metallb_range: "111.21.1.200-11.21.1.240"
+#one_oneKE_longhorn: "YES"
+#one_oneKE_traefik: "NO"
+#one_oneKE_dns: "1.1.1.1 8.8.8.8"

@@ -1,0 +1,26 @@
+# https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_network
+resource "opennebula_virtual_network" "{{ entity_name }}" {
+  name            = "{{ tn_id }}-{{ entity_name }}"
+  physical_device = "{{ one_vnet_physical_device }}"
+  cluster_ids     = {{ site_clusters }}
+  type            = "vxlan"
+  automatic_vlan_id = true
+  mtu             = {{ one_vnet_mtu }}
+  guest_mtu       = {{ one_vnet_guest_mtu }}
+
+  gateway         = "{{ one_vnet_gw }}"
+  network_mask    = "{{ one_vnet_netmask }}"
+  dns             = "{{ one_vnet_dns }}"
+}
+
+resource "opennebula_virtual_network_address_range" "{{ entity_name }}" {
+  virtual_network_id = opennebula_virtual_network.{{ entity_name }}.id
+  ar_type            = "IP4"
+  ip4                = "{{ one_vnet_first_ip }}"
+  size               = {{ one_vnet_address_size }}
+}
+
+output "{{ entity_name }}-id" {
+  description = "OpenNebula Network ID"
+  value       = opennebula_virtual_network.{{ entity_name }}.id
+}

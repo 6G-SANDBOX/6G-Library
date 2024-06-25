@@ -1,0 +1,30 @@
+---
+- name: "Write terraform manifest with the custom outputs"
+  ansible.builtin.blockinfile:
+    path: "{{ workspace }}/.terraform/tf-custom_outputs.tf"
+    block: |
+      output "{{ item.key }}" {
+        value       = "{{ item.value }}"
+      }
+    marker: "# {mark} ANSIBLE MANAGED BLOCK FOR OUTPUT {{ item.key }}"
+    create: true
+  loop: "{{ custom_outputs }}"
+  # loop_control:
+  #   label: "{{ item.key }}"
+
+- name: Terraform apply to load the new custom outputs
+  community.general.terraform:
+    project_path: "{{ workspace }}/.terraform/"
+    state: "present"
+    force_init: true
+
+- name: Upload terraform manifest to S3
+  amazon.aws.s3_object:
+    endpoint_url: "{{ site_s3_server.endpoint }}"
+    mode: put
+    access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
+    secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
+    bucket: "{{ site_s3_server.bucket }}"
+    object: "{{ tn_id }}/tf-custom_outputs.tf"
+    src: "{{ workspace }}/.terraform/tf-custom_outputs.tf"
+    encrypt: no

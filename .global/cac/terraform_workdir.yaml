@@ -1,0 +1,24 @@
+---
+- name: Create directory for terraform manifests
+  ansible.builtin.file:
+    path: "{{ workspace }}/.terraform"
+    state: directory
+    mode: "755"
+
+- name: "Prepare terraform manifest for provider: {{ site_hypervisor }}"
+  ansible.builtin.copy:
+    src: "{{ workspace }}/.global/iac/{{ site_hypervisor }}/provider.tf"
+    dest: "{{ workspace }}/.terraform/{{ site_hypervisor }}_provider.tf"
+    mode: "640"
+
+- name: Prepare AWS s3 backend terraform manifest
+  ansible.builtin.template:
+    src: "{{ workspace }}/.global/iac/backend.tf.j2"
+    dest: "{{ workspace }}/.terraform/backend.tf"
+    mode: "640"
+
+- name: "Get terraform manifests from previous deployed components"
+  ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/s3_download.yaml"
+
+- name: Run 'terraform init'
+  ansible.builtin.command: "terraform -chdir={{ workspace }}/.terraform/ init"

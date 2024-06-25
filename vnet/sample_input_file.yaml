@@ -1,0 +1,8 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+# This component does not need any input file
+
+#one_vnet_gw: "10.21.12.1"
+#one_vnet_netmask: "255.255.255.0"
+#one_vnet_dns: "1.1.1.1 1.0.0.1"
+#one_vnet_first_ip: "10.21.12.1"
+#one_vnet_address_size: 100

@@ -1,0 +1,73 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  short_description: Deploys a general-purpose Virtual Machine
+  long_description: |
+    A general-purpose Virtual Machine based on Ubuntu 22.04 lTS.
+    Through variable "one_vm_kvm_size", five different types of instances can be deployed
+    - **extra_large**: 32 GiB of memory, 8 vCPU and 100GiB of storage
+    - **large**: 16 GiB of memory, 4 vCPU and 50GiB of storage
+    - **medium**: 8 GiB of memory, 4 vCPU and 25GiB of storage
+    - **small**: 4 GiB of memory, 2 vCPU and 15GiB of storage
+    - **very_small**: 2 GiB of memory, 1 vCPU and 10GiB of storage
+  hypervisors: [one]
+
+####################################
+## Component input
+####################################
+input:
+  one_vm_kvm_networks:
+    description: Ordered list of Virtual Network names the VM will be part of. In most cases first one should always be the tn_vxlan
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
+    required_when: false
+  one_vm_kvm_size:
+    description: |
+      Select one type of instance according to your hardware requirements
+      - extra_large: 32 GiB of memory, 8 vCPU and 100GiB of storage
+      - large: 16 GiB of memory, 4 vCPU and 50GiB of storage
+      - medium: 8 GiB of memory, 4 vCPU and 25GiB of storage
+      - small: 4 GiB of memory, 2 vCPU and 15GiB of storage
+      - very_small: 2 GiB of memory, 1 vCPU and 10GiB of storage
+    type: str
+    choices:
+      - "extra_large"
+      - "large"
+      - "medium"
+      - "small"
+      - "very_small"
+    required_when: true
+
+####################################
+## Component output
+####################################
+output:
+  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
+  id: VM ID in OpenNebula

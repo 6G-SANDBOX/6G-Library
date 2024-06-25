@@ -1,0 +1,39 @@
+---
+- name: Install Python and pip
+  ansible.builtin.apt:
+    name: 
+      - python3
+      - python3-pip
+    update_cache: true
+
+- name: Install k8s python plugin
+  ansible.builtin.pip:
+    name:
+      - kubernetes>12.0.0
+      - pyyaml>=3.11
+      - jsonpatch
+
+- name: Create Ingress type nginx for Longhorn 
+  environment:
+    K8S_AUTH_KUBECONFIG: /etc/rancher/rke2/rke2.yaml
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: dashboard-longhorn
+        namespace: longhorn-system
+      spec:
+        ingressClassName: nginx
+        rules:
+        - host: "longhorn.{{ hostvars['localhost']['tn_id'] }}.{{ hostvars['localhost']['site_domain'] }}"
+          http:
+            paths:
+            - pathType: Prefix
+              path: /
+              backend:
+                service:
+                  name: longhorn-frontend
+                  port:
+                    number: 80

@@ -1,0 +1,69 @@
+---
+- name: "STAGE 1: Apply IAC to deploy the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load site-specific variables
+      ansible.builtin.include_vars:
+        file: "{{ workspace }}/6G-Sandbox-Sites/.sites/{{ deployment_site }}/values.yaml"
+
+    - name: Create directory for terraform manifests
+      ansible.builtin.file:
+        path: "{{ workspace }}/.terraform"
+        state: directory
+        mode: "755"
+
+    - name: "Prepare terraform manifest for provider: {{ site_hypervisor }}"
+      ansible.builtin.copy:
+        src: "{{ workspace }}/.global/iac/{{ site_hypervisor }}/provider.tf"
+        dest: "{{ workspace }}/.terraform/{{ site_hypervisor }}_provider.tf"
+        mode: "640"
+
+    - name: Prepare AWS s3 backend terraform manifest
+      ansible.builtin.template:
+        src: "{{ workspace }}/.global/iac/backend.tf.j2"
+        dest: "{{ workspace }}/.terraform/backend.tf"
+        mode: "640"
+
+    - name: Run 'terraform apply' a first time. Command will fail
+      community.general.terraform:
+        project_path: "{{ workspace }}/.terraform/"
+        state: "present"
+        force_init: true
+      ignore_errors: true
+
+    - name: Run 'terraform apply' a second time. Command should now succeed
+      community.general.terraform:
+        project_path: "{{ workspace }}/.terraform/"
+        state: "present"
+        force_init: true
+
+    - name: Remove the Trial Network .ssh/config.d/ file
+      ansible.builtin.file:
+        path: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+        state: absent
+
+    - name: Delete S3 folder
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}"
+        mode: delobj
+
+    - name: Generate OK json response
+      ansible.builtin.template:
+        src: "{{ workspace }}/.global/json_templates/ok_result.json.j2"
+        dest: "{{ workspace }}/ok_result-tn_destroy.json"
+        mode: "640"
+
+    - name: Send OK json response to TNLCM
+      ansible.builtin.uri:
+        url: "{{ tnlcm_callback }}"
+        method: POST
+        body_format: json
+        src: "{{ workspace }}/ok_result-tn_destroy.json"
+      register: tnlcm_post
+      ignore_errors: true

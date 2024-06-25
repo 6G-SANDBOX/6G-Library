@@ -1,0 +1,16 @@
+---
+- name: Load site-specific variables
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/6G-Sandbox-Sites/.sites/{{ deployment_site }}/values.yaml"
+
+- name: Load private component-specific variables
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/{{ component_type }}/variables/{{ site_hypervisor }}/private.yaml"
+
+- name: Load public component-specific variables from input file
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/{{ component_type }}/variables/input_file.yaml"
+
+- name: Load pipeline-specific variables from Jenkins parameters
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/{{ component_type }}/variables/pipeline_parameters.yaml"

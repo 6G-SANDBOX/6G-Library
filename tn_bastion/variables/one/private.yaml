@@ -1,0 +1,20 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_bastion_cpu: 2
+one_bastion_memory: 1024
+one_bastion_disk: 10240   # Size of the Image. Future plans to downsize it
+
+one_bastion_wireguard_allowedips: "192.168.199.0/24"
+
+# By default, In tn_bastion the first VNet is hardcoded to be the site default (site_networks_id.default)
+# The following ones are appended here (tn_vxlan.id)
+one_bastion_networks: 
+  - tn_vxlan

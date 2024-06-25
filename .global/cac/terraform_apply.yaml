@@ -1,0 +1,62 @@
+---
+- name: Register all template files from the component
+  ansible.builtin.find:
+    paths: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/iac/"
+    patterns: "*.tf.j2"
+  register: terraform_templates
+
+- name: "Prepare {{ entity_name}} terraform manifests"
+  ansible.builtin.template:
+    src: "{{ item.path }}"
+    dest: >-
+      {{
+        workspace + '/.terraform/tf-' + item.path | basename | regex_replace('.tf.j2', '') +
+        (('-' + custom_name) if component_type not in ['tn_vxlan', 'tn_bastion', 'tn_init'] else '') +
+        '.tf'
+      }}
+  loop: "{{ terraform_templates.files }}"
+  register: terraform_manifests
+  
+- name: Terraform apply
+  community.general.terraform:
+    project_path: "{{ workspace }}/.terraform/"
+    state: "present"
+    force_init: true
+  ignore_errors: true
+  register: terraform_apply
+
+- name: Check terraform apply return code
+  when: terraform_apply.failed
+  block:
+    - name: Generate FAIL markdown response
+      ansible.builtin.template:
+        src: "{{ workspace }}/{{ component_type }}/result_templates/fail_result.md.j2"
+        dest: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.md"
+
+    - name: Encode FAIL markdown response into base64
+      ansible.builtin.slurp:
+        src: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.md"
+      register: fail2markdown
+
+    - name: Generate FAIL json response
+      ansible.builtin.template:
+        src: "{{ workspace }}/.global/json_templates/fail_result.json.j2"
+        dest: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.json"
+
+    - name: Debug FAIL json response
+      ansible.builtin.debug:
+        msg: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/json_templates/fail_result.json.j2') }}"
+      when: debug
+
+    - name: Send FAIL json response to TNLCM
+      ansible.builtin.uri:
+        url: "{{ tnlcm_callback }}"
+        method: POST
+        body_format: json
+        src: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.json"
+      register: tnlcm_post
+      ignore_errors: true
+
+    - name: Stop playbook execution
+      ansible.builtin.fail:
+        msg: "The Execution of 'terraform apply' failed. Check generated markdown file for more debugging information."

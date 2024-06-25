@@ -1,0 +1,43 @@
+---
+- name: "STAGE 1: Apply IAC to deploy the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Overwrite "entity_name" with only tn_vxlan
+      ansible.builtin.set_fact:
+        entity_name: "tn_vxlan"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Terraform apply
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
+
+- name: "STAGE 2: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        output:
+          id: "{{ id | b64encode }}"

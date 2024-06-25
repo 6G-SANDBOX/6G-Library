@@ -1,0 +1,35 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+#one_ueransim_cpu: 2
+#one_ueransim_memory: 2048
+#one_ueransim_disk: 3072
+#one_ueransim_networks: 
+#  - tn_vxlan
+
+one_ueransim_run_gnb: "YES"
+one_ueransim_run_ue: "YES"
+
+one_ueransim_gnb_linked_open5gs: open5gs-sample_name
+#one_ueransim_ue_linked_gnb: ueransim-sample_name
+
+#one_ueransim_gnb_proxy: null
+#one_ueransim_gnb_mcc: "001"
+#one_ueransim_gnb_mnc: "01"
+#one_ueransim_gnb_tac: "200"
+#one_ueransim_gnb_amf_address: "10.21.12.200"
+#one_ueransim_gnb_slices_sst: "1"
+#one_ueransim_gnb_slices_sd: "1"
+
+#one_ueransim_ue_supi: "imsi-001010000000001"
+#one_ueransim_ue_mcc: "001"
+#one_ueransim_ue_mnc: "01"
+#one_ueransim_ue_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+#one_ueransim_ue_op: "E8ED289DEBA952E4283B54E88E6183CA"
+#one_ueransim_ue_gnbSearchList: null
+#one_ueransim_ue_session_apn: "internet"
+#one_ueransim_ue_session_sst: "1"
+#one_ueransim_ue_session_sd: "1"
+#one_ueransim_ue_configured_nssai_sst: "1"
+#one_ueransim_ue_configured_nssai_sd: "1"
+#one_ueransim_ue_default_nssai_sst: "1"
+#one_ueransim_ue_default_nssai_sd: "1"

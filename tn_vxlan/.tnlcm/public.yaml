@@ -1,0 +1,71 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  short_description: Bootstraps the Trial Network with an initial Virtual Network (tn_vxlan)
+  long_description: |
+    Legacy first component of any Trial Network. tn_init is the new recommended component for starting Trial Networks
+    Main vnet of the Trial Network and accessible through the tn_bastion VPN
+  hypervisors: [one]
+
+####################################
+## Component input
+####################################
+input:
+  one_vxlan_gw:
+    description: Default gateway of the tn_vxlan subnet
+    type: str
+    default_value: "192.168.199.1"
+    required_when: false
+  one_vxlan_netmask:
+    description: Network mask of the tn_vxlan subnet
+    type: str
+    default_value: "255.255.255.0"
+    required_when: false
+  one_vxlan_dns:
+    description: Space-separated list of DNS servers configured in VMs with tn_vxlan as their main Network Interface
+    type: str
+    default_value: "1.1.1.1 1.0.0.1"
+    required_when: false
+  one_vxlan_first_ip:
+    description: First IP address of the VNet range
+    type: str
+    default_value: "192.168.199.1"
+    required_when: false
+  one_vxlan_address_size:
+    description: Amount of IP addresses that compose the VNet range
+    type: int
+    default_value: 254
+    required_when: false
+
+####################################
+## Component output
+####################################
+output:
+  id: VNet ID in OpenNebula

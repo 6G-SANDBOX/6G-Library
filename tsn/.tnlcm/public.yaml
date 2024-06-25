@@ -1,0 +1,45 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Francisco Luque Schempp <schempp@uma.es>
+  short_description: Enables the capability of using TSN endpoints in the Trial Network.
+  long_description: |
+    Component that enables the capability of using TSN endpoints in the Trial Network
+
+    NOTE: Currently tsn is only available in the site "uma"
+  hypervisors: [one]
+
+####################################
+## Component input
+####################################
+input:
+
+####################################
+## Component output
+####################################
+output:

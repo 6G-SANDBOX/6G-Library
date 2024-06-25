@@ -1,0 +1,96 @@
+---
+- name: "STAGE 1: Apply IAC to deploy the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Overwrite "entity_name" with only tn_bastion
+      ansible.builtin.set_fact:
+        entity_name: "tn_bastion"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Terraform apply
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
+
+- name: "STAGE 2: Prepare to access the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+
+    - name: Verify that the bastion access IP is correctly loaded
+      ansible.builtin.debug:
+        msg: "Network Main Interface is: {{ ips[site_networks_id.default | string] | default('----') }}"
+
+    - name: Add new VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "tn_bastion"
+        ansible_host: "{{ ips[site_networks_id.default | string] }}"
+        ansible_user: "{{ site_jenkins_ssh_user }}"
+
+    - name: Create SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+
+
+- name: "STAGE 3: Apply CAC to prepare the component"
+  hosts: "tn_bastion"
+  gather_facts: false
+  tasks:
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        timeout: 200
+
+    ### Calling load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
+    ### But it makes the code much MUCH cleaner with almost no extra latency
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Create an ed25519 ssh key pair to access the future Trial Network components
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/set_ssh_keypair.yaml"
+
+    - name: Fetch VPN config
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/get_vpn_client_tunnel.yaml"
+      when: site_hypervisor == "one"
+
+
+- name: "STAGE 4: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Publish SSH key as a terraform output
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "ssh_public_key"
+            value: "{{ hostvars['tn_bastion']['ssh_public_key']['content'] | b64decode | trim }}"
+
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        output:
+          ips: "{{ ips | b64encode }}"
+          id: "{{ id | b64encode }}"
+          vpn_client_tunnel: "{{ hostvars[entity_name]['client_tunnel']['content'] }}"
+          ssh_public_key: "{{ hostvars[entity_name]['ssh_public_key']['content'] }}"
+          ssh_private_key: "{{ hostvars[entity_name]['ssh_private_key']['content'] }}"

@@ -1,0 +1,78 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  short_description: Creates a Virtual Network inside OpenNebula
+  long_description: |
+    Private Virtual Network inside the Trial Network.
+    Allows the experimenter to interconnect different components using private networks instead of the main tn_vxlan
+    The Virtual Network is of type VXLAN, and spans the subnet formed with one_vnet_first_ip and one_vnet_netmask
+    A Virtual Network ranges "one_vnet_address_size" successive IPs starting from "one_vnet_first_ip"
+    The maximum value for a full /24 subnet starting from X.X.X.1 should be 254
+  hypervisors: [one]
+
+####################################
+## Component input
+####################################
+input:
+  one_vnet_gw:
+    description: Default gateway of the Virtual Network subnet
+    type: str
+    default_value: "10.21.12.1"
+    required_when: false
+
+  one_vnet_netmask:
+    description: Network mask of the Virtual Network subnet
+    type: str
+    default_value: "255.255.255.0"
+    required_when: false
+
+  one_vnet_dns:
+    description: Space-separated list of DNS servers configured in VMs with tn_vxlan as their main Network Interface
+    type: str
+    default_value: "1.1.1.1 1.0.0.1"
+    required_when: false
+
+  one_vnet_first_ip:
+    description: First IP address of the Virtual Network range
+    type: str
+    default_value: "10.21.12.1"
+    required_when: false
+
+  one_vnet_address_size:
+    description: Amount of IP addresses that compose the Virtual Network range
+    type: int
+    default_value: 100
+    required_when: false
+
+####################################
+## Component output
+####################################
+output:
+  id: VNet ID in OpenNebula
