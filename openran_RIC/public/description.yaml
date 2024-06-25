@@ -36,6 +36,19 @@ public:
     value: ["KPM_MONITOR"]
     user_input: true
     optional: false
+   RIC_LOGLEVEL:
+    description: The log level of all containers.
+    type: "str"
+    value: "WARN"
+    user_input: true
+    optional: true
+   E2_PORT:
+    description: By using E2_PORT it is possible to configure Near-RT RIC E2 port.
+    type: "int"
+    value: 30421
+    user_input: true
+    optional: true
+
 
 ###################################################
 ##

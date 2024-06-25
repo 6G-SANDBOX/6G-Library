@@ -8,9 +8,9 @@
 ##
 ################################################
 
-RIC_LOGLEVEL: "WARN"   #TMP Values
+RAN_ric_enable: true
+RAN_ric_ip: "main"
 RC_FLIP_PERIOD: 5 #TMP Values
-E2_PORT: 30421 #TMP Values
 RC_SLICE_ID1: 1 #TMP Values
 RC_SLICE_ID2: 2 #TMP Values
 RC_QUOTA1: 20 #TMP Values
