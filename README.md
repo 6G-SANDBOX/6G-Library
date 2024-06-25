@@ -17,7 +17,7 @@
 
 [6G-SANDBOX](https://6g-sandbox.eu/) is a HE funded research project (HORIZON-JU-SNS-2022-STREAM-C-01-01). The 6G-SANDBOX project brings a complete and modular facility for the European experimentation ecosystem (in line and under the directions set by SNS JU), which is expected to support for the next decade technology and research validation processes needed in the pathway towards 6G.
 
-![6gsandbox-facility](https://6g-sandbox.eu/wp-content/uploads/2022/12/6G_SANBOX-Facility-verview.png)
+![6gsandbox-facility](https://6g-sandbox.eu/wp-content/uploads/2024/01/UPDATED-ARCHITECTURE-FIGURE-2024-1030x885.png)
 
 To design these experiments, a 6G library will be available. This library contains modules and physical equipment that will be used to create the experiments that we call Trial Networks.
 A Trial Network is a fully configurable, manageable and controllable environment, that combines virtual and physical components to model a 6G network environment.
