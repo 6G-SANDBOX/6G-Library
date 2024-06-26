@@ -6,6 +6,7 @@
 
 - Standardized changelog format to fit [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog/blob/main/CHANGELOG.md) rules.
 - New parameters added to the Jenkinsfile.
+- Pipeline executins can point to a specific commit, release or branch
 - New vm_kvm component replacing all previous VM components
 - New tn_init component, combining tn_vxlan and tn_bastion together
 - New tsn component, enabling further networking capabilities.
