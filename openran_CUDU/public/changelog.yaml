@@ -1,0 +1,15 @@
+####################################
+##
+## Component changelog
+##
+####################################
+
+releases:
+  0.0.1:
+    release_date: '2024-06-26'
+    changes:
+      release_summary: This is the initial release
+      major_changes:
+        - Creation of component
+        - Creation public and private parameters
+        

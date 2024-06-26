@@ -5,9 +5,21 @@
 ####################################
 
 releases:
-  0.0.1":
+  0.0.1:
     release_date: '2024-06-24'
     changes:
       release_summary: This is the initial release
       major_changes:
         - Creating a parameters template
+  0.0.2:
+    release_date: '2024-06-25'
+    changes:
+      release_summary: This is the initial release
+      major_changes:
+        - Adding appropriate parameter values.
+  0.0.3:
+    release_date: '2024-06-26'
+    changes:
+      release_summary: Small changes
+      major_changes:
+        - Edit in the results directory.

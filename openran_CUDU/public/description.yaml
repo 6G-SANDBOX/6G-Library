@@ -1,0 +1,337 @@
+####################################
+##
+## Component metadata
+## 
+####################################
+component_name: openran_CUDU
+metadata:
+  maintainers: 
+    - Piotr Kulesza <p.kulesza@is-wireless.com>
+    - Adam Flizikowski  <a.flizikowski@is-wireless.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  version: 0.0.1
+  depends:
+    ##- openran_RU:
+    ##    version: ">=0.0.1"
+    - open5gs:
+        version: ">=0.0.1"
+    - openran_RIC:
+        version: ">=0.0.1"
+  short_description: IS-Wirelss Near-RT RIC .
+  long_description: |
+    Component responsible for Near-RT RIC deployment from IS-Wireless.
+  platforms: [one]
+  sites: [uma]
+
+###################################################
+##
+## Public component variables that 
+## should be filled by the experimenter or 
+## the TNLCM. Some of them could be optional
+##
+## If component is optional, value is the default one
+## If component is not optional, value is an example one
+## 
+###################################################
+public:
+  RAN_band_indicator:
+    description: The IE FreqBandIndicatorNR is used to convey an NR frequency band number as defined in TS 38.101-1 and TS 38.101-2.
+    type: "int"
+    value: 78
+    user_input: true
+    optional: false
+   RAN_pointa_arfcn_dl:
+    description: Absolute frequency position of the reference resource block (Common RB 0). Its lowest subcarrier is also known as Point A (see TS 38.211, clause 4.4.4.2).
+    type: "int"
+    value: 646062
+    user_input: true
+    optional: false
+   RAN_pointa_arfcn_ul:
+    description: Absolute frequency position of the reference resource block (Common RB 0). Its lowest subcarrier is also known as Point A (see TS 38.211 [16], clause 4.4.4.2).
+    type: "int"
+    value: 646062
+    user_input: true
+    optional: false
+   RAN_gscn:
+    description: Range depends on NR operating band, see Table 5.4.3.3-1: Applicable SS raster entries per operating band in 3GPP 38.101-1.
+    type: "int"
+    value: 7982
+    user_input: true
+    optional: false
+   RAN_ssb_arfcn: 
+    description: Value ARFCN, see ARFCN-ValueNR 3GPP 38.331.
+    type: "int"
+    value: 646368
+    user_input: true
+    optional: false
+   RAN_k_ssb: 
+    description: k_SSB value is obtained from the MIB parameter ssb-SubcarrierOffset. From 3GPP 38.211 7.4.2.3.2
+    type: "int"
+    value: 18
+    user_input: true
+    optional: false
+   RAN_offsetToPointA: 
+    description: Represents the offset to Point A as defined in TS 38.211 [16], clause 4.4.4.2.
+    type: "int"
+    value: 4
+    user_input: true
+    optional: false
+   RAN_config_idx: 
+    description: Index see Index in Table 13-1 and Table 13-4 in 3GPP 38.213
+    type: "int"
+    value: 7
+    user_input: true
+    optional: false
+   RAN_ric_enable: 
+    description: O-DU Near-Real Time RIC interface status.
+    type: "str"
+    value: "true"
+    user_input: true
+    optional: false
+   CONFIG: 
+    description: Configuration File template
+    type: "str"
+    value: "tdd_7ds2u_40mhz_30kscs_MIMO2x2"
+    user_input: true
+    optional: false
+   L1H_maxNumPdschLayers: 
+    description: Maximum number of PDSCH layers supported in this release (errorsout if not fulfilled by L2). Use 2 while testing MIMO 2x2.
+    type: "int"
+    value: 2
+    user_input: true
+    optional: false
+   L1H_maxNumPuschLayers: 
+    description: MIMO UL configuration. Maximum number of PUSCH layers supported in this release (errors out if not fulfilled by L2). Only value 1 is supported.
+    type: "int"
+    value: 1
+    user_input: true
+    optional: false
+   L1H_maxNumDlFronthaulPrbs: 
+    description: Maximum number of Physical Resource Blocks on downlink. Parameter shall be used only for Benetel RAN550/RAN650 CAT-B v0.8.0 setup. Value 144 shall be used only for 100 MHz bandwidth. Value 106 shall be used only for 40 MHz bandwidth.
+    type: "int"
+    value: 106
+    user_input: true
+    optional: false
+   ISW_GLOBAL_LOG_LEVEL: 
+    description: Log level
+    type: "str"
+    value: "EMERG"
+    user_input: true
+    optional: false
+   SDRAN_DEBUG: 
+    description: While EMERG should be 0, while DEBUG should be 1
+    type: "int"
+    value: 0
+    user_input: true
+    optional: false
+   RAN_pci_val: 
+    description: physCellId see 3GPP 38.331. The PhysCellId identifies the physical cell identity (PCI).
+    type: "int"
+    value: 0
+    user_input: true
+    optional: false
+   RAN_mcc_val: 
+    description: Mobile Country Code (MCC) consisting of three digits. The MCC identifies uniquely the country of domicile of the mobile subscriber (see TS 23.003).
+    type: "int"
+    value: 999
+    user_input: true
+    optional: true
+   RAN_mnc_val: 
+    description: Mobile Network Code (MNC) consisting of two or three digits for mobile subscriber. The length of the MNC (two or three digits) depends on the value of the MCC. A mixture of two and three digit MNC codes within a single MCC area is not recommended and is outside the scope of this specification. (see TS 23.003)
+    type: "int"
+    value: 98
+    user_input: true
+    optional: true
+   RAN_gnb_id: 
+    description: Global gNB ID see 38.413. This IE is used to globally identify a gNB (see TS 38.300 [8]). Global gNB ID Equal to the leftmost bits of the NR Cell Identity IE contained in the NR CGI IE of each cell served by the gNB.
+    type: "str"
+    value: 00E0001
+    user_input: true
+    optional: false
+   RAN_cell_id: 
+    description: Cell identity. Value in this file is decimal, but it is encoded hexadecimal.
+    type: "int"
+    value: 12
+    user_input: true
+    optional: true
+   RAN_tac: 
+    description: Tracking Area Code (TAC) see 3GPP TS 29.571 / 3GPP TS 38.413 Parameter identifying a tracking area code, in decimalrepresentatio.
+    type: "int"
+    value: 1
+    user_input: true
+    optional: true
+   RAN_root_sequence_idx: 
+    description: prach-RootSequenceIndex l139 see 3GPP 38.331 PRACH root sequence index (see TS 38.211 [16], clause 6.3.3.1).
+    type: "int"
+    value: 10
+    user_input: true
+    optional: false
+   RAN_neighborhood: 
+    description: RAN_neighborhood - Configuration of neighbourhood cells for handover purposes. Configure PCI, Global gNB ID, MCC, MNC and TAC of the neighbourhood cells for the 5G SA handover purposes.
+    type: "str"
+    value: "{\"pci\":88,\"global_id\":\"0x00F00\",\"mcc\":1,\"mnc\":1,\"mnc_eu\":1,\"tac\":1}"
+    user_input: true
+    optional: false
+   RAN_rrm_policy_list: 
+    description: RAN_rrm_policy_list is an array of RRM Policies, where one policy, which contains rrmPolicyMaxRatio, rrmPolicyMinRatio, rrmPolicyDedicatedRatio, corresponds to one slice.
+    type: "str"
+    value: "{\"rrmPolicyMaxRatio\":100,\"rrmPolicyMinRatio\":20,\"rrmPolicyDedicatedRatio\":0,\"slices\":[{\"sst\":1,\"sd\":-1}]},{\"rrmPolicyMaxRatio\":100,\"rrmPolicyMinRatio\":80,\"rrmPolicyDedicatedRatio\":0,\"slices\":[{\"sst\":2, \"sd\":-1}]}"
+    user_input: true
+    optional: true
+   RAN_pdsch_mcs_table: 
+    description: RAN_pdsch_mcs_table determines the value of the mcs-Table RRC IE that is sent to the UE.
+    type: "int"
+    value: -1
+    user_input: true
+    optional: true
+   RAN_cqi_table: 
+    description: RAN_cqi_table determines the value of cqi-Table RRC IE that is sent to the UE.
+    type: "str"
+    value: "\"table1\""
+    user_input: true
+    optional: true    
+   RAN_dl_mcs_table: 
+    description: RAN_dl_mcs_table determines which MCS Table will be used in DU as specified in 5.1.3.1 3GPP 38.214 : A value of 1 corresponds to Table 5.1.3.1-1: MCS index table 1 for PDSCH. This allows for up to 64QAM modulation. A value of 2 corresponds to Table 5.1.3.1-2: MCS index table 2 for PDSCH. This allows for up to 256QAM modulation.
+    type: "int"
+    value: 1
+    user_input: true
+    optional: true    
+   RAN_ss_PBCH_BlockPower: 
+    description: ss-PBCH-BlockPower see 3GPP 38.331 36 Average EPRE of the resources elements that carry secondary synchronisation signals in dBm that the NW used for SSB transmission, see TS 38.213 [13], clause 7.
+    type: "int"
+    value: -24
+    user_input: true
+    optional: false 
+   RAN_tx_power: 
+    description: Internal RAN parameter which is forwarded to the UL1. Need to be set to the same value as ss-PBCH-BlockPower (see parameter above)
+    type: "int"
+    value: -24
+    user_input: true
+    optional: false    
+   RAN_p0_NominalWithGrant: 
+    description: P0 value for PUSCH with grant (except msg3). Value in dBm. Only even values (step size 2) allowed (see TS 38.213, clause 7.1) This field is cell specific
+    type: "int"
+    value: -78
+    user_input: true
+    optional: false 
+   RAN_p0_nominal: 
+    description: Power control parameter P0 for PUCCH transmissions. Value in dBm. Only even values (step size 2) allowed (see TS 38.213, clause 7.2).
+    type: "int"
+    value: -80
+    user_input: true
+    optional: false     
+   RAN_preambleReceivedTargetPower: 
+    description: The target power level at the network receiver side (see TS 38.213, clause 7.4, TS 38.321, clauses 5.1.2, 5.1.3). 
+    type: "int"
+    value: -60
+    user_input: true
+    optional: false   
+   RAN_p_max: 
+    description: The IE P-Max is used to limit the UE's uplink transmission power on a carrier frequency, in TS 38.101-1 and is used to calculate the parameter Pcompensation defined in TS 38.304.
+    type: "int"
+    value: 33
+    user_input: true
+    optional: false   
+   RAN_alpha: 
+    description: PUSCH-PowerControl Information element alpha value for PUSCH with grant (except msg3) (see TS 38.213, clause 7.1). The IE Alpha defines possible values of the pathloss compensation coefficient for uplink power control.
+    type: "int"
+    value: 7
+    user_input: true
+    optional: false 
+   RAN_qfi_AM: 
+    description: Optional parameter, Switch QFI 7 and QFI 9 to AM and update parameters (if any):
+    type: "str"
+    value: "7,9"
+    user_input: true
+    optional: true  
+   RAN_qfi_UM: 
+    description: Optional parameter, Switch QFI 69 to UM and update parameters (if any)
+    type: "int"
+    value: 69
+    user_input: true
+    optional: true
+   RAN_rlcAM_sn_FieldLength: 
+    description: Optional parameter, RLC AM parameters for DRB and default values: AM SN field size in bits - see 3GPP TS 38.331
+    type: "int"
+    value: 1
+    user_input: true
+    optional: true     
+   RAN_rlcAM_t_PollRetransmit: 
+    description: Optional parameter, Timer used by the transmitting side of an AM RLC entity in order to retransmit a poll - see 3GPP TS 38.331
+    type: "int"
+    value: 8
+    user_input: true
+    optional: true         
+   RAN_rlcAM_pollPDU: 
+    description: Optional parameter, Used by the transmitting side of each AM RLC entity to trigger a poll for every pollPDU PDUs - see 3GPP TS 38.331
+    type: "int"
+    value: 23
+    user_input: true
+    optional: true      
+   RAN_rlcAM_pollByte: 
+    description: Optional parameter, Used by the transmitting side of each AM RLC entity to trigger a poll for every pollByte bytes - see 3GPP TS 38.331
+    type: "int"
+    value: 43
+    user_input: true
+    optional: true       
+   RAN_rlcAM_t_Reassembly: 
+    description: Optional parameter, Timer used by the receiving side of an AM RLC entity in order to monitor waiting time for AMD PDU - see 3GPP TS 38.331
+    type: "int"
+    value: 7
+    user_input: true
+    optional: true      
+   RAN_rlcAM_t_StatusProhibit: 
+    description: Optional parameter, Timer used by the receiving side of an AM RLC entity in order to prohibit transmission of a STATUS PDU - see 3GPP TS 38.331
+    type: "int"
+    value: 0
+    user_input: true
+    optional: true        
+   RAN_rlcUM_sn_FieldLength: 
+    description: Optional parameter, RLC UM parameters for DRB and default values: UM SN field size in bits - see 3GPP TS 38.331
+    type: "int"
+    value: 0
+    user_input: true
+    optional: true     
+   RAN_rlcUM_t_Reassembly: 
+    description: Optional parameter, Timer used by the receiving side of an AM RLC entity in order to monitor waiting time for UMD PDU - see 3GPP TS 38.331
+    type: "int"
+    value: 8
+    user_input: true
+    optional: true
+   ISW_SPLIT_LOGS: 
+    description: Log dump to file configuration
+    type: "str"
+    value: "yes"
+    user_input: true
+    optional: false  
+   ISW_SPLIT_LOGS_MEGABYTES: 
+    description: Log dump to file configuration
+    type: "int"
+    value: 1024
+    user_input: true
+    optional: false      
+   ISW_SPLIT_LOGS_SUFFIX: 
+    description: Log dump to file configuration
+    type: "str"
+    value: "_ran550_iswlog"
+    user_input: true
+    optional: false     
+    ISW_SPLIT_LOGS_SUFFIX: 
+    description: Log dump to file configuration
+    type: "int"
+    value: 3
+    user_input: true
+    optional: false     
+    
+
+
+
+###################################################
+##
+## Output component variables that 
+## should be keeped by the TNLCM 
+## 
+###################################################
+outputs:
+  CU_IP: "O-CU IP. Format IPv4 (xxx.xxx.xxx.xxx)."
+  DU_IP: "O-DU IP. Format IPv4 (xxx.xxx.xxx.xxx)."

@@ -1,0 +1,28 @@
+################################################
+##
+## Component private variables
+##
+## Variables that should be necessary 
+## for the deployment but are not available 
+## to the experimenter
+##
+################################################
+
+STACK_TYPE: "5g"
+RU_IP: "10.10.2.100"
+RAN_ric_ip: "172.27.2.1"
+RAN_ric_port: 1234
+ISW_CPU_CORES_PHY: "4,28,6,30,8,32,10,34"
+ISW_CPU_CORES_RAN: "12,36,14,38,16,40"
+L1H_bbuFronthaulServerMode: 1
+L1H_bbuFronthaulServerAddr: '\"10.10.2.10\"'
+L1H_maxPuschModOrder: 6
+L1H_targetRecvDelay_us: 1479
+L1H_otherLayerKeepaliveTimer_ms: 30
+MONITOR_ENABLE: "YES"
+HANG_ENABLE: "YES"
+RAN_ue_context_pool_size: 20
+CU_IP: "ran_cu550"
+DU_IP: "ran_du550"
+RAN_cu_ip: "ran_cu550"
+RAN_du_ip: "ran_du550"
