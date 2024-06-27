@@ -47,7 +47,7 @@ public:
     user_input: true
     optional: false
    RAN_pointa_arfcn_ul:
-    description: Absolute frequency position of the reference resource block (Common RB 0). Its lowest subcarrier is also known as Point A (see TS 38.211 [16], clause 4.4.4.2).
+    description: Absolute frequency position of the reference resource block (Common RB 0). Its lowest subcarrier is also known as Point A (see TS 38.211, clause 4.4.4.2).
     type: "int"
     value: 646062
     user_input: true

@@ -1,6 +1,6 @@
-# IS-Wireless Near-RT RIC
+# IS-Wireless O-RAN
 
-IS-Wireless Near-RT RIC component has been successfully addded to the Trial Network {{ tn_id }}
+IS-Wireless O-RAN component has been successfully addded to the Trial Network {{ tn_id }}
 
 Important information:
 
@@ -9,9 +9,13 @@ This component will be available:
 from: {{ date_from }}
 to: {{ date_to }}
 
-### Selected configurations during deployment.
+### IS-Wireless O-RAN Frequency configuration:
 
-* List of chosen xApps: {{ xApp_deploy_list }}
-* The log level of all containers: {{ RIC_LOGLEVEL }}
-* By using E2_PORT it is possible to configure Near-RT RIC E2 port: {{ E2_PORT }}
-
+* NR frequency band number: {{ RAN_band_indicator }}
+* Absolute frequency position for downlink: {{ RAN_pointa_arfcn_dl }}
+* Absolute frequency position for uplink: {{ RAN_pointa_arfcn_ul }}
+* Global Synchronization Raster Channel: {{ RAN_gscn }}
+* ARFCN Value: {{ RAN_ssb_arfcn }}
+* k_SSB value: {{ RAN_k_ssb }}
+* Representation of the offset to Point A: {{ RAN_offsetToPointA }}
+* Index: {{ RAN_config_idx }}

@@ -12,4 +12,10 @@ releases:
       major_changes:
         - Creation of component
         - Creation public and private parameters
-        
+  0.0.2:
+    release_date: '2024-06-27'
+    changes:
+      release_summary: Changes in results
+      major_changes:
+        - Changes in results
+                
