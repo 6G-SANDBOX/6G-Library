@@ -118,7 +118,7 @@ pipeline {
                     credentialsId: 'remote_ssh',
                     extraVars: [
                         workspace: "${WORKSPACE}",
-                        vaultCredentialsId: "${ANSIBLE_VAULT}"
+                        vaultCredentialsId: "${ANSIBLE_VAULT}",
                         component_type: "${params.COMPONENT_TYPE}",
                         deployment_site: "${params.DEPLOYMENT_SITE}"
                     ],
