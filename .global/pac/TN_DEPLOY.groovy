@@ -28,6 +28,9 @@ pipeline {
         // Github token to clone the 6G-Sandbox-Sites repository
         GITHUB_JENKINS = credentials('GITHUB_JENKINS')
 
+        // Password to decrypt the variables of your site
+        ANSIBLE_VAULT = credentials('ANSIBLE_VAULT')
+
         // Opennebula Terraform Provider envorimental variables https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs#environment-variables
         // OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
         OPENNEBULA_USERNAME = credentials('OPENNEBULA_TNLCM_USERNAME')
@@ -115,6 +118,7 @@ pipeline {
                     credentialsId: 'remote_ssh',
                     extraVars: [
                         workspace: "${WORKSPACE}",
+                        vaultCredentialsId: "${ANSIBLE_VAULT}"
                         component_type: "${params.COMPONENT_TYPE}",
                         deployment_site: "${params.DEPLOYMENT_SITE}"
                     ],

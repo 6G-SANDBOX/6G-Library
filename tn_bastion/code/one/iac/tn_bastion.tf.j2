@@ -16,7 +16,6 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     WIREGUARD_ALLOWEDIPS = "{{ one_bastion_wireguard_allowedips }}"
   }
 
-  
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
   disk {
     image_id = {{ site_available_components.tn_bastion.image_id }}
