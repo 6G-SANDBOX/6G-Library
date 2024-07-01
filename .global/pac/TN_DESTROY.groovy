@@ -65,6 +65,7 @@ pipeline {
               // "SSH credentials" plugin required: https://plugins.jenkins.io/ssh-credentials/
                 ansiblePlaybook(
                     credentialsId: 'remote_ssh',
+                    vaultCredentialsId: 'ANSIBLE_VAULT',
                     extraVars: [
                         tn_id: "${params.TN_ID}",
                         deployment_site: "${params.DEPLOYMENT_SITE}",
