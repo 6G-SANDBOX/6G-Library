@@ -1,0 +1,19 @@
+# Substitutes doc/create_component.yaml file
+
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+one_open5gcore_oneKE: "oneKE-custom_name"
+
+#one_open5gcore_mcc: "999"
+#one_open5gcore_mnc: "38"
+#one_open5gcore_msin: "234567890"
+#one_open5gcore_msin_start: "1000000000"
+#one_open5gcore_msin_count: 20
+#one_open5gcore_key: "00000000000000000000000000000000"
+#one_open5gcore_opc: "66E94BD4EF8A2C3B884CFA59CA342B2E"
+#one_open5gcore_apn: "default"
+#one_open5gcore_tac: "2"
+#one_open5gcore_s_nssai_sst: "1"
+#one_open5gcore_s_nssai_sd: ""
+#one_open5gcore_amf_ip: "192.168.12.10"
+#one_open5gcore_upf_ip: "192.168.13.10"

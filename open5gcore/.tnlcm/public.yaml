@@ -1,0 +1,109 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 4 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
+  short_description: Deploys a VM with Open5Gcore services all in one (CP+UP)
+  long_description: |
+    This componnet will deploy the Open5Gcore 5c core network as an all in one VM.
+    This componnets uses seperated N2,N3,N6 interfaces.
+  hypervisors: [one]
+
+####################################
+## Component input
+####################################
+input:
+  one_open5gcore_mcc:
+    description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
+    type: str
+    default_value: "999"
+    required_when: false
+
+  one_open5gcore_mnc:
+    description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
+    type: str
+    default_value: "38"
+    required_when: false
+
+  one_open5gcore_msin:
+    description: Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 10 digits inside quotes.
+    type: str
+    default_value: "0000000001"
+    required_when: false
+
+  one_open5gcore_msin_start:
+    description: Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 10 digits inside quotes. Used as start value when adding a range.
+    type: str
+    default_value: "1000000000"
+    required_when: false
+
+  one_open5gcore_msin_count:
+    description: Number of Subscribers that will be added based on the `msin_start` value given before.
+    type: int
+    default_value: 20
+    required_when: false
+
+  one_open5gcore_key:
+    description: Permanent Subscription Key used for all automatically added Subscribers.
+    type: str
+    default_value: "00000000000000000000000000000000"
+    required_when: false
+
+  one_open5gcore_opc:
+    description: Operator Code crypted (OPc) used for all automatically added Subscribers.
+    type: str
+    default_value: "66E94BD4EF8A2C3B884CFA59CA342B2E"
+    required_when: false
+
+  one_open5gcore_apn:
+    description: Access Point Name (APN) of the initial PDU session to be stablished
+    type: str
+    default_value: "default"
+    required_when: false
+
+  one_open5gcore_tac:
+    description: Tracking Area Code in the PLMN
+    type: str
+    default_value: "1"
+    required_when: false
+
+  one_open5gcore_s_nssai_sst:
+    description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    type: str
+    default_value: "1"
+    required_when: false
+
+  one_open5gcore_s_nssai_sd:
+    description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    type: str
+    default_value: ""
+    required_when: false
+
+
+####################################
+## Component output
+####################################
+output:
+  open5gcore_metadata_dict: Dictionary with multiple parameters used in the core bootstrap
