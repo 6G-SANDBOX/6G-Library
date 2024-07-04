@@ -93,7 +93,7 @@ input:
 
   one_ueransim_gnb_mnc:
     description: |
-      In gNB simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
+      In gNB simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
       Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
     type: str
     default_value: "01"
