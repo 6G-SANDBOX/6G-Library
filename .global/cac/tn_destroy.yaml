@@ -6,7 +6,7 @@
   tasks:
     - name: Load site-specific variables
       ansible.builtin.include_vars:
-        file: "{{ workspace }}/6G-Sandbox-Sites/.sites/{{ deployment_site }}/values.yaml"
+        file: "{{ workspace }}/6G-Sandbox-Sites/{{ deployment_site }}/core.yaml"
 
     - name: Create directory for terraform manifests
       ansible.builtin.file:

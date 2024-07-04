@@ -112,12 +112,12 @@ pipeline {
               // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
               // "SSH credentials" plugin required: https://plugins.jenkins.io/ssh-credentials/
                 ansiblePlaybook(
-                    credentialsId: 'remote_ssh',
+                    credentialsId: 'SSH_PRIVATE_KEY',
                     vaultCredentialsId: 'ANSIBLE_VAULT',
                     extraVars: [
                         workspace: "${WORKSPACE}",
-                        component_type: "${params.COMPONENT_TYPE}",
                         deployment_site: "${params.DEPLOYMENT_SITE}"
+                        component_type: "${params.COMPONENT_TYPE}",
                     ],
                     playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"
                 )

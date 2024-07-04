@@ -64,14 +64,13 @@ pipeline {
               // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
               // "SSH credentials" plugin required: https://plugins.jenkins.io/ssh-credentials/
                 ansiblePlaybook(
-                    credentialsId: 'remote_ssh',
+                    credentialsId: 'SSH_PRIVATE_KEY',
                     vaultCredentialsId: 'ANSIBLE_VAULT',
                     extraVars: [
-                        tn_id: "${params.TN_ID}",
-                        deployment_site: "${params.DEPLOYMENT_SITE}",
-                        tnlcm_callback: "${params.TNLCM_CALLBACK}}",
-                        debug: "${params.DEBUG}",
                         workspace: "${WORKSPACE}",
+                        deployment_site: "${params.DEPLOYMENT_SITE}",
+                        tn_id: "${params.TN_ID}",
+                        tnlcm_callback: "${params.TNLCM_CALLBACK}}",
                     ],
                     playbook: "${WORKSPACE}/.global/cac/tn_destroy.yaml"
                 )
