@@ -107,3 +107,5 @@ input:
 ####################################
 output:
   open5gcore_metadata_dict: Dictionary with multiple parameters used in the core bootstrap
+  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
+  id: VM ID in OpenNebula
