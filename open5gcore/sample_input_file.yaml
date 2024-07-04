@@ -1,8 +1,5 @@
-# Substitutes doc/create_component.yaml file
-
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
-one_open5gcore_oneKE: "oneKE-custom_name"
 
 #one_open5gcore_mcc: "999"
 #one_open5gcore_mnc: "38"
