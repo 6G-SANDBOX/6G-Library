@@ -5,6 +5,9 @@
 - name: Get VM metadata from OpenNebula API
   community.general.one_vm:
     instance_ids: "{{ item.value }}"
+    api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
+    api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
+    api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
   register: vm_metadata
 
 - name: Extract IP from VM info

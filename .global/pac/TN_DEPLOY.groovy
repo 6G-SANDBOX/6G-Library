@@ -30,21 +30,15 @@ pipeline {
 
         // Opennebula Terraform Provider envorimental variables https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs#environment-variables
         // OPENNEBULA_API_CREDENTIALS = credentials('OPENNEBULA_API_CREDENTIALS')
-        OPENNEBULA_USERNAME = credentials('OPENNEBULA_TNLCM_USERNAME')
-        OPENNEBULA_PASSWORD = credentials('OPENNEBULA_TNLCM_PASSWORD')
+        OPENNEBULA_USERNAME = credentials('OPENNEBULA_USERNAME')
+        OPENNEBULA_PASSWORD = credentials('OPENNEBULA_PASSWORD')
         OPENNEBULA_ENDPOINT = credentials('OPENNEBULA_ENDPOINT')
         OPENNEBULA_FLOW_ENDPOINT = credentials('OPENNEBULA_FLOW_ENDPOINT')
         OPENNEBULA_INSECURE = credentials('OPENNEBULA_INSECURE')
 
-        // Values used by OpenNebula CLI commands https://docs.opennebula.io/6.8/management_and_operations/references/cli.html#shell-environment
-        // And the ansible module https://docs.ansible.com/ansible/latest/collections/community/general/one_vm_module.html
-        // ONE_XMLRPC = credentials('ONE_XMLRPC')  // Try to remove
-        ONE_AUTH = credentials('ONE_AUTH')
-        ONE_URL = credentials('ONE_URL')  // Add to Jenkins
-
         // AWS Terraform Provider envirmental variables (for the MinIO S3 storage) https://registry.terraform.io/providers/hashicorp/aws/2.54.0/docs#environment-variables
-        AWS_ACCESS_KEY_ID = credentials('MINIO_KEY')
-        AWS_SECRET_ACCESS_KEY = credentials('MINIO_SECRET')
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
 
     stages {
@@ -113,7 +107,7 @@ pipeline {
               // "SSH credentials" plugin required: https://plugins.jenkins.io/ssh-credentials/
                 ansiblePlaybook(
                     credentialsId: 'SSH_PRIVATE_KEY',
-                    vaultCredentialsId: 'ANSIBLE_VAULT',
+                    vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD',
                     extraVars: [
                         workspace: "${WORKSPACE}",
                         deployment_site: "${params.DEPLOYMENT_SITE}"

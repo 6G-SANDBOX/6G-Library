@@ -65,6 +65,9 @@
     - name: Fetch master metadata
       community.general.one_vm:
         instance_ids: "{{ node_ids.master_0 | int }}"
+        api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
+        api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
+        api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
       register: master_metadata
     - name: Extract kubeconfig file from master metadata
       ansible.builtin.set_fact:
