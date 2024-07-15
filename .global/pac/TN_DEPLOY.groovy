@@ -44,6 +44,7 @@ pipeline {
     stages {
         stage('Stage 1: Import input file into the workspace') {
             steps {
+                echo 'Stage 1: Import input file into the workspace'
                 script {
                     echo("DEPLOYING DEPLOYMENT: ${TN_ID}-${COMPONENT_TYPE}-${CUSTOM_NAME}")
                     echo "Stage 1: Import input file into the workspace"
@@ -63,7 +64,7 @@ pipeline {
 
         stage('Stage 2: Import Jenkins parameters into the workspace') {
             steps {
-                echo 'Stage 2: Load Jenkins parameters into the workspace'
+                echo 'Stage 2: Import Jenkins parameters into the workspace'
                 script{
                     def paramsFile = "${WORKSPACE}/${params.COMPONENT_TYPE}/variables/pipeline_parameters.yaml"
                     def paramsContent = "tn_id: ${params.TN_ID}\n"
@@ -108,6 +109,7 @@ pipeline {
                 ansiblePlaybook(
                     credentialsId: 'SSH_PRIVATE_KEY',
                     vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD',
+                    inventory: 'localhost,',
                     extraVars: [
                         workspace: "${WORKSPACE}",
                         deployment_site: "${params.DEPLOYMENT_SITE}",
