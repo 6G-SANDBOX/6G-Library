@@ -158,6 +158,7 @@
         object: "{{ tn_id }}/kconf-{{ entity_name }}.kubeconfig"
         src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
         encrypt: false
+        validate_certs: false
 
     # Common task to create custom terraform outputs with information of interest for future deployments.
     - name: Publish node IDs and IPs as a terraform outputs"

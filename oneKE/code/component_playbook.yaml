@@ -143,6 +143,7 @@
         object: "{{ tn_id }}/kconf-{{ entity_name }}.kubeconfig"
         src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
         encrypt: false
+        validate_certs: false
 
     - name: Publish node IDs and IPs as a terraform outputs"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
