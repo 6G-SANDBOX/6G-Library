@@ -11,8 +11,8 @@ pipeline {
     parameters {
         string(name: 'TN_ID', defaultValue: '', description: 'Trial Network Identifier. MANDATORY')
         string(name: 'COMPONENT_TYPE', defaultValue: '', description: '6G Library Component type. MANDATORY')
-        string(name: 'CUSTOM_NAME', defaultValue: '', description: 'Custom name for the component inside the Trian Network. MANDATORY except for tn_vxlan and tn_bastion')
-        choice(name: 'DEPLOYMENT_SITE', choices: ['uma', 'athens', 'fokus', 'oulu'], description: 'Site where the deployment is being made. Choose between uma, athens, fokus or oulu. MANDATORY')
+        string(name: 'CUSTOM_NAME', defaultValue: '', description: 'Custom name for the component inside the Trian Network. MANDATORY except for tn_init (including tn_vxlan and tn_bastion)')
+        string(name: 'DEPLOYMENT_SITE', defaultValue: '', description: 'Site where the deployment is being made. E.g. uma, athens, fokus, oulu... MANDATORY')
         string(name: 'TNLCM_CALLBACK', defaultValue: 'http://tnlcm-ip:5000/tnlcm/callback/', description: 'URL of the TNLCM to notify the results. MANDATORY')
         string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library.git', description: '6G-Library repository HTTPS URL. Leave it as-is unless you want to test your own fork')
         string(name: 'LIBRARY_BRANCH', defaultValue: 'refs/heads/main', description: 'LIBRARY_URL checkout to use. Valid inputs can be refs/heads/<branchName>, refs/tags/<tagName> or <commitId>. Leave it as-is unless you want to test alternative releases/branches/commits.')

@@ -31,7 +31,7 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
         ansible_user: "root"
 
-- name: "STAGE 2: Apply IAC to deploy the component"
+- name: "STAGE 2: Apply IaC to deploy the component"
   hosts: "{{ hostvars['localhost']['one_open5gs_oneKE'] }}-master_0"
   gather_facts: false
   tasks:

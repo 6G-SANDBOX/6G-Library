@@ -17,8 +17,9 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    # Some components lik the tn_init can only be deployed once per TN. entity_name is a variable combining the component_type and the custom_name
-    # You can optionally supress the custom_name for these components
+    # The variable "entity_name" is formed during the pipeline as {{ component_type }}-{{ custom_name }}
+    # Some components like the tn_init can only be deployed once per TN.
+    # In these components the custom name should not be required, and you can optionally supress it from the "entity_name" to avoid confusion
     # - name: Overwrite "entity_name" with only tn_init
     #   ansible.builtin.set_fact:
     #     entity_name: "tn_init"

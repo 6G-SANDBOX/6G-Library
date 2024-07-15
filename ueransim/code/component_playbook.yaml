@@ -1,5 +1,5 @@
 ---
-- name: "STAGE 1: Apply IAC to deploy the component"
+- name: "STAGE 1: Apply IaC to deploy the component"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -50,7 +50,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
 
 
-- name: "STAGE 3: Apply CAC to prepare the component"
+- name: "STAGE 3: Apply CaC to prepare the component"
   hosts: "{{ hostvars['localhost']['entity_name'] }}"
   gather_facts: false
   tasks:
