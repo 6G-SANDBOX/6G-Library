@@ -6,11 +6,11 @@ terraform {
         s3 = "{{ site_s3_server.endpoint }}"
     }
     region = "{{ site_s3_server.region }}"
-    insecure = {{ site_s3_server.insecure }}
-    skip_credentials_validation = {{ site_s3_server.skip_credentials_validation }}
-    skip_region_validation = {{ site_s3_server.skip_region_validation }}
-    skip_requesting_account_id = {{ site_s3_server.skip_requesting_account_id }}
-    skip_metadata_api_check = {{ site_s3_server.skip_metadata_api_check }}
-    use_path_style = {{ site_s3_server.use_path_style }}
+    insecure = {{ site_s3_server.insecure | lower}}
+    skip_credentials_validation = {{ site_s3_server.skip_credentials_validation | lower }}
+    skip_region_validation = {{ site_s3_server.skip_region_validation | lower }}
+    skip_requesting_account_id = {{ site_s3_server.skip_requesting_account_id | lower }}
+    skip_metadata_api_check = {{ site_s3_server.skip_metadata_api_check | lower }}
+    use_path_style = {{ site_s3_server.use_path_style | lower }}
   }  
 }
