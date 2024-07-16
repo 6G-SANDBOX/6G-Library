@@ -51,7 +51,7 @@ pipeline {
             steps {               
                 ansiblePlaybook(
                     credentialsId: 'SSH_PRIVATE_KEY',
-                    vaultCredentialsId: 'ANSIBLE_VAULT',
+                    vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD',
                     inventory: 'localhost,',
                     extraVars: [
                         workspace: "${WORKSPACE}",
