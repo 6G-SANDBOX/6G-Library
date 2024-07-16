@@ -94,6 +94,7 @@ pipeline {
                 // )
                 checkout([$class: 'GitSCM',
                           branches: [[name: params.SITES_BRANCH]],
+                          extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '6G-Sandbox-Sites']],
                           userRemoteConfigs: [[url: params.SITES_URL]]
                 ])
                 // checkout([$class: 'GitSCM',
