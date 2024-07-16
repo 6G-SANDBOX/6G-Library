@@ -99,7 +99,7 @@ pipeline {
                 } 
                 ansiblePlaybook(
                     credentialsId: 'SSH_PRIVATE_KEY',
-                    vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD',
+                    vaultCredentialsId: 'ANSIBLE_VAULT',
                     inventory: 'localhost,',
                     extraVars: [
                         workspace: "${WORKSPACE}",
