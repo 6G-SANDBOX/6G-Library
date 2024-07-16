@@ -80,27 +80,11 @@ pipeline {
         stage('Stage 3: Clone 6G-Sandbox-Sites repository') {
             steps {
                 echo 'Stage 3: Clone 6G-Sandbox-Sites repository'
-                // script {
-                //     def gitUrlWithoutGitAt = "${params.SITES_URL}".replace('https://', '')
-                //     def gitUrlWithToken = "https://${GITHUB_JENKINS}@${gitUrlWithoutGitAt}"
-                //     sh "git clone --no-checkout $gitUrlWithToken"
-                //     dir(gitUrlWithToken.tokenize('/').last().replace('.git', '')) {
-                //         sh "git checkout ${params.SITES_BRANCH}"
-                //     }
-                // }
-                // checkout scmGit(
-                //     branches: [[name: '${params.SITES_BRANCH}']],
-                //     userRemoteConfigs: [[url: '${params.SITES_URL}']]
-                // )
                 checkout([$class: 'GitSCM',
                           branches: [[name: params.SITES_BRANCH]],
                           extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '6G-Sandbox-Sites']],
                           userRemoteConfigs: [[url: params.SITES_URL]]
                 ])
-                // checkout([$class: 'GitSCM',
-                //           branches: [[name: "${params.SITES_BRANCH}"]],
-                //           userRemoteConfigs: [[url: "${params.SITES_URL}"]]
-                // ])
             }
         }
 
@@ -113,9 +97,6 @@ pipeline {
                         echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${COMPONENT_TYPE} in the ${DEPLOYMENT_SITE} site"
                     }
                 } 
-                
-              // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
-              // "SSH credentials" plugin required: https://plugins.jenkins.io/ssh-credentials/
                 ansiblePlaybook(
                     credentialsId: 'SSH_PRIVATE_KEY',
                     vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD',
@@ -135,7 +116,6 @@ pipeline {
         always {
             echo "PIPELINE FINISHED"
         }
-
         cleanup{
             // script step required to execute "Scripted Pipeline" syntax blocks into Declarative Pipelines
             script {

@@ -39,21 +39,16 @@ pipeline {
             steps {
                 echo("PURGING TRIAL NETWORK: ${TN_ID}") 
                 echo 'Stage 1: Clone 6G-Sandbox-Sites repository'
-                script {
-                    def gitUrlWithoutGitAt = "${params.SITES_URL}".replace('https://', '')
-                    def gitUrlWithToken = "https://${GITHUB_JENKINS}@${gitUrlWithoutGitAt}"
-                    sh "git clone --no-checkout $gitUrlWithToken"
-                    dir(gitUrlWithToken.tokenize('/').last().replace('.git', '')) {
-                        sh "git checkout ${params.SITES_BRANCH}"
-                    }
-                }
+                checkout([$class: 'GitSCM',
+                          branches: [[name: params.SITES_BRANCH]],
+                          extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '6G-Sandbox-Sites']],
+                          userRemoteConfigs: [[url: params.SITES_URL]]
+                ])
             }
         }
 
         stage('Stage 2: Run playbook to destroy the selected Trial Network') {
             steps {               
-              // "Ansible" jenkins plugin required: https://plugins.jenkins.io/ansible/#plugin-content-declarative-1  https://www.jenkins.io/doc/pipeline/steps/ansible/#ansibleplaybook-invoke-an-ansible-playbook
-              // "SSH credentials" plugin required: https://plugins.jenkins.io/ssh-credentials/
                 ansiblePlaybook(
                     credentialsId: 'SSH_PRIVATE_KEY',
                     vaultCredentialsId: 'ANSIBLE_VAULT',
@@ -73,7 +68,6 @@ pipeline {
         always {
             echo "PIPELINE FINISHED"
         }
-
         cleanup{
             // script step required to execute "Scripted Pipeline" syntax blocks into Declarative Pipelines
             script {
