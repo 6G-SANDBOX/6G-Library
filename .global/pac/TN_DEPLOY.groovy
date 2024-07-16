@@ -88,10 +88,18 @@ pipeline {
                 //         sh "git checkout ${params.SITES_BRANCH}"
                 //     }
                 // }
-                checkout scmGit(
-                    branches: [[name: '${params.SITES_BRANCH}']],
-                    userRemoteConfigs: [[url: '${params.SITES_URL}']]
-                )
+                // checkout scmGit(
+                //     branches: [[name: '${params.SITES_BRANCH}']],
+                //     userRemoteConfigs: [[url: '${params.SITES_URL}']]
+                // )
+                checkout([$class: 'GitSCM',
+                          branches: [[name: params.SITES_BRANCH]],
+                          userRemoteConfigs: [[url: params.SITES_URL]]
+                ])
+                // checkout([$class: 'GitSCM',
+                //           branches: [[name: "${params.SITES_BRANCH}"]],
+                //           userRemoteConfigs: [[url: "${params.SITES_URL}"]]
+                // ])
             }
         }
 
