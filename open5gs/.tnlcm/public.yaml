@@ -50,19 +50,19 @@ input:
     required_when: false
 
   one_open5gs_mcc:
-    description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
+    description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
     type: str
     default_value: "001"
     required_when: false
 
   one_open5gs_mnc:
-    description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
+    description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
     type: str
     default_value: "01"
     required_when: false
 
   one_open5gs_msin:
-    description: Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 10 digits inside quotes.
+    description: Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes. mcc + mnc + msin must add to exactly 15
     type: str
     default_value: "0000000001"
     required_when: false

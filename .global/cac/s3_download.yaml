@@ -1,7 +1,3 @@
-# TODO: Inform collection "amazon.aws >= 7.5.0" is required in ansible-galaxy
-# https://docs.ansible.com/ansible/latest/collections/amazon/aws/index.html#plugins-in-amazon-aws
-# https://docs.ansible.com/ansible/latest/collections/amazon/aws/s3_object_module.html
-
 - name: Get list of files from S3
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"
@@ -11,6 +7,7 @@
     bucket: "{{ site_s3_server.bucket }}"
     prefix: "{{ tn_id }}"
     marker: "{{ tn_id }}"
+    validate_certs: false
   register: s3_bucket_items
 
 - name: Download S3 files
@@ -22,5 +19,6 @@
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ item }}"
     dest: "{{ workspace }}/.terraform/{{ item | basename }}"
+    validate_certs: false
   when: item.endswith('.tf')
   with_items: "{{ s3_bucket_items.s3_keys }}"

@@ -10,13 +10,11 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   context = {
     NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
-    USERNAME = "{{ site_jenkins_ssh_user }}"
-    SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
+    USERNAME = "jenkins"
     VPN_PUBLIC_IP = "{{ site_public_ip }}"
     WIREGUARD_ALLOWEDIPS = "{{ one_bastion_wireguard_allowedips }}"
   }
 
-  
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
   disk {
     image_id = {{ site_available_components.tn_bastion.image_id }}

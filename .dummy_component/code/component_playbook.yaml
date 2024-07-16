@@ -17,8 +17,9 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    # Some components lik the tn_init can only be deployed once per TN. entity_name is a variable combining the component_type and the custom_name
-    # You can optionally supress the custom_name for these components
+    # The variable "entity_name" is formed during the pipeline as {{ component_type }}-{{ custom_name }}
+    # Some components like the tn_init can only be deployed once per TN.
+    # In these components the custom name should not be required, and you can optionally supress it from the "entity_name" to avoid confusion
     # - name: Overwrite "entity_name" with only tn_init
     #   ansible.builtin.set_fact:
     #     entity_name: "tn_init"
@@ -72,7 +73,7 @@
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-        ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['ssh_public_key'] }}"
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string}}"
@@ -87,8 +88,8 @@
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}"
         ansible_host: "{{ ips[ vnet_id ] }}"
-        ansible_ssh_common_args: "-J {{ site_jenkins_ssh_user }}@{{ bastion_ip }}"
-        ansible_user: "{{ site_jenkins_ssh_user }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"
 
     # While not used by the Jenkins, we included the configuration of a .ssh/config per TN in the Jenkins for debugging purposes.
     - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
@@ -112,11 +113,12 @@
     # Some sites may have a MASTER ssh key, appart of the jenkins one
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
-        user: "{{ hostvars['localhost']['site_jenkins_ssh_user'] }}"
+        user: jenkins
         state: present
         key: "{{ item }}"
       loop:
-        - "{{ hostvars['localhost']['site_admin_ssh_public_key'] }}"
+        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
+      when: item != ''
 
     # Any deployed VM should create a "tnuser" user for the experimenter's access. All components can be accessed through that user with the ssh key created in tn_init
     - name: Create new user for experimenter access
@@ -132,7 +134,7 @@
         state: present
         key: "{{ item }}"
       loop:
-        - "{{ hostvars['localhost']['ssh_public_key'] }}"
+        - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
     # Example of inclued task files common to all hypervisors, like helm charts, or bash/python/ruby sripts.
     - name: Helm install
@@ -156,6 +158,7 @@
         object: "{{ tn_id }}/kconf-{{ entity_name }}.kubeconfig"
         src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
         encrypt: false
+        validate_certs: false
 
     # Common task to create custom terraform outputs with information of interest for future deployments.
     - name: Publish node IDs and IPs as a terraform outputs"

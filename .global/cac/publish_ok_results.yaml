@@ -9,6 +9,7 @@
     object: "{{ tn_id }}/{{ item.dest | basename }}"
     src: "{{ item.dest }}"
     encrypt: false
+    validate_certs: false
   loop: "{{ terraform_manifests.results }}"
   when: terraform_apply.failed is defined and terraform_apply.failed == false
 
@@ -51,3 +52,4 @@
     object: "{{ tn_id }}/ok_result-{{ entity_name }}.md"
     src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.md"
     encrypt: false
+    validate_certs: false

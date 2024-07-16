@@ -31,7 +31,7 @@
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-        ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['ssh_public_key'] }}"
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         cluster_roles: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-roles'] }}"
 
@@ -53,7 +53,7 @@
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}-{{ item.key }}"
         ansible_host: "{{ item.value }}"
-        ansible_ssh_common_args: "-J {{ site_jenkins_ssh_user }}@{{ bastion_ip }}{% if not item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}{% if not item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
         ansible_user: "root"
         groups: "{{ entity_name | replace('-', '_') }}"
       loop: "{{ node_ips | dict2items }}"
@@ -65,6 +65,9 @@
     - name: Fetch master metadata
       community.general.one_vm:
         instance_ids: "{{ node_ids.master_0 | int }}"
+        api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
+        api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
+        api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
       register: master_metadata
     - name: Extract kubeconfig file from master metadata
       ansible.builtin.set_fact:
@@ -76,17 +79,19 @@
         dest: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
         mode: "644"
 
+
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "{{ hostvars['localhost']['entity_name'] | replace('-', '_') }}"
   gather_facts: false
   tasks:
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
-        user: "root"
+        user: root
         state: present
         key: "{{ item }}"
       loop:
-        - "{{ hostvars['localhost']['site_admin_ssh_public_key'] }}"
+        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
+      when: item != ''
 
     - name: Create new user for experimenter access in alpine
       ansible.builtin.user:
@@ -108,7 +113,7 @@
         state: present
         key: "{{ item }}"
       loop:
-        - "{{ hostvars['localhost']['ssh_public_key'] }}"
+        - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
     - name: Apply extra Helm charts
       when: inventory_hostname == hostvars['localhost']['entity_name'] + '-master_0'
@@ -138,6 +143,7 @@
         object: "{{ tn_id }}/kconf-{{ entity_name }}.kubeconfig"
         src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
         encrypt: false
+        validate_certs: false
 
     - name: Publish node IDs and IPs as a terraform outputs"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"

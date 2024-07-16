@@ -27,4 +27,5 @@
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/tf-custom_outputs.tf"
     src: "{{ workspace }}/.terraform/tf-custom_outputs.tf"
-    encrypt: no
+    encrypt: false
+    validate_certs: false

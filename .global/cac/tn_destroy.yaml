@@ -6,7 +6,7 @@
   tasks:
     - name: Load site-specific variables
       ansible.builtin.include_vars:
-        file: "{{ workspace }}/6G-Sandbox-Sites/.sites/{{ deployment_site }}/values.yaml"
+        file: "{{ workspace }}/6G-Sandbox-Sites/{{ deployment_site }}/core.yaml"
 
     - name: Create directory for terraform manifests
       ansible.builtin.file:
@@ -47,11 +47,12 @@
     - name: Delete S3 folder
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: delobj
         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
         object: "{{ tn_id }}"
-        mode: delobj
+        validate_certs: false
 
     - name: Generate OK json response
       ansible.builtin.template:

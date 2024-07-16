@@ -1,0 +1,42 @@
+# https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
+# https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
+resource "opennebula_virtual_machine" "{{ entity_name }}" {
+  name        = "{{ tn_id }}-{{ entity_name }}"
+  template_id = {{ site_available_components.dummy_component.template_id }}
+  cpu         = {{ one_dummy_component_cpu }}
+  vcpu        = {{ one_dummy_component_cpu }}
+  memory      = {{ one_dummy_component_memory }}
+
+  context = {
+    NETWORK = "YES"
+    SET_HOSTNAME = "$NAME"
+    USERNAME = "jenkins"
+  }
+
+{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+  disk {
+    image_id = {{ site_available_components.dummy_component.image_id }}
+    size     = {{ one_dummy_componentdisk }}
+    target   = "vda"
+    driver   = "qcow2"
+  } #}
+
+{% for network in one_dummy_component_networks %}
+  nic {
+    model           = "virtio"
+    network_id      = opennebula_virtual_network.{{ network }}.id
+  }
+{% endfor %}
+
+  depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
+}
+
+output "{{ entity_name }}-id" {
+  description = "OpenNebula VM ID"
+  value = opennebula_virtual_machine.{{ entity_name }}.id
+}
+
+output "{{ entity_name }}-ips" {
+  description = "OpenNebula VM Network Assignments"
+  value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
+}
