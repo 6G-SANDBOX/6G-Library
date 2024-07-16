@@ -30,8 +30,8 @@ pipeline {
         OPENNEBULA_INSECURE = credentials('OPENNEBULA_INSECURE')
 
         // AWS Terraform Provider envirmental variables (for the MinIO S3 storage) https://registry.terraform.io/providers/hashicorp/aws/2.54.0/docs#environment-variables
-        AWS_ACCESS_KEY_ID = credentials('MINIO_KEY')
-        AWS_SECRET_ACCESS_KEY = credentials('MINIO_SECRET')
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
     }
 
     stages {
@@ -52,6 +52,7 @@ pipeline {
                 ansiblePlaybook(
                     credentialsId: 'SSH_PRIVATE_KEY',
                     vaultCredentialsId: 'ANSIBLE_VAULT',
+                    inventory: 'localhost,',
                     extraVars: [
                         workspace: "${WORKSPACE}",
                         deployment_site: "${params.DEPLOYMENT_SITE}",
