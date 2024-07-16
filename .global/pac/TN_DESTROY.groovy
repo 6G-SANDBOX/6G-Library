@@ -72,7 +72,7 @@ pipeline {
         cleanup{
             // script step required to execute "Scripted Pipeline" syntax blocks into Declarative Pipelines
             script {
-                if (params.DEBUG == 'false') {
+                if (env.DEBUG == 'false') {
                     echo 'Clean up Workspace'
                     deleteDir()
                 
