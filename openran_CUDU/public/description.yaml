@@ -8,7 +8,7 @@ metadata:
   maintainers: 
     - Piotr Kulesza <p.kulesza@is-wireless.com>
     - Adam Flizikowski  <a.flizikowski@is-wireless.com>
-    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Munjure Mowla <m.mowla@is-wireless.com>
   version: 0.0.1
   depends:
     ##- openran_RU:
