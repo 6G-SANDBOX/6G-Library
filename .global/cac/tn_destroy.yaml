@@ -37,7 +37,6 @@
       community.general.terraform:
         project_path: "{{ workspace }}/.terraform/"
         state: "present"
-        force_init: true
 
     - name: Remove the Trial Network .ssh/config.d/ file
       ansible.builtin.file:

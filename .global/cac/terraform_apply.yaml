@@ -21,7 +21,6 @@
   community.general.terraform:
     project_path: "{{ workspace }}/.terraform/"
     state: "present"
-    force_init: true
   ignore_errors: true
   register: terraform_apply
 
