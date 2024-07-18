@@ -44,6 +44,7 @@
 - name: "STAGE 3: Publish execution results"
   hosts: localhost
   gather_facts: false
+  connection: local
   tasks:
     - name: Define open5gs metadata dictionary
       ansible.builtin.set_fact:
