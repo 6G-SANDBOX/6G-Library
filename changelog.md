@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.2.1]
+
+### Changed
+
+- Failed terraform applies correctly post a markdown to the MinIO informing about the error.
+
 ## [v0.2.0] - 2024-06-06
 
 ### Added
