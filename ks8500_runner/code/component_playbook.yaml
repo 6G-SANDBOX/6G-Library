@@ -1,0 +1,154 @@
+---
+# Main playbook to deploy the component
+# The different plays just serve as logical sepparations between deployment phases. If the "hosts" parameter of different plays is the same, feel free to join them
+# This sample file will try to use as many public task files as possible, but your component may not need many of them. Feel free to use just the ones you need.
+- name: "STAGE 1: Apply IAC to deploy the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+
+    # Necessary in most if not all components. Loads the usable variables from 4 different sources in the following order:
+    # 1. Site variables. Metadata unique to each site. Information like Image IDs, VNet IDs or ssh public keys.
+    # 2. Private variables. Loads the component private values for the site hypervisor. File at {{ component_type }}/variables/{{ site_hypervisor }}/private.yaml
+    # 3. Public variables. Loads the component input values as defined in the TNLCM/Jenkins. File is written and then read from {{ component_type }}/variables/input_file.yaml
+    # 4. Pipeline parameters. Some of the parameters sent by the TNLCM to the Jenkins, like the custom_name or the the tnlcm_calback URL.
+    #    File is written and then read from {{ component_type }}/variables/pipeline_parameters.yaml
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    # Some components lik the tn_init can only be deployed once per TN. entity_name is a variable combining the component_type and the custom_name
+    # You can optionally supress the custom_name for these components
+    # - name: Overwrite "entity_name" with only tn_init
+    #   ansible.builtin.set_fact:
+    #     entity_name: "tn_init"
+
+    # Creates a terraform working directory at .terraform/, loads the MINIO backend and { site_hypervisor }} terraform provider files,
+    # downloads manifests from previous deployments, and runs a single terraform init
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    # More than just a simple terraform apply. Templates all manifests from {{ component_type }}/code/{{ site_hypervisor }}/iac/*.tf.j2, writes them
+    # at .terraform and runs a terraform apply.
+    # Task also has error handling, and if apply fails, will send a notification to the TNLCM with the stderr, and text from {{ component_type }}/result_templates/fail_result.md.j2
+    - name: Terraform apply
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
+
+# Post-terraform preliminary tasks. Still no component configuration.
+- name: "STAGE 2: Prepare to access the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+
+    # Module to retrieve all generated outputs from the terraform working directory in JSON with a key-value format
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    # Save some of the outputs as playbook facts (variables). Some of them will be surelly be used as future output values
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_runner_networks[0] + '-id'] | string}}"
+
+        #one_runner_backend_url: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-runner_backend_url'] | string}}"
+        #one_runner_registration_token: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-runner_registration_token'] | string}}"
+        #one_runner_name: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-runner_name'] | string}}"
+
+    # Include the deployed component/s as Inventory host/s.
+    - name: Add new VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "{{ entity_name }}"
+        ansible_host: "{{ ips[ vnet_id ] }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+    - name: Create SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+
+# Configuration play. Modules executed in the deployment component.
+# Remember in Ansible variables are loaded in each host, so if you change the host, you can either
+# - Set the variables again (with the load_variables.yaml global taskfile or similar)
+# - Refer to the hostvars of localhost.
+- name: "STAGE 3: Apply CAC to prepare the component"
+  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  gather_facts: false
+  tasks:
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        timeout: 200
+
+    # Some sites may have a MASTER ssh key, appart of the jenkins one
+    - name: Set site ssh key as authorized in jenkins user
+      ansible.posix.authorized_key:
+        user: jenkins
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
+      when: item != ''
+
+    # Detect if required network connectivity is availabla for the runner
+    # Curl returns error if we cannot connect, should cause ansible script to terminate
+    - name: verify-connectivity
+      ansible.builtin.shell:  curl https://test-automation.pw.keysight.com/index.html
+    
+    - name: install-docker
+      ansible.builtin.shell: |
+         apk add --update docker docker-compose openrc
+         rc-update add docker boot
+         service docker start
+         service docker status
+
+    - name: create-runner-dirs
+      ansible.builtin.shell: |
+         mkdir -p /opt/KS8500Runner
+         cd /opt/KS8500Runner
+         mkdir Config
+         mkdir SessionLogs
+         mkdir Settings
+         mkdir Storage
+
+    - name: deploy-runner-configuration
+      copy: 
+        src:  "{{ playbook_dir }}/runner/"
+        dest: "/opt/KS8500Runner/"
+       
+    - name: build-runner-image
+      ansible.builtin.shell: |
+        cd /opt/KS8500Runner/
+        docker build -t ks8500_runner .
+  
+    - name: register-runner
+      ansible.builtin.shell: cd /opt/KS8500Runner; chown -R 1654:1654 /opt/KS8500Runner; docker run --volume /opt/KS8500Runner/Config/:/opt/tap/Config:rw --volume /opt/KS8500Runner/SessionLogs/:/opt/tap/SessionLogs:rw --volume /opt/KS8500Runner/Settings/:/opt/tap/Settings:rw --volume /opt/KS8500Runner/Storage/:/opt/tap/Storage:rw -it --entrypoint "" ks8500_runner /opt/tap/tap runner register --name {{one_runner_name}} --url {{one_runner_backend_url}} --registrationToken {{one_runner_registration_token}}
+      register: registration_info
+
+    - name: start-runner
+      ansible.builtin.shell: cd /opt/KS8500Runner; docker-compose up -d
+      
+# Final phase of the deployments. Gather information and publish it
+- name: "STAGE 4: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    # Common task to create custom terraform outputs with information of interest for future deployments.
+    - name: Merge all component component outputs into one "output" variable
+      ansible.builtin.set_fact:
+
+        output:
+          ips: "{{ ips | b64encode }}"
+          id: "{{ id | b64encode }}"
+          # TODO: Maybe we should get rid of the base64 encode to make the information more easily readable, but need to check if it creates other problems first
+          registration_info: "{{ (registration_info.stdout | b64encode) }}" 

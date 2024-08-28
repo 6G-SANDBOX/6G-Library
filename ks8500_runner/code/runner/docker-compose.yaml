@@ -1,0 +1,11 @@
+services:
+  runner:
+    image: ks8500_runner
+    entrypoint: tap runner start
+    environment:
+      LM_LICENSE_FILE: "@license.opentap.keysight.com"
+    volumes:
+      - ./Config:/opt/tap/Config:rw
+      - ./SessionLogs:/opt/tap/SessionLogs:rw
+      - ./Settings:/opt/tap/Settings:rw
+      - ./Storage:/opt/tap/Storage:rw

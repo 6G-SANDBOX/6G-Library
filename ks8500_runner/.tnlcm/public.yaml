@@ -1,0 +1,72 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Torsten Iversen <torsten.iversen@keysight.com>
+    - The Dao <the.dao@keysight.com>
+  short_description: Deploys a VM with KS8500 Runner
+  long_description: |
+    The KS8500 Runner allows accessing local on premises ressources while running a test campaign being scheduled from the KS8500 backend
+  hypervisors: [one]
+  # appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/ks8500_runner
+
+####################################
+## Component input
+####################################
+input:
+  one_runner_networks:
+    description: Ordered list of Virtual Network names the VM will be part of. In most cases first one should always be the tn_vxlan
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
+    required_when: false
+
+  one_runner_registration_token: 
+    description: |
+      KS8500 users registration token for creating the runner
+    type: str
+    required_when: true
+
+  one_runner_name: 
+    description: |
+      User assigned name to identify the runner in the KS8500 web UI
+    type: str
+    defaulr_value: "OpenNebulaDefault"
+    required_when: true
+
+  one_runner_backend_url:
+    description: |
+      URL for accessing the KS8500 backend. The runner needs this information to connect
+    type: str
+    default_value: "https://test-automation.pw.keysight.com"
+    required_when: true
+
+####################################
+## Component output
+####################################
+output:
+  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
+  id: VM ID in OpenNebula
+  registration_info: A string with information to use in the KS8500 UI

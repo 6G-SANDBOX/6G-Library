@@ -1,0 +1,3 @@
+# Substitutes doc/create_component.yaml file
+runner_name: OpenNebulaRunner1
+runner_registration_token: place-a-user-token-here
