@@ -1,0 +1,63 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+  short_description: Enables the capability of using Nokia Radio in a Trial Network.
+  long_description: |
+    This component allows the use of a real Nokia Radio into a Trial Network. 
+    The configuration exposed by this component should be synced with the 5G core and the UE to be used in conjunction with it.
+    NOTE: Currently this component is only available in the site "uma"
+  hypervisors: [one]
+
+####################################
+## Component input
+####################################
+input:
+  reserved_from:
+    description: From date where the component is to be reserved
+    type: "str"
+    default_value: "YYYY-MM-DDTHH:MM:SSZ"
+    required_when: true
+  reserved_to:
+    description: To date where the component is to be reserved
+    type: "str"
+    default_value: "YYYY-MM-DDTHH:MM:SSZ"
+    required_when: true    
+
+
+####################################
+## Component output
+####################################
+output:
+  reserved_from: From date where the component is to be reserved
+  reserved_to: To date where the component is to be reserved
+  plmn_id: PLMN preconfigured on the Nokia Radio
+  tac: Tracking area code
+  snssai_sst: Slice service type
+  snssai_sd: Slice differentiator
+  amf_ip: AMF IP
+  route_amf_via: IP route to reach AMF 
