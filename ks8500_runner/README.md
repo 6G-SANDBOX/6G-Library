@@ -14,6 +14,8 @@ This is the initial version of the automation scripts. Since we do not have acce
 
 	The alpine image from Minione that we used for limited local testing needs Python installed before we can apply the playbook. Is that also the case in 6GLibrary, 
 	or do we get a version of the Alpine image that is ready to run Ansible playbooks?
+
+ 	We prefixed the variables with one_ assuming this was to identify the hypervisor based on the ueransim example, but we do not know if this is best practice. The coude would look a bit cleaner if we did not use the prefix. Recomendation?
 	
 ## Runner.tf.j2
 	Copied and modified this from ueransim. Is it still appropriate for our component when we are not providing a custom VM (we install on generic Alpine Linux)  
