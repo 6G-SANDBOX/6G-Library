@@ -1,0 +1,6 @@
+- name: Execute manage_route script in Router Manager
+  shell: "nohup /root/route-manager.sh {{ tn_id }} {{ one_nokia_routable_network }} {{ one_nokia_routable_gateway }} {{ one_nokia_reservation_time }} > /tmp/route-manager.log 2>&1 &" 
+  args:
+    executable: /bin/bash
+  async: 0
+  poll: 0

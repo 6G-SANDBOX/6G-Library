@@ -1,19 +1,18 @@
 # NOKIA RADIO UMA
 
-NOKIA RADIO UMA component has been successfully addded to the Trial Network {{ tn_id }}
+NOKIA RADIO UMA component has been successfully addded to the Trial Network {{ tn_id }}.
 
 Important information:
 
-This component will be available:
+This component will be available for {{ nokia_reservation_time: }} minutes from now.
 
-from: {{ reserved_from }}
-to: {{ reserved_to }}
+### Relevant information about Radio Configuration:
 
-### Relevant information about Radio Configuration
-
-* PLMN: {{ plmn_id }}
-* TAC: {{ tac }}
-* S-NSSAI SST: {{ snssai_sst }}
-* S-NSSAI SD: {{ snssai_sd }}
-* AMF IP: {{ amf_ip }}
-* ROUTE AMF VIA: {{ router_ip }}
+* PLMN ID (MCC): {{ one_open5gs_mcc }}
+* PLMN ID (MNC): {{ one_open5gs_mnc }}
+* TAC: {{ one_open5gs_tac }}
+* S-NSSAI (SST): {{ one_open5gs_s_nssai_sst }}
+* S-NSSAI (SD): {{ one_open5gs_s_nssai_sd }}
+* AMF_IP: {{ one_open5gs_amf_ip }}
+* UPF_IP: {{ one_open5gs_upf_ip }}
+* ROUTE AMF VIA: {{ route_manager_ip }}

@@ -1,0 +1,12 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_nokia_router_manager_ip: "10.11.28.134"
+one_nokia_routable_network: "10.10.12.0/24"

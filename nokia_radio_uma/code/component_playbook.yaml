@@ -1,1 +1,79 @@
-# TODO
+---
+- name: "STAGE 1: Prepare to access a previous target component"
+  hosts: localhost
+  gather_facts: false
+  connection: local  
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_oneKE + '-node_ips'] }}"
+
+    # - name: Add the oneKE master to Ansible Inventory
+    #   ansible.builtin.add_host:
+    #     hostname: "{{ one_open5gs_oneKE }}-master_0"
+    #     ansible_host: "{{ node_ips.master_0 }}"
+    #     ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
+    #     ansible_user: "root"
+
+- name: "STAGE 2: Apply IaC to deploy the component - STEP 1"
+  hosts: "{{ router_manager_ip }}"
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Enable routing path in Route Manager
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/enable_routing_manager.yaml"
+
+# - name: "STAGE 2: Apply IaC to deploy the component - STEP 2"
+#   hosts: "{{ bastion_ip }}"
+#   gather_facts: false
+#   tasks:
+#     - name: Load enviromental variables from different sources inside the component
+#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+#     - name: Enable routing path in Bastion
+#       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/enable_routing_bastion.yaml"
+
+
+- name: "STAGE 3: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Define Nokia metadata dictionary
+      ansible.builtin.set_fact:
+        nokia_metadata_dict: >-
+          {
+            'nokia_reservation_time': '{{ nokia_reservation_time }}'
+            'router_manager_ip': '{{ router_manager_ip }}'
+          }
+
+    - name: Publish Nokia metadata as terraform outputs"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-metadata"
+            value: "{{ nokia_metadata_dict }}"
+
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        output:
+          open5gs_metadata_dict: "{{ nokia_metadata_dict | b64encode }}"
