@@ -1,0 +1,4 @@
+# INPUT FILE
+
+one_vm_kvm_networks: 
+  - tn_vxlan
