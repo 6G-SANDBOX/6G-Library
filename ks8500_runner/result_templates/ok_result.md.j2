@@ -6,14 +6,12 @@ A *ks8500_runner* appliance has been succesfully created as part of the Trial Ne
 ### Deployment
 Important information about the deployment
 
+* **KS8500 registration information**: {{ registration_info.stdout }}
 * **VM ID**: {{ id }}
-* **MEMORY**: {{ one_runner_memory}} MiB
-* **VCPU**: {{ one_runner_cpu }}
+* **MEMORY**: {{ one_ks8500runner_memory}} MiB
+* **VCPU**: {{ one_ks8500runner_cpu }}
 * **Network Interfaces**:
     ```json
     {{ ips }}
     ```
-* **KS8500 registration information**:
-    ```json
-    {{ registration_info.stdout }}
-    ```
+    
