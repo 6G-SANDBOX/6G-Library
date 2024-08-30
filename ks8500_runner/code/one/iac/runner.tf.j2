@@ -16,7 +16,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
   disk {
-    image_id = "Alpine Linux 3.17" # TODO: how to do this correctly?
+    image_id = {{ site_available_components.ks8500runner.image_id }}
     size     = {{ one_ks8500runner_disk }}
     target   = "vda"
     driver   = "qcow2"
