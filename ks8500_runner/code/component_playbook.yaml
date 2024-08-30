@@ -81,6 +81,13 @@
 # - Set the variables again (with the load_variables.yaml global taskfile or similar)
 # - Refer to the hostvars of localhost.
 - name: "STAGE 3: Apply CAC to prepare the component"
+  vars:
+    ks8500runner_mounts:
+      - Config
+      - SessionLogs
+      - Settings
+      - Storage
+    ks8500runner_path: /opt/KS8500Runner
   hosts: "{{ hostvars['localhost']['entity_name'] }}"
   gather_facts: false
   tasks:
@@ -105,38 +112,58 @@
       ansible.builtin.shell:  curl https://test-automation.pw.keysight.com/index.html
     
     - name: install-docker
-      ansible.builtin.shell: |
-         apk add --update docker docker-compose openrc
-         rc-update add docker boot
-         service docker start
-         service docker status
+      community.general.apk:
+        name: docker,docker-cli-buildx,docker-compose,openrc,docker-cli-compose
+        update_cache: true
+    
+    - name: enable-docker-service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
 
     - name: create-runner-dirs
-      ansible.builtin.shell: |
-         mkdir -p /opt/KS8500Runner
-         cd /opt/KS8500Runner
-         mkdir Config
-         mkdir SessionLogs
-         mkdir Settings
-         mkdir Storage
+      ansible.builtin.file:
+        path: "{{ ks8500runner_path }}/{{ item }}"
+        state: directory
+        mode: '0700'
+      loop: "{{ ks8500runner_mounts }}"
 
     - name: deploy-runner-configuration
-      copy: 
+      ansible.builtin.copy:
         src:  "{{ playbook_dir }}/all/runner/"
-        dest: "/opt/KS8500Runner/"
+        dest: "{{ ks8500runner_path }}"
        
     - name: build-runner-image
-      ansible.builtin.shell: |
-        cd /opt/KS8500Runner/
-        docker build -t ks8500_runner .
+      community.docker.docker_image_build:
+        name: ks8500_runner:latest
+        path: "{{ ks8500runner_path }}"
+        dockerfile: Dockerfile
   
+    - name: create-mount-list
+      set_fact:
+        mount_list: '{{ (mount_list|default([])) + [{"target": "/opt/tap/" + item, "source": "{{ ks8500runner_path }}/" + item, "type": "bind" }] }}'
+      loop: "{{ ks8500runner_mounts }}"
+
+    # The microsoft base image uses this ID. Maybe we can find a better solution.
+    - name: workaround-permissions
+        ansible.builtin.shell: chown -R 1654:1654 /opt/KS8500Runner
+
     - name: register-runner
-      ansible.builtin.shell: cd /opt/KS8500Runner; chown -R 1654:1654 /opt/KS8500Runner; docker run --volume /opt/KS8500Runner/Config/:/opt/tap/Config:rw --volume /opt/KS8500Runner/SessionLogs/:/opt/tap/SessionLogs:rw --volume /opt/KS8500Runner/Settings/:/opt/tap/Settings:rw --volume /opt/KS8500Runner/Storage/:/opt/tap/Storage:rw -it --entrypoint "" ks8500_runner /opt/tap/tap runner register --name {{ks8500runner_name}} --url {{ks8500runner_backend_url}} --registrationToken {{ks8500runner_registration_token}}
-      register: registration_info
+      community.docker.docker_container:
+        image: ks8500_runner
+        name: register-runner
+        mounts: "{{ mount_list }}"
+        entrypoint: ""
+        detach: false
+        working_dir: "{{ ks8500runner_path }}"
+        command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --registrationToken {{ ks8500runner_registration_token }}
+      register: docker_container_output
 
     - name: start-runner
-      ansible.builtin.shell: cd /opt/KS8500Runner; docker-compose up -d
-      
+      # cannot use docker_compose_v2 with the default package from apk, so using the deprecated docker_compose
+      community.docker.docker_compose:
+        project_src: "{{ ks8500runner_path }}"
 # Final phase of the deployments. Gather information and publish it
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
@@ -150,5 +177,4 @@
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
-          # TODO: Maybe we should get rid of the base64 encode to make the information more easily readable, but need to check if it creates other problems first
-          registration_info: "{{ (registration_info.stdout | b64encode) }}" 
+          registration_info: "{{ (docker_container_output.container.Output | b64encode) }}" 
