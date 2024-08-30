@@ -27,7 +27,7 @@
     - name: Add Route Manager to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "routemanager"
-        ansible_host: "{{ one_nokia_router_manager_ip }}"
+        ansible_host: "{{ one_nokia_route_manager_ip }}"
         ansible_user: "root"
         ansible_ssh_private_key_file: "/var/lib/jenkins/.ssh/id_ed25519"
 
@@ -69,7 +69,7 @@
         nokia_metadata_dict: >-
           {
             'one_nokia_reservation_time': '{{ one_nokia_reservation_time }}',
-            'one_nokia_router_manager_ip': '{{ one_nokia_router_manager_ip }}'
+            'one_nokia_route_manager_ip': '{{ one_nokia_route_manager_ip }}'
           }
 
     - name: Publish Nokia metadata as terraform outputs"
