@@ -1,0 +1,6 @@
+- name: Add routes in bastion
+  ansible.builtin.shell: "ip route add {{ item }}"
+  with_items:
+    - "{{ one_nokia_routable_network }} via {{ hostvars['localhost']['node_ips'].vnf_0 }}"
+    - "{{ one_nokia_main_ip }} via {{ one_nokia_router_manager_ip }}"
+  become: yes

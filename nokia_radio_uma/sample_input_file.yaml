@@ -1,1 +1,6 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+one_open5gs_oneKE: "oneKE-main"
+one_nokia_main_ip: "your_nokia_ip"
+one_nokia_router_manager_ip: "10.11.28.134"
+one_nokia_reservation_time: "60"
