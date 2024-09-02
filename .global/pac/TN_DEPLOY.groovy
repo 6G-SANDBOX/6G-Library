@@ -9,13 +9,13 @@ pipeline {
     }
 
     parameters {
-        string(name: 'TN_ID', defaultValue: '', description: 'Trial Network Identifier. MANDATORY')
+        string(name: 'TN_ID', defaultValue: '', description: 'Trial Network Identifier. Valid characters are A-Z, a-z, 0-9 and underscore _. MANDATORY')
         string(name: 'COMPONENT_TYPE', defaultValue: '', description: '6G Library Component type. MANDATORY')
-        string(name: 'CUSTOM_NAME', defaultValue: '', description: 'Custom name for the component inside the Trian Network. MANDATORY except for tn_init (including tn_vxlan and tn_bastion)')
+        string(name: 'CUSTOM_NAME', defaultValue: '', description: 'Custom name for the component inside the Trial Network. Valid characters are A-Z, a-z, 0-9 and underscore _. MANDATORY except for tn_init (including tn_vxlan and tn_bastion)')
         string(name: 'DEPLOYMENT_SITE', defaultValue: '', description: 'Site where the deployment is being made. E.g. uma, athens, fokus, oulu... MANDATORY')
         string(name: 'TNLCM_CALLBACK', defaultValue: 'http://tnlcm-ip:5000/tnlcm/callback/', description: 'URL of the TNLCM to notify the results. MANDATORY')
         string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library.git', description: '6G-Library repository HTTPS URL. Leave it as-is unless you want to test your own fork')
-        string(name: 'LIBRARY_BRANCH', defaultValue: 'refs/heads/main', description: 'LIBRARY_URL checkout to use. Valid inputs can be refs/heads/<branchName>, refs/tags/<tagName> or <commitId>. Leave it as-is unless you want to test alternative releases/branches/commits.')
+        string(name: 'LIBRARY_BRANCH', defaultValue: 'v0.2.1', description: 'LIBRARY_URL checkout to use. Valid inputs can be refs/heads/<branchName>, refs/tags/<tagName> or <commitId>. Leave it as-is unless you want to test alternative releases/branches/commits.')
         string(name: 'SITES_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git', description: '6G-Library-Sites repository HTTP URL. Leave it as-is unless you want to test your own fork')
         string(name: 'SITES_BRANCH', defaultValue: 'refs/heads/main', description: 'SITES_URL checkout to use. Valid inputs can be refs/heads/<branchName>, refs/tags/<tagName> or <commitId>. Leave it as-is unless you want to test alternative releases/branches/commits.')
         booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG. Files will not be purged after the pipeline execution')

@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.2.1]
+
+### Changed
+
+- Failed terraform applies correctly post a markdown to the MinIO informing about the error.
+- Corrected texts in the pipeline parameter descriptions
+- New nokia_radio_uma component
+
 ## [v0.2.0] - 2024-06-06
 
 ### Added

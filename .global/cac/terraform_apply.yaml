@@ -56,6 +56,18 @@
       register: tnlcm_post
       ignore_errors: true
 
+    - name: Send FAIL markdown response to S3
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/fail_result-{{ entity_name }}.md"
+        src: "{{ workspace }}/{{ component_type }}/code/fail_result-{{ entity_name }}.md"
+        encrypt: false
+        validate_certs: false
+
     - name: Stop playbook execution
       ansible.builtin.fail:
         msg: "The Execution of 'terraform apply' failed. Check generated markdown file for more debugging information."

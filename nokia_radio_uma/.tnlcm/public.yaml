@@ -1,0 +1,75 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  short_description: Enables the capability of using Nokia Radio in a Trial Network.
+  long_description: |
+    This component enables the integration of Nokia Airscale physical equipment located at UMA with a 5G core deployed in the Trial Network.
+    It is done by enabling the necessary routing path through the use of the element called ‘Route Manager’ (already deployed in the site). 
+    The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
+    - 'mcc': "214" 
+    - 'mnc': "702"
+    - 'apn': "internet"
+    - 'tac': "0001"
+    - 's_nssai_sst': "1"
+    - 's_nssai_sd': "000009"
+    - 'amf_ip': "10.10.12.200"
+    - 'upf_ip': "10.10.12.201"
+    NOTE: Currently this component is only available in the site "uma".
+  hypervisors: [one]
+
+####################################
+## Component input
+####################################
+
+input:
+  one_nokia_main_ip:
+    description: Address of Nokia Airscale.
+    type: str
+    required_when: false
+  one_nokia_reservation_time:
+    description: Time in minutes for the Nokia Airsale reservation
+    type: int
+    default_value: 60
+    required_when: true
+  one_nokia_route_manager_ip:
+    description: Address of the route manager that will enable routing between Nokia Airscale and 5G Core.
+    type: str
+    default_value: "10.11.28.134"
+    required_when: true
+  one_nokia_oneKE:
+    description: Name of the oneKE cluster to route Nokia traffic.
+    type: "oneKE"
+    required_when: true
+
+####################################
+## Component output
+####################################
+output:
+  nokia_metadata_dict: Dictionary with multiple parameters used in the component bootstrap
