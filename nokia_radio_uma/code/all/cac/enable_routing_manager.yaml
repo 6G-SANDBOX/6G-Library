@@ -1,0 +1,7 @@
+- name: Execute manage_route script in Router Manager
+  ansible.builtin.shell:
+  args:
+    executable: /bin/bash
+    cmd: "nohup /root/route-manager.sh {{ tn_id }} {{ one_nokia_routable_network }} {{ hostvars['localhost']['bastion_ip'] }} {{ one_nokia_reservation_time }} > /tmp/route-manager.log 2>&1 &" 
+  async: 0
+  poll: 0

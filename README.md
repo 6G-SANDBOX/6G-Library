@@ -100,7 +100,7 @@ Component_Name
 #### .tnlcm/
 
 Information used by the TNLCM to integrate the component into Trial Network descriptors.
-+ **public.yaml**: File describing metadata, input and output variables for the component. Further explanations in the [.dummy_component](https://github.com/6G-SANDBOX/6G-Library/main/.dummy_component/.tnlcm/public.yaml) example
++ **public.yaml**: File describing metadata, input and output variables for the component. Further explanations in the [.dummy_component](https://github.com/6G-SANDBOX/6G-Library/blob/main/.dummy_component/.tnlcm/public.yaml) example
 
 
 #### code/
