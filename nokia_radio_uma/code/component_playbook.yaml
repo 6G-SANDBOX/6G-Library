@@ -36,8 +36,8 @@
         hostname: "bastion"
         ansible_host: "{{ bastion_ip }}"
         ansible_user: "jenkins"
-        
-        
+
+
 - name: "STAGE 2: Apply IaC to deploy the component - STEP 1"
   hosts: "routemanager"
   gather_facts: false
@@ -46,7 +46,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
     - name: Enable routing path in Route Manager
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/enable_routing_manager.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_manager.yaml"
 
 - name: "STAGE 2: Apply IaC to deploy the component - STEP 2"
   hosts: "bastion"
@@ -56,7 +56,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
     - name: Enable routing path in Bastion
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/enable_routing_bastion.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_bastion.yaml"
 
 
 - name: "STAGE 3: Publish execution results"

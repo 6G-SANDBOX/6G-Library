@@ -1,6 +1,10 @@
 # Changelog
 
-## [v0.2.1]
+## [unreleased]
+- Update DEBUG parameter description in the `TN_DEPLOY.groovy` pipeline.
+
+
+## [v0.2.1] - 2024-09-02
 
 ### Changed
 
@@ -54,7 +58,8 @@ Initial release of the 6G Library. Changes will be kept on track for now on.
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...HEAD
+[v0.2.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.1.0
 

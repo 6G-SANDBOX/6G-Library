@@ -1,0 +1,90 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 4 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Javier Jimenez <ja.jimenez@uma.es>
+  short_description: Enables the use of a physical UE via STF for a limited duration.
+  long_description: |
+    The UE_STF component enables the use of a physical UE with temporal access to an [STF](https://github.com/DeviceFarmer/stf) (Smartphone Test Farm) deployment.
+    The physical UE can be therefore connect to other RAN/radio components to achieve connectiviy.
+    The EU access time is set to 30 minutes by now. 
+    NOTE: Currently this component is only available in the site "uma".
+  hypervisors: [one]
+
+# ####################################
+# ## Component input
+# ####################################
+# input:
+#   simple_text_variable:
+#     description: Description of an optional text variable.
+#     #type: str
+#     default_value: "Default string"
+#     #choices: []
+#     required_when: false
+
+#   mandatory_list_of_strings:
+#     description: |
+#       Variable has not default and requires a list of mandatory_list_of_strings
+#       A sample valid input would be ["one", "two", "three"]
+#     type: list[str]
+#     #default_value: ""
+#     #choices: []
+#     required_when: true
+
+#   choose_a_number:
+#     description: Select a numeric value from the list of choices. First choice by default.
+#     type: int
+#     default_value: 1
+#     choices: [1,2,3]
+#     required_when: false
+
+#   sample_choice_variable:
+#     description: |
+#       Mandatory variable taht stablishes a dependency with another component.
+#       Through the previous component output, other variables from this component can be autocompleted 
+#     type: vnet
+#     #default_value: ""
+#     #choices: []
+#     required_when: true
+
+#   autocompleted_variable:
+#     description: |
+#       The value will be overwritten in this order:
+#         1. Initial value is in the private.yaml file (a.k.a. the value shown in default_value)
+#         2. If another component was referrenced in "sample_choice_variable" a playbook step will overwrite the value with one of its output variables.
+#         3. If this optional variable is filled, the final value will always be this one.
+#       Most cases will be OK simply leaving the default_value for it to be automatically overwritten
+#     type: "strlist"
+#     default_value: ["255.255.255.0"]
+#     #choices: []
+#     optional: false
+
+# ####################################
+# ## Component output
+# ####################################
+# output:
+#   sample_output_variable: Short description of what the output value is.
+#   another_output_variable: Description is optional. For now, it is unused by the TNLCM. TNLCM only checks the key name.
