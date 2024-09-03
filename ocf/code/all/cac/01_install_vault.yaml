@@ -1,3 +1,7 @@
-- name: Install Vault
+- name: Hello world
+  ansible.builtin.shell: "echo \"HELLO\""
+  become: yes
+
+- name: Execute Install Vault Script
   ansible.builtin.shell: "./capif/helm/scripts/install_vault.sh"
   become: yes
