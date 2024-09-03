@@ -39,10 +39,10 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
     
     - name: Prepare repository for CAPIF installation
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/00_prepare_repository.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/00_prepare_repository.yaml"
     
     - name: Install Vault
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/01_install_vault.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//01_install_vault.yaml"
     
     # - name: Helm install
     #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_install.yaml"
