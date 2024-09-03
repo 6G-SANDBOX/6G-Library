@@ -1,0 +1,3 @@
+- name: Install Capif
+  ansible.builtin.shell: "./capif/helm/scripts/install_capif.sh"
+  become: yes

@@ -1,0 +1,11 @@
+- name: Install Docker CLI
+  ansible.builtin.shell: "apt install docker.io -y"
+  become: yes
+
+- name: Setup static DNS Hosts
+  ansible.builtin.shell: "capif/helm/scripts/get_ingress.sh -n {{ item }}"
+  with_items:
+  - "{{ hostvars['localhost']['ocf_vault_namespace']}}"
+  - "{{ hostvars['localhost']['ocf_capif_namespace']}}"
+  - "{{ hostvars['localhost']['ocf_monitoring_namespace']}}"
+  become: yes
