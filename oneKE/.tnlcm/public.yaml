@@ -138,6 +138,14 @@ input:
     default_value: "1.1.1.1 8.8.8.8"
     required_when: false
 
+  one_oneKE_nginx_passthough:
+    description: |
+      Ingress NGINX by default has passthrough disabled. This variable can override the value to desired one
+      Accepted values are "true" or "false" (no quotes included). Default value is "false"
+    type: bool
+    default_value: false
+    required_when: false 
+
 ####################################
 ## Component output
 ####################################
