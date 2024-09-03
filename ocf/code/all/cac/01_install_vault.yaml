@@ -3,6 +3,6 @@
   become: yes
 
 - name: Execute Install Vault Script
-  ansible.builtin.shell: "./capif/helm/scripts/install_vault.sh"
+  ansible.builtin.command: "./capif/helm/scripts/install_vault.sh"
   become: yes
   register: script_install_vault.out
