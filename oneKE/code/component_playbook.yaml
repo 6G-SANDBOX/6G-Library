@@ -145,6 +145,22 @@
         encrypt: false
         validate_certs: false
 
+    - name: Define OneKE metadata dictionary
+      ansible.builtin.set_fact:
+        oneKE_metadata_dict: >-
+          {
+            'external_vnet': '{{ one_oneKE_external_vnet }}',
+            'internal_vnet': '{{ one_oneKE_internal_vnet }}',
+            'version': '{{ one_oneKE_version }}',
+            'multus': '{{ one_oneKE_multus }}',
+            'cni_plugin': '{{ one_oneKE_cni_plugin }}',
+            'cilium_range': '{{ one_oneKE_cilium_range }}',
+            'metallb_range': '{{ one_oneKE_metallb_range }}',
+            'longhorn': '{{ one_oneKE_longhorn }}',
+            'dns': '{{ one_oneKE_dns }}',
+            'nginx_passthough': '{{ one_oneKE_nginx_passthough }}'
+          }
+
     - name: Publish node IDs and IPs as a terraform outputs"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
@@ -153,6 +169,8 @@
             value: "{{ node_ids }}"
           - key: "{{ entity_name }}-node_ips"
             value: "{{ node_ips }}"
+          - key: "{{ entity_name }}-metadata"
+            value: "{{ oneKE_metadata_dict }}"          
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
@@ -161,5 +179,6 @@
           id: "{{ id | b64encode }}"
           node_ids: "{{ node_ids | b64encode }}"
           node_ips: "{{ node_ips | b64encode }}"
+          metadata_dict: "{{ oneKE_metadata_dict | b64encode }}"
           kubeconfig: "{{ kubeconfig | b64encode }}"
           skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"

@@ -12,4 +12,4 @@ one_oneKE_internal_vnet: "vnet-custom_name"
 #one_oneKE_longhorn: "YES"
 #one_oneKE_traefik: "NO"
 #one_oneKE_dns: "1.1.1.1 8.8.8.8"
-#one_oneKE_nginx_passthough: true
+#one_oneKE_nginx_passthough: false
