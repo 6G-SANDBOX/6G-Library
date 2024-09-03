@@ -1,5 +1,14 @@
 # Changelog
 
+## jms_ocf
+
+### Added
+
+- New input variable `one_oneKE_nginx_passthough` in component `oneKE` to enable [SSL/TLS passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough).
+- New output variable `metadata_dict` from component `oneKE` to be fetched by other components.
+- Fix nokia_radio_uma JSON callback typo.
+- Renamed open5gs output variable
+
 ## [v0.2.1]
 
 ### Changed

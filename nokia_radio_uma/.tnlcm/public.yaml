@@ -72,4 +72,4 @@ input:
 ## Component output
 ####################################
 output:
-  nokia_metadata_dict: Dictionary with multiple parameters used in the component bootstrap
+  metadata_dict: Dictionary with multiple parameters used in the component bootstrap
