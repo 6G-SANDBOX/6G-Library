@@ -141,6 +141,17 @@ input:
     type: bool
     default_value: false
     required_when: false
+  ocf_user:
+    description: User to be registered on OpenCAPIF
+    type: str
+    default_value: client
+    required_when: false
+  ocf_password:
+    description: User password to be registered on OpenCAPIF
+    type: str
+    default_value: password
+    required_when: false
+
 
 ####################################
 ## Component output

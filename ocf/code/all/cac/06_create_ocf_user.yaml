@@ -1,0 +1,3 @@
+- name: Launch Robot OCF Testsuite
+  ansible.builtin.shell: "capif/helm/scripts/create_remote_users.sh.sh -u {{ ocf_user }} -p {{ ocf_password }} --include all"
+  become: yes

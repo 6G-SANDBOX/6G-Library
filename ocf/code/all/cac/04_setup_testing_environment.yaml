@@ -1,6 +1,3 @@
-# - name: Install Docker CLI
-#   ansible.builtin.shell: "apt install docker.io -y"
-#   become: yes
 - name: Update package cache
   apt:
     update_cache: yes
@@ -10,7 +7,7 @@
     name: ['docker.io']
 
 - name: Setup static DNS Hosts
-  ansible.builtin.shell: "capif/helm/scripts/get_ingress.sh -n {{ item }}"
+  ansible.builtin.shell: "capif/helm/scripts/set_ingress.sh -n {{ item }}"
   with_items:
   - "{{ hostvars['localhost']['ocf_vault_namespace']}}"
   - "{{ hostvars['localhost']['ocf_capif_namespace']}}"

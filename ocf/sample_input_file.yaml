@@ -5,6 +5,9 @@ one_ocf_oneKE: "oneKE-custom_name"
 ocf_repo: https://labs.etsi.org/rep/ocf/capif.git
 ocf_branch: staging
 
+ocf_user: client
+ocf_password: password
+
 ocf_vault_namespace: ocf-vault
 ocf_vault_hostname: vault.testbed.develop
 ocf_vault_storage_class: longhorn
@@ -13,6 +16,7 @@ ocf_vault_storage_size: 1Gi
 ocf_monitoring_prometheus_hostname: prometheus.testbed.develop
 ocf_monitoring_namespace: monitoring
 ocf_monitoring_service_name: monitoring
+ocf_monitoring_snooker_enabled: false
 
 ocf_capif_namespace: ocf-capif
 ocf_capif_hostname: capif.testbed.develop

@@ -11,6 +11,9 @@
 ocf_repo: https://labs.etsi.org/rep/ocf/capif.git
 ocf_branch: staging
 
+ocf_user: client
+ocf_password: password
+
 ocf_vault_namespace: ocf-vault
 ocf_vault_hostname: vault.testbed.develop
 ocf_vault_storage_class: nfs-01
