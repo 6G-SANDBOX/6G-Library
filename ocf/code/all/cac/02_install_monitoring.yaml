@@ -1,3 +1,5 @@
-- name: Install Monitoring
-  ansible.builtin.shell: "./capif/helm/scripts/install_monitoring.sh"
+- name: Execute Install Vault Script
+  ansible.builtin.shell: "/root/capif/helm/scripts/install_vault.sh"
   become: yes
+  environment:
+    KUBECONFIG: /etc/rancher/rke2/rke2.yaml
