@@ -3,7 +3,8 @@
     minutes: 1
 
 - name: Launch Robot OCF Testsuite
-  ansible.builtin.shell: "capif/helm/scripts/run_remote_capif_tests.sh --include all --exclude capif_api_acl"
+  ansible.builtin.shell: "capif/helm/scripts/run_remote_capif_tests.sh --include all"
   become: yes
+  retries: 2
   environment:
     KUBECONFIG: /etc/rancher/rke2/rke2.yaml
