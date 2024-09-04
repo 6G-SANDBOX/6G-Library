@@ -14,7 +14,7 @@
 
     - name: Get end of lease time and date with RFC 3339 section 5.6 format
       ansible.builtin.shell: |
-        date -u -d "{{ startTime.stdout }} + {{ ue_stf_lease }} seconds" +'%Y-%m-%dT%H:%M:%SZ'
+        date -u -d "{{ start_time.stdout }} + {{ ue_stf_lease }} seconds" +'%Y-%m-%dT%H:%M:%SZ'
       register: stop_time
       changed_when: false
 
@@ -23,156 +23,67 @@
         url: "{{ site_available_components.ue_stf.origin }}/api/v1/groups/"
         method: POST
         body_format: json
-        # force_basic_auth: true
-        status_code: [200]
+        status_code: [200, 201]
         headers:
           Content-Type: application/json
           Authorization: "Bearer {{ site_available_components.ue_stf.administrator_token }}"
         body: |-
           {
             "name": "{{ tn_id }}-{{ entity_name }}",
-            "startTime": "{{ start_time }}",
-            "stopTime": "{{ stop_time }}",
+            "startTime": "{{ start_time.stdout }}",
+            "stopTime": "{{ stop_time.stdout }}",
             "class": "once",
-            "repetitions": "0"
+            "repetitions": 0
           }
       register: create_group
 
     - name: Debug output
       ansible.builtin.debug:
         var: create_group
+      when: debug
+
+    - name: Add device to the new group
+      ansible.builtin.uri:
+        url: >
+          {{ site_available_components.ue_stf.origin }}/api/v1/groups/{{ create_group.json.group.id }}/devices/{{ site_available_components.ue_stf.device }}
+        method: PUT
+        status_code: [200]
+        headers:
+          Authorization: "Bearer {{ site_available_components.ue_stf.administrator_token }}"
+      register: add_device
+      failed_when: false
+
+    - name: If device was already booked
+      when: not add_device.json.success
+      block:
+        - name: Delete new group
+          ansible.builtin.uri:
+            url: >
+              {{ site_available_components.ue_stf.origin }}/api/v1/groups/{{ create_group.json.group.id }}
+            method: DELETE
+            status_code: [200]
+            headers:
+              Authorization: "Bearer {{ site_available_components.ue_stf.administrator_token }}"
+
+        - name: Publish failed execution results to TNLCM
+          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_fail_results.yaml"
 
 
+    - name: Add user tnuser to the new group
+      ansible.builtin.uri:
+        url: >
+          {{ site_available_components.ue_stf.origin }}/api/v1/groups/{{ create_group.json.group.id }}/users/{{ site_available_components.ue_stf.user_mail }}
+        method: PUT
+        status_code: [200]
+        headers:
+          Authorization: "Bearer {{ site_available_components.ue_stf.administrator_token }}"
+      when: add_device.json.success
 
 
-# - name: "STAGE 2: Prepare to access the component"
-#   hosts: localhost
-#   gather_facts: false
-#   connection: local
-#   tasks:
-
-#     # Module to retrieve all generated outputs from the terraform working directory in JSON with a key-value format
-#     - name: Retrieve terraform outputs
-#       ansible.builtin.shell:
-#       args:
-#         chdir: "{{ workspace }}/.terraform/"
-#         cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
-#         executable: /bin/bash
-#       register: terraform_outputs
-#       changed_when: false
-
-#     # Save some of the outputs as playbook facts (variables). Some of them will be surelly be used as future output values
-#     - name: Set Terraform outputs as playbook facts
-#       ansible.builtin.set_fact:
-#         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-#         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
-#         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
-#         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-#         vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string}}"
-
-#     # Inclusion of a task file to to still do preliminatory tasks out of the main playbook
-#     - name: Fetch cluster node IPs
-#       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/node_ip.yaml"
-#       loop: "{{ cluster_roles | dict2items }}"
-
-#     # Include the deployed component/s as Inventory host/s.
-#     - name: Add new VM to Ansible Inventory
-#       ansible.builtin.add_host:
-#         hostname: "{{ entity_name }}"
-#         ansible_host: "{{ ips[ vnet_id ] }}"
-#         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
-#         ansible_user: "jenkins"
-
-#     # While not used by the Jenkins, we included the configuration of a .ssh/config per TN in the Jenkins for debugging purposes.
-#     - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
-#       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
-#       loop: "{{ node_ips | dict2items }}"
-
-
-# # Configuration play. Modules executed in the deployment component.
-# # Remember in Ansible variables are loaded in each host, so if you change the host, you can either
-# # - Set the variables again (with the load_variables.yaml global taskfile or similar)
-# # - Refer to the hostvars of localhost.
-# - name: "STAGE 3: Apply CAC to prepare the component"
-#   hosts: "{{ hostvars['localhost']['entity_name'] }}"
-#   gather_facts: false
-#   tasks:
-#     - name: Wait for system to become reachable
-#       ansible.builtin.wait_for_connection:
-#         connect_timeout: 5
-#         timeout: 200
-
-#     # Some sites may have a MASTER ssh key, appart of the jenkins one
-#     - name: Set site ssh key as authorized in jenkins user
-#       ansible.posix.authorized_key:
-#         user: jenkins
-#         state: present
-#         key: "{{ item }}"
-#       loop:
-#         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
-#       when: item != ''
-
-#     # Any deployed VM should create a "tnuser" user for the experimenter's access. All components can be accessed through that user with the ssh key created in tn_init
-#     - name: Create new user for experimenter access
-#       become: true
-#       ansible.builtin.user:
-#         name: tnuser
-#         shell: /bin/bash
-#         groups: sudo
-#     - name: Set TN ssh key as authorized in new user
-#       become: true
-#       ansible.posix.authorized_key:
-#         user: tnuser
-#         state: present
-#         key: "{{ item }}"
-#       loop:
-#         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
-
-#     # Example of inclued task files common to all hypervisors, like helm charts, or bash/python/ruby sripts.
-#     - name: Helm install
-#       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_install.yaml"
-
-
-# # Final phase of the deployments. Gather information and publish it
-# - name: "STAGE 4: Publish execution results"
-#   hosts: localhost
-#   gather_facts: false
-#   connection: local
-#   tasks:
-#     # You can publish files to the MINIO S3 Storage
-#     - name: Upload kubeconfig to S3
-#       amazon.aws.s3_object:
-#         endpoint_url: "{{ site_s3_server.endpoint }}"
-#         mode: put
-#         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
-#         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
-#         bucket: "{{ site_s3_server.bucket }}"
-#         object: "{{ tn_id }}/kconf-{{ entity_name }}.kubeconfig"
-#         src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
-#         encrypt: false
-#         validate_certs: false
-
-#     # Common task to create custom terraform outputs with information of interest for future deployments.
-#     - name: Publish node IDs and IPs as a terraform outputs"
-#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
-#       vars:
-#         custom_outputs:
-#           - key: "{{ entity_name }}-node_ids"
-#             value: "{{ node_ids }}"
-#           - key: "{{ entity_name }}-node_ips"
-#             value: "{{ node_ips }}"
-
-#     # Necessary in most if not all components. Publishes the deployment information in the following order:
-#     # 1. Post the new terraform manifests to MINIO S3 Storage
-#     # 2. Generate markdown OK file with information about the component
-#     # 3. Post the markdown OK file to the MINIO S3 Storage
-#     # 4. Send a JSON OK notification to the TNLCM. JSON message also includes the markdown content.
-#     - name: Publish execution results to TNLCM
-#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-#       vars:
-#         output:
-#           id: "{{ id | b64encode }}"
-#           node_ids: "{{ node_ids | b64encode }}"
-#           node_ips: "{{ node_ips | b64encode }}"
-#           kubeconfig: "{{ kubeconfig | b64encode }}"
-#           skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"
+- name: "STAGE 2: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
