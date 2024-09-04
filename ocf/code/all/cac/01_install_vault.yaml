@@ -6,5 +6,3 @@
   ansible.builtin.script: "/root/capif/helm/scripts/install_vault.sh"
   # ansible.builtin.command: "/root/capif/helm/scripts/install_vault.sh"
   become: yes
-  async: 30
-  poll: 0
