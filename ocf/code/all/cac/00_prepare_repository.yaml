@@ -1,3 +1,7 @@
+- name: Clean OCF Repository If it exists
+  ansible.builtin.shell: "rm -rf capif || echo \"folder capif is not present\""
+  become: yes
+
 - name: Clone OCF Repository
   ansible.builtin.shell: "git clone -b {{hostvars['localhost']['ocf_branch']}} {{hostvars['localhost']['ocf_repo']}} capif"
   become: yes
