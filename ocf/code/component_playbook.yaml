@@ -32,7 +32,7 @@
         ansible_user: "root"
 
 - name: "STAGE 2: Apply IaC to deploy the component"
-  hosts: "{{ hostvars['localhost']['one_ocf_oneKE'] }}-master_0"
+  hosts: "{{ one_ocf_oneKE }}-master_0"
   gather_facts: false
   tasks:
     - name: Load enviromental variables from different sources inside the component
