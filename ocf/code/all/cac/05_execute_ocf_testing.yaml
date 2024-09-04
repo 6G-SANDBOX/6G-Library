@@ -1,3 +1,7 @@
+- name: Pause for 1 minutes to CAPIF get ready
+  ansible.builtin.pause:
+    minutes: 1
+
 - name: Launch Robot OCF Testsuite
   ansible.builtin.shell: "capif/helm/scripts/run_remote_capif_tests.sh --include all"
   become: yes
