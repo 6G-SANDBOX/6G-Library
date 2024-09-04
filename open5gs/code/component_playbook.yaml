@@ -76,4 +76,4 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:
-          open5gs_metadata_dict: "{{ open5gs_metadata_dict | b64encode }}"
+          metadata_dict: "{{ open5gs_metadata_dict | b64encode }}"

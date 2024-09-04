@@ -138,6 +138,14 @@ input:
     default_value: "1.1.1.1 8.8.8.8"
     required_when: false
 
+  one_oneKE_nginx_passthough:
+    description: |
+      Variable to enable or disable SSL/TLS passthrough in the Ingress-Nginx controller.
+      Accepted values are "true" or "false" (no quotes included). Default value is "false"
+    type: bool
+    default_value: false
+    required_when: false
+
 ####################################
 ## Component output
 ####################################
@@ -145,5 +153,6 @@ output:
   id: Service ID in OpenNebula
   node_ids: "dictionary of VM IDs in OpenNebula: key='VM name', value='the VM ID'"
   node_ips: "dictionary of VM addresses: key='VM name', value='the VM main address'"
+  metadata_dict: Dictionary with multiple parameters used in the cluster bootstrap
   kubeconfig: Kubeconfig file with keys and endpoints to manage the cluster
   skooner_token: Generated Token to login to the skooner dashboard Web App

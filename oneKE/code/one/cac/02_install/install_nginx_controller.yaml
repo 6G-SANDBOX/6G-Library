@@ -24,3 +24,5 @@
             https: 32443
         admissionWebhooks:
           enabled: false
+        extraArgs:
+          enable-ssl-passthrough: "{{ hostvars['localhost']['one_oneKE_nginx_passthough'] }}"

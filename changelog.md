@@ -4,7 +4,10 @@
 - Update DEBUG parameter description in the `TN_DEPLOY.groovy` pipeline.
 - Removed ansible task in unique components that made entity_name = component_type. That step is moved to the Jenkins Pipeline
 - New common task `publish_fail_results.yaml`, sepparated from `terraform_apply.yaml`
-
+- New input variable `one_oneKE_nginx_passthough` in component `oneKE` to enable [SSL/TLS passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough).
+- New output variable `metadata_dict` from component `oneKE` to be fetched by other components.
+- Fix nokia_radio_uma JSON callback typo.
+- Renamed open5gs output variable
 
 ## [v0.2.1] - 2024-09-02
 
