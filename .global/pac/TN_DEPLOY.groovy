@@ -43,7 +43,6 @@ pipeline {
             steps {
                 echo 'Stage 1: Import input file into the workspace'
                 script {
-                    echo "Stage 1: Import input file into the workspace"
                     def inputFile = "${WORKSPACE}/${params.COMPONENT_TYPE}/variables/input_file.yaml"
 
                     def fileContent = sh (
