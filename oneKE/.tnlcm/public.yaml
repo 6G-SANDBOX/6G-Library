@@ -140,7 +140,7 @@ input:
 
   one_oneKE_nginx_passthough:
     description: |
-      Variable to enable or disable SSL/TLS passthrough in the Ingress-Nginx controller. Disabled by default.
+      Variable to enable or disable SSL/TLS passthrough in the Ingress-Nginx controller.
       Accepted values are "true" or "false" (no quotes included). Default value is "false"
     type: bool
     default_value: false
