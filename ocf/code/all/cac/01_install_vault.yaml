@@ -6,3 +6,8 @@
   ansible.builtin.command: "/root/capif/helm/scripts/install_vault.sh"
   become: yes
   register: script_install_vault_output
+  async: 30
+  poll: 0
+
+- name: Mostrar contenido del archivo
+  ansible.builtin.shell: cat script_install_vault_output
