@@ -4,6 +4,8 @@
 
 - name: Execute Install Vault Script
   ansible.builtin.shell: "/root/capif/helm/scripts/install_vault.sh"
-  # ansible.builtin.command: "/root/capif/helm/scripts/install_vault.sh"
   become: yes
-  remote_src: yes
+  # remote_src: yes
+
+
+# ansible.builtin.command: "/root/capif/helm/scripts/install_vault.sh"
