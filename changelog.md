@@ -2,6 +2,7 @@
 
 ## [unreleased]
 - Update DEBUG parameter description in the `TN_DEPLOY.groovy` pipeline.
+- Removed ansible task in unique components that made entity_name = component_type. That step is moved to the Jenkins Pipeline
 
 
 ## [v0.2.1] - 2024-09-02

@@ -1,6 +1,6 @@
 ---
 # Main playbook to deploy the component
-# The different plays just serve as logical sepparations between deployment phases. If the "hosts" parameter of different plays is the same, feel free to join them
+# The different plays are just logical sepparations between deployment phases. If the "hosts" parameter of different plays is the same, feel free to join them
 # This sample file will try to use as many public task files as possible, but your component may not need many of them. Feel free to use just the ones you need.
 - name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
@@ -10,19 +10,13 @@
 
     # Necessary in most if not all components. Loads the usable variables from 4 different sources in the following order:
     # 1. Site variables. Metadata unique to each site. Information like Image IDs, VNet IDs or ssh public keys.
-    # 2. Private variables. Loads the component private values for the site hypervisor. File at {{ component_type }}/variables/{{ site_hypervisor }}/private.yaml
-    # 3. Public variables. Loads the component input values as defined in the TNLCM/Jenkins. File is written and then read from {{ component_type }}/variables/input_file.yaml
+    # 2. Private variables. Component private values for the site hypervisor. File at {{ component_type }}/variables/{{ site_hypervisor }}/private.yaml
+    # 3. Public variables. Component input values as defined in TNLCM/Jenkins. File is written and then read from {{ component_type }}/variables/input_file.yaml
     # 4. Pipeline parameters. Some of the parameters sent by the TNLCM to the Jenkins, like the custom_name or the the tnlcm_calback URL.
     #    File is written and then read from {{ component_type }}/variables/pipeline_parameters.yaml
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    # The variable "entity_name" is formed during the pipeline as {{ component_type }}-{{ custom_name }}
-    # Some components like the tn_init can only be deployed once per TN.
-    # In these components the custom name should not be required, and you can optionally supress it from the "entity_name" to avoid confusion
-    # - name: Overwrite "entity_name" with only tn_init
-    #   ansible.builtin.set_fact:
-    #     entity_name: "tn_init"
 
     # Creates a terraform working directory at .terraform/, loads the MINIO backend and { site_hypervisor }} terraform provider files,
     # downloads manifests from previous deployments, and runs a single terraform init
@@ -47,10 +41,10 @@
 
     # More than just a simple terraform apply. Templates all manifests from {{ component_type }}/code/{{ site_hypervisor }}/iac/*.tf.j2, writes them
     # at .terraform and runs a terraform apply.
-    # Task also has error handling, and if apply fails, will send a notification to the TNLCM with the stderr, and text from {{ component_type }}/result_templates/fail_result.md.j2
+    # Task also has error handling:
+    # If apply fails, a notification is sent to the TNLCM with the stderr and text from {{ component_type }}/result_templates/fail_result.md.j2
     - name: Terraform apply
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
-
 
 
 # Post-terraform preliminary tasks. Still no component configuration.
@@ -77,7 +71,7 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string}}"
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string }}"
 
     # Inclusion of a task file to to still do preliminatory tasks out of the main playbook
     - name: Fetch cluster node IPs
@@ -87,8 +81,8 @@
     # Include the deployed component/s as Inventory host/s.
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[ vnet_id ] }}"
+        hostname: "new_host"
+        ansible_host: "{{ ips[vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
@@ -103,7 +97,7 @@
 # - Set the variables again (with the load_variables.yaml global taskfile or similar)
 # - Refer to the hostvars of localhost.
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "new_host"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -121,7 +115,8 @@
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
 
-    # Any deployed VM should create a "tnuser" user for the experimenter's access. All components can be accessed through that user with the ssh key created in tn_init
+    # Any deployed VM should create a "tnuser" user for the experimenter's access.
+    # All components should be accessed with that user and the ssh key created in tn_init
     - name: Create new user for experimenter access
       become: true
       ansible.builtin.user:

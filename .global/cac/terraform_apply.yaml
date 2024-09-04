@@ -11,8 +11,7 @@
     dest: >-
       {{
         workspace + '/.terraform/tf-' + item.path | basename | regex_replace('.tf.j2', '') +
-        (('-' + custom_name) if component_type not in ['tn_vxlan', 'tn_bastion', 'tn_init'] else '') +
-        '.tf'
+        (('-' + custom_name) if if component_type != entity_name else '') + '.tf'
       }}
   loop: "{{ terraform_templates.files }}"
   register: terraform_manifests

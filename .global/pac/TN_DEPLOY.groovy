@@ -43,7 +43,6 @@ pipeline {
             steps {
                 echo 'Stage 1: Import input file into the workspace'
                 script {
-                    echo("DEPLOYING DEPLOYMENT: ${TN_ID}-${COMPONENT_TYPE}-${CUSTOM_NAME}")
                     echo "Stage 1: Import input file into the workspace"
                     def inputFile = "${WORKSPACE}/${params.COMPONENT_TYPE}/variables/input_file.yaml"
 
@@ -67,7 +66,8 @@ pipeline {
                     def paramsContent = "tn_id: ${params.TN_ID}\n"
                     paramsContent += "component_type: ${params.COMPONENT_TYPE}\n"
                     paramsContent += "custom_name: ${params.CUSTOM_NAME}\n"
-                    paramsContent += "entity_name: ${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}\n"
+                    def entityName = params.CUSTOM_NAME ? "${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}" : "${params.COMPONENT_TYPE}"
+                    paramsContent += "entity_name: ${entityName}\n"
                     paramsContent += "deployment_site: ${params.DEPLOYMENT_SITE}\n"
                     paramsContent += "tnlcm_callback: ${params.TNLCM_CALLBACK}\n"
                     paramsContent += "debug: ${params.DEBUG}\n"

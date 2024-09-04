@@ -41,7 +41,7 @@
     - name: Debug output
       ansible.builtin.debug:
         var: create_group
-        
+
 
 
 
