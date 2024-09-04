@@ -14,7 +14,9 @@ The mutable variables are specified in the sample input file at `doc/sample_inpu
 (Taken from the [UERANSIM repository](https://github.com/aligungr/UERANSIM))
 
 <p align="center">
-  <a href="https://raw.githubusercontent.com/aligungr/UERANSIM/master/.github/logo.png"><img src="." width="75" title="UERANSIM"></a>
+  <a href="https://github.com/aligungr/UERANSIM">
+    <img src="https://raw.githubusercontent.com/aligungr/UERANSIM/master/.github/logo.png" width="75" title="UERANSIM">
+  </a>
 </p>
 <p align="center">
 <img src="https://img.shields.io/badge/UERANSIM-v3.2.6-blue" />

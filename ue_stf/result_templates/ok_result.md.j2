@@ -1,0 +1,14 @@
+# {{ tn_id }}-{{ entity_name}}
+
+A *UE_STF* component has been succesfully deployed as part of the Trial Network: **`{{ tn_id }}`**
+
+<img src="https://raw.githubusercontent.com/DeviceFarmer/stf/master/res/common/logo/exports/STF-128.png"/>
+
+[STF](https://github.com/DeviceFarmer/stf) (or Smartphone Test Farm) is a web application for debugging smartphones, smartwatches and other gadgets remotely from the comfort of your browser.
+
+You can access the web Portal from {{ site_available_components.ue_stf.origin }}
+Credentials to login are:
+- user: `tnuser`
+- mail: `{{ site_available_components.ue_stf.user_mail }}`
+
+You can access device {{ site_available_components.ue_stf.device }} from {{ start_time.stdout }} to {{ stop_time.stdout }}

@@ -1,0 +1,50 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 4 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Javier Jimenez <ja.jimenez@uma.es>
+  short_description: Enables the use of a physical UE via STF for a limited duration.
+  long_description: |
+    The UE_STF component enables the use of a physical UE with temporal access to an [STF](https://github.com/DeviceFarmer/stf) (Smartphone Test Farm) deployment.
+    The physical UE can be therefore connect to other RAN/radio components to achieve connectiviy.
+    The EU access time is set to 30 minutes by now. 
+    NOTE: Currently this component is only available in the site "uma".
+  hypervisors: [one]
+
+# ####################################
+# ## Component input
+# ####################################
+input:
+  ue_stf_lease:
+    description: Requested time to book the UE device. In seconds.
+    type: int
+    default_value: 3600
+    required_when: false
+
+# ####################################
+# ## Component output
+# ####################################
+output:

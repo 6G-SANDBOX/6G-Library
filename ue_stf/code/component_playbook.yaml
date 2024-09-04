@@ -1,0 +1,89 @@
+---
+- name: "STAGE 1: Request access to a physical device in the STF webUI"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Get current time and date with RFC 3339 section 5.6 format
+      ansible.builtin.command: "date -u +'%Y-%m-%dT%H:%M:%SZ'"
+      register: start_time
+      changed_when: false
+
+    - name: Get end of lease time and date with RFC 3339 section 5.6 format
+      ansible.builtin.shell: |
+        date -u -d "{{ start_time.stdout }} + {{ ue_stf_lease }} seconds" +'%Y-%m-%dT%H:%M:%SZ'
+      register: stop_time
+      changed_when: false
+
+    - name: Create a transient group with the requested device
+      ansible.builtin.uri:
+        url: "{{ site_available_components.ue_stf.origin }}/api/v1/groups/"
+        method: POST
+        body_format: json
+        status_code: [200, 201]
+        headers:
+          Content-Type: application/json
+          Authorization: "Bearer {{ site_available_components.ue_stf.administrator_token }}"
+        body: |-
+          {
+            "name": "{{ tn_id }}-{{ entity_name }}",
+            "startTime": "{{ start_time.stdout }}",
+            "stopTime": "{{ stop_time.stdout }}",
+            "class": "once",
+            "repetitions": 0
+          }
+      register: create_group
+
+    - name: Debug output
+      ansible.builtin.debug:
+        var: create_group
+      when: debug
+
+    - name: Add device to the new group
+      ansible.builtin.uri:
+        url: >
+          {{ site_available_components.ue_stf.origin }}/api/v1/groups/{{ create_group.json.group.id }}/devices/{{ site_available_components.ue_stf.device }}
+        method: PUT
+        status_code: [200]
+        headers:
+          Authorization: "Bearer {{ site_available_components.ue_stf.administrator_token }}"
+      register: add_device
+      failed_when: false
+
+    - name: If device was already booked
+      when: not add_device.json.success
+      block:
+        - name: Delete new group
+          ansible.builtin.uri:
+            url: >
+              {{ site_available_components.ue_stf.origin }}/api/v1/groups/{{ create_group.json.group.id }}
+            method: DELETE
+            status_code: [200]
+            headers:
+              Authorization: "Bearer {{ site_available_components.ue_stf.administrator_token }}"
+
+        - name: Publish failed execution results to TNLCM
+          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_fail_results.yaml"
+
+
+    - name: Add user tnuser to the new group
+      ansible.builtin.uri:
+        url: >
+          {{ site_available_components.ue_stf.origin }}/api/v1/groups/{{ create_group.json.group.id }}/users/{{ site_available_components.ue_stf.user_mail }}
+        method: PUT
+        status_code: [200]
+        headers:
+          Authorization: "Bearer {{ site_available_components.ue_stf.administrator_token }}"
+      when: add_device.json.success
+
+
+- name: "STAGE 2: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

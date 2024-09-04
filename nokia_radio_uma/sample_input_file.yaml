@@ -2,5 +2,5 @@
 
 one_nokias_oneKE: "oneKE-main"
 one_nokia_main_ip: "your_nokia_ip"
-one_nokia_route_manager_ip: "10.19.98.000"
+one_nokia_route_manager_ip: "10.19.98.0"
 one_nokia_reservation_time: "60"

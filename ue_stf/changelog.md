@@ -1,6 +1,6 @@
 # Changelog
 
-## [v0.2.1] - 2024-09-02
+## [unreleased]
 
 ### Added
 
@@ -10,6 +10,7 @@
 <!-- Change latest version value at every release -->
 [unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...HEAD
 [v0.2.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...v0.2.1
+
 
 <!-- FIELDS PER VERSION -->
 <!--

@@ -1,15 +1,15 @@
 # Changelog
 
-## jms_ocf
-
-### Added
-
+## [unreleased]
+- Update DEBUG parameter description in the `TN_DEPLOY.groovy` pipeline.
+- Removed ansible task in unique components that made entity_name = component_type. That step is moved to the Jenkins Pipeline
+- New common task `publish_fail_results.yaml`, sepparated from `terraform_apply.yaml`
 - New input variable `one_oneKE_nginx_passthough` in component `oneKE` to enable [SSL/TLS passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough).
 - New output variable `metadata_dict` from component `oneKE` to be fetched by other components.
 - Fix nokia_radio_uma JSON callback typo.
 - Renamed open5gs output variable
 
-## [v0.2.1]
+## [v0.2.1] - 2024-09-02
 
 ### Changed
 
@@ -63,7 +63,8 @@ Initial release of the 6G Library. Changes will be kept on track for now on.
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...HEAD
+[v0.2.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.1.0
 
