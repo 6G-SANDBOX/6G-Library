@@ -2,7 +2,11 @@
   ansible.builtin.shell: "echo \"HELLO\""
   become: yes
 
+# - name: Execute Install Vault Script
+#   ansible.builtin.command: "/root/capif/helm/scripts/install_vault.sh"
+#   become: yes
+#   register: script_install_vault.out
 - name: Execute Install Vault Script
-  ansible.builtin.command: "./capif/helm/scripts/install_vault.sh"
+  ansible.builtin.shell: "bash -x /root/capif/helm/scripts/install_vault.sh"
   become: yes
   register: script_install_vault.out
