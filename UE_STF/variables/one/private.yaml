@@ -7,3 +7,5 @@
 ## Some of them are modifiable through input variables
 ##
 ######################################################
+
+ue_stf_lease: 3600

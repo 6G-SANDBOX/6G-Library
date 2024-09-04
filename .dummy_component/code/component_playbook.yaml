@@ -38,6 +38,7 @@
     #     executable: /bin/bash
     #   register: terraform_outputs
     #   changed_when: false
+    #
     # - name: Set Terraform outputs as playbook facts
     #   ansible.builtin.set_fact:
     #     bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"

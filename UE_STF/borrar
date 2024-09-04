@@ -1,0 +1,48 @@
+
+
+
+- name: Creates a group with you as owner
+  ansible.builtin.uri:
+    url: "http://10.11.32.205:7100/api/v1/groups/"        # entity Name
+    method: POST
+    body_format: json
+    # force_basic_auth: true
+    status_code: [200]
+    headers:
+      Content-Type: application/json
+      Authorization: "Bearer 1ef3e3dae8d9428baf602e50c45d821b65f596f32bf845d0945fa3f12b620d23"
+    body: |-
+      {
+        “name”: “NewTrialNetwork”,
+        “startTime”: “Now,                      # no poner, default creation time
+        “stopTime”: “1 hour later”,
+        “class”: “once",                        # no poner, default once
+        “repetitions”: “0",                     # no poner, default 0
+        “state”: “pending"                      # no poner, default pending, y ready no se que hace
+      }
+  register: this
+  failed_when: this is failed or "'AWESOME' not in this.content"
+
+
+# curl -sX POST -H "authorization: Bearer 1ef3e3dae8d9428baf602e50c45d821b65f596f32bf845d0945fa3f12b620d23" --header "Content-Type: application/json"   --data '{"name": "NewTrialNetwork"}'   http://10.11.32.205:7100/api/v1/groups/ | jq .group.id
+# get new group ID
+
+### Añadir device
+# curl -sX PUT -H "authorization: Bearer 1ef3e3dae8d9428baf602e50c45d821b65f596f32bf845d0945fa3f12b620d23"  http://10.11.32.205:7100/api/v1/groups/9899aabbffb14cb294f51a95e43c63da/devices/A75259FRCN9A2DV060D
+
+### Si no va (RC=409 destruir grupo. Ejecución fallida)
+# curl -sX DELETE -H "authorization: Bearer 1ef3e3dae8d9428baf602e50c45d821b65f596f32bf845d0945fa3f12b620d23" http://10.11.32.205:7100/api/v1/groups/9899aabbffb14cb294f51a95e43c63da/
+
+# curl -sX PUT -H "authorization: Bearer 1ef3e3dae8d9428baf602e50c45d821b65f596f32bf845d0945fa3f12b620d23" http://10.11.32.205:7100/api/v1/groups/9899aabbffb14cb294f51a95e43c63da/users/tnuser@fakedomain.com
+
+
+
+    # - name: Obtener la fecha y hora actual
+    #   ansible.builtin.command: "date -u +'%Y-%m-%dT%H:%M:%SZ'"
+    #   register: current_time
+
+    # - name: Sumar tiempo a la fecha actual
+    #   ansible.builtin.shell: |
+    #     date -u -d "{{ current_time.stdout }} + {{ add_seconds }} seconds" +'%Y-%m-%dT%H:%M:%SZ'
+    #   register: future_time
+

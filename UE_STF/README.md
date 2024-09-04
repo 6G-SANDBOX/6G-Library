@@ -4,4 +4,4 @@ The **UE_STF** component enables the use of a physical UE with temporal access t
 The physical UE can be therefore connect to other RAN/radio components to achieve connectiviy.
 The EU access time is set to 30 minutes by now.
 
-**NOTE**: Currently this component is only available in the site "uma".
+**WARNING**: Currently this component is currently only available in the site "uma".

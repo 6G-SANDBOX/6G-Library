@@ -1,5 +1,11 @@
 # Changelog
 
+## [unreleased]
+
+### Changed
+
+- Removed variables from the host name for the master, as it added complexity without any advantage.
+
 ## [v0.2.0] - 2024-06-06
 
 ### Changed
@@ -13,7 +19,7 @@ Initial release of the 6G Library. Changes will be kept on track for now on.
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...HEAD
 [v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.1.0
 

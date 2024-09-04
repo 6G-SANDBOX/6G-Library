@@ -2,7 +2,7 @@
 - name: "STAGE 1: Prepare to access a previous target component"
   hosts: localhost
   gather_facts: false
-  connection: local  
+  connection: local
   tasks:
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
