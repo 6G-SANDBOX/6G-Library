@@ -1,6 +1,13 @@
+# - name: Install Docker CLI
+#   ansible.builtin.shell: "apt install docker.io -y"
+#   become: yes
+- name: Update package cache
+  apt:
+    update_cache: yes
+
 - name: Install Docker CLI
-  ansible.builtin.shell: "apt install docker.io -y"
-  become: yes
+  apt:
+    name: ['docker.io']
 
 - name: Setup static DNS Hosts
   ansible.builtin.shell: "capif/helm/scripts/get_ingress.sh -n {{ item }}"

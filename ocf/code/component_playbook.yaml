@@ -38,14 +38,18 @@
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
     
-    - name: Prepare repository for CAPIF installation
+    - name: Prepare repository for OpenCAPIF installation
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/00_prepare_repository.yaml"
     
     - name: Install Vault
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//01_install_vault.yaml"
     
-    # - name: Helm install
-    #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_install.yaml"
+    - name: Install Monitoring
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//02_install_monitoring.yaml"
+    
+    - name: Install OpenCAPIF
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//03_install_capif.yaml"
+
 
 # - name: "STAGE 3: Publish execution results"
 #   hosts: localhost
