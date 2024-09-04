@@ -55,7 +55,7 @@
         ansible_host: "{{ item.value }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}{% if not item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
         ansible_user: "root"
-        groups: "{{ entity_name | replace('-', '_') }}"
+        groups: "OneKE_VMs"
       loop: "{{ node_ips | dict2items }}"
 
     - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
@@ -81,7 +81,7 @@
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] | replace('-', '_') }}"
+  hosts: "OneKE_VMs"
   gather_facts: false
   tasks:
     - name: Set site ssh key as authorized in jenkins user

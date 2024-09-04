@@ -1,26 +1,36 @@
 # Changelog
 
 ## [unreleased]
-- Update DEBUG parameter description in the `TN_DEPLOY.groovy` pipeline.
-- Removed ansible task in unique components that made entity_name = component_type. That step is moved to the Jenkins Pipeline
-- New common task `publish_fail_results.yaml`, sepparated from `terraform_apply.yaml`
+
+
+## [v0.2.2]
+### Added
+- New component ue_stf
+- New common task `publish_fail_results.yaml`, abstracting tasks from `terraform_apply.yaml`
 - New input variable `one_oneKE_nginx_passthough` in component `oneKE` to enable [SSL/TLS passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough).
-- New output variable `metadata_dict` from component `oneKE` to be fetched by other components.
-- Fix nokia_radio_uma JSON callback typo.
-- Renamed open5gs output variable
+- New output variable `metadata_dict` from component `oneKE` to share its input variables to future components.
+### Changed
+- Comments modified in .dummy_component to make it less confusing. Also out variable naming recommendation is reflected on public.yaml
+- Ansible hostname from created components no longer contain variables. It only added complexity without benefits.
+- Renamed output variable from open5gs and nokia_radio_uma components
+- Fix compoment changelogs retroactively
+### Removed
+- Removed ansible task in unique components where `entity_name=component_type`. `entity_name` is now only defined during the Jenkins Pipeline
+### Fixed
+- Component nokia_radio_uma JSON callback is now correctly functional
+- Fixed image in ueransim README.md and ok_result.md
 
 ## [v0.2.1] - 2024-09-02
-
-### Changed
-
-- Failed terraform applies correctly post a markdown to the MinIO informing about the error.
-- Corrected texts in the pipeline parameter descriptions
+### Added
 - New nokia_radio_uma component
+### Changed
+- Updated description of pipeline parameters in TN_DEPLOY.groovy and TN_DESTROY.groovy
+### Fixed
+- Markdown file with stderr from failed executions of terraform apply are now correctly uploaded to the S3 Storage
+
 
 ## [v0.2.0] - 2024-06-06
-
 ### Added
-
 - Standardized changelog format to fit [keep-a-changelog](https://github.com/olivierlacan/keep-a-changelog/blob/main/CHANGELOG.md) rules.
 - New parameters added to the Jenkinsfile.
 - Pipeline executins can point to a specific commit, release or branch
@@ -28,9 +38,7 @@
 - New tn_init component, combining tn_vxlan and tn_bastion together
 - New tsn component, enabling further networking capabilities.
 - New common task files for ansible playbooks.
-
 ### Changed
-
 - Radical repository reorganization:
     - moved `doc/sample_input_file.yaml` to `sample_input_file.yaml`
     - moved `doc/index.md` to `README.md`
@@ -49,21 +57,18 @@
 - New unprivileged user used in OpenNebula: `jenkins-master` from a newly created group called `6G-Sandbox`
 - Access to deployed components can be done with a 'tnuser' user.
 - Replaced Ansible's `amazon.aws.aws_s3` module to a current one: `amazon.aws.s3_object`
-
-
 ### Removed
 - Deleted `.global/pac/DEPLOY_COMPONENT_FROM_COMMIT.groovy`
 - Deleted all redundant VM components
 
 
-
 ## [v0.1.0] - 2024-04-29
-
 Initial release of the 6G Library. Changes will be kept on track for now on.
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...HEAD
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.2...HEAD
+[v0.2.2]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.2.2
 [v0.2.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.1.0

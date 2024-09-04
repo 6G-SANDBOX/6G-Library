@@ -62,45 +62,48 @@ metadata:
 ## Component input
 ####################################
 input:
-  simple_text_variable:
-    description: Description of an optional text variable.
+  dummy_one_simpletextvariable:
+    description: Description of an optional text variable. Variable for OpenNebula sites
     #type: str
     default_value: "Default string"
     #choices: []
     required_when: false
 
-  mandatory_list_of_strings:
+  dummy_one_mandatorylistofstrings:
     description: |
       Variable has not default and requires a list of mandatory_list_of_strings
       A sample valid input would be ["one", "two", "three"]
+      Variable only for OpenNebula sites
     type: list[str]
     #default_value: ""
     #choices: []
     required_when: true
 
-  choose_a_number:
-    description: Select a numeric value from the list of choices. First choice by default.
+  dummy_any_chooseanumber:
+    description: Select a numeric value from the list of choices. First choice by default. Variable for any kind of site
     type: int
     default_value: 1
     choices: [1,2,3]
     required_when: false
 
-  sample_choice_variable:
+  dummy_any_samplechoicevariable:
     description: |
       Mandatory variable taht stablishes a dependency with another component.
       Through the previous component output, other variables from this component can be autocompleted 
+      Variable for any kind of site
     type: vnet
     #default_value: ""
     #choices: []
     required_when: true
 
-  autocompleted_variable:
+  dummy_vmware_autocompletedvariable:
     description: |
       The value will be overwritten in this order:
         1. Initial value is in the private.yaml file (a.k.a. the value shown in default_value)
         2. If another component was referrenced in "sample_choice_variable" a playbook step will overwrite the value with one of its output variables.
         3. If this optional variable is filled, the final value will always be this one.
       Most cases will be OK simply leaving the default_value for it to be automatically overwritten
+      Variable for VMWare sites
     type: "strlist"
     default_value: ["255.255.255.0"]
     #choices: []

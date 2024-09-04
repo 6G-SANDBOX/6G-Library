@@ -27,15 +27,17 @@ In simple words, the 6G library is the catalog of building blocks that can be us
 
 ## Table Of Content
 
-- [Why do we use a git repository?](#why-do-we-use-a-git-repository)
-- [Component Structure](#component-structure)
-  * [Tools](#tools)
-  * [Directory Structure](#directory-structure)
-    + [.tnlcm/](#tnlcm)
-    + [code/](#code)
-    + [result_templates/](#result_templates)
-    + [variables/](#variables)
-- [Links](#links)
+- [6G-SANDBOX SNS Library](#6g-sandbox-sns-library)
+  - [Table Of Content](#table-of-content)
+  - [Why do we use a git repository?](#why-do-we-use-a-git-repository)
+  - [Component Structure](#component-structure)
+    - [Tools](#tools)
+    - [Component Directory Structure](#component-directory-structure)
+      - [.tnlcm/](#tnlcm)
+      - [code/](#code)
+      - [result\_templates/](#result_templates)
+      - [variables/](#variables)
+  - [Links](#links)
 
 ## Why do we use a git repository?
 
@@ -142,5 +144,5 @@ Variable files sepparated by the cloud provider used by each site.
 [issues-shield]: https://img.shields.io/github/issues/6G-SANDBOX/6G-Library.svg?style=for-the-badge
 [issues-url]: https://github.com/6G-SANDBOX/6G-Library/issues
 
-[6glibrary-badge]: https://img.shields.io/badge/6G--Library-v0.2.0-blue
-[6glibrary-url]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.2.0
+[6glibrary-badge]: https://img.shields.io/badge/6G--Library-v0.2.2-blue
+[6glibrary-url]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.2.2

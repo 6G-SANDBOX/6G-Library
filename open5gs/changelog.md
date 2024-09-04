@@ -1,25 +1,20 @@
 # Changelog
 
-## [unreleased]
-
+## [v0.2.2]
 ### Changed
-
-- Removed variables from the host name for the master, as it added complexity without any advantage.
+- Ansible hostname of the OneKE master no longer uses variables. It only added complexity without benefits.
+- Output variable `open5gs_metadata_dict` renamed to `metadata_dict` like the rest of the components
 
 ## [v0.2.0] - 2024-06-06
-
 ### Changed
-
 - Component follows the new architecture.
 
-
 ## [v0.1.0] - 2024-04-29
-
 Initial release of the 6G Library. Changes will be kept on track for now on.
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...HEAD
+[v0.2.2]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.2.2
 [v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.1.0
 

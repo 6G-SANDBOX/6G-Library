@@ -1,9 +1,7 @@
 # Changelog
 
 ## [v0.2.0] - 2024-06-06
-
 ### Added
-
 - New component replacing components:
   * `vm_kvm_exra_large`
   * `vm_kvm_large`
@@ -13,8 +11,7 @@
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...HEAD
-[v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.2.0
+[v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
 
 
 
