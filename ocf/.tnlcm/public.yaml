@@ -136,6 +136,11 @@ input:
     type: str
     default_value: "8Gi"
     required_when: false
+  ocf_monitoring_snooker_enabled:
+    description: Snooker deployment with monitoring is enabled
+    type: bool
+    default_value: false
+    required_when: false
 
 ####################################
 ## Component output

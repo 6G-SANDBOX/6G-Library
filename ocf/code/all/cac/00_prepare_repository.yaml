@@ -16,6 +16,7 @@
   - "\"s/export PROMETHEUS_HOSTNAME=.*/export PROMETHEUS_HOSTNAME={{ ocf_monitoring_prometheus_hostname }}/g\""
   - "\"s/export MONITORING_NAMESPACE=.*/export MONITORING_NAMESPACE={{ ocf_monitoring_namespace }}/g\""
   - "\"s/export MONITORING_SERVICE_NAME=.*/export MONITORING_SERVICE_NAME={{ ocf_monitoring_service_name }}/g\""
+  - "\"s/export MONITORING_SNOOKER_ENABLED=.*/export MONITORING_SNOOKER_ENABLED={{ ocf_monitoring_snooker_enabled }}/g\""
   - "\"s/export CAPIF_RESOURCES=.*/export CAPIF_RESOURCES={{ ocf_capif_resources }}/g\""
   - "\"s/export CAPIF_STORAGE_CLASS=.*/export CAPIF_STORAGE_CLASS={{ ocf_capif_storage_class }}/g\""
   - "\"s/export CAPIF_STORAGE_ACCESS_MODE=.*/export CAPIF_STORAGE_ACCESS_MODE={{ ocf_capif_storage_access_mode }}/g\""
