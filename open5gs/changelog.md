@@ -2,6 +2,7 @@
 
 ## [v0.2.2]
 ### Changed
+- Open5GS upgraded to version `v2.7.1`.
 - Ansible hostname of the OneKE master no longer uses variables. It only added complexity without benefits.
 - Output variable `open5gs_metadata_dict` renamed to `metadata_dict` like the rest of the components
 
