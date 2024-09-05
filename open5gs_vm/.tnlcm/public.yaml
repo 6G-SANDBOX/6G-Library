@@ -50,7 +50,7 @@
 ####################################
 metadata:
   maintainers:
-    - Full Name <contact@mail.address>
+    - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
   short_description: Open5GS as VM
   long_description: |
     The long description of a Component Type may span multiple lines

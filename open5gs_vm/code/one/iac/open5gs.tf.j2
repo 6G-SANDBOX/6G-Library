@@ -2,10 +2,10 @@
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
-  template_id = {{ site_available_components.open5gsvm.template_id }}
-  cpu         = {{ one_ueransim_cpu }}
-  vcpu        = {{ one_ueransim_cpu }}
-  memory      = {{ one_ueransim_memory }}
+  template_id = {{ site_available_components.open5gs_vm.template_id }}
+  cpu         = {{ one_open5gsvm_cpu }}
+  vcpu        = {{ one_open5gsvm_cpu }}
+  memory      = {{ one_open5gsvm_memory }}
 
   context = {
     NETWORK = "YES"
@@ -16,14 +16,14 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
   disk {
-    image_id = {{ site_available_components.open5gsvm.image_id }}
+    image_id = {{ site_available_components.open5gs_vm.image_id }}
     size     = {{ one_ueransim_disk }}
     target   = "vda"
     driver   = "qcow2"
   } #}
 
 
-{% for network in one_ueransim_networks %}
+{% for network in one_open5gsvm_networks %}
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
