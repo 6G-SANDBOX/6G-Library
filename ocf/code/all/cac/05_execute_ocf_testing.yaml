@@ -13,12 +13,18 @@
   ansible.builtin.shell: "zip -r ocf_robot_results.zip capif/results"
   become: yes
 
-- name: Copy Vault keys file
-  ansible.builtin.copy:
-    remote_src: true
+- name: Fetch Robot Tests results
+  ansible.builtin.fetch:
     src: "ocf_robot_results.zip"
     dest: "{{ workspace }}/{{ component_type }}/code/ocf_robot_results.zip"
-    mode: "644"
+    flat: yes
+
+# - name: Copy Vault keys file
+#   ansible.builtin.copy:
+#     remote_src: true
+#     src: "ocf_robot_results.zip"
+#     dest: "{{ workspace }}/{{ component_type }}/code/ocf_robot_results.zip"
+#     mode: "644"
 
 - name: Remove Results directory
   ansible.builtin.shell: "rm -rf capif/results"
