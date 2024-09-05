@@ -102,7 +102,7 @@ pipeline {
                         tn_id:           "${params.TN_ID}",
                         component_type:  "${params.COMPONENT_TYPE}",
                         custom_name:     "${params.CUSTOM_NAME}",
-                        entity_name: entity_name,                       
+                        entity_name:     "${entity_name}",                       
                         deployment_site: "${params.DEPLOYMENT_SITE}",
                         tnlcm_callback:  "${params.TNLCM_CALLBACK}",
                         debug:           "${params.DEBUG}",
