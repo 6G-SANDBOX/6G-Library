@@ -78,7 +78,7 @@ Component_Name
 ├── .tnlcm/
 │   └── public.yaml
 ├── code/
-│   ├── all/
+│   ├── any/
 │   ├── one/
 │   │   ├── cac/
 │   │   └── iac/
