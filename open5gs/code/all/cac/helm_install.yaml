@@ -9,7 +9,7 @@
     kubeconfig: /etc/rancher/rke2/rke2.yaml
     name: open5gs
     chart_ref: oci://registry-1.docker.io/gradiant/open5gs
-    chart_version: 2.2.2
+    chart_version: 2.2.3
     namespace: open5gs
     create_namespace: yes
     values_files:
