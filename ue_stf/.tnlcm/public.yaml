@@ -38,7 +38,7 @@ metadata:
 # ## Component input
 # ####################################
 input:
-  ue_stf_lease:
+  ue_stf_any_lease:
     description: Requested time to book the UE device. In seconds.
     type: int
     default_value: 3600

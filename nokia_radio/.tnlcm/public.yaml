@@ -49,23 +49,23 @@ metadata:
 ####################################
 
 input:
-  one_nokia_main_ip:
+  nokia_radio_one_oneKE:
+    description: Name of the oneKE cluster to route Nokia traffic.
+    type: "oneKE"
+    required_when: true
+  nokia_radio_one_main_ip:
     description: Address of Nokia Airscale.
     type: str
     required_when: false
-  one_nokia_reservation_time:
-    description: Time in minutes for the Nokia Airsale reservation
-    type: int
-    default_value: 60
-    required_when: true
-  one_nokia_route_manager_ip:
+  nokia_radio_one_route_manager_ip:
     description: Address of the route manager that will enable routing between Nokia Airscale and 5G Core.
     type: str
     default_value: "10.11.28.134"
     required_when: true
-  one_nokia_oneKE:
-    description: Name of the oneKE cluster to route Nokia traffic.
-    type: "oneKE"
+  nokia_radio_one_reservation_time:
+    description: Time in minutes for the Nokia Airsale reservation
+    type: int
+    default_value: 60
     required_when: true
 
 ####################################

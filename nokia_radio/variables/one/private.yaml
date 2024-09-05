@@ -8,11 +8,11 @@
 ##
 ######################################################
 
-one_nokia_routable_network: "10.10.12.0/24"
-one_nokia_mcc: "214"
-one_nokia_mnc: "702"
-one_nokia_tac: "0001"
-one_nokia_s_nssai_sst: "1"
-one_nokia_s_nssai_sd: "000009"
-one_nokia_amf_ip: "10.10.12.200"
-one_nokia_upf_ip: "10.10.12.201"
+nokia_radio_one_routable_network: "10.10.12.0/24"
+nokia_radio_one_mcc: "214"
+nokia_radio_one_mnc: "702"
+nokia_radio_one_tac: "0001"
+nokia_radio_one_s_nssai_sst: "1"
+nokia_radio_one_s_nssai_sd: "000009"
+nokia_radio_one_amf_ip: "10.10.12.200"
+nokia_radio_one_upf_ip: "10.10.12.201"
