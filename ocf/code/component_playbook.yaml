@@ -58,14 +58,6 @@
     
     - name: Create OpenCAPIF User
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//06_create_ocf_user.yaml"
-    
-    - name: Copy Vault keys file
-      ansible.builtin.copy:
-        remote_src: true
-        src: "capif/helm/vault_keys.txt"
-        dest: "{{ workspace }}/{{ component_type }}/code/vault_keys.txt"
-        mode: "644"
-
 
 - name: "STAGE 3: Publish execution results"
   hosts: localhost
@@ -101,7 +93,7 @@
             'ocf_capif_mongo_register_storage_size': '{{ ocf_capif_mongo_register_storage_size }}',
           }
 
-    - name: Upload kubeconfig to S3
+    - name: Upload Vault keys to S3
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put
@@ -110,6 +102,30 @@
         bucket: "{{ site_s3_server.bucket }}"
         object: "{{ tn_id }}/vault_keys.txt"
         src: "{{ workspace }}/{{ component_type }}/code/vault_keys.txt"
+        encrypt: false
+        validate_certs: false
+
+    - name: Upload Tests results keys to S3
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/ocf_robot_results.zip"
+        src: "{{ workspace }}/{{ component_type }}/code/ocf_robot_results.zip"
+        encrypt: false
+        validate_certs: false
+
+    - name: Upload Create User Results keys to S3
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/ocf_user_creation_results.zip"
+        src: "{{ workspace }}/{{ component_type }}/code/ocf_user_creation_results.zip"
         encrypt: false
         validate_certs: false
 

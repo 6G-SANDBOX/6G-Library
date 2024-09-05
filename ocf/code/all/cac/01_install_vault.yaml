@@ -3,3 +3,10 @@
   become: yes
   environment:
     KUBECONFIG: /etc/rancher/rke2/rke2.yaml
+
+- name: Copy Vault keys file
+  ansible.builtin.copy:
+    remote_src: true
+    src: "capif/helm/vault_keys.txt"
+    dest: "{{ workspace }}/{{ component_type }}/code/vault_keys.txt"
+    mode: "644"
