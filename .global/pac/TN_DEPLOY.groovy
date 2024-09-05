@@ -90,8 +90,8 @@ pipeline {
         stage('Stage 4: Deploy the selected component') {
             steps {
                 script {
-                    def entityName = params.CUSTOM_NAME ? "${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}" : "${params.COMPONENT_TYPE}"
-                    echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${entityName} in the ${DEPLOYMENT_SITE} site"
+                    def entity_name = params.CUSTOM_NAME ? "${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}" : "${params.COMPONENT_TYPE}"
+                    echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${entity_name} in the ${DEPLOYMENT_SITE} site"
                 } 
                 ansiblePlaybook(
                     credentialsId: 'SSH_PRIVATE_KEY',
@@ -102,7 +102,7 @@ pipeline {
                         tn_id:           "${params.TN_ID}",
                         component_type:  "${params.COMPONENT_TYPE}",
                         custom_name:     "${params.CUSTOM_NAME}",
-                        entity_name:     "${entityName}",                       
+                        entity_name: entity_name,                       
                         deployment_site: "${params.DEPLOYMENT_SITE}",
                         tnlcm_callback:  "${params.TNLCM_CALLBACK}",
                         debug:           "${params.DEBUG}",
