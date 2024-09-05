@@ -109,20 +109,6 @@ pipeline {
                     ],
                     playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"
                 )
-
-
-
-                    def paramsContent = "tn_id: ${params.TN_ID}\n"
-                    paramsContent += "component_type: ${params.COMPONENT_TYPE}\n"
-                    paramsContent += "custom_name: ${params.CUSTOM_NAME}\n"
-                    
-                    paramsContent += "entity_name: ${entityName}\n"
-                    paramsContent += "deployment_site: ${params.DEPLOYMENT_SITE}\n"
-                    paramsContent += "tnlcm_callback: ${params.TNLCM_CALLBACK}\n"
-                    paramsContent += "debug: ${params.DEBUG}\n"
-
-
-
             }
         }    
     }
