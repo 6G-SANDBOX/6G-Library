@@ -59,7 +59,26 @@ pipeline {
 
         stage('Stage 2: Clone 6G-Sandbox-Sites repository') {
             steps {
-                echo 'Stage 2: Clone 6G-Sandbox-Sites repository'
+                echo 'Stage 2: Import Jenkins parameters into the workspace'
+                script{
+                    def paramsFile = "${WORKSPACE}/${params.COMPONENT_TYPE}/variables/pipeline_parameters.yaml"
+                    def paramsContent = "tn_id: ${params.TN_ID}\n"
+                    paramsContent += "component_type: ${params.COMPONENT_TYPE}\n"
+                    paramsContent += "custom_name: ${params.CUSTOM_NAME}\n"
+                    def entityName = params.CUSTOM_NAME ? "${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}" : "${params.COMPONENT_TYPE}"
+                    paramsContent += "entity_name: ${entityName}\n"
+                    paramsContent += "deployment_site: ${params.DEPLOYMENT_SITE}\n"
+                    paramsContent += "tnlcm_callback: ${params.TNLCM_CALLBACK}\n"
+                    paramsContent += "debug: ${params.DEBUG}\n"
+
+                    writeFile file: paramsFile, text: paramsContent
+                }
+            }
+        }
+
+        stage('Stage 3: Deploy the selected component') {
+            steps {
+                echo 'Stage 3: Clone 6G-Sandbox-Sites repository'
                 checkout([$class: 'GitSCM',
                           branches: [[name: params.SITES_BRANCH]],
                           extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '6G-Sandbox-Sites']],
@@ -68,29 +87,26 @@ pipeline {
             }
         }
 
-        stage('Stage 3: Deploy the selected component') {
+        stage('Stage 4: Deploy the selected component') {
             steps {
                 script {
-                    def entity_name = params.CUSTOM_NAME ? "${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}" : "${params.COMPONENT_TYPE}"
-
-                    echo "Stage 3: Run ansible playbook to deploy ${TN_ID}-${entity_name} in the ${DEPLOYMENT_SITE} site"
-                    ansiblePlaybook(
-                        credentialsId: 'SSH_PRIVATE_KEY',
-                        vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD',
-                        inventory: 'localhost,',
-                        extraVars: [
-                            workspace:       "${WORKSPACE}",
-                            tn_id:           "${params.TN_ID}",
-                            component_type:  "${params.COMPONENT_TYPE}",
-                            custom_name:     "${params.CUSTOM_NAME}",
-                            entity_name:     "${entity_name}",
-                            deployment_site: "${params.DEPLOYMENT_SITE}",
-                            tnlcm_callback:  "${params.TNLCM_CALLBACK}",
-                            debug:           "${params.DEBUG}",
-                        ],
-                        playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"
-                    )
-                }
+                    if (env.CUSTOM_NAME) {
+                        echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${COMPONENT_TYPE}-${CUSTOM_NAME} in the ${DEPLOYMENT_SITE} site"
+                    } else {
+                        echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${COMPONENT_TYPE} in the ${DEPLOYMENT_SITE} site"
+                    }
+                } 
+                ansiblePlaybook(
+                    credentialsId: 'SSH_PRIVATE_KEY',
+                    vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD',
+                    inventory: 'localhost,',
+                    extraVars: [
+                        workspace: "${WORKSPACE}",
+                        // deployment_site: "${params.DEPLOYMENT_SITE}",
+                        component_type: "${params.COMPONENT_TYPE}",
+                    ],
+                    playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"
+                )
             }
         }    
     }
