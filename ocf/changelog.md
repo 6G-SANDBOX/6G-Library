@@ -1,11 +1,5 @@
 # Changelog
 
-## [v0.2.0] - 2024-06-06
-
-### Changed
-
-- Component follows the new architecture.
-
 
 ## [v0.1.0] - 2024-04-29
 
