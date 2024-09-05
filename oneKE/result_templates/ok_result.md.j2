@@ -81,7 +81,7 @@ Skooner is the easiest way to manage your Kubernetes cluster.
 The token that you can use to access into the dashboard is:
 
 ```
-{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] }}
+{{ hostvars['master_0']['skooner_token']['stdout'] }}
 ```
 
 > The validity of this token is ten years from now. If you need to create another one, use this command:
