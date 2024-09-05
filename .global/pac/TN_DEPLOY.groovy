@@ -103,7 +103,7 @@ pipeline {
                     extraVars: [
                         workspace: "${WORKSPACE}",
                         // deployment_site: "${params.DEPLOYMENT_SITE}",
-                        // component_type: "${params.COMPONENT_TYPE}",
+                        component_type: "${params.COMPONENT_TYPE}",
                     ],
                     playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"
                 )
