@@ -44,7 +44,7 @@
 
     - name: Add device to the new group
       ansible.builtin.uri:
-        url: >
+        url: >-
           {{ site_available_components.ue_stf.origin }}/api/v1/groups/{{ create_group.json.group.id }}/devices/{{ site_available_components.ue_stf.device }}
         method: PUT
         status_code: [200]
@@ -58,7 +58,7 @@
       block:
         - name: Delete new group
           ansible.builtin.uri:
-            url: >
+            url: >-
               {{ site_available_components.ue_stf.origin }}/api/v1/groups/{{ create_group.json.group.id }}
             method: DELETE
             status_code: [200]
@@ -71,7 +71,7 @@
 
     - name: Add user tnuser to the new group
       ansible.builtin.uri:
-        url: >
+        url: >-
           {{ site_available_components.ue_stf.origin }}/api/v1/groups/{{ create_group.json.group.id }}/users/{{ site_available_components.ue_stf.user_mail }}
         method: PUT
         status_code: [200]

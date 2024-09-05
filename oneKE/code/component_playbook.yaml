@@ -119,15 +119,15 @@
       when: inventory_hostname == hostvars['localhost']['entity_name'] + '-master_0'
       block:
         - name: Apply ingress-nginx helm chart
-          ansible.builtin.include_tasks: >
+          ansible.builtin.include_tasks: >-
             {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_nginx_controller.yaml
 
         - name: Apply Skooner helm chart
-          ansible.builtin.include_tasks: >
+          ansible.builtin.include_tasks: >-
             {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_skooner_dashboard.yaml
 
         - name: Apply nginx Ingress for the longhorn dashboard
-          ansible.builtin.include_tasks: >
+          ansible.builtin.include_tasks: >-
             {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_longhorn_dashboard.yaml
           when: hostvars['localhost']['one_oneKE_longhorn'] == "YES"
 

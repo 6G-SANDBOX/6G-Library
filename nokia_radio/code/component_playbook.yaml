@@ -71,7 +71,6 @@
             'nokia_radio_one_reservation_time': '{{ nokia_radio_one_reservation_time }}',
             'nokia_radio_one_route_manager_ip': '{{ nokia_radio_one_route_manager_ip }}'
           }
-
     - name: Publish Nokia metadata as terraform outputs"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
