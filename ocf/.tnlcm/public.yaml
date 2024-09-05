@@ -116,6 +116,11 @@ input:
     type: str
     default_value: "1Gi"
     required_when: false
+  ocf_capif_tempo_storage_size:
+    description: Tempo Persistent storage size
+    type: str
+    default_value: "1Gi"
+    required_when: false
   ocf_user:
     description: User to be registered on OpenCAPIF
     type: str

@@ -27,6 +27,7 @@
   - "\"s/export CAPIF_LOKI_STORAGE_SIZE=.*/export CAPIF_LOKI_STORAGE_SIZE={{ ocf_capif_loki_storage_size }}/g\""
   - "\"s/export CAPIF_MONGO_STORAGE_SIZE=.*/export CAPIF_MONGO_STORAGE_SIZE={{ ocf_capif_mongo_storage_size }}/g\""
   - "\"s/export CAPIF_MONGO_REGISTER_STORAGE_SIZE=.*/export CAPIF_MONGO_REGISTER_STORAGE_SIZE={{ ocf_capif_mongo_register_storage_size }}/g\""
+  - "\"s/export CAPIF_TEMPO_STORAGE_SIZE=.*/export CAPIF_TEMPO_STORAGE_SIZE={{ ocf_capif_tempo_storage_size }}/g\""
   - "\"s/export CAPIF_HOSTNAME=.*/export CAPIF_HOSTNAME={{ ocf_capif_hostname }}/g\""
   - "\"s/export REGISTER_HOSTNAME=.*/export REGISTER_HOSTNAME={{ ocf_capif_register_hostname }}/g\""
   - "\"s/export CAPIF_DOMAIN=.*/export CAPIF_DOMAIN={{ ocf_capif_domain }}/g\""
