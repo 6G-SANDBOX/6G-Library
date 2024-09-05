@@ -1,7 +1,7 @@
 # UE_STF
 
 The **UE_STF** 6G-Library component enables the temporal access to a physical UE through an [STF](https://github.com/DeviceFarmer/stf) (Smartphone Test Farm) Web Interface.
-This mobile device has the right SIM to be connected to the physical gNB of the `nokia_radio_uma` component.
+This mobile device has the right SIM to be connected to the physical gNB of the `nokia_radio` component.
 The access time for the device is set to 1h by default, but can be modified
 
 > [!NOTE]  

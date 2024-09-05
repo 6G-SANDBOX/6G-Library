@@ -12,8 +12,6 @@
     # 1. Site variables. Metadata unique to each site. Information like Image IDs, VNet IDs or ssh public keys.
     # 2. Private variables. Component private values for the site hypervisor. File at {{ component_type }}/variables/{{ site_hypervisor }}/private.yaml
     # 3. Public variables. Component input values as defined in TNLCM/Jenkins. File is written and then read from {{ component_type }}/variables/input_file.yaml
-    # 4. Pipeline parameters. Some of the parameters sent by the TNLCM to the Jenkins, like the custom_name or the the tnlcm_calback URL.
-    #    File is written and then read from {{ component_type }}/variables/pipeline_parameters.yaml
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 

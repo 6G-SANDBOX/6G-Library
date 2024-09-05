@@ -11,19 +11,21 @@
 - New output variable `metadata_dict` from component `oneKE` to share its input variables to future components.
 ### Changed
 - Open5GS upgraded to version `v2.7.1`.
+- Component nokia_radio_uma renamed to nokia_radio.
 - Comments modified in .dummy_component to make it less confusing. Also out variable naming recommendation is reflected on public.yaml
 - Ansible hostname from created components no longer contain variables. It only added complexity without benefits.
-- Renamed output variable from open5gs and nokia_radio_uma components
+- Renamed output variable from open5gs and nokia_radio components
 - Fix compoment changelogs retroactively
 ### Removed
 - Removed ansible task in unique components where `entity_name=component_type`. `entity_name` is now only defined during the Jenkins Pipeline
+- Removed `pipeline-parameters.yaml` from playbook execution. Pipeline parameters are now sent as extraVars when executing the ansible playbook.
 ### Fixed
-- Component nokia_radio_uma JSON callback is now correctly functional
+- Component nokia_radio JSON callback is now correctly functional
 - Fixed image in ueransim README.md and ok_result.md
 
 ## [v0.2.1] - 2024-09-02
 ### Added
-- New nokia_radio_uma component
+- - New component nokia_radio_uma
 ### Changed
 - Updated description of pipeline parameters in TN_DEPLOY.groovy and TN_DESTROY.groovy
 ### Fixed

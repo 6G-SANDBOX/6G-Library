@@ -1,7 +1,8 @@
 # Changelog
 
-## [v0.2.1]
+## [v0.2.2]
 ### Changed
+- Component renamed from nokia_radio_uma to nokia_radio.
 - Output variable `nokia_metadata_dict` renamed to `metadata_dict` like the rest of the components
 ### Fixed
 - Fix typo in the TNLCM callback that used an open5gs variable.
