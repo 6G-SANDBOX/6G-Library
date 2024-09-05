@@ -9,9 +9,3 @@
     src: "capif/helm/vault_keys.txt"
     dest: "{{ workspace }}/{{ component_type }}/code/vault_keys.txt"
     flat: yes
-
-  # ansible.builtin.copy:
-  #   remote_src: true
-  #   src: "capif/helm/vault_keys.txt"
-  #   dest: "{{ workspace }}/{{ component_type }}/code/vault_keys.txt"
-  #   mode: "644"

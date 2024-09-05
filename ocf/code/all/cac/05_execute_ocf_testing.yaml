@@ -1,7 +1,3 @@
-- name: Pause for 1 minutes to CAPIF get ready
-  ansible.builtin.pause:
-    minutes: 1
-
 - name: Launch Robot OCF Testsuite
   ansible.builtin.shell: "capif/helm/scripts/run_remote_capif_tests.sh --include all"
   become: yes
@@ -18,13 +14,6 @@
     src: "ocf_robot_results.zip"
     dest: "{{ workspace }}/{{ component_type }}/code/ocf_robot_results.zip"
     flat: yes
-
-# - name: Copy Vault keys file
-#   ansible.builtin.copy:
-#     remote_src: true
-#     src: "ocf_robot_results.zip"
-#     dest: "{{ workspace }}/{{ component_type }}/code/ocf_robot_results.zip"
-#     mode: "644"
 
 - name: Remove Results directory
   ansible.builtin.shell: "rm -rf capif/results"

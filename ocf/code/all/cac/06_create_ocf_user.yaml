@@ -8,13 +8,6 @@
   ansible.builtin.shell: "zip -r ocf_user_creation_results.zip capif/results"
   become: yes
 
-# - name: Copy Vault keys file
-#   ansible.builtin.copy:
-#     remote_src: true
-#     src: "ocf_user_creation_results.zip"
-#     dest: "{{ workspace }}/{{ component_type }}/code/ocf_user_creation_results.zip"
-#     mode: "644"
-
 - name: Fetch Create User results
   ansible.builtin.fetch:
     src: "ocf_user_creation_results.zip"
