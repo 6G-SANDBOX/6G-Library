@@ -84,7 +84,7 @@
             'ocf_capif_namespace': '{{ ocf_capif_namespace }}',
             'ocf_capif_hostname': '{{ ocf_capif_hostname }}',
             'ocf_capif_register_hostname': '{{ ocf_capif_register_hostname }}',
-            'ocf_capif_resources': '{{ ocf_capif_resources }}',
+            'ocf_capif_resources_reserve': '{{ ocf_capif_resources_reserve }}',
             'ocf_capif_storage_class': '{{ ocf_capif_storage_class }}',
             'ocf_capif_storage_access_mode': '{{ ocf_capif_storage_access_mode }}',
             'ocf_capif_grafana_storage_size': '{{ ocf_capif_grafana_storage_size }}',

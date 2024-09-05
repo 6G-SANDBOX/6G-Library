@@ -55,30 +55,20 @@ input:
     type: str
     default_value: "ocf-vault"
     required_when: false
-  ocf_vault_hostname:
-    description: Vault hostname
-    type: str
-    default_value: "vault.testbed.develop"
-    required_when: false
   ocf_vault_storage_class:
-    description: Vault Storage class. (nfs-01 by default)
+    description: Vault Storage class. (longhorn by default)
     type: str
-    default_value: "nfs-01"
+    default_value: "longhorn"
     required_when: false
   ocf_vault_storage_size: 
     description: Vault Storage Size
     type: str
-    default_value: "10Gi"
-    required_when: false
-  ocf_monitoring_prometheus_hostname:
-    description: Prometheus hostname
-    type: str
-    default_value: "prometheus.testbed.develop"
+    default_value: "1Gi"
     required_when: false
   ocf_monitoring_namespace:
     description: Monitoring namespace
     type: str
-    default_value: "monitoring"
+    default_value: "ocf-monitoring"
     required_when: false
   ocf_monitoring_service_name:
     description: Vault Storage Size
@@ -90,36 +80,26 @@ input:
     type: str
     default_value: "ocf-capif"
     required_when: false
-  ocf_capif_hostname:
-    description: CAPIF hostname
+  ocf_capif_resources_reserve:
+    description: CAPIF resource reserve (default NO)
     type: str
-    default_value: "capif.testbed.develop"
-    required_when: false
-  ocf_capif_register_hostname:
-    description: Register hostname
-    type: str
-    default_value: "register.testbed.develop"
-    required_when: false
-  ocf_capif_resources:
-    description: CAPIF resources limitation present (default YES, if NONE no limitation setup for CPU and memory)
-    type: str
-    default_value: "YES"
+    default_value: "NO"
     required_when: false
   ocf_capif_storage_class:
-    description: CAPIF storage class to use (default nfs-01)
+    description: CAPIF storage class to use (default longhorn)
     type: str
-    default_value: "nfs-01"
+    default_value: "longhorn"
     required_when: false
   ocf_capif_storage_access_mode:
-    description: CAPIF storage access mode (ReadWriteMany by default, also ReadWriteOnce)
+    description: CAPIF storage access mode (ReadWriteOnce by default)
     type: str
-    default_value: "ReadWriteMany"
+    default_value: "ReadWriteOnce"
     choices: ["ReadWriteMany", "ReadWriteOnce"]
     required_when: false
   ocf_capif_grafana_storage_size: 
     description: Grafana storage size
     type: str
-    default_value: "10Gi"
+    default_value: "1Gi"
     required_when: false
   ocf_capif_loki_storage_size:
     description: Loki storage size
@@ -129,17 +109,12 @@ input:
   ocf_capif_mongo_storage_size:
     description: CAPIF Mongo storage size
     type: str
-    default_value: "8Gi"
+    default_value: "1Gi"
     required_when: false
   ocf_capif_mongo_register_storage_size:
     description: Register Mongo Storage Size
     type: str
-    default_value: "8Gi"
-    required_when: false
-  ocf_monitoring_snooker_enabled:
-    description: Snooker deployment with monitoring is enabled
-    type: bool
-    default_value: false
+    default_value: "1Gi"
     required_when: false
   ocf_user:
     description: User to be registered on OpenCAPIF

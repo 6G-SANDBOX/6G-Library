@@ -13,11 +13,14 @@
   - "\"s/export VAULT_NAMESPACE=.*/export VAULT_NAMESPACE={{ ocf_vault_namespace }}/g\""
   - "\"s/export VAULT_STORAGE_CLASS=.*/export VAULT_STORAGE_CLASS={{ ocf_vault_storage_class }}/g\""
   - "\"s/export VAULT_STORAGE_SIZE=.*/export VAULT_STORAGE_SIZE={{ ocf_vault_storage_size }}/g\""
+  - "\"s/export DOMAIN1=.*/export DOMAIN1={{ ocf_vault_domain_1 }}/g\""
+  - "\"s/export DOMAIN2=.*/export DOMAIN2={{ ocf_vault_domain_2 }}/g\""
+  - "\"s/export DOMAIN3=.*/export DOMAIN3={{ ocf_vault_domain_3 }}/g\""
   - "\"s/export PROMETHEUS_HOSTNAME=.*/export PROMETHEUS_HOSTNAME={{ ocf_monitoring_prometheus_hostname }}/g\""
   - "\"s/export MONITORING_NAMESPACE=.*/export MONITORING_NAMESPACE={{ ocf_monitoring_namespace }}/g\""
   - "\"s/export MONITORING_SERVICE_NAME=.*/export MONITORING_SERVICE_NAME={{ ocf_monitoring_service_name }}/g\""
   - "\"s/export MONITORING_SNOOKER_ENABLED=.*/export MONITORING_SNOOKER_ENABLED={{ ocf_monitoring_snooker_enabled }}/g\""
-  - "\"s/export CAPIF_RESOURCES=.*/export CAPIF_RESOURCES={{ ocf_capif_resources }}/g\""
+  - "\"s/export CAPIF_RESOURCES=.*/export CAPIF_RESOURCES={{ ocf_capif_resources_reserve }}/g\""
   - "\"s/export CAPIF_STORAGE_CLASS=.*/export CAPIF_STORAGE_CLASS={{ ocf_capif_storage_class }}/g\""
   - "\"s/export CAPIF_STORAGE_ACCESS_MODE=.*/export CAPIF_STORAGE_ACCESS_MODE={{ ocf_capif_storage_access_mode }}/g\""
   - "\"s/export CAPIF_GRAFANA_STORAGE_SIZE=.*/export CAPIF_GRAFANA_STORAGE_SIZE={{ ocf_capif_grafana_storage_size }}/g\""
@@ -26,6 +29,7 @@
   - "\"s/export CAPIF_MONGO_REGISTER_STORAGE_SIZE=.*/export CAPIF_MONGO_REGISTER_STORAGE_SIZE={{ ocf_capif_mongo_register_storage_size }}/g\""
   - "\"s/export CAPIF_HOSTNAME=.*/export CAPIF_HOSTNAME={{ ocf_capif_hostname }}/g\""
   - "\"s/export REGISTER_HOSTNAME=.*/export REGISTER_HOSTNAME={{ ocf_capif_register_hostname }}/g\""
+  - "\"s/export CAPIF_DOMAIN=.*/export CAPIF_DOMAIN={{ ocf_capif_domain }}/g\""
   become: yes
 
 - name: Setup kubectl alias
