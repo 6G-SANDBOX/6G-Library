@@ -30,7 +30,7 @@
 
 - name: Debug OK json response
   ansible.builtin.debug:
-    msg: "{{ workspace }}/.global/json_templates/ok_result.json.j2"
+    msg: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/json_templates/ok_result.json.j2') }}"
   when: debug
 
 - name: Send OK json response to TNLCM
