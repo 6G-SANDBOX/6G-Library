@@ -90,23 +90,39 @@ pipeline {
         stage('Stage 4: Deploy the selected component') {
             steps {
                 script {
-                    if (env.CUSTOM_NAME) {
-                        echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${COMPONENT_TYPE}-${CUSTOM_NAME} in the ${DEPLOYMENT_SITE} site"
-                    } else {
-                        echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${COMPONENT_TYPE} in the ${DEPLOYMENT_SITE} site"
-                    }
+                    def entityName = params.CUSTOM_NAME ? "${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}" : "${params.COMPONENT_TYPE}"
+                    echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${entityName} in the ${DEPLOYMENT_SITE} site"
                 } 
                 ansiblePlaybook(
                     credentialsId: 'SSH_PRIVATE_KEY',
                     vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD',
                     inventory: 'localhost,',
                     extraVars: [
-                        workspace: "${WORKSPACE}",
-                        // deployment_site: "${params.DEPLOYMENT_SITE}",
-                        component_type: "${params.COMPONENT_TYPE}",
+                        workspace:       "${WORKSPACE}",
+                        tn_id:           "${params.TN_ID}",
+                        component_type:  "${params.COMPONENT_TYPE}",
+                        custom_name:     "${params.CUSTOM_NAME}",
+                        entity_name: entity_name,                       
+                        deployment_site: "${params.DEPLOYMENT_SITE}",
+                        tnlcm_callback:  "${params.TNLCM_CALLBACK}",
+                        debug:           "${params.DEBUG}",
                     ],
                     playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"
                 )
+
+
+
+                    def paramsContent = "tn_id: ${params.TN_ID}\n"
+                    paramsContent += "component_type: ${params.COMPONENT_TYPE}\n"
+                    paramsContent += "custom_name: ${params.CUSTOM_NAME}\n"
+                    
+                    paramsContent += "entity_name: ${entityName}\n"
+                    paramsContent += "deployment_site: ${params.DEPLOYMENT_SITE}\n"
+                    paramsContent += "tnlcm_callback: ${params.TNLCM_CALLBACK}\n"
+                    paramsContent += "debug: ${params.DEBUG}\n"
+
+
+
             }
         }    
     }

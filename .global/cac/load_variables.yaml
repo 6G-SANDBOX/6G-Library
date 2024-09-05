@@ -1,7 +1,7 @@
 ---
-- name: Load pipeline-specific variables from Jenkins parameters
-  ansible.builtin.include_vars:
-    file: "{{ workspace }}/{{ component_type }}/variables/pipeline_parameters.yaml"
+# - name: Load pipeline-specific variables from Jenkins parameters
+#   ansible.builtin.include_vars:
+#     file: "{{ workspace }}/{{ component_type }}/variables/pipeline_parameters.yaml"
 
 - name: Load site-specific variables
   ansible.builtin.include_vars:
