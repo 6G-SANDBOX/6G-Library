@@ -1,0 +1,13 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+# Private variables define for each virtualization platform (hypervisor) a set of default values.
+# Some private variables are just defaults to be overwritten by the input_file.yaml, while others are not intended to be overwritten.
+# Fact is, with input_file.yaml you can technically overwrite any value shown here, but the TNLCM will only let you to modify the ones in public.yaml

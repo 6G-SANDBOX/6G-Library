@@ -1,0 +1,15 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+#one_open5gs_webui_subdomain: "open5gs"
+
+one_open5gs_mcc: "999"
+one_open5gs_mnc: "38"
+one_open5gs_msin: "0000000001"
+one_open5gs_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+one_open5gs_opc: "E8ED289DEBA952E4283B54E88E6183CA"
+one_open5gs_apn: "internet"
+one_open5gs_tac: "200"
+one_open5gs_s_nssai_sst: "1"
+one_open5gs_s_nssai_sd: "1"
+one_open5gs_amf_ip: "10.21.12.200"
+one_open5gs_upf_ip: "10.21.12.201"
