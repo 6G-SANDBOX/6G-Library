@@ -102,8 +102,8 @@ pipeline {
                     inventory: 'localhost,',
                     extraVars: [
                         workspace: "${WORKSPACE}",
-                        deployment_site: "${params.DEPLOYMENT_SITE}",
-                        component_type: "${params.COMPONENT_TYPE}",
+                        // deployment_site: "${params.DEPLOYMENT_SITE}",
+                        // component_type: "${params.COMPONENT_TYPE}",
                     ],
                     playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"
                 )
