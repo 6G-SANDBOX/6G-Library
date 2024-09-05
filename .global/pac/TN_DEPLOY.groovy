@@ -91,24 +91,25 @@ pipeline {
             steps {
                 script {
                     def entity_name = params.CUSTOM_NAME ? "${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}" : "${params.COMPONENT_TYPE}"
+
                     echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${entity_name} in the ${DEPLOYMENT_SITE} site"
-                } 
-                ansiblePlaybook(
-                    credentialsId: 'SSH_PRIVATE_KEY',
-                    vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD',
-                    inventory: 'localhost,',
-                    extraVars: [
-                        workspace:       "${WORKSPACE}",
-                        tn_id:           "${params.TN_ID}",
-                        component_type:  "${params.COMPONENT_TYPE}",
-                        custom_name:     "${params.CUSTOM_NAME}",
-                        entity_name: entity_name,                       
-                        deployment_site: "${params.DEPLOYMENT_SITE}",
-                        tnlcm_callback:  "${params.TNLCM_CALLBACK}",
-                        debug:           "${params.DEBUG}",
-                    ],
-                    playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"
-                )
+                    ansiblePlaybook(
+                        credentialsId: 'SSH_PRIVATE_KEY',
+                        vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD',
+                        inventory: 'localhost,',
+                        extraVars: [
+                            workspace:       "${WORKSPACE}",
+                            tn_id:           "${params.TN_ID}",
+                            component_type:  "${params.COMPONENT_TYPE}",
+                            custom_name:     "${params.CUSTOM_NAME}",
+                            entity_name: entity_name,                       
+                            deployment_site: "${params.DEPLOYMENT_SITE}",
+                            tnlcm_callback:  "${params.TNLCM_CALLBACK}",
+                            debug:           "${params.DEBUG}",
+                        ],
+                        playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"
+                    )
+                }
             }
         }    
     }
