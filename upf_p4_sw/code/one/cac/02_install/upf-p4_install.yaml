@@ -1,0 +1,212 @@
+- name: Install some required apt packages
+  become: true
+  tasks:
+  - name: Install required packages
+    apt:
+      name: 
+        - net-tools
+        #- mongodb-clients          # Deprecated in Ubuntu 22. I need to install mongo shell (mongosh)
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg
+        - lsb-release
+      state: present
+      update_cache: yes
+
+- name: Install docker engine
+  become: true                                                                                                                                                                                                                                                                                       
+  tasks:
+  - name: Add Docker GPG apt Key
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+  - name: Add Docker repository
+    apt_repository:
+      #repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"    # I think that the fact ansible_distribution_release is deactivated (check it)
+      repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable"
+      state: present
+
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+
+  - name: Install Docker Engine
+    apt:
+      name: 
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-buildx-plugin
+        - docker-compose-plugin
+      state: present
+
+  - name: Add jenkins user to docker group
+    user:
+      name: jenkins
+      groups: docker
+      append: yes
+
+  - name: Set correct permissions for Docker socket
+    file:
+      path: /var/run/docker.sock
+      mode: '0666'
+
+  - name: Restart Docker service
+    systemd:
+      name: docker
+      state: restarted
+
+
+- name: Configure GitHub Container Registry authentication
+  become: true
+  tasks:
+  - name: Ensure .docker directory exists
+    file:
+      path: /home/jenkins/.docker
+      state: directory
+      mode: '0700'
+      owner: jenkins
+      group: jenkins
+
+  - name: Create Docker config file
+    template:
+      src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_config.json.j2"
+      #src: docker_config.json.j2
+      dest: /home/jenkins/.docker/config.json
+      mode: '0600'
+      owner: jenkins
+      group: jenkins
+
+
+- name: Copy docker-compose file
+  #become: true
+  tasks:
+  - name: Copy docker-compose.yaml file
+    copy:
+      src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker-compose.yaml"
+      #src: docker-compose.yaml
+      dest: "/home/jenkins/docker-compose.yaml"
+      owner: jenkins
+      group: jenkins
+      mode: '0644'
+
+  - name: Copy config folder
+    synchronize:
+      src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config"
+      #src: ./config
+      dest: "/home/jenkins"
+      rsync_opts:
+      - "--chown=jenkins:jenkins"
+      mode: push
+      recursive: yes  # for copy subfolder too
+
+
+- name: Modify UPF controller configuration
+  tasks:
+  - name: Replace ENB_IPV4_N3 in config.yaml
+    ansible.builtin.replace:
+      path: /home/jenkins/config/controller-upf/config.yaml
+      regexp: '^(\s*ENB_IPV4_N3\s*:\s*)".+"'
+      replace: '\1"{{ one_upf_p4_sw_controller.enb_ipv4_n3 }}"' 
+
+  - name: Replace DN_IPV4_N6 in config.yaml
+    ansible.builtin.replace:
+      path: /home/jenkins/config/controller-upf/config.yaml
+      regexp: '^(\s*DN_IPV4_N6\s*:\s*)".+"'
+      replace: '\1"{{ one_upf_p4_sw_controller.dn_ipv4_n6 }}"'
+
+  - name: Replace UPF_IPV4_N3 in config.yaml
+    ansible.builtin.replace:
+      path: /home/jenkins/config/controller-upf/config.yaml
+      regexp: '^(\s*UPF_IPV4_N3\s*:\s*)".+"'
+      replace: '\1"{{ one_upf_p4_sw_controller.upf_ipv4_n3 }}"'
+
+  - name: Replace UPF_IPV4_N6 in config.yaml
+    ansible.builtin.replace:
+      path: /home/jenkins/config/controller-upf/config.yaml
+      regexp: '^(\s*UPF_IPV4_N6\s*:\s*)".+"'
+      replace: '\1"{{ one_upf_p4_sw_controller.upf_ipv4_n6 }}"'
+
+  - name: Replace ENB_MAC_N3 in config.yaml
+    ansible.builtin.replace:
+      path: /home/jenkins/config/controller-upf/config.yaml
+      regexp: '^(\s*ENB_MAC_N3\s*:\s*)".+"'
+      replace: '\1"{{ one_upf_p4_sw_controller.enb_mac_n3 }}"'
+
+  - name: Replace DN_MAC_N6 in config.yaml
+    ansible.builtin.replace:
+      path: /home/jenkins/config/controller-upf/config.yaml
+      regexp: '^(\s*DN_MAC_N6\s*:\s*)".+"'
+      replace: '\1"{{ one_upf_p4_sw_controller.dn_mac_n6 }}"'
+
+  - name: Replace UPF_MAC_N3 in config.yaml
+    ansible.builtin.replace:
+      path: /home/jenkins/config/controller-upf/config.yaml
+      regexp: '^(\s*UPF_MAC_N3\s*:\s*)".+"'
+      replace: '\1"{{ one_upf_p4_sw_controller.upf_mac_n3 }}"'
+
+  - name: Replace UPF_MAC_N6 in config.yaml
+    ansible.builtin.replace:
+      path: /home/jenkins/config/controller-upf/config.yaml
+      regexp: '^(\s*UPF_MAC_N6\s*:\s*)".+"'
+      replace: '\1"{{ one_upf_p4_sw_controller.upf_mac_n6 }}"'
+
+  - name: Replace subnet_IPv4 in config.yaml
+    ansible.builtin.replace:
+      path: /home/jenkins/config/controller-upf/config.yaml
+      regexp: '^(\s*subnet_IPv4\s*:\s*)".+"'
+      replace: '\1"{{ one_upf_p4_sw_ue_pool }}"'
+
+
+- name: Modify open5GS configuration
+  tasks: 
+  - name: Replace ngap addr in amf.yaml
+    ansible.builtin.replace:
+      path: /home/jenkins/config/open5gs/amf.yaml
+      regexp: '^(\s+ngap:\n\s+- addr:) .*'
+      replace: '\1 {{ one_upf_p4_sw_open5gs_amf.ngap_addr }}'
+
+  - name: Replace subnet addr in smf.yaml
+    ansible.builtin.replace:
+      path: /home/jenkins/config/open5gs/smf.yaml
+      regexp: '^(\s+subnet:\n\s+- addr:) .*'
+      replace: '\1 {{ one_upf_p4_sw_ue_pool }}'
+
+
+- name: Modify chassis configuration
+  tasks:
+  - name: Replace interface name N3
+    ansible.builtin.replace:
+      path: /home/jenkins/config/stratum-upf/chassis_config.pb.txt
+      regexp: '(singleton_ports \{\n  id: 1\n  name: )"[^"]*"'
+      replace: '\1 {{ one_upf_p4_sw_chassis_conf.phy_n3 }}'
+      
+  - name: Replace interface name N6
+    ansible.builtin.replace:
+      path: /home/jenkins/config/stratum-upf/chassis_config.pb.txt
+      regexp: '(singleton_ports \{\n  id: 3\n  name: )"[^"]*"'
+      replace: '\1 {{ one_upf_p4_sw_chassis_conf.phy_n6 }}'
+
+  
+#- name: Run docker-compose
+#  become: true
+#  become_user: jenkins
+#  tasks:
+#  - name: Run docker compose
+#    community.docker.docker_compose:
+#      project_src: /home/jenkins
+#      files:
+#        - docker-compose.yaml
+#      state: present
+
+
+- name: Run docker-compose
+  become: true
+  become_user: jenkins
+  tasks:
+  - name: Execute docker-compose up
+    command: docker compose -f /home/jenkins/docker-compose.yaml up -d
+    args:
+      chdir: /home/jenkins

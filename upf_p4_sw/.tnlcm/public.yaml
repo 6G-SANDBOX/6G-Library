@@ -1,0 +1,114 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 4 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+# "name" has been removed, "input" was "public" and "output" was "outputs"
+# The public.yaml file informs the TNLCM about the component behaviour and how to integrate it inside a Trial Network
+# "metadata" includes general information about the component, "input" describes the modifiable parameters, and "output" the return values reachable from other components.
+
+### metadata:
+# Gives the TNLCM some general information to provide the experimenter with some useful information about the component's behaviour. Fields are shown in the TNLCM Frontend:
+#   - mantainers: Unordered list of active component mantainers
+#   - short_description: One sentence long description.
+#   - long_description: Description that can span multiple lines. Can serve to component dependencies.
+#   - hypervisors: Unordered list of compatible hypervisors for the component. Currently only OpenNebula (one)
+
+### input:
+# Describes variables shown in the TNLCM to be filled by the experimenter and included in a TN descriptor. 
+# Most variables just serve to overwrite a private value, but others (mainly mandatory ones) serve to define dependencies between componentes.
+# Each variable can contain the following fields:
+#   - description; A general description of the variable shown in the TNLCM Frontend. "" by default
+#   - type: Expected python built-in data type https://www.w3schools.com/python/python_datatypes.asp, but it can also be a component name. "str" by default
+#   - default_value: In optional variables, the value existing in privates.yaml that the variable can overwrite. "" by default
+#   - choices: List of possible input values. [] by default
+#   - required_when: Condition to satisfy to make the variable mandatory to fill by the experimenter. Values can be a simple true/false, or a boolean condition https://www.w3schools.com/python/python_booleans.asp
+#                    Conditions can include the value of other input variables of the same comopnent. false by default
+
+### output:
+# Structure of the dictionary "output" the TNLCM expects to receive after the component deployment
+# Only keys are checked, the value shown here is a short description only seen in this file
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Full Name <contact@mail.address>    
+  short_description: Short description of a Component Type
+  long_description: |
+    The long description of a Component Type may span multiple lines
+    and provide a more in depth outline of it's purpose.
+    This imaginary component needs a previous "X" component to be previously deployed and referrenced in input: "sampleVariable"
+  hypervisors: [one]
+
+####################################
+## Component input
+####################################
+input:
+  simple_text_variable:
+    description: Description of an optional text variable.
+    #type: str
+    default_value: "Default string"
+    #choices: []
+    required_when: false
+
+  mandatory_list_of_strings:
+    description: |
+      Variable has not default and requires a list of mandatory_list_of_strings
+      A sample valid input would be ["one", "two", "three"]
+    type: list[str]
+    #default_value: ""
+    #choices: []
+    required_when: true
+
+  choose_a_number:
+    description: Select a numeric value from the list of choices. First choice by default.
+    type: int
+    default_value: 1
+    choices: [1,2,3]
+    required_when: false
+
+  sample_choice_variable:
+    description: |
+      Mandatory variable taht stablishes a dependency with another component.
+      Through the previous component output, other variables from this component can be autocompleted 
+    type: vnet
+    #default_value: ""
+    #choices: []
+    required_when: true
+
+  autocompleted_variable:
+    description: |
+      The value will be overwritten in this order:
+        1. Initial value is in the private.yaml file (a.k.a. the value shown in default_value)
+        2. If another component was referrenced in "sample_choice_variable" a playbook step will overwrite the value with one of its output variables.
+        3. If this optional variable is filled, the final value will always be this one.
+      Most cases will be OK simply leaving the default_value for it to be automatically overwritten
+    type: "strlist"
+    default_value: ["255.255.255.0"]
+    #choices: []
+    optional: false
+
+####################################
+## Component output
+####################################
+output:
+  sample_output_variable: Short description of what the output value is.
+  another_output_variable: Description is optional. For now, it is unused by the TNLCM. TNLCM only checks the key name.

@@ -1,0 +1,165 @@
+services:
+  # ---- Services for UPF-P4 ----
+  # Service to run the optimized BMv2 Stratum module (UPF-P4 SW Data Plane)
+  upf-dn-bmv2-stratum:
+    container_name: upf-p4-bmv2-stratum-optimized
+    image: ghcr.io/rafagarciauma/bmv2-stratum-optimized:ubuntu18-stratum-bmv2_0.0.1
+    volumes:
+      - "./config/stratum-upf:/etc/stratum"
+    privileged: true
+    network_mode: host
+  # Service to run the P4 UPF BMv2 controller
+  upf-cp-bmv2:
+    container_name: p4-upf-controller-bmv2
+    image: ghcr.io/rafagarciauma/upf-p4-controller-bmv2:latest
+    volumes:
+      - "./config/controller-upf:/controller-upf-config"
+    network_mode: host
+    privileged: true
+    depends_on:
+      - upf-dn-bmv2-stratum
+      
+# ---- Services for Open5GS ----
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_DATABASE: open5gs
+    network_mode: host
+    privileged: true
+
+  amf:
+    image: ghcr.io/rafagarciauma/open5gs-morse:2.5.6
+    command:
+    - open5gs-amfd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  ausf:
+    image: ghcr.io/rafagarciauma/open5gs-morse:2.5.6
+    command:
+    - open5gs-ausfd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  bsf:
+    image: ghcr.io/rafagarciauma/open5gs-morse:2.5.6
+    command:
+    - open5gs-bsfd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  nrf:
+    image: ghcr.io/rafagarciauma/open5gs-morse:2.5.6
+    command: open5gs-nrfd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  nssf:
+    image: ghcr.io/rafagarciauma/open5gs-morse:2.5.6
+    command: open5gs-nssfd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  pcf:
+    image: ghcr.io/rafagarciauma/open5gs-morse:2.5.6
+    command:
+    - open5gs-pcfd
+    environment:
+      DB_URI: mongodb://localhost/open5gs
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  #scp:
+  #  image: ghcr.io/rafagarciauma/open5gs-morse:2.5.6
+  #  command: open5gs-scpd
+  #  environment:
+  #    DB_URI: mongodb://mongo/open5gs
+  #  volumes:
+  #    - ./config/open5gs:/opt/open5gs/etc/open5gs
+  #  network_mode: host
+  #  restart: on-failure
+
+  smf:
+    image: ghcr.io/rafagarciauma/open5gs-morse:2.5.6
+    command: open5gs-smfd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+      #- ./config/freeDiameter:/opt/open5gs/etc/freeDiameter
+    network_mode: host
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    restart: on-failure
+    
+  udm:
+    image: ghcr.io/rafagarciauma/open5gs-morse:2.5.6
+    command:
+    - open5gs-udmd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  udr:
+    image: ghcr.io/rafagarciauma/open5gs-morse:2.5.6
+    command:
+    - open5gs-udrd
+    environment:
+      DB_URI: mongodb://localhost/open5gs
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+
+#  upf:
+#    image: ghcr.io/rafagarciauma/open5gs-morse:2.5.6
+#    command:
+#      - open5gs-upfd
+#    cap_add:
+#      - all
+#    volumes:
+#      - ./config/open5gs:/opt/open5gs/etc/open5gs
+#    privileged: true
+#    network_mode: host
+#    restart: on-failure
+   # environment:
+   # ENABLE_NAT: "false"
+#    ports:
+#      - 2152:2152
+
+  webui:
+    image: gradiant/open5gs-webui:2.5.6
+    environment:
+      DB_URI: mongodb://localhost/open5gs
+      NODE_ENV: dev
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+# Define the volumes for the UPF deployment
+#volumes:
+#  stratum-config:
+#  controller-upf-config:
+  
+# Define the networks for the UPF deployment
