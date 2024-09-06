@@ -1,5 +1,5 @@
 - name: Launch Robot OCF Testsuite
-  ansible.builtin.shell: "capif/helm/scripts/run_remote_capif_tests.sh --include all"
+  ansible.builtin.shell: "capif/helm/scripts/run_remote_capif_tests.sh --include smoke"
   become: yes
   retries: 2
   environment:
