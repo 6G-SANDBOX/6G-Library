@@ -131,6 +131,12 @@ input:
     type: str
     default_value: password
     required_when: false
+  ocf_tests_to_pass:
+    description: Tests to launch, (smoke - sanity check after deployment, all - launch complete OCF test suite)
+    type: str
+    default_value: smoke
+    choices: ["smoke", "all"]
+    required_when: false
 
 
 ####################################

@@ -29,3 +29,6 @@ ocf_capif_tempo_storage_size: 1Gi
 # Client to be used by experimenter
 ocf_user: client
 ocf_password: password
+
+# Setup tests to pass
+ocf_tests_to_pass: smoke
