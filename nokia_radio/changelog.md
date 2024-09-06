@@ -1,26 +1,20 @@
 # Changelog
 
 ## [v0.2.2]
-### Fixed
-- Fixed image visualization in README.md and ok_result.md
-
-
-## [v0.2.0] - 2024-06-06
 ### Changed
-- Component follows the new architecture.
-- Updated README.md
+- Component renamed from nokia_radio_uma to nokia_radio.
+- Output variable `nokia_metadata_dict` renamed to `metadata_dict` like the rest of the components
+### Fixed
+- Fix typo in the TNLCM callback that used an open5gs variable.
 
-
-## [v0.1.0] - 2024-04-29
-Initial release of the 6G Library. Changes will be kept on track for now on.
+## [v0.2.1] - 2024-09-02
+### Added
+- New component
 
 
 <!-- Change latest version value at every release -->
 [v0.2.2]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.2.2
-[v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
-[v0.1.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.1.0
-
-
+[v0.2.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...v0.2.1
 
 <!-- FIELDS PER VERSION -->
 <!--

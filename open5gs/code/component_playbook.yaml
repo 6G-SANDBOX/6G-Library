@@ -2,7 +2,7 @@
 - name: "STAGE 1: Prepare to access a previous target component"
   hosts: localhost
   gather_facts: false
-  connection: local  
+  connection: local
   tasks:
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
@@ -26,13 +26,13 @@
 
     - name: Add the oneKE master to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ one_open5gs_oneKE }}-master_0"
+        hostname: "master_0"
         ansible_host: "{{ node_ips.master_0 }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
         ansible_user: "root"
 
 - name: "STAGE 2: Apply IaC to deploy the component"
-  hosts: "{{ hostvars['localhost']['one_open5gs_oneKE'] }}-master_0"
+  hosts: "master_0"
   gather_facts: false
   tasks:
     - name: Load enviromental variables from different sources inside the component

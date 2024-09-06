@@ -8,11 +8,4 @@
 ##
 ######################################################
 
-one_nokia_routable_network: "10.10.12.0/24"
-one_nokia_mcc: "214"
-one_nokia_mnc: "702"
-one_nokia_tac: "0001"
-one_nokia_s_nssai_sst: "1"
-one_nokia_s_nssai_sd: "000009"
-one_nokia_amf_ip: "10.10.12.200"
-one_nokia_upf_ip: "10.10.12.201"
+ue_stf_any_lease: 3600

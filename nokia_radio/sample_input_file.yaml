@@ -1,0 +1,6 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+nokia_radio_one_oneKE: "oneKE-main"
+nokia_radio_one_main_ip: "your_nokia_ip"
+nokia_radio_one_route_manager_ip: "10.19.98.0"
+nokia_radio_one_reservation_time: 60

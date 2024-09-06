@@ -1,0 +1,18 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+nokia_radio_any_routable_network: "10.10.12.0/24"
+nokia_radio_any_mcc: "214"
+nokia_radio_any_mnc: "702"
+nokia_radio_any_tac: "0001"
+nokia_radio_any_s_nssai_sst: "1"
+nokia_radio_any_s_nssai_sd: "000009"
+nokia_radio_any_amf_ip: "10.10.12.200"
+nokia_radio_any_upf_ip: "10.10.12.201"
