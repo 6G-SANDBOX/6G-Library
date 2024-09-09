@@ -2,8 +2,8 @@
 
 #one_open5gs_webui_subdomain: "open5gs"
 
-one_open5gsvm_cpu: 4
-one_open5gsvm_memory: 4
+one_open5gs_vm_cpu: 4
+one_open5gs_vm_memory: 4096
 
 one_open5gs_mcc: "999"
 one_open5gs_mnc: "38"
