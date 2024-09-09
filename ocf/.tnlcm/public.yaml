@@ -1,0 +1,146 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jorge Moratinos <jorge.moratinossalcines@telefonica.com>
+  short_description: Deploys an OpenCAPIF inside a Kubernetes cluster 
+  long_description: |
+    Helm Chart deploying a 5G SA Core inside a Kubernetes cluster
+    More info in the official documentation: https://open5gs.org/open5gs/docs/
+  hypervisors: [one]
+
+####################################
+## Component input
+####################################
+input:
+  one_ocf_oneKE:
+    description: Name of the oneKE cluster used to deploy the Helm Chart
+    type: "oneKE"
+    required_when: true
+  ocf_repo:
+    description: OCF Repository URL
+    type: str
+    default_value: "https://labs.etsi.org/rep/ocf/capif.git"
+    required_when: false
+  ocf_branch:
+    description: OCF Repository Branch to use
+    type: str
+    default_value: "staging"
+    required_when: false
+  ocf_vault_namespace:
+    description: Vault namespace
+    type: str
+    default_value: "ocf-vault"
+    required_when: false
+  ocf_vault_storage_class:
+    description: Vault Storage class. (longhorn by default)
+    type: str
+    default_value: "longhorn"
+    required_when: false
+  ocf_vault_storage_size: 
+    description: Vault Storage Size
+    type: str
+    default_value: "1Gi"
+    required_when: false
+  ocf_monitoring_namespace:
+    description: Monitoring namespace
+    type: str
+    default_value: "ocf-monitoring"
+    required_when: false
+  ocf_monitoring_service_name:
+    description: Vault Storage Size
+    type: str
+    default_value: "monitoring"
+    required_when: false
+  ocf_capif_namespace: 
+    description: CAPIF namespace
+    type: str
+    default_value: "ocf-capif"
+    required_when: false
+  ocf_capif_resources_reserve:
+    description: CAPIF resource reserve (default NO)
+    type: str
+    default_value: "NO"
+    required_when: false
+  ocf_capif_storage_class:
+    description: CAPIF storage class to use (default longhorn)
+    type: str
+    default_value: "longhorn"
+    required_when: false
+  ocf_capif_storage_access_mode:
+    description: CAPIF storage access mode (ReadWriteOnce by default)
+    type: str
+    default_value: "ReadWriteOnce"
+    choices: ["ReadWriteMany", "ReadWriteOnce"]
+    required_when: false
+  ocf_capif_grafana_storage_size: 
+    description: Grafana storage size
+    type: str
+    default_value: "1Gi"
+    required_when: false
+  ocf_capif_loki_storage_size:
+    description: Loki storage size
+    type: str
+    default_value: "100Mi"
+    required_when: false
+  ocf_capif_mongo_storage_size:
+    description: CAPIF Mongo storage size
+    type: str
+    default_value: "1Gi"
+    required_when: false
+  ocf_capif_mongo_register_storage_size:
+    description: Register Mongo Storage Size
+    type: str
+    default_value: "1Gi"
+    required_when: false
+  ocf_capif_tempo_storage_size:
+    description: Tempo Persistent storage size
+    type: str
+    default_value: "1Gi"
+    required_when: false
+  ocf_user:
+    description: User to be registered on OpenCAPIF
+    type: str
+    default_value: client
+    required_when: false
+  ocf_password:
+    description: User password to be registered on OpenCAPIF
+    type: str
+    default_value: password
+    required_when: false
+  ocf_tests_to_pass:
+    description: Tests to launch, (smoke - sanity check after deployment, all - launch complete OCF test suite)
+    type: str
+    default_value: smoke
+    choices: ["smoke", "all"]
+    required_when: false
+
+
+####################################
+## Component output
+####################################
+output:
+  ocf_metadata_dict: Dictionary with multiple parameters used in the core bootstrap
