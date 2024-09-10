@@ -11,7 +11,10 @@ populate:
     pullPolicy: IfNotPresent
   initCommands: #[]
   # example of initCommands:
-  - open5gs-dbctl add_ue_with_slice {{ one_open5gs_mcc }}{{ one_open5gs_mnc }}{{ one_open5gs_msin }} {{ one_open5gs_key }} {{ one_open5gs_opc }} {{ one_open5gs_apn }} {{ one_open5gs_s_nssai_sst }} {{ one_open5gs_s_nssai_sd }}
+  - >
+  open5gs-dbctl add_ue_with_slice {{ one_open5gs_mcc | string }}{{ one_open5gs_mnc | string }}{{ one_open5gs_msin | string }} 
+  {{ one_open5gs_key | string }} {{ one_open5gs_opc | string }} {{ one_open5gs_apn | string }} 
+  {{ one_open5gs_s_nssai_sst | string }} {{ one_open5gs_s_nssai_sd | string }}
 
 # Common
 mongodb:
@@ -78,41 +81,41 @@ amf:
   config:
     guamiList:
       - plmn_id:
-          mcc: "{{ one_open5gs_mcc }}"
-          mnc: "{{ one_open5gs_mnc }}"
+          mcc: "{{ one_open5gs_mcc | string }}"
+          mnc: "{{ one_open5gs_mnc | string }}"
         amf_id:
           region: 2
           set: 1
     taiList:
       - plmn_id:
-          mcc: "{{ one_open5gs_mcc }}"
-          mnc: "{{ one_open5gs_mnc }}"
-        tac: [ {{ one_open5gs_tac }} ]
+          mcc: "{{ one_open5gs_mcc | string }}"
+          mnc: "{{ one_open5gs_mnc | string }}"
+        tac: [ "{{ one_open5gs_tac | string }}" ]
     plmnList:
       - plmn_id:
-          mcc: "{{ one_open5gs_mcc }}"
-          mnc: "{{ one_open5gs_mnc }}"
+          mcc: "{{ one_open5gs_mcc | string }}"
+          mnc: "{{ one_open5gs_mnc | string }}"
         s_nssai:
-          - sst: {{ one_open5gs_s_nssai_sst }}
-            sd: "{{ one_open5gs_s_nssai_sd }}"
+          - sst: "{{ one_open5gs_s_nssai_sst | string }}"
+            sd: "{{ one_open5gs_s_nssai_sd | string }}"
     networkName: "open5gs"
   services:
     ngap:
       type: LoadBalancer
-      loadBalancerIP: "{{ one_open5gs_amf_ip }}"
+      loadBalancerIP: "{{ one_open5gs_amf_ip | string }}"
 
 nrf:
   config:
     servingList:
       - plmn_id:
-          mcc: "{{ one_open5gs_mcc }}"
-          mnc: "{{ one_open5gs_mnc }}"
+          mcc: "{{ one_open5gs_mcc | string }}"
+          mnc: "{{ one_open5gs_mnc | string }}"
 
 upf:
   config:
     upf:
       gtpu:
-        advertise: "{{ one_open5gs_upf_ip }}"
+        advertise: "{{ one_open5gs_upf_ip | string }}"
     subnetList:
       - subnet: "10.45.0.0/16"
         gateway: "10.45.0.1"
@@ -122,18 +125,18 @@ upf:
   services:
     gtpu:
       type: LoadBalancer
-      loadBalancerIP: "{{ one_open5gs_upf_ip }}"
+      loadBalancerIP: "{{ one_open5gs_upf_ip | string }}"
 
 
 nssf:
   config:
     nsiList:
     - uri: ""
-      sst: {{ one_open5gs_s_nssai_sst }}
-      sd: "{{ one_open5gs_s_nssai_sd }}"
+      sst: "{{ one_open5gs_s_nssai_sst | string }}"
+      sd: "{{ one_open5gs_s_nssai_sd | string }}"
 
 webui:
   ingress:
     enabled: true
     ingressClassName: nginx
-    hostname: "{{ one_open5gs_webui_subdomain }}.{{ tn_id}}.{{ site_domain }}"
+    hostname: "{{ one_open5gs_webui_subdomain | string }}.{{ tn_id }}.{{ site_domain }}"
