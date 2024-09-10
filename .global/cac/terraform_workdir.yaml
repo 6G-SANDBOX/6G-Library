@@ -21,4 +21,4 @@
   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/s3_download.yaml"
 
 - name: Run 'terraform init'
-  ansible.builtin.command: "terraform -chdir={{ workspace }}/.terraform/ init"
+  ansible.builtin.command: "terraform -chdir={{ workspace }}/.terraform/ init -reconfigure"

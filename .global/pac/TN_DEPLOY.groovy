@@ -15,10 +15,10 @@ pipeline {
         string(name: 'DEPLOYMENT_SITE', defaultValue: '', description: 'Site where the deployment is being made. E.g. uma, athens, fokus, oulu... MANDATORY')
         string(name: 'TNLCM_CALLBACK', defaultValue: 'http://tnlcm-ip:5000/tnlcm/callback/', description: 'URL of the TNLCM to notify the results. MANDATORY')
         string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library.git', description: '6G-Library repository HTTPS URL. Leave it as-is unless you want to test your own fork')
-        string(name: 'LIBRARY_BRANCH', defaultValue: 'refs/tags/v0.2.2', description: 'LIBRARY_URL checkout to use. Valid inputs can be refs/heads/<branchName>, refs/tags/<tagName> or <commitId>. Leave it as-is unless you want to test alternative releases/branches/commits.')
+        string(name: 'LIBRARY_BRANCH', defaultValue: 'v0.2.1', description: 'LIBRARY_URL checkout to use. Valid inputs can be refs/heads/<branchName>, refs/tags/<tagName> or <commitId>. Leave it as-is unless you want to test alternative releases/branches/commits.')
         string(name: 'SITES_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git', description: '6G-Library-Sites repository HTTP URL. Leave it as-is unless you want to test your own fork')
         string(name: 'SITES_BRANCH', defaultValue: 'refs/heads/main', description: 'SITES_URL checkout to use. Valid inputs can be refs/heads/<branchName>, refs/tags/<tagName> or <commitId>. Leave it as-is unless you want to test alternative releases/branches/commits.')
-        booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG. Files will not be purged after the pipeline execution. WARNING: You have to manually delete the workspace from the Jenkins VM filesystem to be able to lauch new jobs if you choose this option.')
+        booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG. Files will not be purged after the pipeline execution')
         // 'File Parameter' jenkins plugin required: https://plugins.jenkins.io/file-parameters/
         base64File (name: 'FILE', description: 'YAML file that contains the public variables needed to deploy the component')
     }
@@ -43,6 +43,8 @@ pipeline {
             steps {
                 echo 'Stage 1: Import input file into the workspace'
                 script {
+                    echo("DEPLOYING DEPLOYMENT: ${TN_ID}-${COMPONENT_TYPE}-${CUSTOM_NAME}")
+                    echo "Stage 1: Import input file into the workspace"
                     def inputFile = "${WORKSPACE}/${params.COMPONENT_TYPE}/variables/input_file.yaml"
 
                     def fileContent = sh (
@@ -65,8 +67,7 @@ pipeline {
                     def paramsContent = "tn_id: ${params.TN_ID}\n"
                     paramsContent += "component_type: ${params.COMPONENT_TYPE}\n"
                     paramsContent += "custom_name: ${params.CUSTOM_NAME}\n"
-                    def entityName = params.CUSTOM_NAME ? "${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}" : "${params.COMPONENT_TYPE}"
-                    paramsContent += "entity_name: ${entityName}\n"
+                    paramsContent += "entity_name: ${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}\n"
                     paramsContent += "deployment_site: ${params.DEPLOYMENT_SITE}\n"
                     paramsContent += "tnlcm_callback: ${params.TNLCM_CALLBACK}\n"
                     paramsContent += "debug: ${params.DEBUG}\n"
@@ -102,7 +103,7 @@ pipeline {
                     inventory: 'localhost,',
                     extraVars: [
                         workspace: "${WORKSPACE}",
-                        // deployment_site: "${params.DEPLOYMENT_SITE}",
+                        deployment_site: "${params.DEPLOYMENT_SITE}",
                         component_type: "${params.COMPONENT_TYPE}",
                     ],
                     playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"

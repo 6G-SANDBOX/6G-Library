@@ -6,7 +6,7 @@
   tasks:
     - name: Load site-specific variables
       ansible.builtin.include_vars:
-        file: "{{ workspace }}/6G-Sandbox-Sites/.sites/{{ deployment_site }}/values.yaml"
+        file: "{{ workspace }}/6G-Sandbox-Sites/{{ deployment_site }}/core.yaml"
 
     - name: Create directory for terraform manifests
       ansible.builtin.file:
@@ -37,21 +37,44 @@
       community.general.terraform:
         project_path: "{{ workspace }}/.terraform/"
         state: "present"
-        force_init: true
 
     - name: Remove the Trial Network .ssh/config.d/ file
       ansible.builtin.file:
         path: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
         state: absent
 
-    - name: Delete S3 folder
+    - name: Get list of TN objects from S3
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: list
         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}"
+        prefix: "{{ tn_id }}/"
+        validate_certs: false
+      register: s3_bucket_items
+
+    - name: Delete TN objects from S3
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: delobj
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ item }}"
+        validate_certs: false
+      loop: "{{ s3_bucket_items.s3_keys }}"
+
+    - name: Delete TN directory in S3
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: delobj
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/"
+        validate_certs: false
+      register: delete_result
 
     - name: Generate OK json response
       ansible.builtin.template:
