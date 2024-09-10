@@ -36,7 +36,7 @@ metadata:
 ## Component input
 ####################################
 input:
-  one_vm_kvm_networks:
+  one_upf_p4_sw_networks:
     description: Ordered list of Virtual Network names the VM will be part of. In most cases first one should always be the tn_vxlan
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]

@@ -1,3 +1,4 @@
+---
 - name: Install some required apt packages
   become: true
   tasks:
