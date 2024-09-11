@@ -79,8 +79,8 @@
     # Include the deployed component/s as Inventory host/s.
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "new_host"
-        ansible_host: "{{ ips[vnet_id] }}"
+        hostname: "{{ entity_name }}"
+        ansible_host: "{{ ips[ vnet_id ] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
