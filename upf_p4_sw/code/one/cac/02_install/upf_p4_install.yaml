@@ -14,11 +14,11 @@
 
 - name: Install docker engine
   become: true
-  ansible.builtin.include: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_install.yaml"
+  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_install.yaml"
 
 - name: Configure GitHub Container Registry authentication
   become: true
-  ansible.builtin.include: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_configuration.yaml"
+  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_configuration.yaml"
 
 - name: Copy docker-compose file
   #become: true
