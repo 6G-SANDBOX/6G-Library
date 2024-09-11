@@ -32,13 +32,17 @@ Current versions:
 Important information about the deployment
 
 * KUBERNETES CLUSTER : {{ one_open5gs_oneKE }}
-* PLMN ID (MCC): {{ one_open5gs_mcc }}
-* PLMN ID (MNC): {{ one_open5gs_mnc }}
+* PLMN ID (MCC): "{{ one_open5gs_mcc }}"
+* PLMN ID (MNC): "{{ one_open5gs_mnc }}"
 * TAC: {{ one_open5gs_tac }}
 * S-NSSAI (SST): {{ one_open5gs_s_nssai_sst }}
-* S-NSSAI (SD): {{ one_open5gs_s_nssai_sd }}
-* AMF_IP: {{ one_open5gs_amf_ip }}
-* UPF_IP: {{ one_open5gs_upf_ip }}
+* S-NSSAI (SD): "{{ one_open5gs_s_nssai_sd }}"
+* AMF_IP: "{{ one_open5gs_amf_ip }}"
+* UPF_IP: "{{ one_open5gs_upf_ip }}"
 * WEB_UI DASHBOARD: {{ one_open5gs_webui_subdomain }}.{{ tn_id }}.{{ site_domain }}
+
+The default credentials to login into the dashboard are:
+- admin
+- 1423
 
 Note: To access the dashboard, you must add the domain to the /etc/hosts file of your machine mapping it with the IP address of your VNF Machine.

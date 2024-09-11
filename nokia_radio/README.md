@@ -6,8 +6,8 @@ The configuration exposed by this component should be synchronized with the 5G c
 - 'mcc': "214" 
 - 'mnc': "702"
 - 'apn': "internet"
-- 'tac': "0001"
-- 's_nssai_sst': "1"
+- 'tac': 1
+- 's_nssai_sst': 1
 - 's_nssai_sd': "000009"
 - 'amf_ip': "10.10.12.200"
 - 'upf_ip': "10.10.12.201"

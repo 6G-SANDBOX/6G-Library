@@ -101,8 +101,8 @@ input:
 
   one_ueransim_gnb_tac:
     description: In gNB simulation, Tracking Area Code of the PLMN. Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
-    type: str
-    default_value: "200"
+    type: int
+    default_value: 200
     required_when: false
 
   one_ueransim_gnb_amf_address:
@@ -126,8 +126,8 @@ input:
     description: |
       In gNB simulation, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI).
       Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
-    type: int
-    default_value: 1
+    type: str
+    default_value: "1"
     required_when: false
 
   one_ueransim_ue_supi:

@@ -87,14 +87,14 @@ input:
 
   one_open5gs_tac:
     description: Tracking Area Code in the PLMN
-    type: str
-    default_value: "200"
+    type: int
+    default_value: 200
     required_when: false
 
   one_open5gs_s_nssai_sst:
     description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
-    type: str
-    default_value: "1"
+    type: int
+    default_value: 1
     required_when: false
 
   one_open5gs_s_nssai_sd:
