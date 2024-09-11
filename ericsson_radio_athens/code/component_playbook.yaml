@@ -1,0 +1,86 @@
+---
+- name: "STAGE 1: Prepare to access a previous target component"
+  hosts: localhost
+  gather_facts: false
+  connection: local  
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_ericsson_oneKE + '-node_ips'] }}"
+
+    - name: Add Route Manager to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "routemanager"
+        ansible_host: "{{ one_ericsson_route_manager_ip }}"
+        ansible_user: "root"
+        ansible_ssh_private_key_file: "/var/lib/jenkins/.ssh/id_ed25519"
+
+    - name: Add the bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
+        ansible_user: "jenkins"
+        
+        
+- name: "STAGE 2: Apply IaC to deploy the component - STEP 1"
+  hosts: "routemanager"
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Enable routing path in Route Manager
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/enable_routing_manager.yaml"
+
+- name: "STAGE 2: Apply IaC to deploy the component - STEP 2"
+  hosts: "bastion"
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Enable routing path in Bastion
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/enable_routing_bastion.yaml"
+
+
+- name: "STAGE 3: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Define ericsson metadata dictionary
+      ansible.builtin.set_fact:
+        ericsson_metadata_dict: >-
+          {
+            'one_ericsson_reservation_time': '{{ one_ericsson_reservation_time }}',
+            'one_ericsson_route_manager_ip': '{{ one_ericsson_route_manager_ip }}'
+          }
+
+    - name: Publish ericsson metadata as terraform outputs"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-metadata"
+            value: "{{ ericsson_metadata_dict }}"
+
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        output:
+          open5gs_metadata_dict: "{{ ericsson_metadata_dict | b64encode }}"
