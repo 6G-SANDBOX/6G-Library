@@ -13,12 +13,14 @@
     update_cache: yes
 
 - name: Install docker engine
+  block:
+    - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_install.yaml"
   become: true
-  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_install.yaml"
 
 - name: Configure GitHub Container Registry authentication
+  block:
+    - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_configuration.yaml"
   become: true
-  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_configuration.yaml"
 
 - name: Copy docker-compose file
   #become: true
