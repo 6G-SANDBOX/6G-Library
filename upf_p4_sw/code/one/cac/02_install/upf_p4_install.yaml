@@ -6,12 +6,12 @@
     apt:
       name: 
         - net-tools
-        #- mongodb-clients          # Deprecated in Ubuntu 22. I need to install mongo shell (mongosh)
         - apt-transport-https
         - ca-certificates
         - curl
         - gnupg
         - lsb-release
+        - mongosh
       state: present
       update_cache: yes
 
