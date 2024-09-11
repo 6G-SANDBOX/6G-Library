@@ -9,6 +9,10 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
+    - name: Set github_token as a fact
+      ansible.builtin.set_fact:
+        github_token: "{{ github_token }}" 
+
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
@@ -90,8 +94,6 @@
     - name: UPF P4 SW install
       ansible.builtin.include_tasks: 
         file: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/upf_p4_install.yaml"
-        vars:
-          github_token: "{{ github_token }}" 
 
 
 - name: "STAGE 4: Publish execution results"
