@@ -11,7 +11,10 @@ populate:
     pullPolicy: IfNotPresent
   initCommands: #[]
   # example of initCommands:
-  - open5gs-dbctl add_ue_with_slice {{ one_open5gs_mcc | string }}{{ one_open5gs_mnc | string }}{{ one_open5gs_msin | string }} {{ one_open5gs_key | string }} {{ one_open5gs_opc | string }} {{ one_open5gs_apn | string }} {{ one_open5gs_s_nssai_sst | string }} {{ one_open5gs_s_nssai_sd | string }}
+  - >
+    open5gs-dbctl add_ue_with_slice {{ one_open5gs_mcc | string }}{{ one_open5gs_mnc | string }}{{ one_open5gs_msin | string }} 
+    {{ one_open5gs_key | string }} {{ one_open5gs_opc | string }} {{ one_open5gs_apn | string }} 
+    {{ one_open5gs_s_nssai_sst | string }} {{ one_open5gs_s_nssai_sd | string }}
 
 # Common
 mongodb:
@@ -87,13 +90,13 @@ amf:
       - plmn_id:
           mcc: "{{ one_open5gs_mcc | string }}"
           mnc: "{{ one_open5gs_mnc | string }}"
-        tac: [ "{{ one_open5gs_tac | string }}" ]
+        tac: [ {{ one_open5gs_tac | int }} ]
     plmnList:
       - plmn_id:
           mcc: "{{ one_open5gs_mcc | string }}"
           mnc: "{{ one_open5gs_mnc | string }}"
         s_nssai:
-          - sst: "{{ one_open5gs_s_nssai_sst | string }}"
+          - sst: {{ one_open5gs_s_nssai_sst | int }}
             sd: "{{ one_open5gs_s_nssai_sd | string }}"
     networkName: "open5gs"
   services:
@@ -129,7 +132,7 @@ nssf:
   config:
     nsiList:
     - uri: ""
-      sst: "{{ one_open5gs_s_nssai_sst | string }}"
+      sst: {{ one_open5gs_s_nssai_sst | int }}
       sd: "{{ one_open5gs_s_nssai_sd | string }}"
 
 webui:
