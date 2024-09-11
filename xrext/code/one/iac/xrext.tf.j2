@@ -9,6 +9,8 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 
   context = {
     NETWORK = "YES"
+    SET_HOSTNAME = "$NAME"
+    USERNAME = "jenkins"
     ONEAPP_XR_CAPIF_API_NAME = "{{ one_xr_capif_api_name }}",
     ONEAPP_XR_CAPIF_HTTPS_HOST = "{{ one_xr_capif_https_host }}",
     ONEAPP_XR_CAPIF_HTTPS_PORT = "{{ one_xr_capif_https_port }}",
@@ -21,9 +23,6 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     ONEAPP_XR_NAC_SERVER_PASSWORD = "{{ one_xr_nac_server_password }}",
     ONEAPP_XR_NAC_SERVER_PORT = "{{ one_xr_nac_server_port }}",
     ONEAPP_XR_NAC_SERVER_UNAME = "{{ one_xr_nac_server_uname }}",
-    SET_HOSTNAME = "$NAME"
-    USERNAME = "{{ site_jenkins_ssh_user }}"
-    SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
   }
 
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error

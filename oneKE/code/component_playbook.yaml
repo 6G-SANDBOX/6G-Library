@@ -53,7 +53,7 @@
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}-{{ item.key }}"
         ansible_host: "{{ item.value }}"
-        ansible_ssh_common_args: "-J {{ site_jenkins_ssh_user }}@{{ bastion_ip }}{% if not item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}{% if not item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
         ansible_user: "root"
         groups: "{{ entity_name | replace('-', '_') }}"
       loop: "{{ node_ips | dict2items }}"
