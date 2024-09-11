@@ -1,5 +1,6 @@
 ---
 - name: Install some required apt packages
+  become: true
   apt:
     name: 
       - net-tools
