@@ -9,9 +9,10 @@
       - curl
       - gnupg
       - lsb-release
-      - mongosh
     state: present
     update_cache: yes
+
+# Install mongosh?
 
 - name: Install docker engine
   block:
