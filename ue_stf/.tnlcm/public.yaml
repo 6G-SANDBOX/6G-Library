@@ -33,6 +33,7 @@ metadata:
     The access time for the device is set to 1h by default, but can be modified
     **NOTE**: Currently this component is only available in the site "uma".
   hypervisors: [one]
+  destroy_script: true
 
 # ####################################
 # ## Component input

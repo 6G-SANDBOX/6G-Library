@@ -57,6 +57,7 @@ metadata:
     and provide a more in depth outline of it's purpose.
     This imaginary component needs a previous "X" component to be previously deployed and referrenced in input: "sampleVariable"
   hypervisors: [one]
+  # destroy_script: false   # true only in special components that require extra steps when being deleted. You probably don't need it
 
 ####################################
 ## Component input

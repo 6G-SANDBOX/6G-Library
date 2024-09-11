@@ -9,12 +9,11 @@ populate:
     repository: gradiant/open5gs-dbctl
     tag: 0.10.3
     pullPolicy: IfNotPresent
-  initCommands: #[]
-  # example of initCommands:
-  - >
-    open5gs-dbctl add_ue_with_slice {{ one_open5gs_mcc | string }}{{ one_open5gs_mnc | string }}{{ one_open5gs_msin | string }} 
-    {{ one_open5gs_key | string }} {{ one_open5gs_opc | string }} {{ one_open5gs_apn | string }} 
-    {{ one_open5gs_s_nssai_sst | string }} {{ one_open5gs_s_nssai_sd | string }}
+  initCommands:
+    - >
+      open5gs-dbctl add_ue_with_slice {{ one_open5gs_mcc | string }}{{ one_open5gs_mnc | string }}{{ one_open5gs_msin | string }} 
+      {{ one_open5gs_key | string }} {{ one_open5gs_opc | string }} {{ one_open5gs_apn | string }} 
+      {{ one_open5gs_s_nssai_sst | string }} {{ one_open5gs_s_nssai_sd | string }}
 
 # Common
 mongodb:
