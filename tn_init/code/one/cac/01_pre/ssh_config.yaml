@@ -2,7 +2,7 @@
   community.general.ssh_config:
     host: "{{ tn_id }}-tn_bastion"
     hostname: "{{ tn_bastion_ips[site_networks_id.default | string] | default('ERROR_ASSIGNING_IP') }}"
-    remote_user: "{{ site_jenkins_ssh_user }}"
+    remote_user: "jenkins"
     identity_file: "/var/lib/jenkins/.ssh/id_ed25519"
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present

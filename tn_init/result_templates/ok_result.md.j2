@@ -19,7 +19,7 @@ Important information:
 
 ## {{ tn_id }}-tn_bastion
 
-TheTrial Network's BASTION ,router and firewall.
+The Trial Network's gateway, router and firewall.
 
 Important information:
 
@@ -39,9 +39,10 @@ Important information:
 
 Public key:
 ```
-{{ hostvars['tn_bastion']['ssh_public_key']['content'] | b64decode }}
+{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] | b64decode }}
 ```
 Private key:
 ```
-{{ hostvars['tn_bastion']['ssh_private_key']['content'] | b64decode }}
+{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] | b64decode }}
 ```
+
