@@ -87,7 +87,7 @@
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
-    - name: UPF-P4 SW install
+    - name: UPF P4 SW install
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/upf_p4_install.yaml"
 
 

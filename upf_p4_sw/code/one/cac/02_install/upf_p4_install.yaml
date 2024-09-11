@@ -2,18 +2,18 @@
 - name: Install some required apt packages
   become: true
   tasks:
-  - name: Install required packages
-    apt:
-      name: 
-        - net-tools
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - gnupg
-        - lsb-release
-        - mongosh
-      state: present
-      update_cache: yes
+    - name: Install required packages
+      apt:
+        name: 
+          - net-tools
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+          - mongosh
+        state: present
+        update_cache: yes
 
 - name: Install docker engine
   become: true                                                                                                                                                                                                                                                                                       
