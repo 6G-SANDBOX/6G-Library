@@ -68,6 +68,7 @@
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "{{ hostvars['localhost']['entity_name'] }}"
   gather_facts: false
+  delegate_facts: true
   tasks:
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
