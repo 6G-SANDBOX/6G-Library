@@ -59,25 +59,7 @@ pipeline {
 
         stage('Stage 2: Clone 6G-Sandbox-Sites repository') {
             steps {
-                echo 'Stage 2: Import Jenkins parameters into the workspace'
-                script{
-                    def paramsFile = "${WORKSPACE}/${params.COMPONENT_TYPE}/variables/pipeline_parameters.yaml"
-                    def paramsContent = "tn_id: ${params.TN_ID}\n"
-                    paramsContent += "component_type: ${params.COMPONENT_TYPE}\n"
-                    paramsContent += "custom_name: ${params.CUSTOM_NAME}\n"
-                    paramsContent += "entity_name: ${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}\n"
-                    paramsContent += "deployment_site: ${params.DEPLOYMENT_SITE}\n"
-                    paramsContent += "tnlcm_callback: ${params.TNLCM_CALLBACK}\n"
-                    paramsContent += "debug: ${params.DEBUG}\n"
-
-                    writeFile file: paramsFile, text: paramsContent
-                }
-            }
-        }
-
-        stage('Stage 3: Deploy the selected component') {
-            steps {
-                echo 'Stage 3: Clone 6G-Sandbox-Sites repository'
+                echo 'Stage 2: Clone 6G-Sandbox-Sites repository'
                 checkout([$class: 'GitSCM',
                           branches: [[name: params.SITES_BRANCH]],
                           extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '6G-Sandbox-Sites']],
