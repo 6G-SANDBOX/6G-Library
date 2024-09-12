@@ -55,7 +55,7 @@
     owner: jenkins
     group: jenkins
     mode: '0755'
-    recursive: yes
+    directory_mode: yes
 
 - name: Modify UPF controller configuration in config.yaml
   ansible.builtin.replace:
