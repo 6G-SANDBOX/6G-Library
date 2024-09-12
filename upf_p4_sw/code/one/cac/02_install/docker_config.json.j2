@@ -1,7 +1,7 @@
 {
   "auths": {
     "ghcr.io": {
-      "auth": "{{ ansible_facts.github_token | b64encode }}"
+      "auth": "{{ github_token | b64encode }}"
     }
   }
 }
