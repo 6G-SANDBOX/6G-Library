@@ -7,7 +7,7 @@
     owner: jenkins
     group: jenkins
 
-- name: Testing 1. Fact github_token
+- name: Testing 5. Fact github_token
   debug:
     var: github_token
 

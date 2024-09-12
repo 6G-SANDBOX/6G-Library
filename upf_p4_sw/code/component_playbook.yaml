@@ -21,6 +21,10 @@
 
     - name: Terraform apply
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
+    - name: Testing 1. Fact github_token
+      debug:
+        var: github_token
  
 
 - name: "STAGE 2: Prepare to access the component"
@@ -55,6 +59,10 @@
     - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
       #loop: "{{ node_ips | dict2items }}"
+    
+    - name: Testing 2. Fact github_token
+      debug:
+        var: github_token
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
@@ -90,6 +98,10 @@
         key: "{{ item }}"
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+
+    - name: Testing 3. Fact github_token
+      debug:
+        var: github_token
 
     - name: UPF P4 SW install
       ansible.builtin.include_tasks: 
