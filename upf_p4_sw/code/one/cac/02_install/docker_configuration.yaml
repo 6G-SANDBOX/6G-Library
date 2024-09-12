@@ -7,10 +7,6 @@
     owner: jenkins
     group: jenkins
 
-- name: Testing 5. Fact github_token
-  debug:
-    var: github_token
-
 - name: Create Docker config file
   template:
     src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_config.json.j2"

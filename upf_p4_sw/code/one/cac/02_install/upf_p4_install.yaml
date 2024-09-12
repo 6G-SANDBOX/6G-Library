@@ -45,6 +45,7 @@
     dest: "/home/jenkins"
     rsync_opts:
     - "--chown=jenkins:jenkins"
+    ssh_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -J bastion_user@bastion_host"
     mode: push
     recursive: yes  # for copy subfolder too
 
