@@ -55,6 +55,7 @@
         ansible_host: "{{ ips[ vnet_id ] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
+        github_token: "{{ github_token }}"
 
     - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
@@ -68,7 +69,6 @@
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "{{ hostvars['localhost']['entity_name'] }}"
   gather_facts: false
-  delegate_facts: true
   tasks:
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
