@@ -84,7 +84,6 @@
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
-
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
