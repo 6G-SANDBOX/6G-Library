@@ -31,7 +31,7 @@
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-        ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['ssh_public_key'] }}"
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         cluster_roles: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-roles'] }}"
 
@@ -108,7 +108,7 @@
         state: present
         key: "{{ item }}"
       loop:
-        - "{{ hostvars['localhost']['ssh_public_key'] }}"
+        - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
     - name: Apply extra Helm charts
       when: inventory_hostname == hostvars['localhost']['entity_name'] + '-master_0'
