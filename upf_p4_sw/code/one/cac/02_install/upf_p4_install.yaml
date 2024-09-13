@@ -51,8 +51,8 @@
     dest: "/home/jenkins/config"
     owner: jenkins
     group: jenkins
-    mode: '0755'
-    directory_mode: '0755'
+    mode: '0644'
+    #directory_mode: '0755'
 
 - name: Modify UPF controller configuration in config.yaml
   ansible.builtin.replace:
