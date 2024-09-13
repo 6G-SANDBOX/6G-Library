@@ -21,7 +21,7 @@
 
 - name: Testing 4. Fact github_token
   debug:
-    var: github_token
+    var: hostvars['localhost']['one_upf_p4_sw_ue_pool']
 
 - name: Configure GitHub Container Registry authentication
   block:
