@@ -1,5 +1,5 @@
 # {{ tn_id }}-{{ entity_name}}
-A *open5gs* component has been succesfully deployed as part of the Trial Network: **`{{ tn_id }}`**, inside cluster **`{{ one_open5gs_oneKE }}`**
+The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
 
 <p align="center">
   <a href="https://open5gs.org/open5gs/docs/">
@@ -25,24 +25,22 @@ Deployed Open5GS includes the following 5G Core components:
 If you need detailed information about Open5GS you can visit the official documentation: https://open5gs.org/open5gs/docs/guide/01-quickstart/
 
 Current versions:
-- Open5GS v2.7.1
-- Used Helm Chart v2.2.3
+- Open5GS `v2.7.1`
+- Used Helm Chart `v2.2.3`
 
-# Deployment
-Important information about the deployment
+## Important information
 
-* KUBERNETES CLUSTER : {{ one_open5gs_oneKE }}
-* PLMN ID (MCC): "{{ one_open5gs_mcc }}"
-* PLMN ID (MNC): "{{ one_open5gs_mnc }}"
-* TAC: {{ one_open5gs_tac }}
-* S-NSSAI (SST): {{ one_open5gs_s_nssai_sst }}
-* S-NSSAI (SD): "{{ one_open5gs_s_nssai_sd }}"
-* AMF_IP: "{{ one_open5gs_amf_ip }}"
-* UPF_IP: "{{ one_open5gs_upf_ip }}"
-* WEB_UI DASHBOARD: {{ one_open5gs_webui_subdomain }}.{{ tn_id }}.{{ site_domain }}
+- **Kubernetes Cluster**: `{{ one_open5gs_oneKE }}`
+- **PLMN ID (MCC)**: `{{ one_open5gs_mcc }}`
+- **PLMN ID (MNC)**: `{{ one_open5gs_mnc }}`
+- **TAC**: `{{ one_open5gs_tac }}`
+- **S-NSSAI (SST)**: `{{ one_open5gs_s_nssai_sst }}`
+- **S-NSSAI (SD)**: `{{ one_open5gs_s_nssai_sd }}`
+- **AMF IP**: `{{ one_open5gs_amf_ip }}`
+- **UPF IP**: `{{ one_open5gs_upf_ip }}`
+- **Web portal URL**: `{{ one_open5gs_webui_subdomain }}.{{ tn_id }}.{{ site_domain }}`
+- **Web portal credentials**: 
+  - `admin`
+  - `1423`
 
-The default credentials to login into the dashboard are:
-- admin
-- 1423
-
-Note: To access the dashboard, you must add the domain to the /etc/hosts file of your machine mapping it with the IP address of your VNF Machine.
+**Note**: To access the dashboard, you must add the domain to the /etc/hosts file of your machine mapping it with the IP address of your VNF Machine.

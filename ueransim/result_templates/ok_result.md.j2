@@ -1,5 +1,6 @@
 # {{ tn_id }}-{{ entity_name }}
-A *UERANSIM* component has been succesfully deployed as part of the Trial Network: **`{{ tn_id }}`**
+
+The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
 
 <p align="center">
   <a href="https://github.com/aligungr/UERANSIM">
@@ -14,17 +15,16 @@ A *UERANSIM* component has been succesfully deployed as part of the Trial Networ
 If you need detailed information about what each parameter in the input files mean, check the [official documentation](https://github.com/aligungr/UERANSIM/wiki/Configuration)
 Component configuration logs can be foud at `/var/log/post-ueransim.log` 
 
-### Deployment
-Important information about the deployment
+## Important information:
 
-- **VM ID**: {{ id }}
-- **MEMORY**: {{ one_ueransim_memory}} MiB
-- **VCPU**: {{ one_ueransim_cpu }}
-- **STORAGE**: 5 GiB
-- **Network Interfaces**:
-    ```json
-    {{ ips }}
-    ```
+- **OpenNebula VM ID**: `{{ id }}`
+- **VM memory**: `{{ one_ueransim_memory}} MiB`
+- **VM VCPUs**: `{{ one_ueransim_cpu }}`
+- **VM available storage**: `5 GiB`
+- **VM network interfaces**:
+  ```json
+  {{ ips }}
+  ```
 
 {% if one_ueransim_run_gnb is defined and one_ueransim_run_gnb == 'YES' %}
 ### gNB Runtime

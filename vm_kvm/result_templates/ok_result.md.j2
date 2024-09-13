@@ -1,15 +1,22 @@
 # {{ tn_id }}-{{ entity_name}}
-An Ubuntu 22.04 LTS Virtual Machine of size **{{ one_vm_kvm_size }}** han been succesfully created as part of the Trial Network **{{ tn_id }}**
 
-<img src="https://www.surikaios.com/wp-content/uploads/2022/05/ubuntu-logo.jpg" width="400"/>
+The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
 
-Important information:
+<p align="center">
+  <a href="https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05">
+    <img src="https://www.surikaios.com/wp-content/uploads/2022/05/ubuntu-logo.jpg" width="400" title="UBUNTU">
+  </a>
+</p>
 
-* **VM ID**: {{ id }}
-* **MEMORY**: {{ one_vm_kvm_memory}} MiB
-* **VCPU**: {{ one_vm_kvm_cpu }}
-* **STORAGE**: 25 GiB
-* **Network Interfaces**:
-    ```json
-    {{ ips }}
-    ```
+It consists of an Ubuntu 22.04 LTS Virtual Machine 
+
+## Important information:
+
+- **OpenNebula VM ID**: `{{ id }}`
+- **VM memory**: `{{ one_vm_kvm_memory}} MiB`
+- **VM VCPUs**: `{{ one_vm_kvm_cpu }}`
+- **VM available storage**: `25 GiB`
+- **VM network interfaces**:
+  ```json
+  {{ ips }}
+  ```
