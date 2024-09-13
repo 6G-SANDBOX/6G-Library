@@ -45,6 +45,10 @@
 # Structure of the dictionary "output" the TNLCM expects to receive after the component deployment
 # Only keys are checked, the value shown here is a short description only seen in this file
 
+### site_variables variables
+# Dictionary with the different variables that are supposed to be encrypted in the 6G-Sandbox-Sites repository.
+# Each variable has a short description of what it does and its type just for informational purposes
+
 ####################################
 ## Component metadata
 ####################################
@@ -116,3 +120,9 @@ input:
 output:
   sample_output_variable: Short description of what the output value is.
   another_output_variable: Description is optional. For now, it is unused by the TNLCM. TNLCM only checks the key name.
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: Short description of what this variable represents.

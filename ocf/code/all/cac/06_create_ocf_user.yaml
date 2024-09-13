@@ -1,5 +1,5 @@
 - name: Launch Robot OCF Testsuite
-  ansible.builtin.shell: "capif/helm/scripts/create_remote_users.sh -u {{ ocf_user }} -p {{ ocf_password }}"
+  ansible.builtin.shell: "capif/helm/scripts/create_remote_users.sh -u {{ ocf_any_user }} -p {{ ocf_any_password }}"
   become: yes
   environment:
     KUBECONFIG: /etc/rancher/rke2/rke2.yaml

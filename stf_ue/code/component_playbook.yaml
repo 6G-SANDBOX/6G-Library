@@ -14,19 +14,19 @@
 
     - name: Get end of lease time and date with RFC 3339 section 5.6 format
       ansible.builtin.shell: |
-        date -u -d "{{ start_time.stdout }} + {{ ue_stf_any_lease }} seconds" +'%Y-%m-%dT%H:%M:%SZ'
+        date -u -d "{{ start_time.stdout }} + {{ stf_ue_any_lease }} seconds" +'%Y-%m-%dT%H:%M:%SZ'
       register: stop_time
       changed_when: false
 
     - name: Create a transient group with the requested device
       ansible.builtin.uri:
-        url: "{{ site_available_components.ue_stf.origin }}/api/v1/groups/"
+        url: "{{ site_available_components.stf_ue.origin }}/api/v1/groups/"
         method: POST
         body_format: json
         status_code: [200, 201]
         headers:
           Content-Type: application/json
-          Authorization: "Bearer {{ site_available_components.ue_stf.administrator_token }}"
+          Authorization: "Bearer {{ site_available_components.stf_ue.administrator_token }}"
         body: |-
           {
             "name": "{{ tn_id }}-{{ entity_name }}",
@@ -45,11 +45,11 @@
     - name: Add device to the new group
       ansible.builtin.uri:
         url: >-
-          {{ site_available_components.ue_stf.origin }}/api/v1/groups/{{ create_group.json.group.id }}/devices/{{ site_available_components.ue_stf.device }}
+          {{ site_available_components.stf_ue.origin }}/api/v1/groups/{{ create_group.json.group.id }}/devices/{{ site_available_components.stf_ue.device }}
         method: PUT
         status_code: [200]
         headers:
-          Authorization: "Bearer {{ site_available_components.ue_stf.administrator_token }}"
+          Authorization: "Bearer {{ site_available_components.stf_ue.administrator_token }}"
       register: add_device
       failed_when: false
 
@@ -59,11 +59,11 @@
         - name: Delete new group
           ansible.builtin.uri:
             url: >-
-              {{ site_available_components.ue_stf.origin }}/api/v1/groups/{{ create_group.json.group.id }}
+              {{ site_available_components.stf_ue.origin }}/api/v1/groups/{{ create_group.json.group.id }}
             method: DELETE
             status_code: [200]
             headers:
-              Authorization: "Bearer {{ site_available_components.ue_stf.administrator_token }}"
+              Authorization: "Bearer {{ site_available_components.stf_ue.administrator_token }}"
 
         - name: Publish failed execution results to TNLCM
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_fail_results.yaml"
@@ -72,11 +72,11 @@
     - name: Add user tnuser to the new group
       ansible.builtin.uri:
         url: >-
-          {{ site_available_components.ue_stf.origin }}/api/v1/groups/{{ create_group.json.group.id }}/users/{{ site_available_components.ue_stf.user_mail }}
+          {{ site_available_components.stf_ue.origin }}/api/v1/groups/{{ create_group.json.group.id }}/users/{{ site_available_components.stf_ue.user_mail }}
         method: PUT
         status_code: [200]
         headers:
-          Authorization: "Bearer {{ site_available_components.ue_stf.administrator_token }}"
+          Authorization: "Bearer {{ site_available_components.stf_ue.administrator_token }}"
       when: add_device.json.success
 
 

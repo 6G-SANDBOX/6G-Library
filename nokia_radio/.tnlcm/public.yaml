@@ -54,23 +54,47 @@ input:
     description: Name of the oneKE cluster to route Nokia traffic.
     type: "oneKE"
     required_when: true
-  nokia_radio_one_main_ip:
-    description: Address of Nokia Airscale.
-    type: str
-    required_when: false
-  nokia_radio_one_route_manager_ip:
-    description: Address of the route manager that will enable routing between Nokia Airscale and 5G Core.
-    type: str
-    default_value: "10.11.28.134"
-    required_when: true
   nokia_radio_one_reservation_time:
     description: Time in minutes for the Nokia Airsale reservation
     type: int
     default_value: 60
     required_when: true
 
+
 ####################################
 ## Component output
 ####################################
 output:
-  metadata_dict: Dictionary with multiple parameters used in the component bootstrap
+  metadata_dict: # Dictionary with multiple parameters about the nokia_radio component
+    reservation_time: input.nokia_radio_one_oneKE
+    oneKE: input.nokia_radio_one_reservation_time
+    cp_ip: site_variables.cp_ip
+    #up_ip: site_variables.up_ip
+    core_network: site_variables.core_network
+    route_manager_ip1: site_variables.route_manager_ip1
+    #route_manager_ip2: site_variables.route_manager_ip2
+    mcc: site_variables.mcc
+    mnc: site_variables.mnc
+    tac: site_variables.tac
+    s_nssai_sst: site_variables.s_nssai_sst
+    s_nssai_sd: site_variables.s_nssai_sd
+    amf_ip: site_variables.amf_ip
+    upf_ip: site_variables.upf_ip
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  cp_ip: Address of Nokia Airscale
+  # up_ip:
+  core_network:
+  route_manager_ip1: First IP address of the route manager that will enable routing between Nokia Airscale and 5G Core.
+  #route_manager_ip2:
+  mcc:   # Unused
+  mnc:   # Unused
+  tac:   # Unused
+  s_nssai_sst:   # Unused
+  s_nssai_sd:    # Unused
+  amf_ip:    # Unused
+  upf_ip:    # Unused

@@ -153,6 +153,23 @@ output:
   id: Service ID in OpenNebula
   node_ids: "dictionary of VM IDs in OpenNebula: key='VM name', value='the VM ID'"
   node_ips: "dictionary of VM addresses: key='VM name', value='the VM main address'"
-  metadata_dict: Dictionary with multiple parameters used in the cluster bootstrap
+  metadata_dict: # Dictionary with multiple parameters used in the cluster bootstrap
+    external_vnet: input.one_oneKE_external_vnet
+    internal_vnet: input.one_oneKE_internal_vnet
+    version: input.one_oneKE_version
+    multus: input.one_oneKE_multus
+    cni_plugin: input.one_oneKE_cni_plugin
+    cilium_range: input.one_oneKE_cilium_range
+    metallb_range: input.one_oneKE_metallb_range
+    longhorn: input.one_oneKE_longhorn
+    dns: input.one_oneKE_dns
+    nginx_passthrough: input.one_oneKE_nginx_passthrough
   kubeconfig: Kubeconfig file with keys and endpoints to manage the cluster
   skooner_token: Generated Token to login to the skooner dashboard Web App
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  129:
+    template_id: ID of the OneKE v1.29 template to use in your OpenNebula environment

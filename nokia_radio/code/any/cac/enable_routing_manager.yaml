@@ -2,6 +2,6 @@
   ansible.builtin.shell:
   args:
     executable: /bin/bash
-    cmd: "nohup /root/route-manager.sh {{ tn_id }} {{ nokia_radio_any_routable_network }} {{ hostvars['localhost']['bastion_ip'] }} {{ nokia_radio_one_reservation_time }} > /tmp/route-manager.log 2>&1 &" 
+    cmd: "nohup /root/route-manager.sh {{ tn_id }} {{ site_available_components.nokia_radio.core_network }} {{ hostvars['localhost']['bastion_ip'] }} {{ nokia_radio_one_reservation_time }} > /tmp/route-manager.log 2>&1 &" 
   async: 0
   poll: 0

@@ -84,3 +84,11 @@ output:
   vpn_client_tunnel: VPN Client config to connect to this Trial Network
   tn_ssh_public_key: SSH public key present in the TN VMs for the user tnuser
   tn_ssh_private_key: SSH public key to access the TN VMs with the user tnuser
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  # None
+  # Currently, site variables from tn_bastion and tn_vxlan are used instead

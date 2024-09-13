@@ -22,40 +22,40 @@
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_ocf_oneKE + '-node_ips'] }}"
+        node_ips: "{{ (terraform_outputs.stdout | from_json)[ocf_one_oneKE + '-node_ips'] }}"
 
     - name: Add the oneKE master to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ one_ocf_oneKE }}-master_0"
+        hostname: "master_0"
         ansible_host: "{{ node_ips.master_0 }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
         ansible_user: "root"
 
 - name: "STAGE 2: Apply IaC to deploy the component"
-  hosts: "{{ hostvars['localhost']['one_ocf_oneKE'] }}-master_0"
+  hosts: "master_0"
   gather_facts: false
   tasks:
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
-    
+
     - name: Prepare repository for OpenCAPIF installation
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/00_prepare_repository.yaml"
-    
+
     - name: Install Vault
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//01_install_vault.yaml"
-    
+
     - name: Install Monitoring
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//02_install_monitoring.yaml"
-    
+
     - name: Install OpenCAPIF
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//03_install_capif.yaml"
-    
+
     - name: Setup /etc/hosts to access all components
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//04_setup_testing_environment.yaml"
-    
+
     - name: Execute robot tests
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//05_execute_ocf_testing.yaml"
-    
+
     - name: Create OpenCAPIF User
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//06_create_ocf_user.yaml"
 
@@ -66,31 +66,31 @@
   tasks:
     - name: Define OpenCAPIF metadata dictionary
       ansible.builtin.set_fact:
-        ocf_metadata_dict: >-
+        metadata_dict: >-
           {
-            'ocf_repo': '{{ ocf_repo }}',
-            'ocf_branch': '{{ ocf_branch }}',
-            'ocf_user': '{{ ocf_user }}',
-            'ocf_password': '{{ ocf_password }}',
-            'ocf_vault_namespace': '{{ ocf_vault_namespace }}',
-            'ocf_vault_hostname': '{{ ocf_vault_hostname }}',
-            'ocf_vault_storage_class': '{{ ocf_vault_storage_class }}',
-            'ocf_vault_storage_size': '{{ ocf_vault_storage_size }}',
-            'ocf_monitoring_prometheus_hostname': '{{ ocf_monitoring_prometheus_hostname }}',
-            'ocf_monitoring_namespace': '{{ ocf_monitoring_namespace }}',
-            'ocf_monitoring_service_name': '{{ ocf_monitoring_service_name }}',
-            'ocf_monitoring_service_name': '{{ ocf_monitoring_service_name }}',
-            'ocf_monitoring_snooker_enabled': '{{ ocf_monitoring_snooker_enabled }}',
-            'ocf_capif_namespace': '{{ ocf_capif_namespace }}',
-            'ocf_capif_hostname': '{{ ocf_capif_hostname }}',
-            'ocf_capif_register_hostname': '{{ ocf_capif_register_hostname }}',
-            'ocf_capif_resources_reserve': '{{ ocf_capif_resources_reserve }}',
-            'ocf_capif_storage_class': '{{ ocf_capif_storage_class }}',
-            'ocf_capif_storage_access_mode': '{{ ocf_capif_storage_access_mode }}',
-            'ocf_capif_grafana_storage_size': '{{ ocf_capif_grafana_storage_size }}',
-            'ocf_capif_loki_storage_size': '{{ ocf_capif_loki_storage_size }}',
-            'ocf_capif_mongo_storage_size': '{{ ocf_capif_mongo_storage_size }}',
-            'ocf_capif_mongo_register_storage_size': '{{ ocf_capif_mongo_register_storage_size }}',
+            'oneKE': '{{ ocf_one_oneKE }}',
+            'repo': '{{ ocf_any_repo }}',
+            'branch': '{{ ocf_any_branch }}',
+            'vault_namespace': '{{ ocf_any_vault_namespace }}',
+            'vault_storage_class': '{{ ocf_any_vault_storage_class }}',
+            'vault_storage_size': '{{ ocf_any_vault_storage_size }}',
+            'vault_hostname': '{{ ocf_any_vault_hostname }}',
+            'monitoring_namespace': '{{ ocf_any_monitoring_namespace }}',
+            'monitoring_service_name': '{{ ocf_any_monitoring_service_name }}',
+            'monitoring_prometheus_hostname': '{{ ocf_any_monitoring_prometheus_hostname }}',
+            'monitoring_snooker_enabled': '{{ ocf_any_monitoring_snooker_enabled }}',
+            'capif_namespace': '{{ ocf_any_capif_namespace }}',
+            'capif_resources_reserve': '{{ ocf_any_capif_resources_reserve }}',
+            'capif_storage_class': '{{ ocf_any_capif_storage_class }}',
+            'capif_storage_access_mode': '{{ ocf_any_capif_storage_access_mode }}',
+            'capif_grafana_storage_size': '{{ ocf_any_capif_grafana_storage_size }}',
+            'capif_loki_storage_size': '{{ ocf_any_capif_loki_storage_size }}',
+            'capif_mongo_storage_size': '{{ ocf_any_capif_mongo_storage_size }}',
+            'capif_mongo_register_storage_size': '{{ ocf_any_capif_mongo_register_storage_size }}',
+            'capif_hostname': '{{ ocf_any_capif_hostname }}',
+            'capif_register_hostname': '{{ ocf_any_capif_register_hostname }}',
+            'user': '{{ ocf_any_user }}',
+            'password': '{{ ocf_any_password }}',
           }
 
     - name: Upload Vault keys to S3
@@ -134,10 +134,10 @@
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-metadata"
-            value: "{{ ocf_metadata_dict }}"
+            value: "{{ metadata_dict }}"
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:
-          ocf_metadata_dict: "{{ ocf_metadata_dict | b64encode }}"
+          metadata_dict: "{{ metadata_dict | b64encode }}"

@@ -115,8 +115,29 @@ input:
     default_value: "10.21.12.201"
     required_when: false
 
+
 ####################################
 ## Component output
 ####################################
 output:
-  metadata_dict: Dictionary with multiple parameters used in the core bootstrap
+  metadata_dict: #Dictionary with multiple parameters used in the core bootstrap
+    oneKE: input.one_open5gs_oneKE
+    proxy: vnf_0 de input.one_open5gs_oneKE
+    mcc: input.one_open5gs_mcc
+    mnc: input.one_open5gs_mnc
+    msin: input.one_open5gs_msin
+    key: input.one_open5gs_key
+    opc: input.one_open5gs_opc
+    apn: input.one_open5gs_apn
+    tac: input.one_open5gs_tac
+    s_nssai_sd: input.one_open5gs_s_nssai_sst
+    s_nssai_sst: input.one_open5gs_s_nssai_sd
+    amf_ip: input.one_open5gs_amf_ip
+    upf_ip: input.one_open5gs_upf_ip
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  # None

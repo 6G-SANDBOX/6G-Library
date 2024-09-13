@@ -1,34 +1,33 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
-one_ocf_oneKE: "oneKE-custom_name"
+### General deployment configuration
+ocf_one_oneKE: "oneKE-custom_name"
+#ocf_any_repo: https://labs.etsi.org/rep/ocf/capif.git
+#ocf_any_branch: staging
 
-# OCF repository to get helm installation scripts
-ocf_repo: https://labs.etsi.org/rep/ocf/capif.git
-ocf_branch: staging
-
-# Vault deployment configuration
-ocf_vault_namespace: ocf-vault
-ocf_vault_storage_class: longhorn
-ocf_vault_storage_size: 1Gi
+### Vault deployment configuration
+#ocf_any_vault_namespace: "ocf-vault"
+#ocf_any_vault_storage_class: "longhorn"
+#ocf_any_vault_storage_size: 1Gi
 
 # Monitoring deployment configuration
-ocf_monitoring_namespace: ocf-monitoring
-ocf_monitoring_service_name: monitoring
+#ocf_any_monitoring_namespace: "ocf-monitoring"
+#ocf_any_monitoring_service_name: "monitoring"
 
 # OpenCAPIF deployment configuration
-ocf_capif_namespace: ocf-capif
-ocf_capif_resources_reserve: NO
-ocf_capif_storage_class: longhorn
-ocf_capif_storage_access_mode: ReadWriteOnce
-ocf_capif_grafana_storage_size: 1Gi
-ocf_capif_loki_storage_size: 100Mi
-ocf_capif_mongo_storage_size: 1Gi
-ocf_capif_mongo_register_storage_size: 1Gi
-ocf_capif_tempo_storage_size: 1Gi
+#ocf_any_capif_namespace: "ocf-capif"
+#ocf_any_capif_resources_reserve: "NO"
+#ocf_any_capif_storage_class: "longhorn"
+#ocf_any_capif_storage_access_mode: "ReadWriteOnce"
+#ocf_any_capif_grafana_storage_size: "1Gi"
+#ocf_any_capif_loki_storage_size: "100Mi"
+#ocf_any_capif_mongo_storage_size: "1Gi"
+#ocf_any_capif_mongo_register_storage_size: "1Gi"
+#ocf_any_capif_tempo_storage_size: "1Gi"
+
 
 # Client to be used by experimenter
-ocf_user: client
-ocf_password: password
-
+ocf_any_user: "client"
+ocf_any_password: "password"
 # Setup tests to pass
-ocf_tests_to_pass: smoke
+ocf_any_tests_to_pass: "smoke"

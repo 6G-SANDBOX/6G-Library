@@ -27,7 +27,7 @@
     - name: Add Route Manager to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "routemanager"
-        ansible_host: "{{ nokia_radio_one_route_manager_ip }}"
+        ansible_host: "{{ site_available_components.nokia_radio.route_manager_ip1 }}"
         ansible_user: "root"
         ansible_ssh_private_key_file: "/var/lib/jenkins/.ssh/id_ed25519"
 
@@ -68,8 +68,18 @@
       ansible.builtin.set_fact:
         nokia_metadata_dict: >-
           {
-            'nokia_radio_one_reservation_time': '{{ nokia_radio_one_reservation_time }}',
-            'nokia_radio_one_route_manager_ip': '{{ nokia_radio_one_route_manager_ip }}'
+            'reservation_time': '{{ nokia_radio_one_reservation_time }}',
+            'oneKE': '{{ nokia_radio_one_oneKE }}',
+            'cp_ip': '{{ site_available_components.nokia_radio.cp_ip }}',
+            'core_network': '{{ site_available_components.nokia_radio.core_network }}',
+            'route_manager_ip1': '{{ site_available_components.nokia_radio.route_manager_ip1 }}',
+            'mcc': '{{ site_available_components.nokia_radio.mcc }}',
+            'mnc': '{{ site_available_components.nokia_radio.mnc }}',
+            'tac': '{{ site_available_components.nokia_radio.tac }}',
+            's_nssai_sst': '{{ site_available_components.nokia_radio.s_nssai_sst }}',
+            's_nssai_sd': '{{ site_available_components.nokia_radio.s_nssai_sd }}',
+            'amf_ip': '{{ site_available_components.nokia_radio.amf_ip }}',
+            'upf_ip': '{{ site_available_components.nokia_radio.upf_ip }}'
           }
     - name: Publish Nokia metadata as terraform outputs"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"

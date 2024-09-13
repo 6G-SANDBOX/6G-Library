@@ -36,105 +36,105 @@ metadata:
 ## Component input
 ####################################
 input:
-  one_ocf_oneKE:
+  ocf_one_oneKE:
     description: Name of the oneKE cluster used to deploy the Helm Chart
     type: "oneKE"
     required_when: true
-  ocf_repo:
+  ocf_any_repo:
     description: OCF Repository URL
     type: str
     default_value: "https://labs.etsi.org/rep/ocf/capif.git"
     required_when: false
-  ocf_branch:
+  ocf_any_branch:
     description: OCF Repository Branch to use
     type: str
     default_value: "staging"
     required_when: false
-  ocf_vault_namespace:
+  ocf_any_vault_namespace:
     description: Vault namespace
     type: str
     default_value: "ocf-vault"
     required_when: false
-  ocf_vault_storage_class:
+  ocf_any_vault_storage_class:
     description: Vault Storage class. (longhorn by default)
     type: str
     default_value: "longhorn"
     required_when: false
-  ocf_vault_storage_size: 
+  ocf_any_vault_storage_size: 
     description: Vault Storage Size
     type: str
     default_value: "1Gi"
     required_when: false
-  ocf_monitoring_namespace:
+  ocf_any_monitoring_namespace:
     description: Monitoring namespace
     type: str
     default_value: "ocf-monitoring"
     required_when: false
-  ocf_monitoring_service_name:
+  ocf_any_monitoring_service_name:
     description: Vault Storage Size
     type: str
     default_value: "monitoring"
     required_when: false
-  ocf_capif_namespace: 
+  ocf_any_capif_namespace: 
     description: CAPIF namespace
     type: str
     default_value: "ocf-capif"
     required_when: false
-  ocf_capif_resources_reserve:
+  ocf_any_capif_resources_reserve:
     description: CAPIF resource reserve (default NO)
     type: str
     default_value: "NO"
     required_when: false
-  ocf_capif_storage_class:
+  ocf_any_capif_storage_class:
     description: CAPIF storage class to use (default longhorn)
     type: str
     default_value: "longhorn"
     required_when: false
-  ocf_capif_storage_access_mode:
+  ocf_any_capif_storage_access_mode:
     description: CAPIF storage access mode (ReadWriteOnce by default)
     type: str
     default_value: "ReadWriteOnce"
     choices: ["ReadWriteMany", "ReadWriteOnce"]
     required_when: false
-  ocf_capif_grafana_storage_size: 
+  ocf_any_capif_grafana_storage_size: 
     description: Grafana storage size
     type: str
     default_value: "1Gi"
     required_when: false
-  ocf_capif_loki_storage_size:
+  ocf_any_capif_loki_storage_size:
     description: Loki storage size
     type: str
     default_value: "100Mi"
     required_when: false
-  ocf_capif_mongo_storage_size:
+  ocf_any_capif_mongo_storage_size:
     description: CAPIF Mongo storage size
     type: str
     default_value: "1Gi"
     required_when: false
-  ocf_capif_mongo_register_storage_size:
+  ocf_any_capif_mongo_register_storage_size:
     description: Register Mongo Storage Size
     type: str
     default_value: "1Gi"
     required_when: false
-  ocf_capif_tempo_storage_size:
+  ocf_any_capif_tempo_storage_size:
     description: Tempo Persistent storage size
     type: str
     default_value: "1Gi"
     required_when: false
-  ocf_user:
+  ocf_any_user:
     description: User to be registered on OpenCAPIF
     type: str
-    default_value: client
+    default_value: "client"
     required_when: false
-  ocf_password:
+  ocf_any_password:
     description: User password to be registered on OpenCAPIF
     type: str
-    default_value: password
+    default_value: "password"
     required_when: false
-  ocf_tests_to_pass:
+  ocf_any_tests_to_pass:
     description: Tests to launch, (smoke - sanity check after deployment, all - launch complete OCF test suite)
     type: str
-    default_value: smoke
+    default_value: "smoke"
     choices: ["smoke", "all"]
     required_when: false
 
@@ -143,4 +143,33 @@ input:
 ## Component output
 ####################################
 output:
-  ocf_metadata_dict: Dictionary with multiple parameters used in the core bootstrap
+  metadata_dict:   # Dictionary with multiple parameters used in the core bootstrap
+    oneKE: input.ocf_one_oneKE
+    repo: input.ocf_any_repo
+    branch: input.ocf_any_branch
+    vault_namespace: input.ocf_any_vault_namespace
+    vault_storage_class: input.ocf_any_vault_storage_class
+    vault_storage_size: input.ocf_any_vault_storage_size
+    vault_hostname: private.ocf_any_vault_hostname
+    monitoring_namespace: input.ocf_any_monitoring_namespace
+    monitoring_service_name: input.ocf_any_monitoring_service_name
+    monitoring_prometheus_hostname: private.ocf_any_monitoring_prometheus_hostname
+    monitoring_snooker_enabled: private.ocf_any_monitoring_snooker_enabled
+    capif_namespace: input.ocf_any_capif_namespace
+    capif_resources_reserve: input.ocf_any_capif_resources_reserve
+    capif_storage_class: input.ocf_any_capif_storage_class
+    capif_storage_access_mode: input.ocf_any_capif_storage_access_mode
+    capif_grafana_storage_size: input.ocf_any_capif_grafana_storage_size
+    capif_loki_storage_size: input.ocf_any_capif_loki_storage_size
+    capif_mongo_storage_size: input.ocf_any_capif_mongo_storage_size
+    capif_mongo_register_storage_size: input.ocf_any_capif_mongo_register_storage_size
+    capif_hostname: private.ocf_any_capif_hostname
+    capif_register_hostname: private.ocf_any_capif_register_hostname
+    user: input.ocf_any_user
+    password: input.ocf_any_password
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  # None
