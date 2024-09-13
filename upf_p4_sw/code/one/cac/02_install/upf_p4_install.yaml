@@ -47,7 +47,7 @@
 - name: Copy config folder recursively
   become: true
   ansible.builtin.copy:
-    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config"
+    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config/"
     dest: "/home/jenkins/config"
     owner: jenkins
     group: jenkins
