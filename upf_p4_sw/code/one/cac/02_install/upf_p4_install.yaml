@@ -19,10 +19,6 @@
     - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_install.yaml"
   become: true
 
-- name: Testing 4. Fact github_token
-  debug:
-    var: hostvars['localhost']['one_upf_p4_sw_ue_pool']
-
 - name: Configure GitHub Container Registry authentication
   block:
     - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_configuration.yaml"
@@ -62,7 +58,7 @@
   ansible.builtin.replace:
     path: /home/jenkins/config/controller-upf/config.yaml
     regexp: '^(\s*{{ item.key }}\s*:\s*)".+"'
-    replace: '\1"{{ one_upf_p4_sw_controller[item.value] }}"'
+    replace: '\1"{{ hostvars["localhost"]["one_upf_p4_sw_controller"][item.value] if item.value != "one_upf_p4_sw_ue_pool" else hostvars["localhost"]["one_upf_p4_sw_ue_pool"] }}"'
   loop:
     - { key: 'ENB_IPV4_N3', value: 'enb_ipv4_n3' }
     - { key: 'DN_IPV4_N6', value: 'dn_ipv4_n6' }
@@ -74,26 +70,23 @@
     - { key: 'UPF_MAC_N6', value: 'upf_mac_n6' }
     - { key: 'subnet_IPv4', value: 'one_upf_p4_sw_ue_pool' }
 
-
 - name: Modify open5GS configuration
   ansible.builtin.replace:
     path: "{{ item.path }}"
     regexp: '^(\s+{{ item.key }}:\n\s+- addr:) .*'
     replace: '\1 {{ item.value }}'
   loop:
-    - { path: '/home/jenkins/config/open5gs/amf.yaml', key: 'ngap', value: '{{ one_upf_p4_sw_open5gs_amf.ngap_addr }}' }
-    - { path: '/home/jenkins/config/open5gs/smf.yaml', key: 'subnet', value: '{{ one_upf_p4_sw_ue_pool }}' }
-
+    - { path: '/home/jenkins/config/open5gs/amf.yaml', key: 'ngap', value: '{{ hostvars["localhost"]["one_upf_p4_sw_open5gs_amf"]["ngap_addr"] }}' }
+    - { path: '/home/jenkins/config/open5gs/smf.yaml', key: 'subnet', value: '{{ hostvars["localhost"]["one_upf_p4_sw_ue_pool"] }}' }
 
 - name: Modify chassis configuration
   ansible.builtin.replace:
     path: /home/jenkins/config/stratum-upf/chassis_config.pb.txt
     regexp: '(singleton_ports \{\n\s+id: {{ item.id }}\n\s+name: )"[^"]*"'
-    replace: '\1 {{ one_upf_p4_sw_chassis_conf[item.key] }}'
+    replace: '\1 {{ hostvars["localhost"]["one_upf_p4_sw_chassis_conf"][item.key] }}'
   loop:
     - { id: 1, key: 'phy_n3' }
     - { id: 3, key: 'phy_n6' }
-
   
 #- name: Run docker-compose
 #  become: true
