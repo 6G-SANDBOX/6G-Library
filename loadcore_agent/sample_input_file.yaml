@@ -1,8 +1,7 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
-one_loadcore_agent_middleware_ip: 192.168.0.0
 #This is a list of network ids. Each entry means a network interface attached to this network.
 one_loadcore_agent_networks: 
-  - 563
-  - 564
-  - 565
+  - "vnet_1"
+  - "vnet_2"
+  - "vnet_3"
