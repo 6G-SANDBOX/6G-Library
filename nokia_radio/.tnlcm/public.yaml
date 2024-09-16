@@ -88,13 +88,13 @@ output:
 site_variables:
   cp_ip: Address of Nokia Airscale
   # up_ip:
-  core_network:
+  core_network: Subnetwork (CIDR) of the private subnet of the input.nokia_radio_one_oneKE. Will be autocompleted in the future
   route_manager_ip1: First IP address of the route manager that will enable routing between Nokia Airscale and 5G Core.
   #route_manager_ip2:
-  mcc:   # Unused
-  mnc:   # Unused
-  tac:   # Unused
-  s_nssai_sst:   # Unused
-  s_nssai_sd:    # Unused
-  amf_ip:    # Unused
-  upf_ip:    # Unused
+  mcc:   # Unused, will complete other components dependencies in the future
+  mnc:   # Unused, will complete other components dependencies in the future
+  tac:   # Unused, will complete other components dependencies in the future
+  s_nssai_sst:   # Unused, will complete other components dependencies in the future
+  s_nssai_sd:    # Unused, will complete other components dependencies in the future
+  amf_ip:    # Unused, will complete other components dependencies in the future
+  upf_ip:    # Unused, will complete other components dependencies in the future
