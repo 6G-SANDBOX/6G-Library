@@ -8,11 +8,11 @@ Below is a summary of the docker components that have been deployed within the v
 * Open5GS Release 16 Docker Containers: One container for each Open5GS service (AMF, SMF, etc) without UPF service.
 
 ## Access to Virtual Machine
-You will be able to access the VM through IP {{ ips }} with SSH connection.
+You will be able to access the VM through IP {{ output.ips }} with SSH connection.
 
 ## Connections
 The UPF-P4 BMv2 SW + Open5GS CP has been successfully deployed to connect to:
-* RAN N3 IP: {{ enb_ipv4_n3 }}
-* DN external: {{ dn_ipv4_n6 }}
+* RAN N3 IP: {{ output.enb_ipv4_n3 }}
+* DN external: {{ output.dn_ipv4_n6 }}
 
 ## Logs
