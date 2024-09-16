@@ -1,7 +1,18 @@
 # {{ tn_id }}-{{ entity_name}}
 
-This file is shown to the experimenter after the deployment was succesful.
-It can describe its post-deployment behaviour, remind about the input values, or show generated output values.
-You can be as verbose as you want: from a schema of the minimal information, to a detailed documentation.
+## Deployment
+The UPF-P4 BMv2 SW module has been successfully deployed on the VM {{ tn_id }}-{{ entity_name}}. This deployment is part of the Trial Network {{ tn_id }}.
+Below is a summary of the docker components that have been deployed within the virtual machine:
+* DP-UPF Docker Container: Executes the P4 UPF data plane.
+* CP-UPF Docker Container: Run the data plane python controller.
+* Open5GS Release 16 Docker Containers: One container for each Open5GS service (AMF, SMF, etc) without UPF service.
 
-Remember this is a template, so that playbook variables can be used here.
+## Access to Virtual Machine
+You will be able to access the VM through IP {{ ips }} with SSH connection.
+
+## Connections
+The UPF-P4 BMv2 SW + Open5GS CP has been successfully deployed to connect to:
+* RAN N3 IP: {{ enb_ipv4_n3 }}
+* DN external: {{ dn_ipv4_n6 }}
+
+## Logs

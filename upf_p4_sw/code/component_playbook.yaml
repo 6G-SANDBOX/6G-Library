@@ -115,15 +115,18 @@
     #    validate_certs: false
 
     # Common task to create custom terraform outputs with information of interest for future deployments.
+    # RAFA: My idea is to save the following outputs: N3 (UPF), N1-N2 (AMF) and N6 (UPF)
     - name: Publish node IDs and IPs as a terraform outputs"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-node_ids"
-            value: "{{ node_ids }}"
-          - key: "{{ entity_name }}-node_ips"
-            value: "{{ node_ips }}"
-
+          - key: "{{ entity_name }}-upf_ipv4_n3"
+            value: "{{ one_upf_p4_sw_controller.upf_ipv4_n3 }}"
+          - key: "{{ entity_name }}-upf_ipv4_n6"
+            value: "{{ one_upf_p4_sw_controller.upf_ipv4_n6 }}"
+          - key: "{{ entity_name }}-amf_ipv4_n2"
+            value: "{{ one_upf_p4_sw_open5gs_amf.ngap_addr }}" 
+                                                                                          
     # Necessary in most if not all components. Publishes the deployment information in the following order:
     # 1. Post the new terraform manifests to MINIO S3 Storage
     # 2. Generate markdown OK file with information about the component
@@ -134,7 +137,10 @@
       vars:
         output:
           id: "{{ id | b64encode }}"
-          node_ids: "{{ node_ids | b64encode }}"
-          node_ips: "{{ node_ips | b64encode }}"
+          ips: "{{ ips | b64encode }}"
+          enb_ipv4_n3: "{{ one_upf_p4_sw_controller.enb_ipv4_n3 }}"
+          dn_ipv4_n6: "{{ one_upf_p4_sw_controller.dn_ipv4_n6 }}"
+          #node_ids: "{{ node_ids | b64encode }}"
+          #node_ips: "{{ node_ips | b64encode }}"
           #kubeconfig: "{{ kubeconfig | b64encode }}"
           #skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"
