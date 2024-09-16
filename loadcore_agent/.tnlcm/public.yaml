@@ -1,0 +1,67 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Filip Ivanovich <filip.ivanovic@keysight.com>
+    - Abhishek Bakshi <abhishek.bakshi@keysight.com>
+  short_description: Keysight LoadCore Agent
+  long_description: |
+    A vm machine with Keysight LoadCore Agent ready to play.
+    With the variable "one_loadcore_middleware_ip", you need to specify the IP address where the LoadCore Middleware is listening.
+    After booting, the agent register itself with the LoadCore Middleware server.
+  hypervisors: [one]
+
+####################################
+## Component input
+####################################
+input:
+  one_loadcore_agent_networks:
+    description: Ordered list of Virtual Network names the VM will be part of.
+    type: "list[vnet]"
+    default_value: ["vnet"]
+    required_when: false
+  one_loadcore_agent_middleware_ip:
+    description: IP Address where LoadCore Middleware is listening.
+    type: str
+    default_value: "192.168.0.0"
+    required_when: true
+
+####################################
+## Component output
+####################################
+output:
+  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
+  id: VM ID in OpenNebula
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the LoadCore VM template to use in your OpenNebula environment
+  image_id: ID of the LoadCore image to use in your OpenNebula environment
