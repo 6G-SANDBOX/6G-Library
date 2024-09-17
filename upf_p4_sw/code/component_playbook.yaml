@@ -21,7 +21,7 @@
 
     - name: Terraform apply
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
- 
+
 
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
