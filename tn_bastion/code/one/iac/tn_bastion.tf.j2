@@ -39,10 +39,10 @@ resource "opennebula_virtual_machine" "tn_bastion" {
 
 output "tn_bastion-id" {
   description = "OpenNebula VM ID"
-  value = opennebula_virtual_machine.{{ entity_name }}.id
+  value = opennebula_virtual_machine.tn_bastion.id
 }
 
 output "tn_bastion-ips" {
   description = "OpenNebula VM Network Assignments"
-  value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
+  value = { for nic in opennebula_virtual_machine.tn_bastion.nic[*] : nic.network_id => nic.computed_ip }
 }
