@@ -28,7 +28,7 @@ ocf_any_monitoring_prometheus_hostname: "prometheus.{{ tn_id }}.{{ site_domain }
 ocf_any_monitoring_snooker_enabled: false
 
 # OpenCAPIF deployment configuration
-ocf_capif_namespace: "ocf-capif"
+ocf_any_capif_namespace: "ocf-capif"
 ocf_any_capif_resources_reserve: "NO"
 ocf_any_capif_storage_class: "longhorn"
 ocf_any_capif_storage_access_mode: "ReadWriteOnce"
