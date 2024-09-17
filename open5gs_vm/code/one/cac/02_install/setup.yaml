@@ -1,0 +1,21 @@
+####################################
+##
+## Ansible YAML Playbook Template
+## - install open5gs and mongodb
+####################################
+
+  - name: Update apt cache and upgrade packages.
+    apt: update_cache=true cache_valid_time=3600 upgrade=full
+
+  - name: Install packages
+    ansible.builtin.apt:
+      state: present
+      name:
+        - bmon
+        - tmux
+
+  - name: disable UFW
+    service:
+      name: ufw
+      state: stopped
+      enabled: false
