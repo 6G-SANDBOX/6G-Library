@@ -1,0 +1,23 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+# Private variables define for each virtualization platform (hypervisor) a set of default values.
+# Some private variables are just defaults to be overwritten by the input_file.yaml, while others are not intended to be overwritten.
+# Fact is, with input_file.yaml you can technically overwrite any value shown here, but the TNLCM will only let you to modify the ones in public.yaml
+
+one_ks8500runner_cpu: 2
+one_ks8500runner_memory: 2048
+one_ks8500runner_disk: 3072
+one_ks8500runner_networks: 
+  - tn_vxlan
+
+ks8500runner_backend_url: https://test-automation.pw.keysight.com
+ks8500runner_registration_token: none
+ks8500runner_name: OpenNebulaDefault
