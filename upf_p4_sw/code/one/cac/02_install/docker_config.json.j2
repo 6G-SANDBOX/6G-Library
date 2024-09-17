@@ -1,0 +1,7 @@
+{
+  "auths": {
+    "ghcr.io": {
+      "auth": "{{ hostvars['localhost']['github_token'] | b64encode }}"
+    }
+  }
+}
