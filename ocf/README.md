@@ -1,6 +1,8 @@
-# open5gs
+# OpenCAPIF (OCF)
 
-Helm Chart deploying a 5G SA Core inside a Kubernetes cluster
-More info in the official documentation: https://open5gs.org/open5gs/docs/
+This component will deploy OpenCAPIF from ETSI.
 
-Template needs to have a non-Default CPU architecture, just like the MinIO
+Helm Chart deploying OpenCAPIF inside kubernetes cluster
+
+More info in the official documentation: https://ocf.etsi.org/documentation/latest/
+
