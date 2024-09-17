@@ -87,6 +87,6 @@
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
-          vpn_client_tunnel: "{{ hostvars[entity_name]['client_tunnel']['content'] }}"
-          tn_ssh_public_key: "{{ hostvars[entity_name]['tn_ssh_public_key']['content'] }}"
-          tn_ssh_private_key: "{{ hostvars[entity_name]['tn_ssh_private_key']['content'] }}"
+          vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"
+          tn_ssh_public_key: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
+          tn_ssh_private_key: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"

@@ -59,17 +59,17 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ks8500runner_networks[0] + '-id'] | string}}"
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ks8500runner_networks[0] + '-id'] | string }}"
 
-        #ks8500runner_backend_url: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ks8500runner_backend_url'] | string}}"
-        #ks8500runner_registration_token: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ks8500runner_registration_token'] | string}}"
-        #ks8500runner_name: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ks8500runner_name'] | string}}"
+        # ks8500runner_backend_url: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ks8500runner_backend_url'] | string}}"
+        # ks8500runner_registration_token: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ks8500runner_registration_token'] | string}}"
+        # ks8500runner_name: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ks8500runner_name'] | string}}"
 
     # Include the deployed component/s as Inventory host/s.
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[ vnet_id ] }}"
+        hostname: "ks8500runner"
+        ansible_host: "{{ ips[vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
@@ -88,7 +88,7 @@
       - Settings
       - Storage
     ks8500runner_path: /opt/KS8500Runner
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "ks8500runner"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -108,48 +108,48 @@
 
     # Detect if required network connectivity is availabla for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
-    - name: verify-connectivity
-      ansible.builtin.shell:  curl https://test-automation.pw.keysight.com/index.html
-    
-    - name: install-docker
+    - name: Verify connectivity
+      ansible.builtin.shell: curl https://test-automation.pw.keysight.com/index.html
+
+    - name: Install docker
       community.general.apk:
         name: docker,docker-cli-buildx,docker-compose,openrc,docker-cli-compose
         update_cache: true
-    
-    - name: enable-docker-service
+
+    - name: Enable docker service
       ansible.builtin.service:
         name: docker
         state: started
-        enabled: yes
+        enabled: true
 
-    - name: create-runner-dirs
+    - name: Create runner dirs
       ansible.builtin.file:
         path: "{{ ks8500runner_path }}/{{ item }}"
         state: directory
         mode: '0700'
       loop: "{{ ks8500runner_mounts }}"
 
-    - name: deploy-runner-configuration
+    - name: Deploy runner configuration
       ansible.builtin.copy:
-        src:  "{{ playbook_dir }}/all/runner/"
+        src: "{{ playbook_dir }}/all/runner/"
         dest: "{{ ks8500runner_path }}"
-       
-    - name: build-runner-image
+
+    - name: Build runner image
       community.docker.docker_image_build:
         name: ks8500_runner:latest
         path: "{{ ks8500runner_path }}"
         dockerfile: Dockerfile
-  
-    - name: create-mount-list
-      set_fact:
-        mount_list: '{{ (mount_list|default([])) + [{"target": "/opt/tap/" + item, "source": "{{ ks8500runner_path }}/" + item, "type": "bind" }] }}'
+
+    - name: Create mount list
+      ansible.builtin.set_fact:
+        mount_list: '{{ (mount_list | default([])) + [{"target": "/opt/tap/" + item, "source": "{{ ks8500runner_path }}/" + item, "type": "bind"}] }}'
       loop: "{{ ks8500runner_mounts }}"
 
     # The microsoft base image uses this ID. Maybe we can find a better solution.
-    - name: workaround-permissions
-        ansible.builtin.shell: chown -R 1654:1654 /opt/KS8500Runner
+    - name: Workaround permissions
+      ansible.builtin.shell: chown -R 1654:1654 /opt/KS8500Runner
 
-    - name: register-runner
+    - name: Register runner
       community.docker.docker_container:
         image: ks8500_runner
         name: register-runner
@@ -160,7 +160,7 @@
         command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --registrationToken {{ ks8500runner_registration_token }}
       register: docker_container_output
 
-    - name: start-runner
+    - name: Start runner
       # cannot use docker_compose_v2 with the default package from apk, so using the deprecated docker_compose
       community.docker.docker_compose:
         project_src: "{{ ks8500runner_path }}"
@@ -177,4 +177,4 @@
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
-          registration_info: "{{ (docker_container_output.container.Output | b64encode) }}" 
+          registration_info: "{{ (docker_container_output.container.Output | b64encode) }}"

@@ -11,7 +11,7 @@
 
     - name: Set github_token as a fact
       ansible.builtin.set_fact:
-        github_token: "{{ github_token }}" 
+        github_token: "{{ github_token }}"
 
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
@@ -43,22 +43,22 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_upf_p4_sw_networks[0] + '-id'] | string}}"
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_upf_p4_sw_networks[0] + '-id'] | string }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[ vnet_id ] }}"
+        hostname: "upf_p4_sw"
+        ansible_host: "{{ ips[vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
     - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
-      #loop: "{{ node_ips | dict2items }}"
+      # loop: "{{ node_ips | dict2items }}"
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "upf_p4_sw"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -81,7 +81,7 @@
         name: tnuser
         shell: /bin/bash
         groups: sudo
-        
+
     - name: Set TN ssh key as authorized in new user
       become: true
       ansible.posix.authorized_key:
@@ -92,7 +92,7 @@
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
     - name: UPF P4 SW install
-      ansible.builtin.include_tasks: 
+      ansible.builtin.include_tasks:
         file: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/upf_p4_install.yaml"
 
 
@@ -102,7 +102,7 @@
   connection: local
   tasks:
     # You can publish files to the MINIO S3 Storage
-    #- name: Upload kubeconfig to S3
+    # - name: Upload kubeconfig to S3
     #  amazon.aws.s3_object:
     #    endpoint_url: "{{ site_s3_server.endpoint }}"
     #    mode: put
@@ -125,8 +125,8 @@
           - key: "{{ entity_name }}-upf_ipv4_n6"
             value: "{{ one_upf_p4_sw_controller.upf_ipv4_n6 }}"
           - key: "{{ entity_name }}-amf_ipv4_n2"
-            value: "{{ one_upf_p4_sw_open5gs_amf.ngap_addr }}" 
-                                                                                          
+            value: "{{ one_upf_p4_sw_open5gs_amf.ngap_addr }}"
+
     # Necessary in most if not all components. Publishes the deployment information in the following order:
     # 1. Post the new terraform manifests to MINIO S3 Storage
     # 2. Generate markdown OK file with information about the component
@@ -140,7 +140,7 @@
           ips: "{{ ips | b64encode }}"
           enb_ipv4_n3: "{{ one_upf_p4_sw_controller.enb_ipv4_n3 }}"
           dn_ipv4_n6: "{{ one_upf_p4_sw_controller.dn_ipv4_n6 }}"
-          #node_ids: "{{ node_ids | b64encode }}"
-          #node_ips: "{{ node_ips | b64encode }}"
-          #kubeconfig: "{{ kubeconfig | b64encode }}"
-          #skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"
+          # node_ids: "{{ node_ids | b64encode }}"
+          # node_ips: "{{ node_ips | b64encode }}"
+          # kubeconfig: "{{ kubeconfig | b64encode }}"
+          # skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"

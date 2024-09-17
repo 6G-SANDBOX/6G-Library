@@ -17,14 +17,14 @@
       # Task also has error handling, and if apply fails, will send a notification to the TNLCM with the stderr, and text from {{ component_type }}/result_templates/fail_result.md.j2
       - name: Terraform apply
         ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
-      
+
 
 # Post-terraform preliminary tasks. Still no component configuration.
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
   gather_facts: false
   connection: local
-  tasks:     
+  tasks:
 
     # Module to retrieve all generated outputs from the terraform working directory in JSON with a key-value format
     - name: Retrieve terraform outputs
@@ -34,7 +34,7 @@
         cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
         executable: /bin/bash
       register: terraform_outputs
-      changed_when: false  
+      changed_when: false
 
     # Save some of the outputs as playbook facts (variables). Some of them will be surelly be used as future output values
     - name: Set Terraform outputs as playbook facts
@@ -43,19 +43,19 @@
         ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string}}"
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string }}"
 
     # Include the deployed component/s as Inventory host/s.
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[ vnet_id ] }}"
+        hostname: "opensand_sat"
+        ansible_host: "{{ ips[vnet_id] }}"
         ansible_ssh_common_args: "-J {{ site_jenkins_ssh_user }}@{{ bastion_ip }}"
-        ansible_user: "{{ site_jenkins_ssh_user }}"        
+        ansible_user: "{{ site_jenkins_ssh_user }}"
 
     # While not used by the Jenkins, we included the configuration of a .ssh/config per TN in the Jenkins for debugging purposes.
     - name: Create SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"   
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
 
 
 # Configuration play. Modules executed in the deployment component.
@@ -63,7 +63,7 @@
 # - Set the variables again (with the load_variables.yaml global taskfile or similar)
 # - Refer to the hostvars of localhost.   
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "opensand_sat"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -97,14 +97,14 @@
       loop:
         - "{{ hostvars['localhost']['ssh_public_key'] }}"
 
-    
+
     - name: Download and install packages to VM
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/install_packages.yaml"   
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/install_packages.yaml"
 
 
     # Example of included task files common to all hypervisors, like helm charts, or bash/python/ruby sripts.
-    #- name: Helm install
-    #  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_install.yaml"        
+    # - name: Helm install
+    #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_install.yaml"
 
 # Final phase of the deployments. Gather information and publish it
 - name: "STAGE 4: Publish execution results"

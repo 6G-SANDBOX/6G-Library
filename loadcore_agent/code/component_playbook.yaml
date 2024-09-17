@@ -34,21 +34,21 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_loadcore_agent_networks[0] + '-id'] | string}}"
-    
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_loadcore_agent_networks[0] + '-id'] | string }}"
+
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[ vnet_id ] }}"
+        hostname: "loadcore_agent"
+        ansible_host: "{{ ips[vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
-        ansible_user: jenkins
+        ansible_user: "jenkins"
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "loadcore_agent"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -92,13 +92,13 @@
 
     - name: Execute bash script to register the Agent with the Middleware
       become: true
-      shell: "/home/tnuser/agent-setup.sh {{ loadcore_middleware_ip }} management_interface=ens3 test_interface=ens4 reboot_api_enabled=y update_hostname=n"
+      ansible.builtin.shell: "/home/tnuser/agent-setup.sh {{ loadcore_middleware_ip }} management_interface=ens3 test_interface=ens4 reboot_api_enabled=y update_hostname=n"
       args:
         chdir: "/home/tnuser/"
       register: result
 
     - name: Verify result
-      assert:
+      ansible.builtin.assert:
         that:
           - result.rc == 0
         fail_msg: "There was a problem registering LoadCore Agent"

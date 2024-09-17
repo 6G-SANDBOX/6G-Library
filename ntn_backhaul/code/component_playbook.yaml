@@ -33,11 +33,11 @@
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ntn_ip: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
-  
+
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[ vnet_id ] }}"
+        hostname: "ntn_backhaul"
+        ansible_host: "{{ ips[vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: jenkins
 
@@ -46,7 +46,7 @@
 
 
 # - name: "STAGE 3: Apply CAC to prepare the component"
-#   hosts: "{{ hostvars['localhost']['entity_name'] }}"
+#   hosts: "ntn_backhaul"
 #   gather_facts: false
 #   tasks:
 #     - name: Wait for system to become reachable
