@@ -27,10 +27,12 @@ resource "opennebula_virtual_machine" "tn_bastion" {
     model           = "virtio"
     network_id      = "{{ site_networks_id.default }}"
   }
+{% for network in one_bastion_networks %}
   nic {
     model           = "virtio"
-    network_id      = opennebula_virtual_network.tn_vxlan.id
+    network_id      = opennebula_virtual_network.{{ network }}.id
   }
+{% endfor %}
 
   depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
 }
