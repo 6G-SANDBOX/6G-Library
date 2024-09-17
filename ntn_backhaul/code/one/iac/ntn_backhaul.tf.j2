@@ -1,0 +1,33 @@
+# https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
+# https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
+resource "opennebula_virtual_machine" "{{ entity_name }}" {
+  name        = "{{ tn_id }}-{{ entity_name }}"
+  template_id = {{ site_available_components.loadcore_agent.template_id }}
+  cpu         = {{ one_loadcore_agent_cpu }}
+  vcpu        = {{ one_loadcore_agent_cpu }}
+  memory      = {{ one_loadcore_agent_memory }}
+
+  context = {
+    NETWORK = "YES"
+    SET_HOSTNAME = "$NAME"
+    USERNAME = "jenkins"
+  }
+
+{% for network in one_loadcore_agent_networks %}
+  nic {
+    model           = "virtio"
+    network_id      = opennebula_virtual_network.{{ network }}.id
+  }
+{% endfor %}
+
+}
+
+output "{{ entity_name }}-id" {
+  description = "OpenNebula VM ID"
+  value = opennebula_virtual_machine.{{ entity_name }}.id
+}
+
+output "{{ entity_name }}-ips" {
+  description = "OpenNebula VM Network Assignments"
+  value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
+}
