@@ -18,7 +18,7 @@
         create: true
       controller:
         service:
-          type: NodePort
+          type: LoadBalancer
           nodePorts:
             http: 32080
             https: 32443
