@@ -81,7 +81,7 @@
         name: tnuser
         shell: /bin/bash
         groups: sudo
-
+        password: ''
     - name: Set TN ssh key as authorized in new user
       become: true
       ansible.posix.authorized_key:

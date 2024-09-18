@@ -98,6 +98,7 @@
         name: tnuser
         shell: /bin/bash
         groups: wheel
+        password: ''
       when: "'vnf' in inventory_hostname"
 
     - name: Create new user for experimenter access in ubuntu
@@ -105,6 +106,7 @@
         name: tnuser
         shell: /bin/bash
         groups: sudo
+        password: ''
       when: "'vnf' not in inventory_hostname"
 
     - name: Set TN ssh key as authorized in new user
