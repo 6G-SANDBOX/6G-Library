@@ -25,10 +25,8 @@
   become: true
 
 - name: Copy docker-compose file
-  #become: true
   copy:
     src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker-compose.yaml"
-    #src: docker-compose.yaml
     dest: "/home/jenkins/docker-compose.yaml"
     owner: jenkins
     group: jenkins
