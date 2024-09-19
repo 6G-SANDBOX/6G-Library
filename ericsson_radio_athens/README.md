@@ -1,4 +1,4 @@
-# ERICSSON RADIO UMA
+# ERICSSON RADIO ATHENS
 
 Component that enables the capability of access physical Ericsson Radio in a Trial Network
 
