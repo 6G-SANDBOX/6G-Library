@@ -30,10 +30,10 @@
   tasks:
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
-        args:
-          chdir: "{{ workspace }}/.terraform/"
-          cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
-          executable: /bin/bash
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
       register: terraform_outputs
       changed_when: false
 
