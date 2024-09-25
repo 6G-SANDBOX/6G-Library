@@ -12,7 +12,7 @@ one_upf_p4_sw_memory: 8192
 one_upf_p4_sw_disk: 25600
 one_upf_p4_sw_networks:
   - tn_vxlan
-  - vnet_1
+  - vnet-vnet_1
 
 one_upf_p4_sw_controller:
   enb_ipv4_n3: "10.0.3.2"
@@ -35,4 +35,3 @@ one_upf_p4_sw_open5gs_amf:
 one_upf_p4_sw_chassis_conf:
   phy_n3: "ens39"
   phy_n6: "ens37"
-
