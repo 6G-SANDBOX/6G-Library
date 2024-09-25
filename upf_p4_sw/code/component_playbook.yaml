@@ -47,7 +47,7 @@
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
+        hostname: "upf_p4_sw"
         ansible_host: "{{ ips[ vnet_id ] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
@@ -58,7 +58,7 @@
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "upf_p4_sw"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
