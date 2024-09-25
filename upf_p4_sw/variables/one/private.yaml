@@ -12,6 +12,7 @@ one_upf_p4_sw_memory: 8192
 one_upf_p4_sw_disk: 25600
 one_upf_p4_sw_networks:
   - tn_vxlan
+  - vnet_1
 
 one_upf_p4_sw_controller:
   enb_ipv4_n3: "10.0.3.2"
@@ -21,7 +22,7 @@ one_upf_p4_sw_controller:
   enb_mac_n3: "00:0c:29:8b:74:9d"
   dn_mac_n6: "00:0c:29:1d:76:76"
   upf_mac_n3: "00:0c:29:ac:eb:ed"
-  upf_mac_n6: "00:aa:bb:00:00:91"
+  upf_mac_n6: "00:aa:bb:00:00:61"
 
 one_upf_p4_sw_ue_pool: "10.45.0.0/16"
 
