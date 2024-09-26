@@ -30,7 +30,6 @@ metadata:
   long_description: |
     Ubuntu 22.04 LTS virtual machine with the ELCM installed.
     It also contains OpenTAP, InfluxDB and Grafana services installed.
-    Containerized applications with Docker.
   hypervisors: [one]
 
 ####################################
