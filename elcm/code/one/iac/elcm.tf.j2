@@ -11,10 +11,10 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
     USERNAME = "jenkins"
-    INFLUXDB_USER = "{{ one_elcm_influxdb_user }}"
-    INFLUXDB_PASSWORD = "{{ one_elcm_influxdb_password }}"
-    INFLUXDB_DATABASE = "{{ one_elcm_influxdb_database }}"
-    GRAFANA_PASSWORD = "{{ one_elcm_grafana_password }}"
+    ONEAPP_ELCM_INFLUXDB_USER = "{{ one_elcm_influxdb_user }}"
+    ONEAPP_ELCM_INFLUXDB_PASSWORD = "{{ one_elcm_influxdb_password }}"
+    ONEAPP_ELCM_INFLUXDB_DATABASE = "{{ one_elcm_influxdb_database }}"
+    ONEAPP_ELCM_GRAFANA_PASSWORD = "{{ one_elcm_grafana_password }}"
   }
 
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
