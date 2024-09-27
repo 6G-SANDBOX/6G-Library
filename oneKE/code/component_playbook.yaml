@@ -84,6 +84,11 @@
   hosts: "OneKE_VMs"
   gather_facts: false
   tasks:
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        timeout: 200
+
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
         user: root
