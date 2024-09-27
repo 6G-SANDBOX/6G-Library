@@ -2,18 +2,7 @@
 
 ## [unreleased]
 - New component xrext
-- New developing component ericsson_radio_athens
-- New developing component ks8500_runner
-- New developing component loadcore_agent
-- New developing component ntn_backhaul
-- New developing component open5gcore
-- New developing component open5gs_vm
-- New developing component opensand_gw
-- New developing component opensand_sat
-- New developing component opensand_st
-- New developing component upf_p4_sw
-- New developing component elcm
-
+- New component elcm
 
 ## [v0.2.2]
 ### Added

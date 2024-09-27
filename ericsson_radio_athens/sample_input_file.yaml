@@ -1,6 +1,0 @@
-# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
-
-one_ericssons_oneKE: "redhat-main"
-one_ericsson_main_ip: "your_ericsson_ip"
-one_ericsson_route_manager_ip: "10.220.10.000"
-one_ericsson_reservation_time: "60"
