@@ -136,7 +136,7 @@
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-metadata"
-            value: "{{ open5gs_metadata_dict }}"
+            value: "{{ upf_p4_sw_metadata_dict }}"
                                                                                           
     # Necessary in most if not all components. Publishes the deployment information in the following order:
     # 1. Post the new terraform manifests to MINIO S3 Storage
