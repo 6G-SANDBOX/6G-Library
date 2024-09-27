@@ -12,6 +12,7 @@
 - New developing component opensand_sat
 - New developing component opensand_st
 - New developing component upf_p4_sw
+- New developing component elcm
 
 
 ## [v0.2.2]
