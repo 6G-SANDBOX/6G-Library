@@ -1,0 +1,36 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+# Private variables define for each virtualization platform (hypervisor) a set of default values.
+# Some private variables are just defaults to be overwritten by the input_file.yaml, while others are not intended to be overwritten.
+# Fact is, with input_file.yaml you can technically overwrite any value shown here, but the TNLCM will only let you to modify the ones in public.yaml
+
+# VM params, fixed:
+one_xrext_cpu: 1
+one_xrext_memory: 2048
+one_xrext_disk: 20
+
+# Default values for XRext image ONE PARAMS (we could have avoided putting them here, because the 
+# default values ​​of the ONE image are exactly the same, corresponding to the [uma] site):
+one_xr_nac_server_ip: "10.182.32.52"
+one_xr_nac_server_port: "8005"
+one_xr_nac_server_uname: "uma"
+one_xr_nac_server_password: "123456"
+one_xr_capif_http_host: "capifcore"
+one_xr_capif_http_port: "8080"
+one_xr_capif_https_host: "capifcore"
+one_xr_capif_https_port: "443"
+one_xr_capif_uname: "api_user_1"
+one_xr_capif_password: "api_user_1_ABC"
+one_xr_capif_invoker_id: "08433b4cd09fe6f741f23e12e5f652"
+one_xr_capif_api_name: "nac_api"
+
+# Also public variable, can be modified by the experimenter from the TNLCM:
+one_xrext_networks: 
+  - tn_vxlan

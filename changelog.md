@@ -1,12 +1,11 @@
 # Changelog
 
-## [unreleased]
-
-
-## [v0.2.2]
+## [v0.3.0]
 ### Added
 - New component stf_ue
 - New component ocf
+- New component xrext
+- New component elcm
 - New common task `publish_fail_results.yaml`, abstracting tasks from `terraform_apply.yaml`
 - New input variable `one_oneKE_nginx_passthough` in component `oneKE` to enable [SSL/TLS passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough).
 - New output variable `metadata_dict` from component `oneKE` to share its input variables to future components.
@@ -23,6 +22,7 @@
 ### Fixed
 - Component nokia_radio JSON callback is now correctly functional
 - Fixed image in ueransim README.md and ok_result.md
+- tnuser login not working in OneKE vnf_0, as account was created locked
 
 ## [v0.2.1] - 2024-09-02
 ### Added
@@ -71,8 +71,8 @@ Initial release of the 6G Library. Changes will be kept on track for now on.
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.2...HEAD
-[v0.2.2]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.2.2
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.3.0...HEAD
+[v0.3.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.3.0
 [v0.2.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.1.0

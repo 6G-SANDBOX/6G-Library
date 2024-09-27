@@ -12,6 +12,6 @@
   - "{{ hostvars['localhost']['ocf_any_vault_namespace']}}"
   - "{{ hostvars['localhost']['ocf_any_capif_namespace']}}"
   - "{{ hostvars['localhost']['ocf_any_monitoring_namespace']}}"
-  become: yes
+  become: true
   environment:
     KUBECONFIG: /etc/rancher/rke2/rke2.yaml

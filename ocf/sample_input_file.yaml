@@ -25,9 +25,9 @@ ocf_one_oneKE: "oneKE-custom_name"
 #ocf_any_capif_mongo_register_storage_size: "1Gi"
 #ocf_any_capif_tempo_storage_size: "1Gi"
 
-
 # Client to be used by experimenter
-ocf_any_user: "client"
-ocf_any_password: "password"
+#ocf_any_user: "client"
+#ocf_any_password: "password"
+
 # Setup tests to pass
-ocf_any_tests_to_pass: "smoke"
+#ocf_any_tests_to_pass: "smoke"

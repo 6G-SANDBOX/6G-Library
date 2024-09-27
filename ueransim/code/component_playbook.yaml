@@ -37,12 +37,12 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_networks[0] + '-id'] | string}}"
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_networks[0] + '-id'] | string }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[ vnet_id ] }}"
+        hostname: "ueransim"
+        ansible_host: "{{ ips[vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
@@ -51,7 +51,7 @@
 
 
 - name: "STAGE 3: Apply CaC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "ueransim"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -74,7 +74,7 @@
         name: tnuser
         shell: /bin/bash
         groups: sudo
-
+        password: ''
     - name: Set TN ssh key as authorized in new user
       become: true
       ansible.posix.authorized_key:
@@ -113,13 +113,14 @@
                 'mnc': '{{ one_ueransim_gnb_mnc }}',
                 'msin': '{{ terraform_outputs_open5gs_dict.msin }}',
                 'key': '{{ terraform_outputs_open5gs_dict.key }}',
-                'opc': '{{ terraform_outputs_open5gs_dict.opc  }}',
+                'opc': '{{ terraform_outputs_open5gs_dict.opc }}',
                 'apn': '{{ terraform_outputs_open5gs_dict.apn }}',
                 'tac': '{{ one_ueransim_gnb_tac }}',
                 'sst': '{{ one_ueransim_gnb_slices_sst }}',
                 'sd': '{{ one_ueransim_gnb_slices_sd }}',
-                'gnb_address': '{{ ips[ vnet_id ] }}'
+                'gnb_address': '{{ ips[vnet_id] }}'
               }
+
         - name: Append gnb_metadata to the output
           ansible.builtin.set_fact:
             output: "{{ output | combine({'gnb_metadata_dict': gnb_metadata_dict | b64encode}) }}"

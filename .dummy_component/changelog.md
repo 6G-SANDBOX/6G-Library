@@ -3,7 +3,7 @@
 ## [unreleased]
 
 
-## [v0.2.2]
+## [v0.3.0]
 ### Changed
 - Modified comments to make it less confusing
 - Ansible hostname of created component no longer uses variables. It only added complexity without benefits.
@@ -21,8 +21,8 @@ Initial release of the 6G Library. Changes will be kept on track for now on.
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.2...HEAD
-[v0.2.2]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.2.2
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.3.0...HEAD
+[v0.3.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.3.0
 [v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.1.0
 
