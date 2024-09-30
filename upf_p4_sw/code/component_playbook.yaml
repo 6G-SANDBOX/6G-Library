@@ -116,19 +116,24 @@
     #    validate_certs: false
 
     # TODO: Maybe it is possible to put more field. I should also add an automation mechanism for mcc, mnc and other fields.
-    # TODO: In future, program some 
+    # TODO: In future, program/automate some of them 
     - name: Define UPF-P4(+Open5GS) metadata dictionary
       ansible.builtin.set_fact:
         upf_p4_sw_metadata_dict: >-
           {
+            'proxy': '{{ ips[ vnet_id ] }}',
             'mcc': '001',
             'mnc': '01',
-            'key': '465B5CE8 B199B49F AA5F0A2E E238A6BC',
-            'opc': 'E8ED289D EBA952E4 283B54E8 8E6183CA',
+            'msin': '0000000001',
+            'key': '465B5CE8B199B49FAA5F0A2EE238A6BC',
+            'opc': 'E8ED289DEBA952E4283B54E88E6183CA',
             'apn': 'internet',
-            'upf_ipv4_n3': '{{ one_upf_p4_sw_controller.upf_ipv4_n3 }}',
-            'upf_ipv4_n6': '{{ one_upf_p4_sw_controller.upf_ipv4_n6 }}',
-            'amf_ipv4_n2': '{{ one_upf_p4_sw_open5gs_amf.ngap_addr }}'
+            'tac': '1',
+            's_nssai_sst': '1',
+            's_nssai_sd': '1',
+            'amf_ip': '{{ one_upf_p4_sw_open5gs_amf.ngap_addr }}',
+            'upf_ip': '{{ one_upf_p4_sw_controller.upf_ipv4_n3 }}',
+            'upf_ipv4_n6': '{{ one_upf_p4_sw_controller.upf_ipv4_n6 }}'
           }
 
     - name: Publish node IDs and IPs as a terraform outputs"
@@ -143,6 +148,7 @@
     # 2. Generate markdown OK file with information about the component
     # 3. Post the markdown OK file to the MINIO S3 Storage
     # 4. Send a JSON OK notification to the TNLCM. JSON message also includes the markdown content.
+    #TODO: Improve this
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
