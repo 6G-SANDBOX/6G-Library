@@ -25,11 +25,6 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
-    {% if loop.index0 == 0 %} # Marca la primera NIC como predeterminada
-      attributes = {
-        DEFAULT = "YES"
-    }
-    {% endif %}
   }
 {% endfor %}
 
