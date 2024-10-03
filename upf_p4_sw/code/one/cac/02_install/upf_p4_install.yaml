@@ -81,7 +81,7 @@
   ansible.builtin.replace:
     path: /home/jenkins/config/stratum-upf/chassis_config.pb.txt
     regexp: '(singleton_ports \{\n\s+id: {{ item.id }}\n\s+name: )"[^"]*"'
-    replace: '\1 {{ hostvars["localhost"]["one_upf_p4_sw_chassis_conf"][item.key] }}'
+    replace: '\1"{{ hostvars["localhost"]["one_upf_p4_sw_chassis_conf"][item.key] }}"'
   loop:
     - { id: 1, key: 'phy_n3' }
     - { id: 3, key: 'phy_n6' }
