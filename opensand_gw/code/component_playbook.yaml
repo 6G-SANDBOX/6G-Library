@@ -50,8 +50,8 @@
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}"
         ansible_host: "{{ ips[ vnet_id ] }}"
-        ansible_ssh_common_args: "-J {{ site_jenkins_ssh_user }}@{{ bastion_ip }}"
-        ansible_user: "{{ site_jenkins_ssh_user }}"        
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"        
 
     # While not used by the Jenkins, we included the configuration of a .ssh/config per TN in the Jenkins for debugging purposes.
     - name: Create SSH config file in the Jenkins-master for debugging purposes
