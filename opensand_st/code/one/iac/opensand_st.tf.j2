@@ -13,7 +13,6 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
     USERNAME = "jenkins"
-    SSH_PUBLIC_KEY = "{{ site_jenkins_ssh_public_key }}"
   }
 
 
