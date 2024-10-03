@@ -1,15 +1,18 @@
-- become: true
+
 - name: Install git package
+  become: true
   ansible.builtin.package:
     name: git
     state: present
 - name: Ensure destination directory exists
+  become: true
   ansible.builtin.file:
     path: "/home/repo"
     state: directory
     mode: "0755"
 
 - name: Clone the repository
+  become: true
   ansible.builtin.git:
     repo: "https://github.com/INFOLYSiS/opensand_config.git"
     dest: "/home/repo"
