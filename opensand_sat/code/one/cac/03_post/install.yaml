@@ -1,9 +1,9 @@
 ---
 - name: Install Git and Clone Repo
-  # become: true
+  become: true
   vars:
-    repo_url: https://github.com/INFOLYSiS/opensand_config.git
-    dest_dir: "/home/repo"
+    repo: https://github.com/INFOLYSiS/opensand_config.git
+    dest: "/home/repo"
   tasks:
     - name: Install git package
       ansible.builtin.package:
@@ -11,12 +11,12 @@
         state: present
     - name: Ensure destination directory exists
       ansible.builtin.file:
-        path: "{{ dest_dir }}"
+        path: "{{ dest }}"
         state: directory
         mode: 0755
 
     - name: Clone the repository
       ansible.builtin.git:
-        repo: "{{ repo_url }}"
-        dest: "{{ dest_dir }}"
+        repo: "{{ repo }}"
+        dest: "{{ dest }}"
         version: "master"
