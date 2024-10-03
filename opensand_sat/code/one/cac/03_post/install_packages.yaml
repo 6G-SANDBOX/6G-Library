@@ -1,6 +1,5 @@
 ---
 - name: Install Git and Clone Repository
-  hosts: all
   become: true
   vars:
     repo_url: "https://github.com/INFOLYSiS/opensand_config.git"
