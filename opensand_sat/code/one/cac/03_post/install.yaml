@@ -5,8 +5,7 @@
   vars:
     repo: https://github.com/INFOLYSiS/opensand_config.git
     dest: "/home/repo"
-  tasks:
-    - name: Install git package
-      ansible.builtin.package:
-        name: git
-        state: present
+  
+  ansible.builtin.package:
+    name: git
+    state: present
