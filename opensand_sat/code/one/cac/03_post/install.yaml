@@ -1,22 +1,22 @@
 ---
 
-hosts: localhost
-become: true
-vars:
-  repo: https://github.com/INFOLYSiS/opensand_config.git
-  dest: "/home/repo"
-tasks:
-  - name: Install git package
-    ansible.builtin.package:
-      name: git
-      state: present
-  - name: Ensure destination directory exists
-    ansible.builtin.file:
-      path: "{{ dest }}"
-      state: directory
-      mode: "0755"
-  - name: Clone the repository
-    ansible.builtin.git:
-      repo: "{{ repo }}"
-      dest: "{{ dest }}"
-      version: "master"
+- hosts: localhost
+  become: true
+  vars:
+    repo: https://github.com/INFOLYSiS/opensand_config.git
+    dest: "/home/repo"
+  tasks:
+    - name: Install git package
+      ansible.builtin.package:
+        name: git
+        state: present
+    - name: Ensure destination directory exists
+      ansible.builtin.file:
+        path: "{{ dest }}"
+        state: directory
+        mode: "0755"
+    - name: Clone the repository
+      ansible.builtin.git:
+        repo: "{{ repo }}"
+        dest: "{{ dest }}"
+        version: "master"
