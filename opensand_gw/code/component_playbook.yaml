@@ -88,6 +88,7 @@
         name: tnuser
         shell: /bin/bash
         groups: sudo
+        password: ''
 
     - name: Set TN ssh key as authorized in new user
       become: true
@@ -96,7 +97,7 @@
         state: present
         key: "{{ item }}"
       loop:
-        - "{{ hostvars['localhost']['ssh_public_key'] }}"
+        - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
     
     - name: Download and install packages to VM
