@@ -1,36 +1,36 @@
 ---
-- name: Minimal Test for Git Installation and Cloning
-  hosts: localhost  # Change to the target host if necessary
-  become: true  # Ensures the playbook runs with elevated privileges
-  vars:
-    repo_url: "https://github.com/INFOLYSiS/opensand_config.git"  # Replace with a valid Git repo URL
-    dest_dir: "/home/repo"  # Test directory for cloning the repository
-  tasks:
-    - name: Install git package
-      ansible.builtin.package:
-        name: git
-        state: present
-      register: git_package_result
+name: Minimal Test for Git Installation and Cloning
+hosts: localhost  # Change to the target host if necessary
+become: true  # Ensures the playbook runs with elevated privileges
+vars:
+  repo_url: "https://github.com/INFOLYSiS/opensand_config.git"  # Replace with a valid Git repo URL
+  dest_dir: "/home/repo"  # Test directory for cloning the repository
+tasks:
+  - name: Install git package
+    ansible.builtin.package:
+      name: git
+      state: present
+    register: git_package_result
 
-    - debug:  # Output the result of the package installation
-        var: git_package_result
+  - debug:  # Output the result of the package installation
+      var: git_package_result
 
-    - name: Ensure destination directory exists
-      ansible.builtin.file:
-        path: "{{ dest_dir }}"
-        state: directory
-        mode: '0755'
-      register: file_creation_result
+  - name: Ensure destination directory exists
+    ansible.builtin.file:
+      path: "{{ dest_dir }}"
+      state: directory
+      mode: '0755'
+    register: file_creation_result
 
-    - debug:  # Output the result of the directory creation
-        var: file_creation_result
+  - debug:  # Output the result of the directory creation
+      var: file_creation_result
 
-    - name: Clone the repository
-      ansible.builtin.git:
-        repo: "{{ repo_url }}"
-        dest: "{{ dest_dir }}"
-        version: "main"  # Use the correct branch name, e.g., "main" or "master"
-      register: git_clone_result
+  - name: Clone the repository
+    ansible.builtin.git:
+      repo: "{{ repo_url }}"
+      dest: "{{ dest_dir }}"
+      version: "main"  # Use the correct branch name, e.g., "main" or "master"
+    register: git_clone_result
 
-    - debug:  # Output the result of the git clone task
-        var: git_clone_result
+  - debug:  # Output the result of the git clone task
+      var: git_clone_result
