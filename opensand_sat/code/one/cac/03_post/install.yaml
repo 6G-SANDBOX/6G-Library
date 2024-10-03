@@ -3,12 +3,23 @@
   vars:
     repo: https://github.com/INFOLYSiS/opensand_config.git
     dest: "/home/repo"
-  tasks:  
-  - ansible.builtin.git:
-      repo: "{{ repo }}"
-      dest: "{{ dest }}"
-      version: "master"
 
+  
+  ansible.builtin.package:
+    name: git
+    state: present
+
+    
+  ansible.builtin.file:
+    path: "{{ dest }}"
+    state: directory
+    mode: 0755
+  
+  ansible.builtin.git:
+    repo: "{{ repo }}"
+    dest: "{{ dest }}"
+    version: "master"
+  register: git_clone_result
 
 - debug:
     var: git_clone_result
