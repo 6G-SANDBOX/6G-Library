@@ -4,11 +4,11 @@
     repo: https://github.com/INFOLYSiS/opensand_config.git
     dest: "/home/repo"
   tasks:  
-    ansible.builtin.git:
+  - ansible.builtin.git:
       repo: "{{ repo }}"
       dest: "{{ dest }}"
       version: "master"
-    register: git_clone_result
+  - register: git_clone_result
 
 - debug:
     var: git_clone_result
