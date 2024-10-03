@@ -8,7 +8,7 @@
       repo: "{{ repo }}"
       dest: "{{ dest }}"
       version: "master"
-  - register: git_clone_result
+
 
 - debug:
     var: git_clone_result
