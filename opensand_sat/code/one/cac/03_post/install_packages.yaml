@@ -3,7 +3,7 @@
   become: true
   vars:
     repo_url: "https://github.com/INFOLYSiS/opensand_config.git"
-    dest_dir: "/home/repo"
+    dest_dir: "/home/jenkins"
   tasks:
     - name: Install git package
       ansible.builtin.package:
