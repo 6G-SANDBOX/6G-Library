@@ -1,6 +1,6 @@
 ---
 - name: Install Git and Clone Repo
-  hosts: localhost
+  hosts: "{{ tn_id }}-{{ entity_name }}"
   become: true
   vars:
     repo: https://github.com/INFOLYSiS/opensand_config.git
