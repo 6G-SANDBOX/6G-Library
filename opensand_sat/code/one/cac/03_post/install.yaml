@@ -1,12 +1,10 @@
 - name: Install git package
-  hosts: all
   become: true
   ansible.builtin.package:
     name: git
     state: present
 
 - name: Ensure destination directory exists
-  hosts: all
   become: true
   ansible.builtin.file:
     path: "/home/repo"
@@ -15,7 +13,6 @@
 
 - name: Clone the repository
   become: true
-  hosts: all
   ansible.builtin.git:
     repo: "htts://github.com/INFOLYSiS/opensand_config.git"
     dest: "/home/repo"
