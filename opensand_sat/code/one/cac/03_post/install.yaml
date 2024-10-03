@@ -1,6 +1,6 @@
 ---
-
-- hosts: localhost
+- name: "Install Git and Clone Repo"
+  hosts: localhost
   become: true
   vars:
     repo: https://github.com/INFOLYSiS/opensand_config.git
@@ -15,6 +15,7 @@
         path: "{{ dest }}"
         state: directory
         mode: "0755"
+
     - name: Clone the repository
       ansible.builtin.git:
         repo: "{{ repo }}"
