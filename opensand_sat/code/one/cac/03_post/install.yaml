@@ -14,6 +14,6 @@
 - name: Clone the repository
   become: true
   ansible.builtin.git:
-    repo: "htts://github.com/INFOLYSiS/opensand_config.git"
+    repo: "https://github.com/INFOLYSiS/opensand_config.git"
     dest: "/home/repo"
     version: "master"
