@@ -74,11 +74,12 @@
 
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
-        user: "{{ hostvars['localhost']['site_jenkins_ssh_user'] }}"
+        user: jenkins
         state: present
         key: "{{ item }}"
       loop:
-        - "{{ hostvars['localhost']['site_admin_ssh_public_key'] }}"
+        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
+      when: item != ''
 
     # Any deployed VM should create a "tnuser" user for the experimenter's access. All components can be accessed through that user with the ssh key created in tn_init
     - name: Create new user for experimenter access
