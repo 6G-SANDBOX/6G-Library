@@ -1,7 +1,7 @@
 - name: Clone the repository
   ansible.builtin.git:
-    repo: https://github.com/INFOLYSiS/opensand_config.git
-    dest: "/home/jenkins"
+    repo_url: https://github.com/INFOLYSiS/opensand_config.git
+    dest_dir: "/home/jenkins"
     version: "master"
   register: git_clone_result
 
