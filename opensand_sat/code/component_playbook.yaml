@@ -120,7 +120,7 @@
       ansible.builtin.set_fact:
         output:
           ips: "{{ ips | b64encode }}"
-          vm_id: "{{ id | b64encode }}"
+          id: "{{ id | b64encode }}"
 
 
     - name: Publish execution results to TNLCM
