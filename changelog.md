@@ -21,12 +21,12 @@
 - Removed `pipeline-parameters.yaml` from playbook execution. Pipeline parameters are now sent as extraVars when executing the ansible playbook.
 ### Fixed
 - Component nokia_radio JSON callback is now correctly functional
-- Fixed image in ueransim README.md and ok_result.md
+- Picture in ueransim README.md and ok_result.md not rendering properly
 - tnuser login not working in OneKE vnf_0, as account was created locked
 
 ## [v0.2.1] - 2024-09-02
 ### Added
-- - New component nokia_radio_uma
+- New component nokia_radio_uma
 ### Changed
 - Updated description of pipeline parameters in TN_DEPLOY.groovy and TN_DESTROY.groovy
 ### Fixed
