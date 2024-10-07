@@ -12,7 +12,7 @@
     state: present
     update_cache: yes
 
-# Install mongosh?
+# TODO: Install mongosh?
 
 - name: Install docker engine
   block:
@@ -42,49 +42,29 @@
 #    mode: push
 #    recursive: yes  # for copy subfolder too
 
-- name: Copy config folder recursively
+- name: Copy static config folder recursively
   become: true
   ansible.builtin.copy:
-    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config/"
+    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config/static/"
     dest: "/home/jenkins/config"
     owner: jenkins
     group: jenkins
     mode: '0644'
     #directory_mode: '0755'
 
-- name: Modify UPF controller configuration in config.yaml
-  ansible.builtin.replace:
-    path: /home/jenkins/config/controller-upf/config.yaml
-    regexp: '^(\s*{{ item.key }}\s*:\s*)".+"'
-    replace: '\1"{{ hostvars["localhost"]["one_upf_p4_sw_controller"][item.value] if item.value != "one_upf_p4_sw_ue_pool" else hostvars["localhost"]["one_upf_p4_sw_ue_pool"] }}"'
+- name: Apply templates to configuration files
+  template:
+    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config/templates/{{ item.src }}"
+    dst: "/home/jenkins/config/{{ item.dest }}"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
   loop:
-    - { key: 'ENB_IPV4_N3', value: 'enb_ipv4_n3' }
-    - { key: 'DN_IPV4_N6', value: 'dn_ipv4_n6' }
-    - { key: 'UPF_IPV4_N3', value: 'upf_ipv4_n3' }
-    - { key: 'UPF_IPV4_N6', value: 'upf_ipv4_n6' }
-    - { key: 'ENB_MAC_N3', value: 'enb_mac_n3' }
-    - { key: 'DN_MAC_N6', value: 'dn_mac_n6' }
-    - { key: 'UPF_MAC_N3', value: 'upf_mac_n3' }
-    - { key: 'UPF_MAC_N6', value: 'upf_mac_n6' }
-    - { key: 'subnet_IPv4', value: 'one_upf_p4_sw_ue_pool' }
-
-- name: Modify open5GS configuration
-  ansible.builtin.replace:
-    path: "{{ item.path }}"
-    regexp: '^(\s+{{ item.key }}:\n\s+- addr:) .*'
-    replace: '\1 {{ item.value }}'
-  loop:
-    - { path: '/home/jenkins/config/open5gs/amf.yaml', key: 'ngap', value: '{{ hostvars["localhost"]["one_upf_p4_sw_open5gs_amf"]["ngap_addr"] }}' }
-    - { path: '/home/jenkins/config/open5gs/smf.yaml', key: 'subnet', value: '{{ hostvars["localhost"]["one_upf_p4_sw_ue_pool"] }}' }
-
-- name: Modify chassis configuration
-  ansible.builtin.replace:
-    path: /home/jenkins/config/stratum-upf/chassis_config.pb.txt
-    regexp: '(singleton_ports \{\n\s+id: {{ item.id }}\n\s+name: )"[^"]*"'
-    replace: '\1"{{ hostvars["localhost"]["one_upf_p4_sw_chassis_conf"][item.key] }}"'
-  loop:
-    - { id: 1, key: 'phy_n3' }
-    - { id: 3, key: 'phy_n6' }
+    - { src: 'controller-upf/config.yaml.j2', dest: 'controller-upf/config.yaml' }
+    - { src: 'open5gs/amf.yaml.j2', dest: 'open5gs/amf.yaml' }
+    - { src: 'open5gs/nssf.yaml.j2', dest: 'open5gs/nssf.yaml' }
+    - { src: 'open5gs/smf.yaml.j2', dest: 'open5gs/smf.yaml' }
+    - { src: 'stratum-upf/chassis_config.pb.txt.j2', dest: 'stratum-upf/chassis_config.pb.txt' }
   
 #- name: Run docker-compose
 #  become: true
