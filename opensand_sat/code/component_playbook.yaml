@@ -104,11 +104,7 @@
     #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/install_packages.yaml"   
     - name: Download and install packages to VM
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/03_post/install.yaml"   
-
-
-    # Example of included task files common to all hypervisors, like helm charts, or bash/python/ruby sripts.
-    #- name: Helm install
-    #  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_install.yaml"        
+     
 
 # Final phase of the deployments. Gather information and publish it
 - name: "STAGE 4: Publish execution results"
