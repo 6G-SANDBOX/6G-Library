@@ -42,9 +42,96 @@ input:
     default_value: ["tn_vxlan"]
     required_when: false
 
+  
+  one_upf_p4_sw_open5gs_control.mcc:
+    description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "001"
+    required_when: false
+
+  one_upf_p4_sw_open5gs_control.mnc:
+    description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "01"
+    required_when: false
+
+  one_upf_p4_sw_open5gs_control.msin:
+    description: Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "0000000001"
+    required_when: false
+
+  one_upf_p4_sw_open5gs_control.key:
+    description: Permanent Subscription Key
+    type: str
+    default_value: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+    required_when: false
+
+  one_upf_p4_sw_open5gs_control.opc:
+    description: Operator Code
+    type: str
+    default_value: "E8ED289DEBA952E4283B54E88E6183CA"
+    required_when: false
+
+  one_upf_p4_sw_open5gs_control.apn:
+    description: Access Point Name (APN) of the initial PDU session to be stablished
+    type: str
+    default_value: "internet"
+    required_when: false
+
+  one_upf_p4_sw_open5gs_control.tac:
+    description: Tracking Area Code in the PLMN
+    type: int
+    default_value: 200
+    required_when: false
+
+  one_upf_p4_sw_open5gs_control.s_nssai_sst:
+    description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    type: int
+    default_value: 1
+    required_when: false
+
+  one_upf_p4_sw_open5gs_control.s_nssai_sd:
+    description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    type: str
+    default_value: "1"
+    required_when: false
+
+  one_upf_p4_sw_open5gs_amf.ngap_addr:
+    description: Address to expose the Core Access and Mobility Management Function (AMF)
+    type: str
+    default_value: "10.0.1.2"
+    required_when: false
+
+  one_upf_p4_sw_controller.upf_ipv4_n3:
+    description: Address to expose the N3 (gnb-upf) Core User Plane Function (UPF)
+    type: str
+    default_value: "10.0.3.1"
+    required_when: false
+
+  one_upf_p4_sw_controller.upf_ipv4_n6:
+    one_upf_p4_sw_controller.upf_ipv4_n3:
+    description: Address to expose the N6 (upf-pdn) Core User Plane Function (UPF)
+    type: str
+    default_value: "10.0.6.1"
+    required_when: false
+
+# TODO: I think I will put more inputs
+
 ####################################
 ## Component output
 ####################################
 output:
-  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  id: VM ID in OpenNebula
+  metadata_dict:
+    mcc: input.one_upf_p4_sw_open5gs_control.mcc
+    mnc: input.one_upf_p4_sw_open5gs_control.mnc
+    msin: input.one_upf_p4_sw_open5gs_control.msin
+    key: input.one_upf_p4_sw_open5gs_control.key
+    opc: input.one_upf_p4_sw_open5gs_control.opc
+    apn: input.one_upf_p4_sw_open5gs_control.apn
+    tac: input.one_upf_p4_sw_open5gs_control.tac
+    s_nssai_sd: input.one_upf_p4_sw_open5gs_control.s_nssai_sd
+    s_nssai_sst: input.one_upf_p4_sw_open5gs_control.s_nssai_sst
+    amf_ip: input.one_upf_p4_sw_open5gs_amf.ngap_addr 
+    upf_ip: input.one_upf_p4_sw_controller.upf_ipv4_n3
+    upf_ipv4_n6: one_upf_p4_sw_controller.upf_ipv4_n6

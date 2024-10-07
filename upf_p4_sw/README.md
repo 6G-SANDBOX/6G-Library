@@ -12,5 +12,9 @@ UPF-P4 SW is a software-based implementation of the 5G UPF, a critical network f
 * **Trial Network Deployment:** This component is specifically designed for deployment within a 5G trial network, providing a flexible and scalable solution for testing and evaluating 5G user plane functionality. 
 
 ## 📝 Configuration
+TODO: Explain the different configuration files (quite extensive). Also explain what docker compose down and up should do (for the new configuration to be applied)
+
+TODO: Explain how to register new UEs.
 
 ## Logs
+TODO: Explain how to access logs
