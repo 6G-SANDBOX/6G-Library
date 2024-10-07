@@ -7,6 +7,7 @@
 ## Some of them are modifiable through input variables
 ##
 ######################################################
+# Related to the Virtual Machine
 one_upf_p4_sw_cpu: 4
 one_upf_p4_sw_memory: 8192
 one_upf_p4_sw_disk: 25600
@@ -14,6 +15,7 @@ one_upf_p4_sw_networks:
   - tn_vxlan
   - vnet-vnet_1
 
+# Related to the UPF-P4 control plane
 one_upf_p4_sw_controller:
   enb_ipv4_n3: "10.0.3.2"
   dn_ipv4_n6: "10.0.6.2"
@@ -26,12 +28,25 @@ one_upf_p4_sw_controller:
 
 one_upf_p4_sw_ue_pool: "10.45.0.0/16"
 
-one_upf_p4_sw_open5gs_amf:
-  ngap_addr: 10.0.1.2
-
 #one_upf_p4_sw_open5gs_smf:
 #  ue_pool:
 
+# Related to UPF-P4 data plane
 one_upf_p4_sw_chassis_conf:
   phy_n3: "ens39"
   phy_n6: "ens37"
+
+# Related to Open5Gs
+one_upf_p4_sw_open5gs_amf:
+  ngap_addr: 10.0.1.2
+
+one_upf_p4_sw_open5gs_control:
+  mcc: "001"
+  mnc: "01"
+  msin: "0000000001"
+  key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+  opc: "E8ED289DEBA952E4283B54E88E6183CA"
+  apn: "internet"
+  tac: "200"
+  s_nssai_sst: "1"
+  s_nssai_sd: "1"
