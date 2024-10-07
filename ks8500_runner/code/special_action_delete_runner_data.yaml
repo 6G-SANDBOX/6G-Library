@@ -1,0 +1,19 @@
+- name: Gather information about the dockerfile
+  ansible.builtin.stat:
+    path: "{{ ks8500runner_path }}/Dockerfile"
+  register: path_info
+  become: true
+
+- name: Ensure runner stopped before delete runner data
+  community.docker.docker_compose_v2:
+    project_src: "{{ ks8500runner_path }}"
+    state: absent
+  become: true
+  when: path_info.stat.exists
+
+- name: Delete runner data
+  ansible.builtin.file:
+    path: "{{ ks8500runner_path }}/{{ item }}"
+    state: absent
+  loop: "{{ ks8500runner_mounts }}"
+  become: true
