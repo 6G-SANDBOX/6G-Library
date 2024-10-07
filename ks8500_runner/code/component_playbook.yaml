@@ -84,13 +84,13 @@
     - name: Verify connectivity
       ansible.builtin.shell:  curl https://test-automation.pw.keysight.com/index.html
     
-    - name: Get os info
-      command: cat /etc/os-release
-      register: os_info
+    #- name: Get os info
+    #  command: cat /etc/os-release
+    #  register: os_info
 
-    - name: List os info
-      debug:
-        msg: "{{ os_info.stdout }}"
+    #- name: List os info
+    #  debug:
+    #    msg: "{{ os_info.stdout }}"
 
     - name: Enable docker service
       ansible.builtin.service:
@@ -135,15 +135,15 @@
       ansible.builtin.shell: "chown -R 1654:1654 {{ ks8500runner_path }}"
       become: true
 
-    - name: Storage debug collect
-      ansible.builtin.command:
-        cmd: "ls -lR {{ ks8500runner_path }}"
-      register: storage_debug
-      become: true
+    #- name: Storage debug collect
+    #  ansible.builtin.command:
+    #    cmd: "ls -lR {{ ks8500runner_path }}"
+    #  register: storage_debug
+    #  become: true
 
-    - name: Storage debug out
-      ansible.builtin.debug:
-        var: storage_debug.stdout_lines
+    #- name: Storage debug out
+    #  ansible.builtin.debug:
+    #    var: storage_debug.stdout_lines
     
     - name: Check if the registration file exists
       ansible.builtin.stat:
@@ -194,9 +194,9 @@
           id: "{{ id | b64encode }}"
           registration_info: "{{ hostvars['ks8500runner']['ks8500runner_registration_info'] | b64encode }}"
 
-    - name: Output Debug
-      debug:
-        msg: "{{ output }}"
+    #- name: Output Debug
+    #  debug:
+    #    msg: "{{ output }}"
     
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
