@@ -1,0 +1,202 @@
+---
+- name: "STAGE 1: Apply IAC to deploy the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    #- name: Available components
+    #  debug:
+    #    msg: "{{ site_available_components }}"
+    
+    - name: Terraform apply
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
+# Post-terraform preliminary tasks. Still no component configuration.
+- name: "STAGE 2: Prepare to access the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ks8500runner_networks[0] + '-id'] | string}}"
+
+    - name: Add new VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "ks8500runner"
+        ansible_host: "{{ ips[vnet_id] }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+    - name: Create SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+
+- name: "STAGE 3: Apply CAC to prepare the component"
+  vars:
+    ks8500runner_mounts:
+      - Config
+      - SessionLogs
+      - Settings
+      - Storage
+    ks8500runner_path: /opt/KS8500Runner
+  hosts: "ks8500runner"
+  gather_facts: false
+  tasks:
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        timeout: 200
+
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    # Some sites may have a MASTER ssh key, appart of the jenkins one
+    - name: Set site ssh key as authorized in jenkins user
+      ansible.posix.authorized_key:
+        user: jenkins
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
+      when: item != ''
+
+    # Detect if required network connectivity is available for the runner
+    # Curl returns error if we cannot connect, should cause ansible script to terminate
+    - name: Verify connectivity
+      ansible.builtin.shell:  curl https://test-automation.pw.keysight.com/index.html
+    
+    #- name: Get os info
+    #  command: cat /etc/os-release
+    #  register: os_info
+
+    #- name: List os info
+    #  debug:
+    #    msg: "{{ os_info.stdout }}"
+
+    - name: Enable docker service
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+      become: true
+
+    - name: Delete runner data
+      include_tasks: special_action_delete_runner_data.yaml
+      when: ks8500runner_special_action is defined and ks8500runner_special_action == "delete_runner_data"
+
+    - name: Create runner dirs
+      ansible.builtin.file:
+        path: "{{ ks8500runner_path }}/{{ item }}"
+        state: directory
+        mode: '0700'
+      loop: "{{ ks8500runner_mounts }}"
+      become: true
+
+    - name: Deploy runner configuration
+      ansible.builtin.copy:
+        src:  "{{ playbook_dir }}/all/runner/"
+        dest: "{{ ks8500runner_path }}"
+      become: true
+       
+    - name: Build runner image
+      community.docker.docker_image_build:
+        name: ks8500_runner:latest
+        path: "{{ ks8500runner_path }}"
+        dockerfile: Dockerfile
+      become: true
+  
+    - name: Create mount list
+      ansible.builtin.set_fact:
+        mount_list: '{{ (mount_list|default([])) + [{"target": "/opt/tap/" + item, "source": "{{ ks8500runner_path }}/" + item, "type": "bind" }] }}'
+      loop: "{{ ks8500runner_mounts }}"
+      become: true
+
+    # The microsoft base image uses this UID. Maybe we can find a better solution.
+    - name: Workaround permissions
+      ansible.builtin.shell: "chown -R 1654:1654 {{ ks8500runner_path }}"
+      become: true
+
+    #- name: Storage debug collect
+    #  ansible.builtin.command:
+    #    cmd: "ls -lR {{ ks8500runner_path }}"
+    #  register: storage_debug
+    #  become: true
+
+    #- name: Storage debug out
+    #  ansible.builtin.debug:
+    #    var: storage_debug.stdout_lines
+    
+    - name: Check if the registration file exists
+      ansible.builtin.stat:
+        path: "{{ ks8500runner_path }}/Config/runner.lic"
+      register: registration_file
+      become: true
+
+    - name: Register runner
+      community.docker.docker_container:
+        image: ks8500_runner
+        name: register-runner
+        mounts: "{{ mount_list }}"
+        entrypoint: ""
+        detach: false
+        working_dir: "{{ ks8500runner_path }}"
+        command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --registrationToken {{ ks8500runner_registration_token }}
+      register: docker_container_output
+      when: not registration_file.stat.exists
+      become: true
+
+    - name: Start runner
+      community.docker.docker_compose_v2:
+        project_src: "{{ ks8500runner_path }}"
+      become: true
+
+    - name: Add registration_info if not available
+      ansible.builtin.set_fact:
+        ks8500runner_registration_info: "Registration not performed (already registered)"
+      when: docker_container_output.container.Output is undefined
+
+    - name: Add registration_info if available
+      ansible.builtin.set_fact:
+        ks8500runner_registration_info: "{{ docker_container_output.container.Output }}"
+      when: docker_container_output.container.Output is defined
+
+# Final phase of the deployments. Gather information and publish it
+- name: "STAGE 4: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    # Common task to create custom terraform outputs with information of interest for future deployments.
+    - name: Merge all component component outputs into one "output" variable
+
+      ansible.builtin.set_fact:
+        output:
+          ips: "{{ ips | b64encode }}"
+          id: "{{ id | b64encode }}"
+          registration_info: "{{ hostvars['ks8500runner']['ks8500runner_registration_info'] | b64encode }}"
+
+    #- name: Output Debug
+    #  debug:
+    #    msg: "{{ output }}"
+    
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

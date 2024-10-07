@@ -2,6 +2,7 @@
 
 ## [v0.3.0]
 ### Added
+- New component ks8500_runner
 - New component stf_ue
 - New component ocf
 - New component xrext
