@@ -55,7 +55,7 @@
 - name: Apply templates to configuration files
   template:
     src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config/templates/{{ item.src }}"
-    dst: "/home/jenkins/config/{{ item.dest }}"
+    dest: "/home/jenkins/config/{{ item.dest }}"
     owner: jenkins
     group: jenkins
     mode: '0644'
@@ -94,7 +94,7 @@
   become_user: jenkins
   template:
     src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config/templates/register_subscriber.sh.j2"
-    dst: "/home/jenkins/config/register_subscriber.sh"
+    dest: "/home/jenkins/config/register_subscriber.sh"
     owner: jenkins
     group: jenkins
     mode: '0777'
