@@ -104,5 +104,5 @@
   #become_user: jenkins
   command: /home/jenkins/config/register_subscriber.sh
   register: ue_register_result
-  failed_when: ue_register_result.rc != 0 and '"duplicate key error"' not in ue_register_result.stdout
+  failed_when: ue_register_result.rc != 0 and "duplicate key error" not in ue_register_result.stdout and "duplicate key error" not in ue_register_result.stderr
   
