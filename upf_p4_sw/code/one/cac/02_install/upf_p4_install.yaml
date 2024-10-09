@@ -102,5 +102,5 @@
 - name: Run UE registration script
   #become: true
   #become_user: jenkins
-  command: ./home/jenkins/config/register_subscriber.sh
+  command: /home/jenkins/config/register_subscriber.sh
   
