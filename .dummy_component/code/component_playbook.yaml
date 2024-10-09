@@ -150,7 +150,7 @@
         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/kconf-{{ entity_name }}.kubeconfig"
+        object: "{{ tn_id }}/extra-kubeconfig-{{ entity_name }}.yaml"
         src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
         encrypt: false
         validate_certs: false

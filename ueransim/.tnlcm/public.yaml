@@ -186,8 +186,8 @@ input:
 
   one_ueransim_ue_session_sd:
     description: In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
-    type: int
-    default_value: 1
+    type: str
+    default_value: "1"
     required_when: false
 
   one_ueransim_ue_configured_nssai_sst:
@@ -198,8 +198,8 @@ input:
 
   one_ueransim_ue_configured_nssai_sd:
     description: In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
-    type: int
-    default_value: 1
+    type: str
+    default_value: "1"
     required_when: false
 
   one_ueransim_ue_default_nssai_sst:
@@ -210,8 +210,8 @@ input:
 
   one_ueransim_ue_default_nssai_sd:
     description: In UE simulation, Slice Differentiator (SD) of the default NSSAI. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
-    type: int
-    default_value: 1
+    type: str
+    default_value: "1"
     required_when: false
 
 

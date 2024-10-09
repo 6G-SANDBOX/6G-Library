@@ -27,9 +27,9 @@ one_ueransim_ue_linked_gnb: ueransim-sample_name
 #one_ueransim_ue_op: "E8ED289DEBA952E4283B54E88E6183CA"
 #one_ueransim_ue_gnbSearchList: null
 #one_ueransim_ue_session_apn: "internet"
-#one_ueransim_ue_session_sst: "1"
+#one_ueransim_ue_session_sst: 1
 #one_ueransim_ue_session_sd: "1"
-#one_ueransim_ue_configured_nssai_sst: "1"
+#one_ueransim_ue_configured_nssai_sst: 1
 #one_ueransim_ue_configured_nssai_sd: "1"
-#one_ueransim_ue_default_nssai_sst: "1"
+#one_ueransim_ue_default_nssai_sst: 1
 #one_ueransim_ue_default_nssai_sd: "1"

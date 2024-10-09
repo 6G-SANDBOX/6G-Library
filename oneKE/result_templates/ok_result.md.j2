@@ -37,6 +37,7 @@ OneKE Service has four different Roles:
 - **SSL/TLS passthrough enabled in the nginx-ingress**: `{{ one_oneKE_nginx_passthough }}`
 - **Skooner Dashboard URL**: `skooner.{{ tn_id }}.{{ site_domain }}`
 - **Skooner Dashboard token**: `{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] }}`
+- **Longhorn Dashboard URL**: `longhorn.{{ tn_id }}.{{ site_domain }}`
 - **base64 encoded KubeConfig file**:
   ```
   {{ kubeconfig }}
@@ -73,9 +74,9 @@ and then run `kubectl` in another terminal:
 ```shell
 $ kubectl get nodes
 NAME                    STATUS   ROLES                       AGE    VERSION
-oneke-ip-172-20-0-101   Ready    control-plane,etcd,master   58m    v1.27.2+rke2r1
-oneke-ip-172-20-0-102   Ready    <none>                      52m    v1.27.2+rke2r1
-oneke-ip-172-20-0-103   Ready    <none>                      52m    v1.27.2+rke2r1
-oneke-ip-172-20-0-104   Ready    control-plane,etcd,master   31m    v1.27.2+rke2r1
-oneke-ip-172-20-0-105   Ready    control-plane,etcd,master   29m    v1.27.2+rke2r1
+oneke-ip-172-20-0-101   Ready    control-plane,etcd,master   58m    v1.29.2+rke2r1
+oneke-ip-172-20-0-102   Ready    <none>                      52m    v1.29.2+rke2r1
+oneke-ip-172-20-0-103   Ready    <none>                      52m    v1.29.2+rke2r1
+oneke-ip-172-20-0-104   Ready    control-plane,etcd,master   31m    v1.29.2+rke2r1
+oneke-ip-172-20-0-105   Ready    control-plane,etcd,master   29m    v1.29.2+rke2r1
 ```
