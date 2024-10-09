@@ -110,8 +110,8 @@
         upf_p4_sw_metadata_dict: >-
           {
             'proxy': '10.11.3.1',
-            'mcc': '{{ one_upf_p4_sw_open5gs_control.mcc }}'',
-            'mnc': '{{ one_upf_p4_sw_open5gs_control.mnc }}'',
+            'mcc': '{{ one_upf_p4_sw_open5gs_control.mcc }}',
+            'mnc': '{{ one_upf_p4_sw_open5gs_control.mnc }}',
             'msin': '{{ one_upf_p4_sw_open5gs_control.msin }}',
             'key': '{{ one_upf_p4_sw_open5gs_control.key }}',
             'opc': '{{ one_upf_p4_sw_open5gs_control.opc }}',
