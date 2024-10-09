@@ -1,0 +1,7 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+#This is a list of network ids. Each entry means a network interface attached to this network.
+one_loadcore_agent_networks: 
+  - "vnet_1"
+  - "vnet_2"
+  - "vnet_3"
