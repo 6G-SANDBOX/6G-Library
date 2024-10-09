@@ -124,10 +124,10 @@ input:
 
   one_ueransim_gnb_slices_sd:
     description: |
-      In gNB simulation, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI).
+      In gNB simulation, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
       Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
     type: str
-    default_value: "1"
+    default_value: "000001"
     required_when: false
 
   one_ueransim_ue_supi:
@@ -185,9 +185,9 @@ input:
     required_when: false
 
   one_ueransim_ue_session_sd:
-    description: In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
+    description: In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance. Minimum length of 6.
     type: str
-    default_value: "1"
+    default_value: "000001"
     required_when: false
 
   one_ueransim_ue_configured_nssai_sst:
@@ -197,9 +197,9 @@ input:
     required_when: false
 
   one_ueransim_ue_configured_nssai_sd:
-    description: In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
+    description: In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance. Minimum length of 6.
     type: str
-    default_value: "1"
+    default_value: "000001"
     required_when: false
 
   one_ueransim_ue_default_nssai_sst:
@@ -209,9 +209,9 @@ input:
     required_when: false
 
   one_ueransim_ue_default_nssai_sd:
-    description: In UE simulation, Slice Differentiator (SD) of the default NSSAI. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
+    description: In UE simulation, Slice Differentiator (SD) of the default NSSAI. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance. Minimum length of 6.
     type: str
-    default_value: "1"
+    default_value: "000001"
     required_when: false
 
 
