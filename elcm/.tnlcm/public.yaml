@@ -63,3 +63,10 @@ input:
 output:
   ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
   id: VM ID in OpenNebula
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the ELCM VM template to use in your OpenNebula environment
+  image_id: ID of the ELCM image to use in your OpenNebula environment
