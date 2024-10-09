@@ -82,3 +82,11 @@ output:
   ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
   id: VM ID in OpenNebula
   registration_info: A string with information about the runner registration
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the Alpine Linux 3.20 VM template to use in your OpenNebula environment
+  image_id: ID of the Alpine Linux 3.20 image to use in your OpenNebula environment

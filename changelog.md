@@ -7,6 +7,7 @@
 - New component ocf
 - New component xrext
 - New component elcm
+- New components opensand_gw, opensand_sat and opensand_st
 - New common task `publish_fail_results.yaml`, abstracting tasks from `terraform_apply.yaml`
 - New input variable `one_oneKE_nginx_passthough` in component `oneKE` to enable [SSL/TLS passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough).
 - New output variable `metadata_dict` from component `oneKE` to share its input variables to future components.
