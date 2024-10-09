@@ -1,0 +1,4 @@
+---
+- name: Overwrite again with explicit values from the input file
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/{{ component_type }}/variables/input_file.yaml"
