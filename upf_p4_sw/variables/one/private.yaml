@@ -33,8 +33,8 @@ one_upf_p4_sw_ue_pool: "10.45.0.0/16"
 
 # Related to UPF-P4 data plane
 one_upf_p4_sw_chassis_conf:
-  phy_n3: "ens39"
-  phy_n6: "ens37"
+  phy_n3: "eth1"
+  phy_n6: "eth2"
 
 # Related to Open5Gs
 one_upf_p4_sw_open5gs_amf:
