@@ -38,7 +38,7 @@
     
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
+        hostname: "loadcore_agent"
         ansible_host: "{{ ips[ vnet_id ] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: jenkins
@@ -48,7 +48,7 @@
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "loadcore_agent"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -92,7 +92,7 @@
 
     - name: Execute bash script to register the Agent with the Middleware
       become: true
-      shell: "/home/tnuser/agent-setup.sh {{ loadcore_middleware_ip }} management_interface=ens3 test_interface=ens4 reboot_api_enabled=y update_hostname=n"
+      shell: "/home/tnuser/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} management_interface=ens3 test_interface=ens4 reboot_api_enabled=y update_hostname=n"
       args:
         chdir: "/home/tnuser/"
       register: result
