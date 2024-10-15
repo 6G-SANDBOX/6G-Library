@@ -12,7 +12,6 @@
 - New input variable `one_oneKE_nginx_passthough` in component `oneKE` to enable [SSL/TLS passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough).
 - New output variable `metadata_dict` from component `oneKE` to share its input variables to future components.
 ### Changed
-- Open5GS upgraded to version `v2.7.1`.
 - Component nokia_radio_uma renamed to nokia_radio.
 - Comments modified in .dummy_component to make it less confusing. Also out variable naming recommendation is reflected on public.yaml
 - Ansible hostname from created components no longer contain variables. It only added complexity without benefits.
