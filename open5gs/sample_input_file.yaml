@@ -11,6 +11,6 @@ one_open5gs_oneKE: "oneKE-custom_name"
 #one_open5gs_apn: "internet"
 #one_open5gs_tac: 200
 #one_open5gs_s_nssai_sst: 1
-#one_open5gs_s_nssai_sd: "1"
+#one_open5gs_s_nssai_sd: "000001"
 #one_open5gs_amf_ip: "10.21.12.200"
 #one_open5gs_upf_ip: "10.21.12.201"

@@ -98,9 +98,9 @@ input:
     required_when: false
 
   one_open5gs_s_nssai_sd:
-    description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
     type: str
-    default_value: "1"
+    default_value: "000001"
     required_when: false
 
   one_open5gs_amf_ip:

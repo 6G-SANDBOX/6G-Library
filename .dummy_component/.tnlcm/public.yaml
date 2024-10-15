@@ -59,9 +59,12 @@ metadata:
   long_description: |
     The long description of a Component Type may span multiple lines
     and provide a more in depth outline of it's purpose.
-    This imaginary component needs a previous "X" component to be previously deployed and referrenced in input: "sampleVariable"
+    This sample component needs a previous "X" component to be previously deployed, and referrenced in input: "sampleVariable"
+    This sample component uses a custom appliance previously installed in your site (Instructions on how to install the component should be in the README.md file)
   hypervisors: [one]
-  # destroy_script: false   # true only in special components that require extra steps when being deleted. You probably don't need it
+  # destroy_script: false    # true only in special components that require extra steps when being deleted. You probably don't need it
+  # resource_manager: false  # (BETA, do not include yet) true in certain components that require the TNLCM to perform an accounting on how many instances of this component are deployed in a site, and for how long. Quantity and duration are instructed inside the sites repository
+  # appliance: <link>        # will be deprecated in the future. Link to download a custom appliance if the component requires a specific custom VM image/template
 
 ####################################
 ## Component input
