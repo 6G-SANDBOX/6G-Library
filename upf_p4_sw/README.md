@@ -120,7 +120,7 @@ After making changes to the configuration files, it's essential to restart the s
    Bring up the containers with the updated configurations.
 
    ```bash
-   docker-compose up -d
+   docker-compose -f docker-compose.yaml up -d
    ```
 
    - The `-d` flag runs the containers in detached mode (in the background).
@@ -141,11 +141,12 @@ After making changes to the configuration files, it's essential to restart the s
   - Ensure that any IP addresses, ports, and interface names are consistently updated across all relevant configuration files to prevent misconfigurations.
   - For example, if you change the `n4` interface IP address in `config.yaml`, ensure that the corresponding settings in Open5GS configuration files are also updated if necessary.
 
-TODO: Explain how to register new UEs.
+
 ### Registering new user equipments
 To add new UEs to the network, you need to register them in the Open5GS core network database using the provided script.
 
 #### Steps:
+TODO: Explain how to register new UEs.
 
 
 ## Logs
