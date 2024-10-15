@@ -33,6 +33,7 @@ metadata:
     Python 3 + pip
     Python packages 'nac_api' and 'xrext' installed
   hypervisors: [one]
+  appliance: https://marketplace.mobilesandbox.cloud:9443//appliance/service_XRext/download/0
 
 ####################################
 ## Component input
