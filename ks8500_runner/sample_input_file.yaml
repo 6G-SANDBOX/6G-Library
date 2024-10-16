@@ -1,0 +1,8 @@
+# Substitutes doc/create_component.yaml file
+# Use your Runner registration token (NOT user token) from KS8500
+one_ks8500runner_networks:
+  - "tn_vxlan"
+ks8500runner_name: "OpenNebulaRunner1"
+ks8500runner_registration_token: "place-a-registration-token-here"
+ks8500runner_backend_url: "https://test-automation.pw.keysight.com"
+ks8500runner_special_action: "none"

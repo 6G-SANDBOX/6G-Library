@@ -1,0 +1,73 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Carlos Andreo López <c.andreo@uma.es>
+  short_description: Deploys a virtual machine with the ELCM backend and frontend.
+  long_description: |
+    Ubuntu 22.04 LTS virtual machine with the ELCM installed.
+    It also contains OpenTAP, InfluxDB and Grafana services installed.
+  hypervisors: [one]
+  appliance: https://marketplace.mobilesandbox.cloud:9443//appliance/service_ELCM/download/0
+
+####################################
+## Component input
+####################################
+input:
+  one_elcm_influxdb_user:
+    description: Username used to login into the InfluxDB
+    type: str
+    default_value: "admin"
+    required_when: false
+  one_elcm_influxdb_password:
+    description: Password used to login into the InfluxDB
+    type: str
+    default_value: "admin"
+    required_when: false
+  one_elcm_influxdb_database:
+    description: Database name
+    type: str
+    default_value: "elcmdb"
+    required_when: false
+  one_elcm_grafana_password:
+    description: Password used to login into the Grafana
+    type: str
+    default_value: "admin"
+    required_when: false
+
+####################################
+## Component output
+####################################
+output:
+  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
+  id: VM ID in OpenNebula
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the ELCM VM template to use in your OpenNebula environment
+  image_id: ID of the ELCM image to use in your OpenNebula environment

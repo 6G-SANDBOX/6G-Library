@@ -1,47 +1,44 @@
-# TN_INIT
-The Trial Network `{{ tn_id }}` has been successfully created with the following components:
+# {{ tn_id }}-tn_init
 
-## TN_VXLAN: {{ tn_id }}-tn_vxlan
+The Trial Network `{{ tn_id }}` has been successfully created.
+The component `{{ tn_id }}-tn_vxlan` is the main subnetwork of the Trial Network, reachable with the bastion's VPN
+Component `{{ tn_id }}-tn_bastion` is a crutial VM of the Trial Network, which serves as its router, firewall and VPN endpoing.
 
-The Trial Network's main VXLAN.
+## Important information
 
-Important information:
+#### {{ tn_id }}-tn_vxlan
 
-* **OPENNEBULA VIRTUAL NETWORK ID**: {{ tn_vxlan_id }}
-* **VXLAN NAME**: {{ tn_id }}-tn_vxlan
-* **VXLAN FIRST IP**: {{ one_vxlan_first_ip }}
-* **VXLAN ADDRESS SIZE**: {{ one_vxlan_address_size }}
-* **VXLAN GW**: {{ one_vxlan_gw }}
-* **VXLAN DNS**: {{ one_vxlan_dns }}
-* **VXLAN MTU**: {{ one_vxlan_mtu }}
-* **VXLAN GUEST MTU**: {{ one_vxlan_guest_mtu }}
+- **OpenNebula VNet ID**: `{{ tn_vxlan_id }}`
+- **VXLAN first IP**: `{{ one_vxlan_first_ip }}`
+- **VXLAN address size**: `{{ one_vxlan_address_size }}`
+- **VXLAN netmask**: `{{ one_vxlan_netmask }}`
+- **VXLAN gateway**: `{{ one_vxlan_gw }}`
+- **VXLAN DNS**: `{{ one_vxlan_dns }}`
+- **VXLAN MTU**: `{{ one_vxlan_mtu }}`
+- **VXLAN guest MTU**: `{{ one_vxlan_guest_mtu }}`
 
+#### {{ tn_id }}-tn_bastion
 
-## {{ tn_id }}-tn_bastion
+- **OpenNebula VM ID**: `{{ tn_bastion_id }}`
+- **VM network interfaces**:
+  ```json
+  {{ tn_bastion_ips }}
+  ```
 
-The Trial Network's gateway, router and firewall.
-
-Important information:
-
-* **VM ID**: {{ tn_bastion_id }}
-* **Network Interfaces**:
-    ```json
-    {{ tn_bastion_ips }}
-    ```
-
-#### VNP WIREGUARD CLIENT CONFIG
-
+#### Wireguard VPN client config
+Add this configuration file to your local wireguard client tool.
 ```
 {{ hostvars['tn_bastion']['client_tunnel']['content'] | b64decode }}
 ```
 
-#### SSH KEYPAIR TO ACCESS THE REST OF THE TRIAL NETWORK COMPONENTS
+#### SSH keypair
+Use the private key to access Trial Network VM's with user *tnuser*
 
-Public key:
+**Public key**:
 ```
 {{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] | b64decode }}
 ```
-Private key:
+**Private key**:
 ```
 {{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] | b64decode }}
 ```

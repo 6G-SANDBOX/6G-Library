@@ -7,10 +7,6 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Overwrite "entity_name" with only tn_bastion
-      ansible.builtin.set_fact:
-        entity_name: "tn_bastion"
-
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
@@ -91,6 +87,6 @@
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
-          vpn_client_tunnel: "{{ hostvars[entity_name]['client_tunnel']['content'] }}"
-          tn_ssh_public_key: "{{ hostvars[entity_name]['tn_ssh_public_key']['content'] }}"
-          tn_ssh_private_key: "{{ hostvars[entity_name]['tn_ssh_private_key']['content'] }}"
+          vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"
+          tn_ssh_public_key: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
+          tn_ssh_private_key: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"

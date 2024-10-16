@@ -35,7 +35,7 @@ metadata:
     - If one_ueransim_run_gnb == "YES", a previously deployed open5gs component needs to be selected at "one_ueransim_gnb_linked_open5gs"
     - If one_ueransim_run_gnb == "NO" and one_ueransim_run_ue == "YES", a previously deployed ueransim with run_gnb == "YES" needs to be selected at "one_ueransim_ue_linked_gnb"
   hypervisors: [one]
-  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/ueransim326
+  appliance: https://marketplace.mobilesandbox.cloud:9443//appliance/service_UERANSIM/download/0
 
 ####################################
 ## Component input
@@ -101,8 +101,8 @@ input:
 
   one_ueransim_gnb_tac:
     description: In gNB simulation, Tracking Area Code of the PLMN. Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
-    type: str
-    default_value: "200"
+    type: int
+    default_value: 200
     required_when: false
 
   one_ueransim_gnb_amf_address:
@@ -124,10 +124,10 @@ input:
 
   one_ueransim_gnb_slices_sd:
     description: |
-      In gNB simulation, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI).
+      In gNB simulation, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
       Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
-    type: int
-    default_value: 1
+    type: str
+    default_value: "000001"
     required_when: false
 
   one_ueransim_ue_supi:
@@ -185,9 +185,9 @@ input:
     required_when: false
 
   one_ueransim_ue_session_sd:
-    description: In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
-    type: int
-    default_value: 1
+    description: In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance. Minimum length of 6.
+    type: str
+    default_value: "000001"
     required_when: false
 
   one_ueransim_ue_configured_nssai_sst:
@@ -197,9 +197,9 @@ input:
     required_when: false
 
   one_ueransim_ue_configured_nssai_sd:
-    description: In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
-    type: int
-    default_value: 1
+    description: In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance. Minimum length of 6.
+    type: str
+    default_value: "000001"
     required_when: false
 
   one_ueransim_ue_default_nssai_sst:
@@ -209,10 +209,11 @@ input:
     required_when: false
 
   one_ueransim_ue_default_nssai_sd:
-    description: In UE simulation, Slice Differentiator (SD) of the default NSSAI. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
-    type: int
-    default_value: 1
+    description: In UE simulation, Slice Differentiator (SD) of the default NSSAI. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance. Minimum length of 6.
+    type: str
+    default_value: "000001"
     required_when: false
+
 
 ####################################
 ## Component output
@@ -221,6 +222,14 @@ output:
   ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
   id: VM ID in OpenNebula
   run_gnb: UERANSIM instance deployed with one_ueransim_run_gnb == 'YES'
-  gnb_metadata_dict: Dictionary with multiple parameters used in the gNB service bootstrap
+  gnb_metadata_dict: #Dictionary with multiple parameters used in the gNB service bootstrap #TODO
   run_ue: UERANSIM instance deployed with one_ueransim_run_ue == 'YES'
-  ue_metadata_dict: Dictionary with multiple parameters used in the UE service bootstrap
+  ue_metadata_dict: #Dictionary with multiple parameters used in the UE service bootstrap #TODO
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the UERANSIM VM template to use in your OpenNebula environment
+  image_id: ID of the UERANSIM image to use in your OpenNebula environment

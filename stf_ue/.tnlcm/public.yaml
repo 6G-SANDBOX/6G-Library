@@ -1,0 +1,63 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 4 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Javier Jimenez <ja.jimenez@uma.es>
+  short_description: Enables the use of a physical UE via STF for a limited duration.
+  long_description: |
+    The **STF_UE** 6G-Library component enables the temporal access to a physical UE through an [STF](https://github.com/DeviceFarmer/stf) (Smartphone Test Farm) Web Interface.
+    This mobile device has the right SIM to be connected to the physical gNB of the `nokia_radio` component.
+    The access time for the device is set to 1h by default, but can be modified
+    **NOTE**: Currently this component is only available in the site "uma".
+  hypervisors: [one]
+  destroy_script: true
+
+# ####################################
+# ## Component input
+# ####################################
+input:
+  stf_ue_any_lease:
+    description: Requested time to book the UE device. In seconds.
+    type: int
+    default_value: 3600
+    required_when: false
+
+
+# ####################################
+# ## Component output
+# ####################################
+output:
+  # None
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  origin: Full URL of the STF web portal
+  administrator_token: Token to authenticate as the administrator user in the STF API
+  device: Mobile device ID to book to the user "tnuser"
+  user_mail: Mail of the user "tnuser"

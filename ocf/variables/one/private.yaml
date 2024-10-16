@@ -1,0 +1,48 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+# OCF repository to get helm installation scripts
+ocf_any_repo: https://labs.etsi.org/rep/ocf/capif.git
+ocf_any_branch: staging
+
+# Vault deployment configuration
+ocf_any_vault_namespace: "ocf-vault"
+ocf_any_vault_storage_class: "longhorn"
+ocf_any_vault_storage_size: 1Gi
+ocf_any_vault_hostname: "vault.{{ tn_id }}.{{ site_domain }}"
+ocf_any_vault_domain_1: "*.{{ tn_id }}.{{ site_domain }}"
+ocf_any_vault_domain_2: "*.testbed.validation"
+ocf_any_vault_domain_3: "*.testbed.develop"
+
+# Monitoring deployment configuration
+ocf_any_monitoring_namespace: "ocf-monitoring"
+ocf_any_monitoring_service_name: "monitoring"
+ocf_any_monitoring_prometheus_hostname: "prometheus.{{ tn_id }}.{{ site_domain }}"
+ocf_any_monitoring_snooker_enabled: false
+
+# OpenCAPIF deployment configuration
+ocf_any_capif_namespace: "ocf-capif"
+ocf_any_capif_resources_reserve: "NO"
+ocf_any_capif_storage_class: "longhorn"
+ocf_any_capif_storage_access_mode: "ReadWriteOnce"
+ocf_any_capif_grafana_storage_size: "1Gi"
+ocf_any_capif_loki_storage_size: "100Mi"
+ocf_any_capif_mongo_storage_size: "1Gi"
+ocf_any_capif_mongo_register_storage_size: "1Gi"
+ocf_any_capif_tempo_storage_size: "1Gi"
+ocf_any_capif_hostname: "capif.{{ tn_id }}.{{ site_domain }}"
+ocf_any_capif_register_hostname: "register.{{ tn_id }}.{{ site_domain }}"
+ocf_any_capif_domain: "{{ tn_id }}.{{ site_domain }}"
+
+# Client to be used by experimenter
+ocf_any_user: "client"
+ocf_any_password: "password"
+# Setup tests to pass
+ocf_any_tests_to_pass: "smoke"

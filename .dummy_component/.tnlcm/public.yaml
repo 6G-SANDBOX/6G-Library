@@ -45,6 +45,10 @@
 # Structure of the dictionary "output" the TNLCM expects to receive after the component deployment
 # Only keys are checked, the value shown here is a short description only seen in this file
 
+### site_variables variables
+# Dictionary with the different variables that are supposed to be encrypted in the 6G-Sandbox-Sites repository.
+# Each variable has a short description of what it does and its type just for informational purposes
+
 ####################################
 ## Component metadata
 ####################################
@@ -55,56 +59,63 @@ metadata:
   long_description: |
     The long description of a Component Type may span multiple lines
     and provide a more in depth outline of it's purpose.
-    This imaginary component needs a previous "X" component to be previously deployed and referrenced in input: "sampleVariable"
+    This sample component needs a previous "X" component to be previously deployed, and referrenced in input: "sampleVariable"
+    This sample component uses a custom appliance previously installed in your site (Instructions on how to install the component should be in the README.md file)
   hypervisors: [one]
+  # destroy_script: false    # true only in special components that require extra steps when being deleted. You probably don't need it
+  # resource_manager: false  # (BETA, do not include yet) true in certain components that require the TNLCM to perform an accounting on how many instances of this component are deployed in a site, and for how long. Quantity and duration are instructed inside the sites repository
+  # appliance: <link>        # will be deprecated in the future. Link to download a custom appliance if the component requires a specific custom VM image/template
 
 ####################################
 ## Component input
 ####################################
 input:
-  simple_text_variable:
-    description: Description of an optional text variable.
+  dummy_one_simpletextvariable:
+    description: Description of an optional text variable. Variable for OpenNebula sites
     #type: str
     default_value: "Default string"
     #choices: []
     required_when: false
 
-  mandatory_list_of_strings:
+  dummy_one_mandatorylistofstrings:
     description: |
       Variable has not default and requires a list of mandatory_list_of_strings
       A sample valid input would be ["one", "two", "three"]
+      Variable only for OpenNebula sites
     type: list[str]
     #default_value: ""
     #choices: []
     required_when: true
 
-  choose_a_number:
-    description: Select a numeric value from the list of choices. First choice by default.
+  dummy_any_chooseanumber:
+    description: Select a numeric value from the list of choices. First choice by default. Variable for any kind of site
     type: int
     default_value: 1
     choices: [1,2,3]
     required_when: false
 
-  sample_choice_variable:
+  dummy_any_samplechoicevariable:
     description: |
       Mandatory variable taht stablishes a dependency with another component.
       Through the previous component output, other variables from this component can be autocompleted 
+      Variable for any kind of site
     type: vnet
     #default_value: ""
     #choices: []
     required_when: true
 
-  autocompleted_variable:
+  dummy_vmware_autocompletedvariable:
     description: |
       The value will be overwritten in this order:
         1. Initial value is in the private.yaml file (a.k.a. the value shown in default_value)
         2. If another component was referrenced in "sample_choice_variable" a playbook step will overwrite the value with one of its output variables.
         3. If this optional variable is filled, the final value will always be this one.
       Most cases will be OK simply leaving the default_value for it to be automatically overwritten
+      Variable for VMWare sites
     type: "strlist"
     default_value: ["255.255.255.0"]
     #choices: []
-    optional: false
+    required_when: true
 
 ####################################
 ## Component output
@@ -112,3 +123,9 @@ input:
 output:
   sample_output_variable: Short description of what the output value is.
   another_output_variable: Description is optional. For now, it is unused by the TNLCM. TNLCM only checks the key name.
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: Short description of what this variable represents.

@@ -1,0 +1,117 @@
+---
+- name: "STAGE 1: Apply IAC to deploy the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Terraform apply
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
+
+- name: "STAGE 2: Prepare to access the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_loadcore_agent_networks[0] + '-id'] | string}}"
+    
+    - name: Add new VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "{{ entity_name }}"
+        ansible_host: "{{ ips[ vnet_id ] }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: jenkins
+
+    - name: Create SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+
+
+- name: "STAGE 3: Apply CAC to prepare the component"
+  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  gather_facts: false
+  tasks:
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        timeout: 200
+
+    - name: Set site ssh key as authorized in jenkins user
+      ansible.posix.authorized_key:
+        user: jenkins
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
+      when: item != ''
+
+    - name: Create new user for experimenter access
+      become: true
+      ansible.builtin.user:
+        name: tnuser
+        shell: /bin/bash
+        groups: sudo
+
+    - name: Set TN ssh key as authorized in new user
+      become: true
+      ansible.posix.authorized_key:
+        user: tnuser
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+
+    - name: Copy file with owner and permissions
+      become: true
+      ansible.builtin.copy:
+        src: /home/ixia/agent-setup.sh
+        dest: /home/tnuser/agent-setup.sh
+        owner: tnuser
+        group: tnuser
+        mode: '0644'
+
+    - name: Execute bash script to register the Agent with the Middleware
+      become: true
+      shell: "/home/tnuser/agent-setup.sh {{ loadcore_middleware_ip }} management_interface=ens3 test_interface=ens4 reboot_api_enabled=y update_hostname=n"
+      args:
+        chdir: "/home/tnuser/"
+      register: result
+
+    - name: Verify result
+      assert:
+        that:
+          - result.rc == 0
+        fail_msg: "There was a problem registering LoadCore Agent"
+        success_msg: "LoadCore Agent should be registered correctly"
+
+- name: "STAGE 4: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        output:
+          ips: "{{ ips | b64encode }}"
+          id: "{{ id | b64encode }}"

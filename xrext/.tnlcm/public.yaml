@@ -1,0 +1,67 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Joaquín Pérez Otero <joaquin.perez_otero.ext@nokia.com>
+  short_description: Deploys a Virtual Machine with Python modules installed to consume XR extensions of NaC REST API. 
+  long_description: |
+    A Virtual Machine based on Ubuntu 22.04 LTS.
+    Size: 2 GiB of memory, 1 vCPU and 20GiB of storage
+    Python 3 + pip
+    Python packages 'nac_api' and 'xrext' installed
+  hypervisors: [one]
+  appliance: https://marketplace.mobilesandbox.cloud:9443//appliance/service_XRext/download/0
+
+####################################
+## Component input
+####################################
+# Describes variables shown in the TNLCM to be filled by the experimenter and included in a TN descriptor. 
+# Most variables just serve to overwrite a private value, but others (mainly mandatory ones) serve to define dependencies between componentes.
+# Each variable can contain the following fields:
+#   - description; A general description of the variable shown in the TNLCM Frontend. "" by default
+#   - type: Expected python built-in data type https://www.w3schools.com/python/python_datatypes.asp, but it can also be a component name. "str" by default
+#   - default_value: In optional variables, the value existing in privates.yaml that the variable can overwrite. "" by default
+#   - choices: List of possible input values. [] by default
+#   - required_when: Condition to satisfy to make the variable mandatory to fill by the experimenter. Values can be a simple true/false, or a boolean condition https://www.w3schools.com/python/python_booleans.asp
+#                    Conditions can include the value of other input variables of the same comopnent. false by default
+# NOTE: XRext image ONE PARAMS may be included in this section as input variables, but at the moment the 
+#       image is only intended to be used in [uma] site, so the PARAMS are not included her to avoid 
+#       confusing the experimenter.
+input:
+  one_xrext_networks:
+    description: Ordered list of Virtual Network names the VM will be part of. In most cases first one should always be the tn_vxlan
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
+    required_when: false
+
+####################################
+## Component output
+####################################
+# Structure of the dictionary "output" the TNLCM expects to receive after the component deployment
+# Only keys are checked, the value shown here is a short description only seen in this file
+output:
+  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
+  id: VM ID in OpenNebula

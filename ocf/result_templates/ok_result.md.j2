@@ -1,0 +1,29 @@
+# {{ tn_id }}-{{ entity_name}}
+
+The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
+
+OpenCAPIF, an open-source CAPIF implementation, has been successfully deployed on the Kubernetes cluster **{{ ocf_one_oneKE }}** using Helm. This cluster is part of the Trial Network **{{ tn_id }}**.
+
+<img src="https://ocf.etsi.org/images/logos/OpenCAPIF.webp" />
+
+Below is a summary of the components that have been deployed:
+
+* Vault - Vault HashiCorp component to store credentials used by OpenCAPIF
+* Monitoring - Grafana, Loki and Prometheus components to get ready monitoring of CAPIF components
+* OpenCAPIF - Register and CCF components
+
+If you need detailed information about OpenCAPIF you can visit the official documentation: https://ocf.etsi.org/documentation/latest/
+
+## Important information
+
+## Client to be used by experimenter
+ocf_any_user: {{ ocf_any_user }}
+ocf_any_password: {{ ocf_any_password }}
+
+ocf_any_vault_hostname: {{ ocf_any_vault_hostname }} 
+ocf_any_monitoring_prometheus_hostname: {{ ocf_any_monitoring_prometheus_hostname }}
+ocf_any_capif_hostname: {{ ocf_any_capif_hostname }}
+ocf_any_capif_register_hostname: {{ ocf_any_capif_register_hostname }}
+
+
+**Note**: To access the dashboard, you must add the domain to the /etc/hosts file of your machine mapping it with the IP address of your VNF Machine.

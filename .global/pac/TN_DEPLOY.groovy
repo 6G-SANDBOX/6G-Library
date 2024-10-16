@@ -15,10 +15,10 @@ pipeline {
         string(name: 'DEPLOYMENT_SITE', defaultValue: '', description: 'Site where the deployment is being made. E.g. uma, athens, fokus, oulu... MANDATORY')
         string(name: 'TNLCM_CALLBACK', defaultValue: 'http://tnlcm-ip:5000/tnlcm/callback/', description: 'URL of the TNLCM to notify the results. MANDATORY')
         string(name: 'LIBRARY_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Library.git', description: '6G-Library repository HTTPS URL. Leave it as-is unless you want to test your own fork')
-        string(name: 'LIBRARY_BRANCH', defaultValue: 'v0.2.1', description: 'LIBRARY_URL checkout to use. Valid inputs can be refs/heads/<branchName>, refs/tags/<tagName> or <commitId>. Leave it as-is unless you want to test alternative releases/branches/commits.')
+        string(name: 'LIBRARY_BRANCH', defaultValue: 'refs/tags/v0.3.0', description: 'LIBRARY_URL checkout to use. Valid inputs can be refs/heads/<branchName>, refs/tags/<tagName> or <commitId>. Leave it as-is unless you want to test alternative releases/branches/commits.')
         string(name: 'SITES_URL', defaultValue: 'https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git', description: '6G-Library-Sites repository HTTP URL. Leave it as-is unless you want to test your own fork')
         string(name: 'SITES_BRANCH', defaultValue: 'refs/heads/main', description: 'SITES_URL checkout to use. Valid inputs can be refs/heads/<branchName>, refs/tags/<tagName> or <commitId>. Leave it as-is unless you want to test alternative releases/branches/commits.')
-        booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG. Files will not be purged after the pipeline execution')
+        booleanParam(name: 'DEBUG', defaultValue: false, description: 'Enable DEBUG. Files will not be purged after the pipeline execution. WARNING: You have to manually delete the workspace from the Jenkins VM filesystem to be able to lauch new jobs if you choose this option.')
         // 'File Parameter' jenkins plugin required: https://plugins.jenkins.io/file-parameters/
         base64File (name: 'FILE', description: 'YAML file that contains the public variables needed to deploy the component')
     }
@@ -43,8 +43,6 @@ pipeline {
             steps {
                 echo 'Stage 1: Import input file into the workspace'
                 script {
-                    echo("DEPLOYING DEPLOYMENT: ${TN_ID}-${COMPONENT_TYPE}-${CUSTOM_NAME}")
-                    echo "Stage 1: Import input file into the workspace"
                     def inputFile = "${WORKSPACE}/${params.COMPONENT_TYPE}/variables/input_file.yaml"
 
                     def fileContent = sh (
@@ -59,27 +57,9 @@ pipeline {
             }
         }
 
-        stage('Stage 2: Import Jenkins parameters into the workspace') {
+        stage('Stage 2: Clone 6G-Sandbox-Sites repository') {
             steps {
-                echo 'Stage 2: Import Jenkins parameters into the workspace'
-                script{
-                    def paramsFile = "${WORKSPACE}/${params.COMPONENT_TYPE}/variables/pipeline_parameters.yaml"
-                    def paramsContent = "tn_id: ${params.TN_ID}\n"
-                    paramsContent += "component_type: ${params.COMPONENT_TYPE}\n"
-                    paramsContent += "custom_name: ${params.CUSTOM_NAME}\n"
-                    paramsContent += "entity_name: ${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}\n"
-                    paramsContent += "deployment_site: ${params.DEPLOYMENT_SITE}\n"
-                    paramsContent += "tnlcm_callback: ${params.TNLCM_CALLBACK}\n"
-                    paramsContent += "debug: ${params.DEBUG}\n"
-
-                    writeFile file: paramsFile, text: paramsContent
-                }
-            }
-        }
-
-        stage('Stage 3: Clone 6G-Sandbox-Sites repository') {
-            steps {
-                echo 'Stage 3: Clone 6G-Sandbox-Sites repository'
+                echo 'Stage 2: Clone 6G-Sandbox-Sites repository'
                 checkout([$class: 'GitSCM',
                           branches: [[name: params.SITES_BRANCH]],
                           extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '6G-Sandbox-Sites']],
@@ -88,26 +68,29 @@ pipeline {
             }
         }
 
-        stage('Stage 4: Deploy the selected component') {
+        stage('Stage 3: Deploy the selected component') {
             steps {
                 script {
-                    if (env.CUSTOM_NAME) {
-                        echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${COMPONENT_TYPE}-${CUSTOM_NAME} in the ${DEPLOYMENT_SITE} site"
-                    } else {
-                        echo "Stage 4: Run ansible playbook to deploy ${TN_ID}-${COMPONENT_TYPE} in the ${DEPLOYMENT_SITE} site"
-                    }
-                } 
-                ansiblePlaybook(
-                    credentialsId: 'SSH_PRIVATE_KEY',
-                    vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD',
-                    inventory: 'localhost,',
-                    extraVars: [
-                        workspace: "${WORKSPACE}",
-                        deployment_site: "${params.DEPLOYMENT_SITE}",
-                        component_type: "${params.COMPONENT_TYPE}",
-                    ],
-                    playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"
-                )
+                    def entity_name = params.CUSTOM_NAME ? "${params.COMPONENT_TYPE}-${params.CUSTOM_NAME}" : "${params.COMPONENT_TYPE}"
+
+                    echo "Stage 3: Run ansible playbook to deploy ${TN_ID}-${entity_name} in the ${DEPLOYMENT_SITE} site"
+                    ansiblePlaybook(
+                        credentialsId: 'SSH_PRIVATE_KEY',
+                        vaultCredentialsId: 'ANSIBLE_VAULT_PASSWORD',
+                        inventory: 'localhost,',
+                        extraVars: [
+                            workspace:       "${WORKSPACE}",
+                            tn_id:           "${params.TN_ID}",
+                            component_type:  "${params.COMPONENT_TYPE}",
+                            custom_name:     "${params.CUSTOM_NAME}",
+                            entity_name:     "${entity_name}",
+                            deployment_site: "${params.DEPLOYMENT_SITE}",
+                            tnlcm_callback:  "${params.TNLCM_CALLBACK}",
+                            debug:           "${params.DEBUG}",
+                        ],
+                        playbook: "${WORKSPACE}/${params.COMPONENT_TYPE}/code/component_playbook.yaml"
+                    )
+                }
             }
         }    
     }

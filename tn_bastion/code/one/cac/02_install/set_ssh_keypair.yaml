@@ -23,4 +23,3 @@
     key: "{{ item }}"
   loop:
     - "{{ site_admin_ssh_public_key }}"
-    - "{{ tn_ssh_public_key.content | b64decode | trim }}"

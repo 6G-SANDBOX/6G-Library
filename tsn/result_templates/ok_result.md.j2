@@ -1,10 +1,7 @@
-# TSN
+# {{ tn_id }}-tsn
 
-TSN capability has been successfully addded to the Trial Network {{ tn_id }}
-
-# Time-Sentive Networking Trial Network
-
-The Time-Sentive Networking (TSN) Trial Network (TN) architecture is shown below, in which 2 TSN endpoints are interconnected through a TSN bridge.
+The TSN (Time-Sensitive Networking) capability has been successfully addded to the Trial Network {{ tn_id }}
+TSN architecture is shown below, in which 2 TSN endpoints are interconnected through a TSN bridge.
 
 ![TSN_TN](https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/images/TSN_TN.png)
 
@@ -81,7 +78,7 @@ Base Time Nanoseconds: 0
 ---------------------
 ```
 
-### Login Credentials
+#### Login Credentials
 
 Information required to access the TSN components of the trial network.
 
@@ -97,7 +94,7 @@ Information required to access the TSN components of the trial network.
 | TSN bridge | 192.168.2.10 | relyum | admin | Dashboard |
 
 
-# ANNEX A: Relyum TSN bridge CLI configuration
+### ANNEX A: Relyum TSN bridge CLI configuration
 
 **1. CLI configuration tool** 
 
@@ -298,7 +295,7 @@ Examples:
 ```bash
 $ spt_config_reg -f CORE:field_name -r
 
-# Example: 
+#### Example: 
 
 $ spt_config_reg -f INTERNAL_PORT:tx_frames -r Read value: 42465 (HEX: 0x0000A5E1) 
 ```
@@ -308,7 +305,7 @@ $ spt_config_reg -f INTERNAL_PORT:tx_frames -r Read value: 42465 (HEX: 0x0000A5E
 ```bash
 $ spt_config_reg -f CORE:field_name -w value
 
-# Example:
+#### Example:
 
 $ spt_config_reg -f SWITCH:tsn_cbs -w 1 Operation successful
 ```
@@ -465,7 +462,7 @@ $ spt_qav_config -w qav_config_file_test.json
 }
 ```
 
-# ANNEX B: qvb_config_file.json
+### ANNEX B: qvb_config_file.json
 
 ```json
 {

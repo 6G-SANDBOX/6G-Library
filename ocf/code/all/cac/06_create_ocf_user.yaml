@@ -1,0 +1,19 @@
+- name: Launch Robot OCF Testsuite
+  ansible.builtin.shell: "capif/helm/scripts/create_remote_users.sh -u {{ ocf_any_user }} -p {{ ocf_any_password }}"
+  become: yes
+  environment:
+    KUBECONFIG: /etc/rancher/rke2/rke2.yaml
+
+- name: Compress Robot OCF Testsuite results
+  ansible.builtin.shell: "zip -r ocf_user_creation_results.zip capif/results"
+  become: yes
+
+- name: Fetch Create User results
+  ansible.builtin.fetch:
+    src: "ocf_user_creation_results.zip"
+    dest: "{{ workspace }}/{{ component_type }}/code/ocf_user_creation_results.zip"
+    flat: yes
+
+- name: Remove Results directory
+  ansible.builtin.shell: "rm -rf capif/results"
+  become: yes

@@ -1,0 +1,17 @@
+- name: Update package cache
+  apt:
+    update_cache: yes
+
+- name: Install Docker CLI
+  apt:
+    name: ['docker.io']
+
+- name: Setup static DNS Hosts
+  ansible.builtin.shell: "capif/helm/scripts/set_ingress.sh -n {{ item }}"
+  with_items:
+  - "{{ hostvars['localhost']['ocf_any_vault_namespace']}}"
+  - "{{ hostvars['localhost']['ocf_any_capif_namespace']}}"
+  - "{{ hostvars['localhost']['ocf_any_monitoring_namespace']}}"
+  become: true
+  environment:
+    KUBECONFIG: /etc/rancher/rke2/rke2.yaml

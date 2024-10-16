@@ -1,0 +1,40 @@
+- name: Clean OCF Repository If it exists
+  ansible.builtin.shell: "rm -rf capif || echo \"folder capif is not present\""
+  become: yes
+
+- name: Clone OCF Repository
+  ansible.builtin.shell: "git clone -b {{hostvars['localhost']['ocf_any_branch']}} {{hostvars['localhost']['ocf_any_repo']}} capif"
+  become: yes
+
+- name: Configure Variables.sh
+  ansible.builtin.shell: "sed -i {{ item }} capif/helm/scripts/variables.sh"
+  with_items:
+  - "\"s/export VAULT_NAMESPACE=.*/export VAULT_NAMESPACE={{ ocf_any_vault_namespace }}/g\""
+  - "\"s/export VAULT_STORAGE_CLASS=.*/export VAULT_STORAGE_CLASS={{ ocf_any_vault_storage_class }}/g\""
+  - "\"s/export VAULT_STORAGE_SIZE=.*/export VAULT_STORAGE_SIZE={{ ocf_any_vault_storage_size }}/g\""
+  - "\"s/export VAULT_HOSTNAME=.*/export VAULT_HOSTNAME={{ ocf_any_vault_hostname }}/g\""
+  - "\"s/export DOMAIN1=.*/export DOMAIN1={{ ocf_any_vault_domain_1 }}/g\""
+  - "\"s/export DOMAIN2=.*/export DOMAIN2={{ ocf_any_vault_domain_2 }}/g\""
+  - "\"s/export DOMAIN3=.*/export DOMAIN3={{ ocf_any_vault_domain_3 }}/g\""
+  - "\"s/export MONITORING_NAMESPACE=.*/export MONITORING_NAMESPACE={{ ocf_any_monitoring_namespace }}/g\""
+  - "\"s/export MONITORING_SERVICE_NAME=.*/export MONITORING_SERVICE_NAME={{ ocf_any_monitoring_service_name }}/g\""
+  - "\"s/export PROMETHEUS_HOSTNAME=.*/export PROMETHEUS_HOSTNAME={{ ocf_any_monitoring_prometheus_hostname }}/g\""
+  - "\"s/export MONITORING_SNOOKER_ENABLED=.*/export MONITORING_SNOOKER_ENABLED={{ ocf_any_monitoring_snooker_enabled }}/g\""
+  - "\"s/export CAPIF_NAMESPACE=.*/export CAPIF_NAMESPACE={{ ocf_any_capif_namespace }}/g\""
+  - "\"s/export CAPIF_RESOURCES_RESERVE=.*/export CAPIF_RESOURCES_RESERVE={{ ocf_any_capif_resources_reserve }}/g\""
+  - "\"s/export CAPIF_STORAGE_CLASS=.*/export CAPIF_STORAGE_CLASS={{ ocf_any_capif_storage_class }}/g\""
+  - "\"s/export CAPIF_STORAGE_ACCESS_MODE=.*/export CAPIF_STORAGE_ACCESS_MODE={{ ocf_any_capif_storage_access_mode }}/g\""
+  - "\"s/export CAPIF_GRAFANA_STORAGE_SIZE=.*/export CAPIF_GRAFANA_STORAGE_SIZE={{ ocf_any_capif_grafana_storage_size }}/g\""
+  - "\"s/export CAPIF_LOKI_STORAGE_SIZE=.*/export CAPIF_LOKI_STORAGE_SIZE={{ ocf_any_capif_loki_storage_size }}/g\""
+  - "\"s/export CAPIF_MONGO_STORAGE_SIZE=.*/export CAPIF_MONGO_STORAGE_SIZE={{ ocf_any_capif_mongo_storage_size }}/g\""
+  - "\"s/export CAPIF_MONGO_REGISTER_STORAGE_SIZE=.*/export CAPIF_MONGO_REGISTER_STORAGE_SIZE={{ ocf_any_capif_mongo_register_storage_size }}/g\""
+  - "\"s/export CAPIF_TEMPO_STORAGE_SIZE=.*/export CAPIF_TEMPO_STORAGE_SIZE={{ ocf_any_capif_tempo_storage_size }}/g\""
+  - "\"s/export CAPIF_HOSTNAME=.*/export CAPIF_HOSTNAME={{ ocf_any_capif_hostname }}/g\""
+  - "\"s/export REGISTER_HOSTNAME=.*/export REGISTER_HOSTNAME={{ ocf_any_capif_register_hostname }}/g\""
+  - "\"s/export CAPIF_DOMAIN=.*/export CAPIF_DOMAIN={{ ocf_any_capif_domain }}/g\""
+  become: yes
+
+- name: Setup kubectl alias
+  ansible.builtin.shell: "echo \"alias  k='kubectl'\" >> ~/.bashrc"
+  become: yes
+

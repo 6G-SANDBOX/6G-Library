@@ -1,30 +1,30 @@
-## TN_BASTION: {{ tn_id }}-tn_bastion
+# {{ tn_id }}-tn_bastion
 
-The BASTION router and firewall component has been successfully created into the Trial Network {{ tn_id }}
+The component `{{ tn_id }}`-tn_bastion has been successfully created.
+The BASTION is a crutial VM of the Trial Network, which serves as its router, firewall and VPN endpoing.
 
-Important information:
+## Important information:
 
-* OpenNebula ID: {{ id }}
+- **OpenNebula VM ID**: `{{ id }}`
+- **VM network interfaces**:
+  ```json
+  {{ ips }}
+  ```
 
-### BASTION NETWORK INTERFACES
-```
-{{ ips }}
-```
-
-
-### VNP WIREGUARD CLIENT CONFIG
-
+#### Wireguard VPN client config
+Add this configuration file to your local wireguard client tool.
 ```
 {{ hostvars['tn_bastion']['client_tunnel']['content'] | b64decode }}
 ```
 
-### SSH KEYPAIR TO ACCESS THE REST OF THE TRIAL NETWORK COMPONENTS
+#### SSH keypair
+Use the private key to access Trial Network VM's with user *tnuser*
 
-Public key:
+**Public key**:
 ```
 {{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] | b64decode }}
 ```
-Private key:
+**Private key**:
 ```
 {{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] | b64decode }}
 ```

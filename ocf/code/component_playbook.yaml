@@ -1,0 +1,143 @@
+---
+- name: "STAGE 1: Prepare to access a previous target component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        node_ips: "{{ (terraform_outputs.stdout | from_json)[ocf_one_oneKE + '-node_ips'] }}"
+
+    - name: Add the oneKE master to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "master_0"
+        ansible_host: "{{ node_ips.master_0 }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
+        ansible_user: "root"
+
+- name: "STAGE 2: Apply IaC to deploy the component"
+  hosts: "master_0"
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Prepare repository for OpenCAPIF installation
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/00_prepare_repository.yaml"
+
+    - name: Install Vault
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//01_install_vault.yaml"
+
+    - name: Install Monitoring
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//02_install_monitoring.yaml"
+
+    - name: Install OpenCAPIF
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//03_install_capif.yaml"
+
+    - name: Setup /etc/hosts to access all components
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//04_setup_testing_environment.yaml"
+
+    - name: Execute robot tests
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//05_execute_ocf_testing.yaml"
+
+    - name: Create OpenCAPIF User
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac//06_create_ocf_user.yaml"
+
+- name: "STAGE 3: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Define OpenCAPIF metadata dictionary
+      ansible.builtin.set_fact:
+        metadata_dict: >-
+          {
+            'oneKE': '{{ ocf_one_oneKE }}',
+            'repo': '{{ ocf_any_repo }}',
+            'branch': '{{ ocf_any_branch }}',
+            'vault_namespace': '{{ ocf_any_vault_namespace }}',
+            'vault_storage_class': '{{ ocf_any_vault_storage_class }}',
+            'vault_storage_size': '{{ ocf_any_vault_storage_size }}',
+            'vault_hostname': '{{ ocf_any_vault_hostname }}',
+            'monitoring_namespace': '{{ ocf_any_monitoring_namespace }}',
+            'monitoring_service_name': '{{ ocf_any_monitoring_service_name }}',
+            'monitoring_prometheus_hostname': '{{ ocf_any_monitoring_prometheus_hostname }}',
+            'monitoring_snooker_enabled': '{{ ocf_any_monitoring_snooker_enabled }}',
+            'capif_namespace': '{{ ocf_any_capif_namespace }}',
+            'capif_resources_reserve': '{{ ocf_any_capif_resources_reserve }}',
+            'capif_storage_class': '{{ ocf_any_capif_storage_class }}',
+            'capif_storage_access_mode': '{{ ocf_any_capif_storage_access_mode }}',
+            'capif_grafana_storage_size': '{{ ocf_any_capif_grafana_storage_size }}',
+            'capif_loki_storage_size': '{{ ocf_any_capif_loki_storage_size }}',
+            'capif_mongo_storage_size': '{{ ocf_any_capif_mongo_storage_size }}',
+            'capif_mongo_register_storage_size': '{{ ocf_any_capif_mongo_register_storage_size }}',
+            'capif_hostname': '{{ ocf_any_capif_hostname }}',
+            'capif_register_hostname': '{{ ocf_any_capif_register_hostname }}',
+            'user': '{{ ocf_any_user }}',
+            'password': '{{ ocf_any_password }}',
+          }
+
+    - name: Upload Vault keys to S3
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/vault_keys.txt"
+        src: "{{ workspace }}/{{ component_type }}/code/vault_keys.txt"
+        encrypt: false
+        validate_certs: false
+
+    - name: Upload Tests results keys to S3
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/ocf_robot_results.zip"
+        src: "{{ workspace }}/{{ component_type }}/code/ocf_robot_results.zip"
+        encrypt: false
+        validate_certs: false
+
+    - name: Upload Create User Results keys to S3
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/ocf_user_creation_results.zip"
+        src: "{{ workspace }}/{{ component_type }}/code/ocf_user_creation_results.zip"
+        encrypt: false
+        validate_certs: false
+
+    - name: Publish OpenCAPIF metadata as terraform outputs"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-metadata"
+            value: "{{ metadata_dict }}"
+
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        output:
+          metadata_dict: "{{ metadata_dict | b64encode }}"

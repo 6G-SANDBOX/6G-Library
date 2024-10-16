@@ -34,6 +34,7 @@ metadata:
     Main vnet of the Trial Network and accessible through the tn_bastion VPN
   hypervisors: [one]
 
+
 ####################################
 ## Component input
 ####################################
@@ -64,8 +65,16 @@ input:
     default_value: 254
     required_when: false
 
+
 ####################################
 ## Component output
 ####################################
 output:
   id: VNet ID in OpenNebula
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  # None
