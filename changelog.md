@@ -1,6 +1,6 @@
 # Changelog
 
-## [v0.3.0]
+## [v0.3.0] - 2024-10-16
 ### Added
 - New component ks8500_runner
 - New component stf_ue
