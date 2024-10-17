@@ -1,6 +1,10 @@
 # Changelog
 
-## [v0.3.0]
+## [unreleased] - XXXX-XX-XX
+## Fixed
+- Component TSN: markdown report file `ok_result.md.j2`.
+
+## [v0.3.0] - 2024-10-16
 ### Removed
 - Deleted ansible task overwriting `entity_name` with the component type. `entity_name` is now only defined during the Jenkins Pipeline.
 
