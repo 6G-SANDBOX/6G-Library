@@ -10,7 +10,7 @@ TSN architecture is shown below, in which 2 TSN endpoints are interconnected thr
 The TSN configuration can be performed via SSH (cli) using a terminal or dashboard (gui) using a browser. Details on how to configure the different TSN features can be found in the [TSN configuration guide](#annex-a-relyum-tsn-bridge-cli-configuration). For example, the following command is used to configure the Time Aware Shaper (IEEE 802.1Qbv):
 
 ```bash
-spt_config_reg -n 0 -w qbv_config_file.json
+spt_qbv_config -n 0 -w qbv_config_file.json
 ```
 
 In this case, the specific parameters are defined in [qbv_config_file.json](#annex-b-qvb_config_filejson) and are applied only on port 0 of the device (indicated by -n 0). The following image shows the TSN configuration defined in [qbv_config_file.json](#annex-b-qvb_config_filejson).
