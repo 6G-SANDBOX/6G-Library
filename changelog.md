@@ -1,5 +1,9 @@
 # Changelog
 
+## [unreleased] - XXXX-XX-XX
+## Fixed
+- Component TSN: markdown report file `ok_result.md.j2`.
+
 ## [v0.3.0] - 2024-10-16
 ### Added
 - New component ks8500_runner
