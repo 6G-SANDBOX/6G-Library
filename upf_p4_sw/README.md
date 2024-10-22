@@ -6,7 +6,7 @@ UPF-P4 SW is a software-based implementation of the 5G UPF, a critical network f
 
 By employing a Next Generation Software Defined Networking (NG-SDN) approach, UPF-P4 SW allows programming of both the control plane and the data plane, providing complete control and flexibility over network packet processing. This results in a UPF module that is efficient, entirely flexible, and real-time controllable.
 
-## ✨ Key Features:
+## ✨ Key Features
 
 * **P4-based Data Plane:** The UPF's data plane logic is defined using the P4 language, providing fine-grained control over packet processing and forwarding. This allows users to add, modify, or remove algorithms, protocols, and functions in a completely customizable manner.
 * **BMv2 Integration:** The P4 program is compiled and executed on the BMv2 software switch, enabling packet processing within a virtualized environment and facilitating rapid development and testing.
@@ -143,11 +143,35 @@ After making changes to the configuration files, it's essential to restart the s
 
 
 ### Registering new user equipments
-To add new UEs to the network, you need to register them in the Open5GS core network database using the provided script.
+By default, the SIM <MCC|MNC|MSIN> is automatically registered with the <Key>, <OPC>, <APN> and <SLICE> configured in the component input parameters.
+To add new UEs to the network, you need to register them in the Open5GS core network database using the provided script (`register_subscriber.sh`).
 
 #### Steps:
 TODO: Explain how to register new UEs.
+  1. **Navigate to the config folder**:
 
+  Ensure you are in the directory containing the `register_subscriber.sh` script.
+
+   ```bash
+   cd /home/jenkins/config/
+   ```
+
+  2. **Modify the register_subscriber.sh script**:
+
+  Open the script with an editor and modify or add a new line taking into account the format:
+
+  ```bash
+  docker run -ti --rm \
+    --net host \
+    -e DB_URI=mongodb://localhost/open5gs \
+    gradiant/open5gs-dbctl:0.10.3 "open5gs-dbctl add_ue_with_slice MCC|MNC|MSIN> <Key> <OPC> <APN> <S_NSSAI_SST> <S_NSSAI_SD>"
+  ```
+
+  2. **Run the register_subscriber.sh script**:
+
+  ```bash
+  ./register_subscriber.sh
+  ```
 
 ## Logs
 TODO: Explain how to access logs
