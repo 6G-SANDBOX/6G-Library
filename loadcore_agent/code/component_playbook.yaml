@@ -58,7 +58,7 @@
 
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
-        user: jenkins
+        user: ubuntu
         state: present
         key: "{{ item }}"
       loop:
