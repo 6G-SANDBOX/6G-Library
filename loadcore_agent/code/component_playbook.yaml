@@ -82,11 +82,13 @@
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
     - name: Read remote file content
+      become: true
       ansible.builtin.slurp:
         src: /opt/5gc-test-engine/agent-setup.sh
       register: setup_script
 
     - name: Create file with owner and permissions
+      become: true
       ansible.builtin.copy:
         content: "{{ setup_script.content | b64decode }}"
         dest: /home/tnuser/agent-setup.sh
