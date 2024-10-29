@@ -84,7 +84,7 @@
     - name: Copy file with owner and permissions
       become: true
       ansible.builtin.copy:
-        src: /home/ixia/agent-setup.sh
+        src: /opt/5gc-test-engine/agent-setup.sh
         dest: /home/tnuser/agent-setup.sh
         owner: tnuser
         group: tnuser
