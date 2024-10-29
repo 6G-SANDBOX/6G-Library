@@ -97,11 +97,10 @@
         dest: /home/tnuser/agent-setup.sh
         owner: tnuser
         group: tnuser
-        mode: '0644'
+        mode: '0777'
 
     - name: Execute bash script to register the Agent with the Middleware
       become: true
-      become_user: tnuser
       shell: "/home/tnuser/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} management_interface=ens3 test_interface=ens4 reboot_api_enabled=y update_hostname=n"
       args:
         chdir: "/home/tnuser/"
