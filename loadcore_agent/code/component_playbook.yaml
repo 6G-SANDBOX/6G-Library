@@ -56,7 +56,10 @@
         connect_timeout: 5
         timeout: 200
 
-    - name: Set site ssh key as authorized in jenkins user
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Set site ssh key as authorized in ubuntu user
       ansible.posix.authorized_key:
         user: ubuntu
         state: present
