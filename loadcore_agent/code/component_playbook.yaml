@@ -81,10 +81,14 @@
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
-    - name: Copy file with owner and permissions
-      become: true
-      ansible.builtin.copy:
+    - name: Read remote file content
+      ansible.builtin.slurp:
         src: /opt/5gc-test-engine/agent-setup.sh
+      register: setup_script
+
+    - name: Create file with owner and permissions
+      ansible.builtin.copy:
+        content: "{{ setup_script.content | b64decode }}"
         dest: /home/tnuser/agent-setup.sh
         owner: tnuser
         group: tnuser
