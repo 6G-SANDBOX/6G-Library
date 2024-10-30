@@ -101,7 +101,7 @@
 
     - name: Execute bash script to register the Agent with the Middleware
       become: true
-      shell: "/home/tnuser/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} ens3 ens4 y n"
+      shell: "/home/tnuser/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} management_interface=ens3 reboot_api_enabled=y update_hostname=n"
       args:
         chdir: "/home/tnuser/"
       register: result
