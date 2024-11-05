@@ -1,8 +1,18 @@
-- name: Append new commponent's name and IP into a .ssh/config.d/ file
+- name: Append new component's name and IP into a .ssh/config.d/ file
   community.general.ssh_config:
     host: "{{ tn_id }}-{{ entity_name }}"
-    hostname:  "{{ ips[vnet_id] | default('ERROR_ASSIGNING_IP') }}"
+    hostname: "{{ item.value[vnet_id] }}"
     proxyjump: "{{ tn_id }}-tn_bastion"
-    remote_user: "jekins"
+    remote_user: "jenkins"
+    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+    state: present
+  loop: "{{ switch_ips | dict2items }}"
+
+- name: Add collector to SSH config
+  community.general.ssh_config:
+    host: "{{ tn_id }}-{{ entity_name }}_collector"
+    hostname: "{{ collector_ips[vnet_id] }}"
+    proxyjump: "{{ tn_id }}-tn_bastion"
+    remote_user: "jenkins"
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present

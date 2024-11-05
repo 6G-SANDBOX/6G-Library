@@ -23,9 +23,49 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
 
-# Post-terraform preliminary tasks. Still no component configuration.
 - name: "STAGE 2: Prepare to access the component"
-  #TODO
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        switch_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_switches-ips'] }}"
+        switch_ids: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_switches-ids'] }}"
+        collector_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-ips'] }}"
+        collector_id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-id'] }}"
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_int_p4_sw_networks[0] + '-id'] | string}}"
+
+    # Add switches VMs to Ansible Inventory
+    - name: Add switches VMs to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "int_p4_switch_{{ item.key }}"
+        ansible_host: "{{ item.value[vnet_id] }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"
+      loop: "{{ switch_ips | dict2items }}"
+
+    # Add collector VM to Ansible Inventory
+    - name: Add collector to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "int_p4_collector"
+        ansible_host: "{{ collector_ips[vnet_id] }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+    #- name: Add VMs to SSH config file in the Jenkins-master for debugging purposes
+    #  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
