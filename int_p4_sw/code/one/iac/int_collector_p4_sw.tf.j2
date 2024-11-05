@@ -1,8 +1,9 @@
 # https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
-resource "opennebula_virtual_machine" "{{ entity_name }}" {
-  name        = "{{ tn_id }}-{{ entity_name }}"
-  template_id = {{ site_available_components.collector.template_id }}           # TODO: We need to create the template collector in ONE
+resource "opennebula_virtual_machine" "{{ entity_name }}-collector" {
+  name        = "{{ tn_id }}-{{ entity_name }}-collector"
+  #template_id = {{ site_available_components.collector.template_id }}           # TODO: We need to create the template collector in ONE
+  template_id = {{ site_available_components.vm_kvm.template_id }} 
   cpu         = {{ one_int_p4_sw_cpu }}
   vcpu        = {{ one_int_p4_sw_cpu }}
   memory      = {{ one_int_p4_sw_memory }}
@@ -33,10 +34,10 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 
 output "{{ entity_name }}_collector-id" {
   description = "OpenNebula Collector VM ID"
-  value = opennebula_virtual_machine.{{ entity_name }}.id
+  value = opennebula_virtual_machine.{{ entity_name }}-collector.id
 }
 
 output "{{ entity_name }}_collector-ips" {
   description = "OpenNebula Collector VM Network Assignments"
-  value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
+  value = { for nic in opennebula_virtual_machine.{{ entity_name }}-collector.nic[*] : nic.network_id => nic.computed_ip }
 }
