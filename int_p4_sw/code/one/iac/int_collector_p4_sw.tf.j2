@@ -1,6 +1,6 @@
 # https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
-resource "opennebula_virtual_machine" "{{ entity_name }}-collector" {
+resource "opennebula_virtual_machine" "{{ entity_name }}_collector" {
   name        = "{{ tn_id }}-{{ entity_name }}-collector"
   template_id = {{ site_available_components.vm_kvm.template_id }} 
   cpu         = {{ one_int_p4_sw_cpu }}
@@ -38,5 +38,5 @@ output "{{ entity_name }}_collector-id" {
 
 output "{{ entity_name }}_collector-ips" {
   description = "OpenNebula Collector VM Network Assignments"
-  value = { for nic in opennebula_virtual_machine.{{ entity_name }}-collector.nic[*] : nic.network_id => nic.computed_ip }
+  value = { for nic in opennebula_virtual_machine.{{ entity_name }}_collector.nic[*] : nic.network_id => nic.computed_ip }
 }
