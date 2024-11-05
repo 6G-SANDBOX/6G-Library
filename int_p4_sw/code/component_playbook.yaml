@@ -43,8 +43,8 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         switch_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_switches-ips'] }}"
         switch_ids: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_switches-ids'] }}"
-        collector_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector_ips'] }}"
-        collector_id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector_id'] }}"
+        collector_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-ips'] }}" 
+        collector_id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-id'] }}"
         vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_int_p4_sw_networks[0] + '-id'] | string}}"
 
     # Add switches VMs to Ansible Inventory
