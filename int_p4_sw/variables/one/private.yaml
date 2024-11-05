@@ -14,7 +14,7 @@ one_int_p4_sw_disk: 25600
 
 # ----- Config related to the switches INT VMs -----
 # Number of INT-P4 switches
-one_int_p4_sw_n_switches: 2 #TODO: In the future, calculate this value automatically.
+#one_int_p4_sw_n_switches: 2 #TODO: In the future, calculate this value automatically.
 
 # TODO: Check values of the config in each switch (type of switch, interfaces, int_config)
 one_int_p4_sw_switches:
