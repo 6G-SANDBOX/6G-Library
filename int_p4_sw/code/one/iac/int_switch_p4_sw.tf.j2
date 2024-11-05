@@ -1,35 +1,6 @@
-# https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
-# https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
-
-
-# Define a variable that contains the networks for each VM
-variable "networks_per_vm" {
-  default = [
-    {% for i in range(one_int_p4_sw_n_switches) %}
-      [
-        {% for net in one_int_p4_sw_switches["int_p4_switch_" + i|string].networks %}
-          "{{ net }}"{{ "," if not loop.last }}
-        {% endfor %}
-      ]{{ "," if not loop.last }}
-    {% endfor %}
-  ]
-}
-
-# Define variables for all network names
-locals {
-  all_network_names = toset(flatten(var.networks_per_vm))
-}
-
-# Data source para obtener las redes virtuales existentes
-data "opennebula_virtual_network" "vnet" {
-  for_each = local.all_network_names
-  name     = each.value
-}
-
-resource "opennebula_virtual_machine" "{{ entity_name }}" {
-  count = {{ one_int_p4_sw_n_switches}}
-
-  name        = "{{ tn_id }}-{{ entity_name }}-{% raw %}${count.index}{% endraw %}"
+{% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
+resource "opennebula_virtual_machine" "{{ entity_name }}_{{ loop.index0 }}" {
+  name        = "{{ tn_id }}-{{ entity_name }}-{{ loop.index0 }}"
   template_id = {{ site_available_components.vm_kvm.template_id }}
   cpu         = {{ one_int_p4_sw_cpu }}
   vcpu        = {{ one_int_p4_sw_cpu }}
@@ -41,37 +12,36 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     USERNAME = "jenkins"
   }
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
-  disk {
-    image_id = {{ site_available_components.dummy_component.image_id }}
-    size     = {{ one_dummy_componentdisk }}
-    target   = "vda"
-    driver   = "qcow2"
-  } #}
-
-  # Used a dynamic block to generate the nics
-  dynamic "nic" {
-    for_each = var.networks_per_vm[count.index]
-    content {
-      model      = "virtio"
-      network_id = data.opennebula_virtual_network.vnet[nic.value].id
-    }
+{% for network in switch_config.networks %}
+  nic {
+    model           = "virtio"
+    network_id      = opennebula_virtual_network.{{ network }}.id
   }
+{% endfor %}
 
   depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
 }
 
+{% endfor %}
+
 output "{{ entity_name }}_switches-ids" {
   description = "List of OpenNebula INT Switch VM IDs"
-  value = [ for vm in opennebula_virtual_machine.{{ entity_name }} : vm.id ]
+  value       = [
+    {% for switch_name, switch_config in one_int_p4_sw_switches.items() -%}
+    opennebula_virtual_machine.{{ entity_name }}_{{ loop.index0 }}.id,
+    {% endfor %}
+  ]
 }
 
 output "{{ entity_name }}_switches-ips" {
   description = "OpenNebula INT Switch VM Network Assignments for all VMs"
-  value = { 
-    for idx, vm in opennebula_virtual_machine.{{ entity_name }}:
-    idx => {
-      for nic in vm.nic : nic.network_id => nic.computed_ip
-    }
+  value = {
+    {% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
+    "{{ loop.index0 }}": {
+      {% for network in switch_config.networks %}
+      "{{ network }}": opennebula_virtual_machine.{{ entity_name }}_{{ loop.index0 }}.nic[{{ loop.index0 }}].computed_ip,
+      {% endfor %}
+    },
+    {% endfor %}
   }
 }
