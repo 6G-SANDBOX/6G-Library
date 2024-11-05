@@ -1,4 +1,5 @@
-{% for switch_index, (switch_name, switch_config) in enumerate(one_int_p4_sw_switches.items()) %}
+{% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
+{% set switch_index = loop.index0 %}
 resource "opennebula_virtual_machine" "{{ entity_name }}_{{ switch_index }}" {
   name        = "{{ tn_id }}-{{ entity_name }}-{{ switch_index }}"
   template_id = {{ site_available_components.vm_kvm.template_id }}
@@ -12,7 +13,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}_{{ switch_index }}" {
     USERNAME = "jenkins"
   }
 
-{% for nic_index, network in enumerate(switch_config.networks) %}
+{% for network in switch_config.networks %}
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
@@ -27,7 +28,8 @@ resource "opennebula_virtual_machine" "{{ entity_name }}_{{ switch_index }}" {
 output "{{ entity_name }}_switches-ids" {
   description = "List of OpenNebula INT Switch VM IDs"
   value       = [
-    {% for switch_index, (switch_name, switch_config) in enumerate(one_int_p4_sw_switches.items()) -%}
+    {% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
+    {% set switch_index = loop.index0 %}
     opennebula_virtual_machine.{{ entity_name }}_{{ switch_index }}.id,
     {% endfor %}
   ]
@@ -36,9 +38,11 @@ output "{{ entity_name }}_switches-ids" {
 output "{{ entity_name }}_switches-ips" {
   description = "OpenNebula INT Switch VM Network Assignments for all VMs"
   value = {
-    {% for switch_index, (switch_name, switch_config) in enumerate(one_int_p4_sw_switches.items()) %}
+    {% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
+    {% set switch_index = loop.index0 %}
     "{{ switch_index }}": {
-      {% for nic_index, network in enumerate(switch_config.networks) %}
+      {% for network in switch_config.networks %}
+      {% set nic_index = loop.index0 %}
       "{{ network }}": opennebula_virtual_machine.{{ entity_name }}_{{ switch_index }}.nic[{{ nic_index }}].computed_ip,
       {% endfor %}
     },
