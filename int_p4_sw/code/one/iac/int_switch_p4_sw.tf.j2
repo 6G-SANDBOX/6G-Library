@@ -39,7 +39,7 @@ output "{{ entity_name }}_switches-ips" {
     {% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
     "{{ loop.index0 }}": {
       {% for network in switch_config.networks %}
-      "{{ network }}": opennebula_virtual_machine.{{ entity_name }}_{{ loop.index0 }}.nic[{{ loop.index0 }}].computed_ip,
+      "{{ network }}": opennebula_virtual_machine.{{ entity_name }}_{{ loop.index0 }}.nic[{{ loop.index }}].computed_ip,
       {% endfor %}
     },
     {% endfor %}
