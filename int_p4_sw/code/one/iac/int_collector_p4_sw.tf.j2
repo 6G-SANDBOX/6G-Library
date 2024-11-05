@@ -33,7 +33,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}_collector" {
 
 output "{{ entity_name }}_collector-id" {
   description = "OpenNebula Collector VM ID"
-  value = opennebula_virtual_machine.{{ entity_name }}-collector.id
+  value = opennebula_virtual_machine.{{ entity_name }}_collector.id
 }
 
 output "{{ entity_name }}_collector-ips" {
