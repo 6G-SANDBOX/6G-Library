@@ -1,0 +1,37 @@
+---
+# Main playbook to deploy the INT-P4 SW component
+
+- name: "STAGE 1: Apply IAC to deploy the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+#    - name: Set github_token as a fact
+#      ansible.builtin.set_fact:
+#        github_token: "{{ github_token }}" 
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Configure VM resources
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/vm_resources.yaml"
+
+    - name: Terraform apply
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
+
+# Post-terraform preliminary tasks. Still no component configuration.
+- name: "STAGE 2: Prepare to access the component"
+  #TODO
+
+
+- name: "STAGE 3: Apply CAC to prepare the component"
+  #TODO
+
+
+# Final phase of the deployments. Gather information and publish it
+- name: "STAGE 4: Publish execution results"
+  #TODO
