@@ -3,7 +3,7 @@
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   count = {{ one_int_p4_sw_n_switches}}
 
-  name        = "{{ tn_id }}-{{ entity_name }}-${count.index}"
+  name        = "{{ tn_id }}-{{ entity_name }}-{% raw %}${count.index}{% endraw %}"
   template_id = {{ site_available_components.vm_kvm.template_id }}
   cpu         = {{ one_int_p4_sw_cpu }}
   vcpu        = {{ one_int_p4_sw_cpu }}
@@ -23,12 +23,12 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     driver   = "qcow2"
   } #}
 
-{% for network in one_upf_p4_sw_networks_${count.index} %}
+{% raw %}{% for network in one_int_p4_sw_switches["int_p4_switch_" + count.index].networks %}{% endraw %}
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
   }
-{% endfor %}
+{% raw %}{% endfor %}{% endraw %}
 
   depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
 }
