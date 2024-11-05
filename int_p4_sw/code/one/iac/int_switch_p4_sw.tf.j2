@@ -15,6 +15,17 @@ variable "networks_per_vm" {
   ]
 }
 
+# Define variables for all network names
+locals {
+  all_network_names = toset(flatten(var.networks_per_vm))
+}
+
+# Data source para obtener las redes virtuales existentes
+data "opennebula_virtual_network" "vnet" {
+  for_each = local.all_network_names
+  name     = each.value
+}
+
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   count = {{ one_int_p4_sw_n_switches}}
 
@@ -43,7 +54,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     for_each = var.networks_per_vm[count.index]
     content {
       model      = "virtio"
-      network_id = opennebula_virtual_network[nic.value].id
+      network_id = data.opennebula_virtual_network.vnet[nic.value].id
     }
   }
 
