@@ -58,8 +58,8 @@
       loop: "{{ switch_ips | dict2items }}"
 
     - name: Debug collector_ips
-    ansible.builtin.debug:
-      var: collector_ips
+      ansible.builtin.debug:
+        var: collector_ips
 
     # Add collector VM to Ansible Inventory
     - name: Add collector to Ansible Inventory
