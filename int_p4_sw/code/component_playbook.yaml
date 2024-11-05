@@ -46,6 +46,7 @@
         collector_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-ips'] }}" 
         collector_id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-id'] }}"
         vnet_id: "{{ one_int_p4_sw_switches.int_p4_switch_0.networks[0] }}"  # Using the first network of the first switch
+        collector_vnet_id: "{{ one_int_p4_sw_collector.networks[0] }}"
 
     # Add switches VMs to Ansible Inventory
     - name: Add switches VMs to Ansible Inventory
@@ -56,11 +57,15 @@
         ansible_user: "jenkins"
       loop: "{{ switch_ips | dict2items }}"
 
+    - name: Debug collector_ips
+    ansible.builtin.debug:
+      var: collector_ips
+
     # Add collector VM to Ansible Inventory
     - name: Add collector to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "int_p4_collector"
-        ansible_host: "{{ collector_ips[vnet_id] }}"
+        ansible_host: "{{ collector_ips[collector_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
