@@ -46,7 +46,7 @@
         collector_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-ips'] }}" 
         collector_id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-id'] }}"
         vnet_id: "{{ one_int_p4_sw_switches.int_p4_switch_0.networks[0] }}"  # Using the first network of the first switch
-        collector_vnet_id: "{{ (terraform_outputs.stdout | from_json)[[one_int_p4_sw_collector.networks[0] + '-id'] | string }}"
+        collector_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_int_p4_sw_collector.networks[0] + '-id'] | string }}"
 
     # Add switches VMs to Ansible Inventory
     - name: Add switches VMs to Ansible Inventory
