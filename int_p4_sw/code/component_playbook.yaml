@@ -73,10 +73,10 @@
     #  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
 
 
-- name: "STAGE 3: Apply CAC to prepare the component"
+#- name: "STAGE 3: Apply CAC to prepare the component"
   #TODO
 
 
 # Final phase of the deployments. Gather information and publish it
-- name: "STAGE 4: Publish execution results"
+#- name: "STAGE 4: Publish execution results"
   #TODO
