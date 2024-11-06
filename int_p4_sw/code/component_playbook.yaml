@@ -61,6 +61,12 @@
       ansible.builtin.debug:
         var: collector_ips
 
+    # or to see more details of each host
+    - name: Display detailed inventory information
+      ansible.builtin.debug:
+        msg: "Host: {{ item }}, IP: {{ hostvars[item].ansible_host }}"
+      loop: "{{ groups['all'] }}"
+
     # Add collector VM to Ansible Inventory
     - name: Add collector to Ansible Inventory
       ansible.builtin.add_host:
