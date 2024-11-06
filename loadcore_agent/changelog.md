@@ -1,8 +1,13 @@
 # Changelog
 
 ## [unreleased]
+
+### Changed
+- Until the appliance gets the right contextualization, user jenkins is no longer created in this component due to increased complexity and conflicts with cloud-init
+
 ### Fixed
-- Deployment now correctly connects the VM and executes the `agent-setup.sh` script
+- Jenkins now succesfully connects to the VM and executes the `agent-setup.sh` script as root user.
+  
 
 ## [v0.2.2] - 2024-09-16
 ### Added

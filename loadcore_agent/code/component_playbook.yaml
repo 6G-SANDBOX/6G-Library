@@ -68,29 +68,6 @@
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
 
-    # - name: Read remote file content
-    #   become: true
-    #   ansible.builtin.slurp:
-    #     src: /opt/5gc-test-engine/agent-setup.sh
-    #   register: setup_script
-
-    # - name: Create file with owner and permissions
-    #   become: true
-    #   ansible.builtin.copy:
-    #     content: "{{ setup_script.content | b64decode }}"
-    #     dest: /home/tnuser/agent-setup.sh
-    #     owner: tnuser
-    #     group: tnuser
-    #     mode: '0777'
-
-    # - name: Execute bash script to register the Agent with the Middleware
-    #   ansible.builtin.command: "/home/tnuser/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} ens3 ens4 y n"
-    #   become: true
-    #   args:
-    #     chdir: "/home/tnuser/"
-    #   register: agent_setup
-    #   changed_when: false
-
     - name: Execute bash script to register the Agent with the Middleware
       ansible.builtin.command: "/opt/5gc-test-engine/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} ens3 ens4 y n"
       become: true
