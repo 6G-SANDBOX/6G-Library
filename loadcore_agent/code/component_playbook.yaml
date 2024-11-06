@@ -34,12 +34,12 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_loadcore_agent_networks[0] + '-id'] | string}}"
-    
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_loadcore_agent_networks[0] + '-id'] | string }}"
+
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[ vnet_id ] }}"
+        hostname: "loadcore_agent"
+        ansible_host: "{{ ips[vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: ubuntu
 
@@ -48,7 +48,7 @@
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "loadcore_agent"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -68,48 +68,39 @@
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
 
-    - name: Create new user for experimenter access
-      become: true
-      ansible.builtin.user:
-        name: tnuser
-        shell: /bin/bash
-        groups: sudo
+    # - name: Read remote file content
+    #   become: true
+    #   ansible.builtin.slurp:
+    #     src: /opt/5gc-test-engine/agent-setup.sh
+    #   register: setup_script
 
-    - name: Set TN ssh key as authorized in new user
-      become: true
-      ansible.posix.authorized_key:
-        user: tnuser
-        state: present
-        key: "{{ item }}"
-      loop:
-        - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+    # - name: Create file with owner and permissions
+    #   become: true
+    #   ansible.builtin.copy:
+    #     content: "{{ setup_script.content | b64decode }}"
+    #     dest: /home/tnuser/agent-setup.sh
+    #     owner: tnuser
+    #     group: tnuser
+    #     mode: '0777'
 
-    - name: Read remote file content
-      become: true
-      ansible.builtin.slurp:
-        src: /opt/5gc-test-engine/agent-setup.sh
-      register: setup_script
-
-    - name: Create file with owner and permissions
-      become: true
-      ansible.builtin.copy:
-        content: "{{ setup_script.content | b64decode }}"
-        dest: /home/tnuser/agent-setup.sh
-        owner: tnuser
-        group: tnuser
-        mode: '0777'
+    # - name: Execute bash script to register the Agent with the Middleware
+    #   ansible.builtin.command: "/home/tnuser/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} ens3 ens4 y n"
+    #   become: true
+    #   args:
+    #     chdir: "/home/tnuser/"
+    #   register: agent_setup
+    #   changed_when: false
 
     - name: Execute bash script to register the Agent with the Middleware
+      ansible.builtin.command: "/opt/5gc-test-engine/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} ens3 ens4 y n"
       become: true
-      shell: "/home/tnuser/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} ens3 ens4 y n"
-      args:
-        chdir: "/home/tnuser/"
-      register: result
+      register: agent_setup
+      changed_when: false
 
     - name: Verify result
-      assert:
+      ansible.builtin.assert:
         that:
-          - result.rc == 0
+          - agent_setup.rc == 0
         fail_msg: "There was a problem registering LoadCore Agent"
         success_msg: "LoadCore Agent should be registered correctly"
 

@@ -62,14 +62,14 @@
       register: terraform_outputs
       changed_when: false
 
-    # Save some of the outputs as playbook facts (variables). Some of them will be surelly be used as future output values
+    # Save some of the outputs as playbook facts (variables). Some of them will surelly be used as future output values
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
-        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
-        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
-        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string }}"
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"   # defined in the tn_init deployment
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"                            # defined in the tn_init deployment
+        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"                                  # IPs of the newly created VM
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"                                    # ID of the newly created VM in OpenNebula
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_dummy_component_networks[0] + '-id'] | string }}"  # ID of the first VNet used in this VM.
 
     # Inclusion of a task file to to still do preliminatory tasks out of the main playbook
     - name: Fetch cluster node IPs
