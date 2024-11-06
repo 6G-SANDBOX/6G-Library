@@ -44,7 +44,7 @@ metadata:
 ####################################
 input:
   one_vm_kvm_networks:
-    description: Ordered list of Virtual Network names the VM will be part of. This first one is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
+    description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
     required_when: false
