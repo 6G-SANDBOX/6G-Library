@@ -1,5 +1,9 @@
 # Changelog
 
+## [unreleased]
+### Changed
+- Variable `one_bastion_wireguard_allowedips` promoted as public and user-configurable in components `tn_bastion` and `tn_init`
+
 ## [v0.3.0] - 2024-10-16
 ### Added
 - New component ks8500_runner

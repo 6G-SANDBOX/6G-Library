@@ -1,4 +1,4 @@
-# tn_bastion
+# tn_bastion (LEGACY)
 
 Legacy bootrap VM in any Trial Network. tn_init is the new recommended component for starting Trial Networks
 It manages external access to the TN and hosting various networking services such as:
