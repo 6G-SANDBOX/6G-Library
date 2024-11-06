@@ -4,6 +4,9 @@
 ### Changed
 - Variable `one_bastion_wireguard_allowedips` promoted as public and user-configurable in components `tn_bastion` and `tn_init`
 - Updated `open5gs` helm chart reference URL to point the 6G-Sandbox dockerhub
+## Fixed
+- Component TSN: markdown report file `ok_result.md.j2`.
+
 
 ## [v0.3.0] - 2024-10-16
 ### Added
