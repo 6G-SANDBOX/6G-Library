@@ -77,50 +77,50 @@
   hosts: "int_p4_switch_*:int_p4_collector"
   gather_facts: false
   tasks:
-- name: Common setup tasks
-  block:
-    - name: Wait for system to become reachable
-      ansible.builtin.wait_for_connection:
-        connect_timeout: 5
-        timeout: 200
+  - name: Common setup tasks
+    block:
+      - name: Wait for system to become reachable
+        ansible.builtin.wait_for_connection:
+          connect_timeout: 5
+          timeout: 200
 
-    - name: Set site ssh key as authorized in jenkins user
-      ansible.posix.authorized_key:
-        user: jenkins
-        state: present
-        key: "{{ item }}"
-      loop:
-        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
-      when: item != ''
+      - name: Set site ssh key as authorized in jenkins user
+        ansible.posix.authorized_key:
+          user: jenkins
+          state: present
+          key: "{{ item }}"
+        loop:
+          - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
+        when: item != ''
 
-    - name: Create new user for experimenter access
-      become: true
-      ansible.builtin.user:
-        name: tnuser
-        shell: /bin/bash
-        groups: sudo
-        password: ''
-        
-    - name: Set TN ssh key as authorized in new user
-      become: true
-      ansible.posix.authorized_key:
-        user: tnuser
-        state: present
-        key: "{{ item }}"
-      loop:
-        - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+      - name: Create new user for experimenter access
+        become: true
+        ansible.builtin.user:
+          name: tnuser
+          shell: /bin/bash
+          groups: sudo
+          password: ''
+          
+      - name: Set TN ssh key as authorized in new user
+        become: true
+        ansible.posix.authorized_key:
+          user: tnuser
+          state: present
+          key: "{{ item }}"
+        loop:
+          - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
-    - name: Install specific components
-      block:
-        - name: INT Switch installation
-          ansible.builtin.include_tasks: 
-            file: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/int_switch_install.yaml"
-          when: inventory_hostname is match("int_p4_switch_*")
+  - name: Install specific components
+    block:
+      - name: INT Switch installation
+        ansible.builtin.include_tasks: 
+          file: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/int_switch_install.yaml"
+        when: inventory_hostname is match("int_p4_switch_*")
 
-        - name: INT Collector installation
-          ansible.builtin.include_tasks:
-            file: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/int_collector_install.yaml"
-          when: inventory_hostname == 'int_p4_collector'
+      - name: INT Collector installation
+        ansible.builtin.include_tasks:
+          file: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/int_collector_install.yaml"
+        when: inventory_hostname == 'int_p4_collector'
 
 
 - name: "STAGE 4: Publish execution results"
