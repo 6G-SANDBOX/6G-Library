@@ -1,8 +1,34 @@
 # {{ tn_id }}-{{ entity_name}}
 
 ## Deployment
+The INT-P4 SW module has been successfully deployed as part of Trial Network {{ tn_id }}. This deployment includes:
+- {{ switch_ids | length }} INT-P4 switches
+- 1 INT-P4 collector
 
-# TODO
+## Access to Virtual Machines
+### INT-P4 Switches
+The INT-P4 switches are deployed with the following IPs:
+{% for switch_index, switch_ip_dict in switch_ips.items() %}
+- Switch {{ switch_index }}: {{ switch_ip_dict[vnet_id] }}
+{% endfor %}
 
+### INT-P4 Collector
+The INT-P4 collector is deployed with the following IP:
+- Collector: {{ collector_ips[collector_vnet_id] }}
+
+### SSH Access
+All virtual machines are accessible through the bastion host ({{ bastion_ip }}) using the 'tnuser' user.
+
+
+## Configuration
+The switches have been deployed with the following configuration:
+{% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
+- {{ switch_name }}:
+  - Type: {{ switch_config.type }}
+  - Networks: {% for network in switch_config.networks %}{{ network }}{% if not loop.last %}, {% endif %}{% endfor %}
+  - Switch ID: {{ switch_config.config.switch_id }}
+  - Interfaces: {% for interface in switch_config.config.interfaces %}{{ interface.name }} (ID: {{ interface.id }}){% if not loop.last %}, {% endif %}{% endfor %}
+{% endfor %}
 
 ## Logs
+TODO
