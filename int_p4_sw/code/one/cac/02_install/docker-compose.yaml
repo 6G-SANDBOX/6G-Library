@@ -1,0 +1,29 @@
+# TODO: Change the url of the images to Harbor registry
+
+# Define the services for the INT deployment
+services:
+  # Service to run the optimized BMv2 Stratum module (INT-P4 SW Data Plane)
+  int-dp-bmv2-stratum:
+    container_name: int-p4-bmv2-stratum-optimized
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/bmv2-stratum-optimized:ubuntu20.04-int-timestamp
+    volumes:
+      - "./config/stratum-int:/etc/stratum"
+    privileged: true
+    network_mode: host
+  # Service to run the INT-P4 BMv2 controller
+  int-cp-bmv2:
+    container_name: p4-int-controller-bmv2
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/int-p4-controller-bmv2:latest
+    volumes:
+      - "./config/controller-int:/controller-int-config"
+    network_mode: host
+    privileged: true
+    depends_on:
+      - int-dp-bmv2-stratum
+
+# Define the volumes for the INT deployment
+#volumes:
+#  stratum-config:
+#  controller-int-config:
+
+# Define the networks for the INT deployment

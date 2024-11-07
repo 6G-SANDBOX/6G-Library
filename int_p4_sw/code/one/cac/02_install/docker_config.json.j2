@@ -1,0 +1,7 @@
+{
+  "auths": {
+    "dockerhub.mobilesandbox.cloud:9443": {
+      "auth": "{{ hostvars['localhost']['harbor_token'] | b64encode }}"
+    }
+  }
+}
