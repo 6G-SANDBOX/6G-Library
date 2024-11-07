@@ -23,3 +23,24 @@
   block:
     - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_configuration.yaml"
   become: true
+
+- name: Copy docker-compose file
+  copy:
+    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker-compose.yaml"
+    dest: "/home/jenkins/docker-compose.yaml"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+
+# At the moment, the static config is the same for all the INT-P4 switches.
+# TODO: Maybe in the future, we will have different static configurations for each INT-P4 switch.
+- name: Copy static config folder recursively
+  become: true
+  ansible.builtin.copy:
+    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config-switch/static/"
+    dest: "/home/jenkins/config"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+    #directory_mode: '0755'
+  
