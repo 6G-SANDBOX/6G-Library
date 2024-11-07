@@ -44,3 +44,34 @@
     mode: '0644'
     #directory_mode: '0755'
   
+- name: Get switch type and configuration
+  ansible.builtin.set_fact:
+    switch_number: "{{ inventory_hostname | regex_replace('int_p4_switch_(.*)','\\1') }}"
+
+- name: Set switch configuration
+  ansible.builtin.set_fact:
+    switch_type: "{{ hostvars['localhost']['one_int_p4_sw_switches']['int_p4_switch_' + switch_number]['type'] }}"
+    switch_config: "{{ hostvars['localhost']['one_int_p4_sw_switches']['int_p4_switch_' + switch_number]['config'] }}"
+
+- name: Validate switch type
+  ansible.builtin.fail:
+    msg: "Invalid switch type: {{ switch_type }}. Must be one of: source, transit, sink"
+  when: switch_type not in ['source', 'transit', 'sink']
+
+- name: Apply switch configuration templates
+  template:
+    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config-switch/templates/{{ item.src }}"
+    dest: "/home/jenkins/config/{{ item.dest }}"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+  loop:
+    - { src: 'controller-int/config-{{ switch_type }}.yaml.j2', dest: 'controller-int/config.yaml' }
+    - { src: 'stratum-int/chassis_config.pb.txt.j2', dest: 'stratum-int/chassis_config.pb.txt' }
+
+- name: Execute docker-compose up
+  become: true
+  become_user: jenkins
+  command: docker compose -f /home/jenkins/docker-compose.yaml up -d
+  args:
+    chdir: /home/jenkins
