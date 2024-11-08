@@ -175,3 +175,7 @@ To add new UEs to the network, you need to register them in the Open5GS core net
 ## Logs
 TODO: Explain how to access logs (Right now, you need to access the controller container to see the log) 
 (Also explain how to run the docker service so that it is in debug mode and shows the entire log at the cost of lower performance)
+
+
+
+TODO: Explain how to do NAT (in other VMs)

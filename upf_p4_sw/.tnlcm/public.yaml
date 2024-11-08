@@ -110,17 +110,33 @@ input:
     required_when: false
 
   one_upf_p4_sw_controller.upf_ipv4_n6:
-    one_upf_p4_sw_controller.upf_ipv4_n3:
     description: Address to expose the N6 (upf-pdn) Core User Plane Function (UPF)
     type: str
     default_value: "10.0.6.1"
     required_when: false
 
-# TODO: I think I will put more inputs
+  one_upf_p4_sw_controller.enb_ipv4_n3:
+    description: Address of the eNB to connect to the UPF
+    type: str
+    default_value: "10.0.3.2"
+    required_when: false
+
+  one_upf_p4_sw_controller.dn_ipv4_n6:
+    description: Address of the PDN to connect to the UPF
+    type: str
+    default_value: "10.0.6.2"
+    required_when: false
+
+  one_upf_p4_sw_ue_pool:
+    description: Pool of IP addresses to be used as the UE pool
+    type: str
+    default_value: "10.45.0.0/16"
+    required_when: false
 
 ####################################
 ## Component output
 ####################################
+# TODO: Maybe I should put more fields
 output:
   metadata_dict:
     mcc: input.one_upf_p4_sw_open5gs_control.mcc
@@ -134,4 +150,4 @@ output:
     s_nssai_sst: input.one_upf_p4_sw_open5gs_control.s_nssai_sst
     amf_ip: input.one_upf_p4_sw_open5gs_amf.ngap_addr 
     upf_ip: input.one_upf_p4_sw_controller.upf_ipv4_n3
-    upf_ipv4_n6: one_upf_p4_sw_controller.upf_ipv4_n6
+    upf_ipv4_n6: input.one_upf_p4_sw_controller.upf_ipv4_n6

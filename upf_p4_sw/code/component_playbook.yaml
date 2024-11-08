@@ -9,10 +9,6 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-#    - name: Set github_token as a fact
-#      ansible.builtin.set_fact:
-#        github_token: "{{ github_token }}" 
-
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
@@ -36,6 +32,13 @@
         executable: /bin/bash
       register: terraform_outputs
       changed_when: false
+
+    - name: Verify terraform outputs
+      ansible.builtin.assert:
+        that:
+          - terraform_outputs.stdout is defined
+          - terraform_outputs.stdout | from_json is mapping
+        fail_msg: "Invalid terraform outputs"
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
@@ -104,12 +107,10 @@
   tasks:
     # TODO: Maybe it is possible to put more field. I should also add an automation mechanism for mcc, mnc and other fields.
     # TODO: In future, program/automate some of them 
-    # TODO: I don't know clear how to put proxy (to automate)
     - name: Define UPF-P4(+Open5GS) metadata dictionary
       ansible.builtin.set_fact:
         upf_p4_sw_metadata_dict: >-
           {
-            'proxy': '10.11.3.1',
             'mcc': '{{ one_upf_p4_sw_open5gs_control.mcc }}',
             'mnc': '{{ one_upf_p4_sw_open5gs_control.mnc }}',
             'msin': '{{ one_upf_p4_sw_open5gs_control.msin }}',
@@ -131,21 +132,12 @@
           - key: "{{ entity_name }}-metadata"
             value: "{{ upf_p4_sw_metadata_dict }}"
                                                                                           
-    # Necessary in most if not all components. Publishes the deployment information in the following order:
-    # 1. Post the new terraform manifests to MINIO S3 Storage
-    # 2. Generate markdown OK file with information about the component
-    # 3. Post the markdown OK file to the MINIO S3 Storage
-    # 4. Send a JSON OK notification to the TNLCM. JSON message also includes the markdown content.
-    #TODO: Improve this
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:
-          id: "{{ id | b64encode }}"
-          ips: "{{ ips | b64encode }}"
-          enb_ipv4_n3: "{{ one_upf_p4_sw_controller.enb_ipv4_n3 }}"
-          dn_ipv4_n6: "{{ one_upf_p4_sw_controller.dn_ipv4_n6 }}"
-          #node_ids: "{{ node_ids | b64encode }}"
-          #node_ips: "{{ node_ips | b64encode }}"
-          #kubeconfig: "{{ kubeconfig | b64encode }}"
-          #skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"
+          metadata_dict: "{{ upf_p4_sw_metadata_dict | b64encode }}"  
+          #id: "{{ id | b64encode }}"
+          #ips: "{{ ips | b64encode }}"
+          #enb_ipv4_n3: "{{ one_upf_p4_sw_controller.enb_ipv4_n3 | b64encode }}"
+          #dn_ipv4_n6: "{{ one_upf_p4_sw_controller.dn_ipv4_n6 | b64encode }}"

@@ -32,16 +32,6 @@
     group: jenkins
     mode: '0644'
 
-#- name: Copy config folder
-#  synchronize:
-#    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config"
-#    #src: ./config
-#    dest: "/home/jenkins"
-#    rsync_opts:
-#    - "--chown=jenkins:jenkins"
-#    mode: push
-#    recursive: yes  # for copy subfolder too
-
 - name: Copy static config folder recursively
   become: true
   ansible.builtin.copy:
