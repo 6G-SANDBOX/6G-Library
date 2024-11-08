@@ -18,6 +18,9 @@
     # https://docs.ansible.com/ansible/latest/collections/community/general/one_vm_module.html
     - name: "(TEMPORARY) Deploy component with ansible instead of terraform"
       community.general.one_vm:
+        api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
+        api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
+        api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
         attributes:
           name: "{{ tn_id }}-{{ entity_name }}"
         template_id: "{{ site_available_components.loadcore_agent.template_id }}"
@@ -29,7 +32,7 @@
             NETWORK: "YES"
             SET_HOSTNAME: "$NAME"
             USERNAME: "jenkins"
-        networks: "{{ one_loadcore_agent_networks | map('regex_replace', '^(.+)$', 'NETWORK: \"\\1\"') | list }}"
+        networks: "{{ one_loadcore_agent_networks | map('regex_replace', '^(.+)$', '{\"NETWORK\": \"' + tn_id + '-\\1\"}') | map('from_json') | list }}"
       register: created_vm
 
     - name: "(TEMPORARY) Debug VM metadata"
@@ -57,12 +60,13 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         # ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         # id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_loadcore_agent_networks[0] + '-id'] | string }}"
+        # access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_loadcore_agent_networks[0] + '-id'] | string }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "loadcore_agent"
-        ansible_host: "{{ ips[access_vnet_id] }}"
+        # ansible_host: "{{ ips[access_vnet_id] }}"
+        ansible_host: "{{ created_vm.instances[0].networks[0].ip }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: jenkins
 
@@ -113,5 +117,5 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:
-          ips: "{{ ips | b64encode }}"
-          id: "{{ id | b64encode }}"
+          # ips: "{{ ips | b64encode }}"
+          # id: "{{ id | b64encode }}"

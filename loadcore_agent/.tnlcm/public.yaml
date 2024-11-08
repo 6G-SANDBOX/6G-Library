@@ -51,8 +51,8 @@ input:
 ## Component output
 ####################################
 output:
-  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  id: VM ID in OpenNebula
+  # ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
+  # id: VM ID in OpenNebula
 
 ####################################
 ## Site-specific variables
