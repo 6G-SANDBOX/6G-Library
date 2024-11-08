@@ -1,7 +1,22 @@
-- name: Execute manage_route script in Router Manager
-  ansible.builtin.shell:
-  args:
-    executable: /bin/bash
-    cmd: "nohup /root/route-manager.sh {{ tn_id }} {{ site_available_components.nokia_radio.core_network }} {{ hostvars['localhost']['bastion_ip'] }} {{ nokia_radio_one_reservation_time }} > /tmp/route-manager.log 2>&1 &" 
-  async: 0
-  poll: 0
+- name: Make a POST request to the API
+  ansible.builtin.uri:
+    url: "{{ site_available_components.site_routemanager.endpoint }}/routes"
+    method: POST
+    headers:
+      accept: application/json
+      Authorization: "{{ site_available_components.site_routemanager.token }}"
+      Content-Type: application/json
+    body: >
+      {
+        "destination": "{{ site_available_components.nokia_radio.core_network }}",
+        "gateway": "{{ hostvars['localhost']['bastion_ip'] }}",
+        "create_at": "{{ nokia_radio_one_init_time }}",
+        "delete_at": "{{ nokia_radio_one_end_time }}"
+      }
+    body_format: json
+    return_content: yes
+  register: api_response
+
+- name: Display response content
+  debug:
+    var: api_response.content

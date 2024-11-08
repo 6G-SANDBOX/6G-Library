@@ -1,4 +1,5 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
 nokia_radio_one_oneKE: "oneKE-main"
-nokia_radio_one_reservation_time: 180
+nokia_radio_one_init_time: "2024-11-08T09:12:00"
+nokia_radio_one_end_time: "2024-11-09T09:12:00"
