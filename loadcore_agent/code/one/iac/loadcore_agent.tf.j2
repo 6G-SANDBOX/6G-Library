@@ -10,7 +10,6 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   context = {
     NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
-    USERNAME = "jenkins"
   }
 
 {% for network in one_loadcore_agent_networks %}

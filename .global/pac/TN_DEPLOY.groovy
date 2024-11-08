@@ -9,7 +9,7 @@ pipeline {
     }
 
     parameters {
-        string(name: 'TN_ID', defaultValue: '', description: 'Trial Network Identifier. Valid characters are A-Z, a-z, 0-9 and underscore _. MANDATORY')
+        string(name: 'TN_ID', defaultValue: '', description: 'Trial Network Identifier. Alphanumeric string of up to 15 alphanumeric characters (A-Z, a-z and 0-9) following RFC 1123 but without . and -. MANDATORY')
         string(name: 'COMPONENT_TYPE', defaultValue: '', description: '6G Library Component type. MANDATORY')
         string(name: 'CUSTOM_NAME', defaultValue: '', description: 'Custom name for the component inside the Trial Network. Valid characters are A-Z, a-z, 0-9 and underscore _. MANDATORY except for tn_init (including tn_vxlan and tn_bastion)')
         string(name: 'DEPLOYMENT_SITE', defaultValue: '', description: 'Site where the deployment is being made. E.g. uma, athens, fokus, oulu... MANDATORY')

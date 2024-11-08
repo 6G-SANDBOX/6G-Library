@@ -1,3 +1,5 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
 # This component does not need any input file
+
+#one_bastion_wireguard_allowedips: "192.168.199.0/24"
