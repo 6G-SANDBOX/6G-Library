@@ -1,6 +1,5 @@
 # https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
-
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
   template_id = {{ site_available_components.opensand_st.template_id }}

@@ -10,15 +10,26 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   context = {
     NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
+    USERNAME = "jenkins"
   }
 
-{% for network in one_loadcore_agent_networks %}
+{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+  disk {
+    image_id = {{ site_available_components.loadcore_agent.image_id }}
+    size     = {{ one_vm_kvm_disk }}
+    target   = "vda"
+    driver   = "qcow2"
+  } #}
+
+{# {% for network in one_loadcore_agent_networks %}     Verify each vnet is only deployed once via terraform due to a Terraform OpenNebula Provider's limitation    #}
+{% for network in one_loadcore_agent_networks | unique %}
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
   }
 {% endfor %}
 
+  depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
 }
 
 output "{{ entity_name }}-id" {

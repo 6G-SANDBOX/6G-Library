@@ -14,6 +14,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
 
+
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
   gather_facts: false
@@ -34,14 +35,23 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_loadcore_agent_networks[0] + '-id'] | string }}"
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_loadcore_agent_networks[0] + '-id'] | string }}"
+
+    - name: "[Temporary] attach duplicated NICs via OpenNebula's CLI"
+      community.general.one_vm:
+        instance_ids: "{{ id | int }}"
+        networks: "{{ one_loadcore_agent_networks | map('regex_replace', '^(.+)$', 'NETWORK: \"\\1\"') | list }}"
+
+    - name: "[Temporary] Debug network substitution"
+      ansible.builtin.debug:
+        msg: "{{ one_loadcore_agent_networks | map('regex_replace', '^(.+)$', 'NETWORK: \"\\1\"') | list }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "loadcore_agent"
-        ansible_host: "{{ ips[vnet_id] }}"
+        ansible_host: "{{ ips[access_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
-        ansible_user: ubuntu
+        ansible_user: jenkins
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
@@ -59,9 +69,9 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Set site ssh key as authorized in ubuntu user
+    - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
-        user: ubuntu
+        user: jenkins
         state: present
         key: "{{ item }}"
       loop:
