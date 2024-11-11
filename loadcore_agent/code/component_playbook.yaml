@@ -95,12 +95,12 @@
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
 
-    - name: Remove user ixia
-      ansible.builtin.user:
-        name: ixia
-        state: absent
-        remove: true
-      become: true
+    # - name: Remove user ixia
+    #   ansible.builtin.user:
+    #     name: ixia
+    #     state: absent
+    #     remove: true
+    #   become: true
 
     - name: Execute bash script to register the Agent with the Middleware
       ansible.builtin.command: "/opt/5gc-test-engine/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} eth0 y n y"
