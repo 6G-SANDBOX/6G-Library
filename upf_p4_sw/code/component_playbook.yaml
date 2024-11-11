@@ -120,10 +120,12 @@
   tasks:
     # TODO: Maybe it is possible to put more field. I should also add an automation mechanism for mcc, mnc and other fields.
     # TODO: In future, program/automate some of them 
+    # TODO: I don't know clear how to put proxy (to automate) (It is necessary to ueransim component)
     - name: Define UPF-P4(+Open5GS) metadata dictionary
       ansible.builtin.set_fact:
         upf_p4_sw_metadata_dict: >-
           {
+            'proxy': '10.11.3.1',
             'mcc': '{{ one_upf_p4_sw_open5gs_control.mcc }}',
             'mnc': '{{ one_upf_p4_sw_open5gs_control.mnc }}',
             'msin': '{{ one_upf_p4_sw_open5gs_control.msin }}',
