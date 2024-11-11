@@ -13,3 +13,5 @@ one_loadcore_agent_memory: 8192
 one_loadcore_agent_disk: 10240
 one_loadcore_agent_networks: 
   - tn_vxlan
+
+one_loadcore_agent_ixia: true
