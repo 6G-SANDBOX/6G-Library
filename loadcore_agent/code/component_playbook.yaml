@@ -102,19 +102,10 @@
         remove: true
 
     - name: Execute bash script to register the Agent with the Middleware
-      # TODO: change interfaces to eth0, eth1, eth2, eth3...
-      ansible.builtin.command: "/opt/5gc-test-engine/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} ens3 ens4 y n"
+      ansible.builtin.command: "/opt/5gc-test-engine/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} eth0 y n y"
       become: true
-      # register: agent_setup
       changed_when: false
 
-    ### Return code is always 0, no matter what I put as arguments!
-    # - name: Verify result
-    #   ansible.builtin.assert:
-    #     that:
-    #       - agent_setup.rc == 0
-    #     fail_msg: "There was a problem registering LoadCore Agent"
-    #     success_msg: "LoadCore Agent should be registered correctly"
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
