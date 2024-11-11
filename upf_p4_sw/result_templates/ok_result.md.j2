@@ -10,26 +10,26 @@ Below is a summary of the docker components that have been deployed within the v
 * Open5GS Release 16 Docker Containers: One container for each Open5GS service (AMF, SMF, etc) without UPF service.
 
 ## Access to Virtual Machine
-You will be able to access the VM through IP {{ output.ips }} with SSH connection.
+You will be able to access the VM through IP {{ ips }} with SSH connection.
 
 ## Connections
 The UPF-P4 BMv2 SW + Open5GS CP has been successfully deployed to connect to:
-* RAN N3 IP: {{ output.enb_ipv4_n3 }}
-* DN external: {{ output.dn_ipv4_n6 }}
+* RAN N3 IP: {{ one_upf_p4_sw_controller.enb_ipv4_n3 }}
+* DN external: {{ one_upf_p4_sw_controller.dn_ipv4_n6 }}
 
 ## 📊 Core Network Configuration
 
 ### PLMN Information
-- MCC: {{ output.metadata_dict.mcc }}
-- MNC: {{ output.metadata_dict.mnc }}
-- TAC: {{ output.metadata_dict.tac }}
+- MCC: {{ one_upf_p4_sw_open5gs_control.mcc }}
+- MNC: {{ one_upf_p4_sw_open5gs_control.mnc }}
+- TAC: {{ one_upf_p4_sw_open5gs_control.tac }}
 
 ### Network Slice
-- SST: {{ output.metadata_dict.s_nssai_sst }}
-- SD: {{ output.metadata_dict.s_nssai_sd }}
+- SST: {{ one_upf_p4_sw_open5gs_control.s_nssai_sst }}
+- SD: {{ one_upf_p4_sw_open5gs_control.s_nssai_sd }}
 
 ### AMF Configuration
-- AMF Address: {{ output.metadata_dict.amf_ip }}
+- AMF Address: {{ one_upf_p4_sw_open5gs_amf.ngap_addr }}
 
 ### UPF Configuration
 - See README file in the UPF-P4 BMv2 SW repository for more information.
