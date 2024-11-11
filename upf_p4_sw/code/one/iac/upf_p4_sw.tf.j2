@@ -11,14 +11,6 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     USERNAME = "jenkins"
   }
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
-  disk {
-    image_id = {{ site_available_components.dummy_component.image_id }}
-    size     = {{ one_dummy_componentdisk }}
-    target   = "vda"
-    driver   = "qcow2"
-  } #}
-
 {% for network in one_upf_p4_sw_networks %}
   nic {
     model           = "virtio"

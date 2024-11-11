@@ -40,6 +40,15 @@
           - terraform_outputs.stdout | from_json is mapping
         fail_msg: "Invalid terraform outputs"
 
+    - name: Validate terraform output variables
+      ansible.builtin.assert:
+        that:
+          - (terraform_outputs.stdout | from_json)['tn_bastion-ips'] is defined
+          - (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] is defined
+          - (terraform_outputs.stdout | from_json)[entity_name + '-ips'] is defined
+          - (terraform_outputs.stdout | from_json)[entity_name + '-id'] is defined
+        fail_msg: "Missing required terraform outputs"
+
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
@@ -94,6 +103,10 @@
         key: "{{ item }}"
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+
+    - name: Set harbor token from site available components
+      ansible.builtin.set_fact:
+        harbor_token: "{{ hostvars['localhost']['site_available_components']['upf_p4_sw']['harbor_token'] }}"
 
     - name: UPF P4 SW install
       ansible.builtin.include_tasks: 
