@@ -8,6 +8,7 @@ services:
       - "./config/stratum-upf:/etc/stratum"
     privileged: true
     network_mode: host
+    #command: ["-bmv2_log_level=debug"]       # Decomment to enable debug logs
   # Service to run the P4 UPF BMv2 controller
   upf-cp-bmv2:
     container_name: p4-upf-controller-bmv2

@@ -172,10 +172,39 @@ To add new UEs to the network, you need to register them in the Open5GS core net
   ./register_subscriber.sh
   ```
 
-## Logs
-TODO: Explain how to access logs (Right now, you need to access the controller container to see the log) 
-(Also explain how to run the docker service so that it is in debug mode and shows the entire log at the cost of lower performance)
+## 📋 Logs
+### Accessing Component Logs
+To access the logs of any container within the UPF-P4 component, you need to:
 
+1. Access the VM where the component is deployed
+2. List all containers to get their IDs:
+   ```bash
+   docker ps -a
+   ```
+3. View the logs for a specific container:
+   ```bash
+   docker logs <container_id>
+   ```
+
+### Debug Mode
+By default, the `upf-dn-bmv2-stratum` service runs in normal mode. To enable debug logging:
+
+1. Modify the `docker-compose.yaml` file by uncommenting the following line:
+   ```yaml
+   command: ["-bmv2_log_level=debug"]
+   ```
+2. Restart the services:
+   ```bash
+   docker-compose down
+   docker-compose up -d
+   ```
+3. Re-register your UE using the provided script:
+   ```bash
+   ./config/register_subscriber.sh
+   ```
+
+> [!NOTE]
+> Running in debug mode will provide more detailed logs but impact performance. Use this mode only when necessary for troubleshooting.
 
 
 TODO: Explain how to do NAT (in other VMs)
