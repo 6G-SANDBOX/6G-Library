@@ -1,10 +1,12 @@
 # Changelog
 
 ## [unreleased]
+### Added
+- New component upf_p4_sw
 ### Changed
 - Variable `one_bastion_wireguard_allowedips` promoted as public and user-configurable in components `tn_bastion` and `tn_init`
 - Updated `open5gs` helm chart reference URL to point the 6G-Sandbox dockerhub
-## Fixed
+### Fixed
 - Component TSN: markdown report file `ok_result.md.j2`.
 
 
