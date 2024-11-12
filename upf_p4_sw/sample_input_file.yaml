@@ -1,0 +1,37 @@
+# Example
+# At the moment, it not necessary define this variables, because all have default values
+
+one_upf_p4_sw_networks:
+  - tn_vxlan
+  - vnet-N1_N3
+  - vnet-N6
+
+one_upf_p4_sw_controller:
+  enb_ipv4_n3: "10.11.3.2"
+  dn_ipv4_n6: "10.11.6.2"
+  upf_ipv4_n3: "10.11.3.1"
+  upf_ipv4_n6: "10.11.6.1"
+  enb_mac_n3: "	02:00:0a:0b:03:02"
+  dn_mac_n6: "02:00:0a:0b:06:02"
+  upf_mac_n3: "02:00:0a:0b:03:01"
+  upf_mac_n6: "02:00:0a:0b:06:01"
+
+one_upf_p4_sw_ue_pool: "10.45.0.0/16"
+
+one_upf_p4_sw_open5gs_amf:
+  ngap_addr: 10.11.3.1
+
+one_upf_p4_sw_chassis_conf:
+  phy_n3: "eth1"
+  phy_n6: "eth2"
+
+one_upf_p4_sw_open5gs_control:
+  mcc: "001"
+  mnc: "01"
+  msin: "0000000001"
+  key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+  opc: "E8ED289DEBA952E4283B54E88E6183CA"
+  apn: "internet"
+  tac: "200"
+  s_nssai_sst: "1"
+  s_nssai_sd: "1"

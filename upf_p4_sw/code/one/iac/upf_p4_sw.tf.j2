@@ -1,0 +1,32 @@
+resource "opennebula_virtual_machine" "{{ entity_name }}" {
+  name        = "{{ tn_id }}-{{ entity_name }}"
+  template_id = {{ site_available_components.vm_kvm.template_id }}
+  cpu         = {{ one_upf_p4_sw_cpu }}
+  vcpu        = {{ one_upf_p4_sw_cpu }}
+  memory      = {{ one_upf_p4_sw_memory }}
+
+  context = {
+    NETWORK = "YES"
+    SET_HOSTNAME = "$NAME"
+    USERNAME = "jenkins"
+  }
+
+{% for network in one_upf_p4_sw_networks %}
+  nic {
+    model           = "virtio"
+    network_id      = opennebula_virtual_network.{{ network }}.id
+  }
+{% endfor %}
+
+  depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
+}
+
+output "{{ entity_name }}-id" {
+  description = "OpenNebula VM ID"
+  value = opennebula_virtual_machine.{{ entity_name }}.id
+}
+
+output "{{ entity_name }}-ips" {
+  description = "OpenNebula VM Network Assignments"
+  value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
+}

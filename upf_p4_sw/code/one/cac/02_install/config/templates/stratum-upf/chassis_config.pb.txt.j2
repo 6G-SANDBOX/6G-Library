@@ -1,0 +1,58 @@
+description: "Sample config for UPF-P4 Stratum-bmv2"
+chassis {
+  platform: PLT_P4_SOFT_SWITCH
+  name: "bmv2-simple_switch"
+}
+nodes {
+  id: 1
+  slot: 1
+  index: 1
+}
+singleton_ports {
+  id: 1
+  name: "{{ hostvars['localhost']['one_upf_p4_sw_chassis_conf']['phy_n3'] }}"
+  slot: 1
+  port: 1
+  channel: 1
+  speed_bps: 100000000000
+  config_params {
+    admin_state: ADMIN_STATE_ENABLED
+  }
+  node: 1
+}
+singleton_ports {
+  id: 2
+  name: "veth91"
+  slot: 1
+  port: 2
+  channel: 1
+  speed_bps: 100000000000
+  config_params {
+    admin_state: ADMIN_STATE_ENABLED
+  }
+  node: 1
+}
+singleton_ports {
+  id: 3
+  name: "{{ hostvars['localhost']['one_upf_p4_sw_chassis_conf']['phy_n6'] }}"
+  slot: 1
+  port: 3
+  channel: 1
+  speed_bps: 100000000000
+  config_params {
+    admin_state: ADMIN_STATE_ENABLED
+  }
+  node: 1
+}
+singleton_ports {
+  id: 4
+  name: "lo"
+  slot: 1
+  port: 4
+  channel: 1
+  speed_bps: 100000000000
+  config_params {
+    admin_state: ADMIN_STATE_ENABLED
+  }
+  node: 1
+}

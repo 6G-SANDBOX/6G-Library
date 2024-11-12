@@ -1,0 +1,8 @@
+- name: Append new commponent's name and IP into a .ssh/config.d/ file
+  community.general.ssh_config:
+    host: "{{ tn_id }}-{{ entity_name }}"
+    hostname:  "{{ ips[vnet_id] | default('ERROR_ASSIGNING_IP') }}"
+    proxyjump: "{{ tn_id }}-tn_bastion"
+    remote_user: "jekins"
+    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+    state: present
