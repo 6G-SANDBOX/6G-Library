@@ -152,7 +152,7 @@
       vars:
         output:
           metadata_dict: "{{ upf_p4_sw_metadata_dict | b64encode }}"  
-          #id: "{{ id | b64encode }}"
-          #ips: "{{ ips | b64encode }}"
+          id: "{{ id | b64encode }}"
+          ips: "{{ ips | b64encode }}"
           #enb_ipv4_n3: "{{ one_upf_p4_sw_controller.enb_ipv4_n3 | b64encode }}"
           #dn_ipv4_n6: "{{ one_upf_p4_sw_controller.dn_ipv4_n6 | b64encode }}"
