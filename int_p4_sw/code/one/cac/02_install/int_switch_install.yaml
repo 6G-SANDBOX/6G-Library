@@ -14,19 +14,19 @@
     state: present
     update_cache: yes
 
-  - name: Wait for dpkg lock to be released
-    wait_for:
-      path: /var/lib/dpkg/lock-frontend
-      state: absent
-      delay: 10
-      timeout: 300
+- name: Wait for dpkg lock to be released
+  wait_for:
+    path: /var/lib/dpkg/lock-frontend
+    state: absent
+    delay: 10
+    timeout: 300
 
 - name: Install docker engine
   block:
     - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_install.yaml"
   become: true
 
-- name: Configure GitHub Container Registry authentication
+- name: Configure Harbor Container Registry authentication
   block:
     - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_configuration.yaml"
   become: true

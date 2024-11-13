@@ -1,5 +1,3 @@
-# TODO: Change the url of the images to Harbor registry
-
 # Define the services for the INT deployment
 services:
   # Service to run the optimized BMv2 Stratum module (INT-P4 SW Data Plane)

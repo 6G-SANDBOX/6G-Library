@@ -9,10 +9,6 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-#    - name: Set github_token as a fact
-#      ansible.builtin.set_fact:
-#        github_token: "{{ github_token }}" 
-
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
@@ -37,6 +33,18 @@
       register: terraform_outputs
       changed_when: false
 
+    - name: Validate Terraform outputs
+      ansible.builtin.assert:
+        that:
+          - "'tn_bastion-ips' in (terraform_outputs.stdout | from_json)"
+          - "'tn_ssh_public_key' in (terraform_outputs.stdout | from_json)"
+          - "(entity_name + '_switches-ips') in (terraform_outputs.stdout | from_json)"
+          - "(entity_name + '_switches-ids') in (terraform_outputs.stdout | from_json)"
+          - "(entity_name + '_collector-ips') in (terraform_outputs.stdout | from_json)"
+          - "(entity_name + '_collector-id') in (terraform_outputs.stdout | from_json)"
+        fail_msg: "Missing required Terraform outputs"
+        success_msg: "All required Terraform outputs are present"
+
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
@@ -45,27 +53,27 @@
         switch_ids: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_switches-ids'] }}"
         collector_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-ips'] }}" 
         collector_id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-id'] }}"
-        vnet_id: "{{ one_int_p4_sw_switches.int_p4_switch_0.networks[0] }}"  # Using the first network of the first switch
-        collector_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_int_p4_sw_collector.networks[0] + '-id'] | string }}"
+        switch_first_vnet_id: "{{ one_int_p4_sw_switches.int_p4_switch_0.networks[0] }}"  # Using the first network of the first switch. Should be tn_vxlan
+        collector_first_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_int_p4_sw_collector.networks[0] + '-id'] | string }}"
 
     # Add switches VMs to Ansible Inventory
     - name: Add switches VMs to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "int_p4_switch_{{ item.key }}"
-        ansible_host: "{{ item.value[vnet_id] }}"
+        ansible_host: "{{ item.value[switch_first_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
       loop: "{{ switch_ips | dict2items }}"
 
-    - name: Debug collector_ips
-      ansible.builtin.debug:
-        var: collector_ips
+    #- name: Debug collector_ips
+    #  ansible.builtin.debug:
+    #    var: collector_ips
 
     # Add collector VM to Ansible Inventory
     - name: Add collector to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "int_p4_collector"
-        ansible_host: "{{ collector_ips[collector_vnet_id] }}"
+        ansible_host: "{{ collector_ips[collector_first_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
