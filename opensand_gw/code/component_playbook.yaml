@@ -49,7 +49,7 @@
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[ vnet_id ] }}"
+        ansible_host: "{{ ips[vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
