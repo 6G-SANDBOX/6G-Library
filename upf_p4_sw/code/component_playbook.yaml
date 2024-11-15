@@ -1,0 +1,158 @@
+---
+# Main playbook to deploy the UPF-P4 SW component
+
+- name: "STAGE 1: Apply IAC to deploy the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Configure VM resources
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/vm_resources.yaml"
+
+    - name: Terraform apply
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+ 
+
+- name: "STAGE 2: Prepare to access the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Verify terraform outputs
+      ansible.builtin.assert:
+        that:
+          - terraform_outputs.stdout is defined
+          - terraform_outputs.stdout | from_json is mapping
+        fail_msg: "Invalid terraform outputs"
+
+    - name: Validate terraform output variables
+      ansible.builtin.assert:
+        that:
+          - (terraform_outputs.stdout | from_json)['tn_bastion-ips'] is defined
+          - (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] is defined
+          - (terraform_outputs.stdout | from_json)[entity_name + '-ips'] is defined
+          - (terraform_outputs.stdout | from_json)[entity_name + '-id'] is defined
+        fail_msg: "Missing required terraform outputs"
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_upf_p4_sw_networks[0] + '-id'] | string}}"
+
+    - name: Add new VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "upf_p4_sw"
+        ansible_host: "{{ ips[ vnet_id ] }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+    - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+      #loop: "{{ node_ips | dict2items }}"
+
+
+- name: "STAGE 3: Apply CAC to prepare the component"
+  hosts: "upf_p4_sw"
+  gather_facts: false
+  tasks:
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        timeout: 200
+
+    - name: Set site ssh key as authorized in jenkins user
+      ansible.posix.authorized_key:
+        user: jenkins
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
+      when: item != ''
+
+    - name: Create new user for experimenter access
+      become: true
+      ansible.builtin.user:
+        name: tnuser
+        shell: /bin/bash
+        groups: sudo
+        password: ''
+        
+    - name: Set TN ssh key as authorized in new user
+      become: true
+      ansible.posix.authorized_key:
+        user: tnuser
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+
+    - name: Set harbor token from site available components
+      ansible.builtin.set_fact:
+        harbor_token: "{{ hostvars['localhost']['site_available_components']['upf_p4_sw']['harbor_token'] }}"
+
+    - name: UPF P4 SW install
+      ansible.builtin.include_tasks: 
+        file: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/upf_p4_install.yaml"
+
+
+- name: "STAGE 4: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    # TODO: Maybe it is possible to put more field. I should also add an automation mechanism for mcc, mnc and other fields.
+    # TODO: In future, program/automate some of them 
+    # TODO: I don't know clear how to put proxy (to automate) (It is necessary to ueransim component)
+    - name: Define UPF-P4(+Open5GS) metadata dictionary
+      ansible.builtin.set_fact:
+        upf_p4_sw_metadata_dict: >-
+          {
+            'proxy': '10.11.3.1',
+            'mcc': '{{ one_upf_p4_sw_open5gs_control.mcc }}',
+            'mnc': '{{ one_upf_p4_sw_open5gs_control.mnc }}',
+            'msin': '{{ one_upf_p4_sw_open5gs_control.msin }}',
+            'key': '{{ one_upf_p4_sw_open5gs_control.key }}',
+            'opc': '{{ one_upf_p4_sw_open5gs_control.opc }}',
+            'apn': '{{ one_upf_p4_sw_open5gs_control.apn }}',
+            'tac': '{{ one_upf_p4_sw_open5gs_control.tac }}',
+            's_nssai_sst': '{{ one_upf_p4_sw_open5gs_control.s_nssai_sst }}',
+            's_nssai_sd': '{{ one_upf_p4_sw_open5gs_control.s_nssai_sd }}',
+            'amf_ip': '{{ one_upf_p4_sw_open5gs_amf.ngap_addr }}',
+            'upf_ip': '{{ one_upf_p4_sw_controller.upf_ipv4_n3 }}',
+            'upf_ipv4_n6': '{{ one_upf_p4_sw_controller.upf_ipv4_n6 }}'
+          }
+
+    - name: Publish node IDs and IPs as a terraform outputs"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-metadata"
+            value: "{{ upf_p4_sw_metadata_dict }}"
+                                                                                          
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        output:
+          metadata_dict: "{{ upf_p4_sw_metadata_dict | b64encode }}"  
+          id: "{{ id | b64encode }}"
+          ips: "{{ ips | b64encode }}"
+          #enb_ipv4_n3: "{{ one_upf_p4_sw_controller.enb_ipv4_n3 | b64encode }}"
+          #dn_ipv4_n6: "{{ one_upf_p4_sw_controller.dn_ipv4_n6 | b64encode }}"

@@ -1,0 +1,44 @@
+# {{ tn_id }}-{{ entity_name}}
+
+## 📋 Deployment Summary
+The UPF-P4 BMv2 SW module has been successfully deployed as part of Trial Network **{{ tn_id }}**.
+
+## 🖥️ Virtual Machine Information
+- VM ID: {{ id }}
+- Assigned Network IPs: 
+{% for network, ip in ips.items() %}
+  - {{ network }}: {{ ip }}
+{% endfor %}
+
+### 🐳 Docker Components
+Below is a summary of the docker components that have been deployed within the virtual machine:
+* DP-UPF Docker Container: Executes the P4 UPF data plane.
+* CP-UPF Docker Container: Run the data plane python controller.
+* Open5GS Release 16 Docker Containers: One container for each Open5GS service (AMF, SMF, etc) without UPF service.
+
+## Access to Virtual Machine
+You will be able to access the VM through SSH using the IP {{ ips[one_upf_p4_sw_networks[0] + '-id'] }} with SSH connection via the bastion host.
+
+## Connections
+The UPF-P4 BMv2 SW + Open5GS CP has been successfully deployed to connect to:
+* RAN N3 IP: {{ one_upf_p4_sw_controller.enb_ipv4_n3 }}
+* DN external: {{ one_upf_p4_sw_controller.dn_ipv4_n6 }}
+
+## 📊 Core Network Configuration
+
+### PLMN Information
+- MCC: {{ one_upf_p4_sw_open5gs_control.mcc }}
+- MNC: {{ one_upf_p4_sw_open5gs_control.mnc }}
+- TAC: {{ one_upf_p4_sw_open5gs_control.tac }}
+
+### Network Slice
+- SST: {{ one_upf_p4_sw_open5gs_control.s_nssai_sst }}
+- SD: {{ one_upf_p4_sw_open5gs_control.s_nssai_sd }}
+
+### AMF Configuration
+- AMF Address: {{ one_upf_p4_sw_open5gs_amf.ngap_addr }}
+
+### UPF Configuration
+- See README file in the UPF-P4 BMv2 SW repository for more information.
+
+## 📝 Logs
