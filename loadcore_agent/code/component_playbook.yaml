@@ -13,7 +13,7 @@
     # - name: Terraform apply
     #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
-    ### EXCEPTIONALLY AND DUE TO A TERRAFORM PROVIDER LIMITATION, THIS COMPONENT NEEDS TO BE DEPLOYED WITH ANSIBLE INSTEAD OF TERRAFORM
+    ### EXCEPTIONALLY AND DUE TO A TERRAFORM PROVIDER LIMITATION, THIS COMPONENT NEEDS TO BE DEPLOYED WITH ANSIBLE INSTEAD OF TERRAFORM
     ### BREAKING CONFIGURATION AS CODE IS DISCOURAGED
     # https://docs.ansible.com/ansible/latest/collections/community/general/one_vm_module.html
     - name: "(TEMPORARY) Deploy component with ansible instead of terraform"
@@ -104,9 +104,10 @@
       when: "not one_loadcore_agent_ixia"
 
     - name: Execute bash script to register the Agent with the Middleware
-      ansible.builtin.command: "sudo /opt/5gc-test-engine/agent-setup.sh {{ site_available_components.loadcore_agent.loadcore_middleware_ip }} eth0 y n y"
+      ansible.builtin.shell: |
+        set -o pipefail
+        printf "{{ site_available_components.loadcore_agent.loadcore_middleware_ip }}\neth0\ny\nn" | /opt/5gc-test-engine/agent-setup.sh
       become: true
-      become_user: ixia
       changed_when: false
 
 
