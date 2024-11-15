@@ -123,6 +123,8 @@
       ansible.builtin.shell: |
         set -o pipefail
         printf "{{ site_available_components.loadcore_agent.loadcore_middleware_ip }}\neth0\ny\nn" | /opt/5gc-test-engine/agent-setup.sh
+      args:
+        executable: /bin/bash
       become: true
       changed_when: false
 
