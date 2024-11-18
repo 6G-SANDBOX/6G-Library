@@ -1,0 +1,98 @@
+--- 
+apiVersion: v1
+kind: Service
+metadata: 
+  {{- if .Values.northboundGateway.shared_ip }}
+  annotations:
+    metallb.universe.tf/address-pool: nginx
+    metallb.universe.tf/allow-shared-ip: shared-ip
+  {{- end }}
+
+  labels: 
+    group: onemnef
+  name: ngw
+spec: 
+  ports: 
+    - 
+      name: https
+      port: 8080
+      protocol: TCP
+      targetPort: 8500
+  selector: 
+    app: ngw
+  type: LoadBalancer
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  labels: 
+    app: ngw
+    group: onemnef
+  name: ngw
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: ngw
+  template: 
+    metadata: 
+      labels: 
+        app: ngw
+        group: onemnef
+    spec: 
+      containers: 
+        - 
+          image: "{{ .Values.global.registry }}{{ .Values.northboundGateway.image}}:{{ .Values.northboundGateway.tag }}"
+          imagePullPolicy: Always
+          name: ngw
+          ports: 
+            - 
+              containerPort: 8500
+              name: https
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+      volumes:
+      - name: config-volume
+        configMap:
+          name: ngw-config
+---
+apiVersion: v1
+data:
+  config.init: |
+    [general]
+    logs = True
+    heartbeat = False
+    ; DEBUG, INFO, WARNING, ERROR, CRITICAL
+    log_level = INFO
+    log_location = logs
+    log_to_console = True
+    log_to_file = True
+
+    [logger]
+    log_level = INFO
+    log_to_file = False
+    log_file_path = ''
+
+    [mqtt]
+    ssl = True
+    verify_ssl = False
+    ca_path = '/home/ONEmNEF/certs/ca.pem'
+    host = {{ .Values.global.mqtt_host }}
+    port = {{ .Values.global.mqtt_port }}
+    retries = 1025
+    workers = 6
+
+    [requests]
+    workers = 4
+    ngw_host = proxy.onemnef.com
+    ssl = True
+    cert_path = '/home/ONEmNEF/certs/cert.crt'
+    key_path = '/home/ONEmNEF/certs/key.pem'
+    http2 = False
+    timeout = 25
+
+kind: ConfigMap
+metadata:
+  name: ngw-config
+  namespace: onemnef

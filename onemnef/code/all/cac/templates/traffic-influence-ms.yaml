@@ -1,0 +1,70 @@
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  labels: 
+    app: traffic-influence
+    group: onemnef
+  name: traffic-influence
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: traffic-influence
+  template: 
+    metadata: 
+      labels: 
+        app: traffic-influence
+        group: onemnef
+    spec: 
+      containers: 
+        - 
+          image: "{{ .Values.global.registry }}{{ .Values.trafficInfluenceMs.image}}:{{ .Values.trafficInfluenceMs.tag }}"
+          imagePullPolicy: Always
+          name: traffic-influence
+          workingDir: /home/ONEmNEF/API-microservices/Nnef_TrafficInfluence
+          args:
+          - "python3 main.py"
+          command: 
+          - sh
+          - "-c"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+      volumes:
+      - name: config-volume
+        configMap:
+          name: traffic-influence-config
+      
+---
+apiVersion: v1
+data:
+  config.init: |
+    [general]
+    logs = True
+    heartbeat = False
+    ; DEBUG, INFO, WARNING, ERROR, CRITICAL
+    logger_name = TrafficInfluence
+    log_level = DEBUG
+    log_location = logs
+    log_to_console = True
+    log_to_file = False
+
+    [logger]
+    log_level = DEBUG
+    log_to_file = False
+    log_file_path = ''
+
+    [mqtt]
+    ssl = True
+    verify_ssl = False
+    ca_path = '/home/ONEmNEF/certs/ca.pem'
+    host = {{ .Values.global.mqtt_host }}
+    port = {{ .Values.global.mqtt_port }}
+    retries = 1025
+    workers = 6
+
+kind: ConfigMap
+metadata:
+  name: traffic-influence-config
+  namespace: onemnef

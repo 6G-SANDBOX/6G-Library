@@ -1,0 +1,19 @@
+---
+- name: Render helm values template
+  template:
+    src: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_values_template.yaml"
+    dest: "/tmp/helm_values_rendered.yaml"
+
+- name: Deploy Onemnef helm
+  kubernetes.core.helm:
+    kubeconfig: /etc/rancher/rke2/rke2.yaml
+    name: onemnef
+    chart_ref: Chart.yaml
+    chart_version: 1.0.0
+    namespace: onemnef
+    create_namespace: yes
+    values_files:
+    - "/tmp/helm_values_rendered.yaml"
+
+- name: Wait for all pods to be Running
+  ansible.builtin.command: kubectl wait pod --all --for=condition=Ready -n onemnef --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=1200s

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.org/redirect-to-https: "true"
+    nginx.org/ssl-services: ngw
+  name: ingress-ngw
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: {{ .Values.northboundGateway.ingress.fqdn }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: ngw
+            port:
+              number: 8080
+        path: /
+        pathType: ImplementationSpecific
+  tls:
+  - hosts:
+    - {{ .Values.northboundGateway.ingress.fqdn }}
+    secretName: {{ .Values.global.tlsCertificate }}

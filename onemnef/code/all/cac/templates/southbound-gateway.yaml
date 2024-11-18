@@ -1,0 +1,149 @@
+--- 
+apiVersion: v1
+kind: Service
+metadata: 
+  {{- if .Values.southboundGateway.shared_ip }}
+  annotations:
+    metallb.universe.tf/address-pool: nginx
+    metallb.universe.tf/allow-shared-ip: shared-ip
+  {{- end }}
+
+  labels: 
+    group: onemnef
+  name: sgw
+spec: 
+  ports: 
+    - 
+      name: https
+      port: 8500
+      protocol: TCP
+      targetPort: 8500
+  selector: 
+    app: sgw
+  type: LoadBalancer
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  labels: 
+    app: sgw
+    group: onemnef
+  name: sgw
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: sgw
+  template: 
+    metadata: 
+      labels: 
+        app: sgw
+        group: onemnef
+    spec: 
+      hostAliases:
+        - hostnames:
+          - {{ .Values.southboundGateway.amf_host }}
+          - {{ .Values.southboundGateway.nrf_host }}
+          - {{ .Values.southboundGateway.amf_host }}
+          - {{ .Values.southboundGateway.pcf_host }}
+          - {{ .Values.southboundGateway.bsf_host }}
+          - {{ .Values.southboundGateway.udm_host }}
+          - {{ .Values.southboundGateway.sgw_host }}
+         
+          ip: {{ .Values.southboundGateway.core_ip }}
+      containers: 
+      -  
+        image: "{{ .Values.global.registry }}{{ .Values.southboundGateway.image}}:{{ .Values.southboundGateway.tag }}"
+        imagePullPolicy: Always
+        name: sgw
+        ports: 
+          - 
+            containerPort: 8500
+            name: https
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 0
+          capabilities:
+            add:
+              - NET_ADMIN
+              - SYS_MODULE
+        command:
+          - sh
+          - "-c"
+        args:
+          - |
+            gunicorn --config=gunicorn_config.py --log-level=debug 'wsgi:app'
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/config
+      volumes:
+      - name: config-volume
+        configMap:
+          name: sgw-config
+
+      
+---
+apiVersion: v1
+data:
+  config.init: |
+    [general]
+    logs = True
+    heartbeat = False
+    ; DEBUG, INFO, WARNING, ERROR, CRITICAL
+    log_level = DEBUG
+    log_location = logs
+    log_to_console = True
+    log_to_file = False
+
+    [logger]
+    log_level = DEBUG
+    log_to_file = False
+    log_file_path = ''
+
+    [mqtt]
+    ssl = True
+    verify_ssl = False
+    ca_path = '/home/ONEmNEF/certs/ca.pem'
+    host = {{ .Values.global.mqtt_host }}
+    port = {{ .Values.global.mqtt_port }}
+    retries = 1025
+
+    [requests]
+    use_nrf = False
+    use_capif = {{ .Values.southboundGateway.use_capif }}
+    fqdn = sgw
+    sgw_host = {{ .Values.southboundGateway.sgw_host }}
+    sgw_port = {{ .Values.southboundGateway.sgw_port }}
+    nrf_host = {{ .Values.southboundGateway.nrf_host }}
+    nrf_port = {{ .Values.southboundGateway.nrf_port }}
+    ssl = True
+    cert_path = '/home/ONEmNEF/certs/cert.crt'
+    key_path = '/home/ONEmNEF/certs/key.pem'
+    protocol = {{ .Values.southboundGateway.protocol }}
+    http2 = {{ .Values.southboundGateway.http2 }}
+    timeout = 25
+
+    [capif]
+    deployment = ath
+    host = {{ .Values.southboundGateway.capif_host }}
+    http_port = {{ .Values.southboundGateway.capif_http_port }}
+    https_port = {{ .Values.southboundGateway.capif_https_port }}
+    certs_folder = certs
+    pk_file = certs/capif_pk.crt
+
+    [core_nfs]
+    amf_host = {{ .Values.southboundGateway.amf_host }}
+    amf_port = {{ .Values.southboundGateway.amf_port }}
+    pcf_host = {{ .Values.southboundGateway.pcf_host }}
+    pcf_port = {{ .Values.southboundGateway.pcf_port }}
+    smf_host = {{ .Values.southboundGateway.smf_host }}
+    smf_port = {{ .Values.southboundGateway.smf_port }}
+    bsf_host = {{ .Values.southboundGateway.bsf_host }}
+    bsf_port = {{ .Values.southboundGateway.bsf_port }}
+    udm_host = {{ .Values.southboundGateway.udm_host }}
+    udm_port = {{ .Values.southboundGateway.udm_port }}
+
+kind: ConfigMap
+metadata:
+  name: sgw-config
+  namespace: onemnef

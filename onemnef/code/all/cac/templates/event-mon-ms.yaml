@@ -1,0 +1,69 @@
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  labels: 
+    app: event-monitoring
+    group: onemnef
+  name: event-monitoring
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: event-monitoring
+  template: 
+    metadata: 
+      labels: 
+        app: event-monitoring
+        group: onemnef
+    spec: 
+      containers: 
+        - 
+          image: "{{ .Values.global.registry }}{{ .Values.eventMonMs.image}}:{{ .Values.eventMonMs.tag }}"
+          imagePullPolicy: Always
+          name: event-monitoring
+          workingDir: /home/ONEmNEF/API-microservices/Nnef_EventMonitoring
+          args:
+          - "python3 main.py"
+          command: 
+          - sh
+          - "-c"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+      volumes:
+      - name: config-volume
+        configMap:
+          name: event-monitoring-config
+---
+apiVersion: v1
+data:
+  config.init: |
+    [general]
+    logs = True
+    heartbeat = False
+    ; DEBUG, INFO, WARNING, ERROR, CRITICAL
+    logger_name = EventMonitoring
+    log_level = DEBUG
+    log_location = logs
+    log_to_console = True
+    log_to_file = False
+
+    [logger]
+    log_level = DEBUG
+    log_to_file = False
+    log_file_path = ''
+
+    [mqtt]
+    ssl = True
+    verify_ssl = False
+    ca_path = '/home/ONEmNEF/certs/ca.pem'
+    host = {{ .Values.global.mqtt_host }}
+    port = {{ .Values.global.mqtt_port }}
+    retries = 1025
+    workers = 6
+
+kind: ConfigMap
+metadata:
+  name: event-monitoring-config
+  namespace: onemnef

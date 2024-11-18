@@ -1,0 +1,90 @@
+
+global: # Parameters for ALL the charts and sub-charts 
+  registry: dockerhub.mobilesandbox.cloud:9443/onesource/ # Image Registry
+  tlsCertificate: onemnef-tls-secret
+  mqtt_host: "{{ mqtt_host }}"
+  mqtt_port: 8883
+
+analyticsExposureMs:
+  image: api-ms
+  tag: latest
+
+dbProxy:
+  image: dbproxy
+  tag: latest
+  user: nef 
+  pwd: nef-pw 
+  host: "{{ mongodb_host }}"
+  port: 27017 
+  database: nef 
+
+eventMonMs:
+  image: api-ms
+  tag: latest
+
+messageBroker:
+  image: message-broker
+  tag: latest
+  shared_ip: true
+
+mongoDb:
+  imageDb: mongo
+  imageWeb: mongo-express
+  tagDb: latest
+  tagWeb: latest
+  user: nef 
+  pwd: nef-pw 
+  host: "{{ mongodb_host }}"
+  port: 27017 
+  database: nef 
+
+northboundGateway:
+  image: northbound-gw
+  tag: latest
+  shared_ip: true
+  ingress:
+    fqdn: "{{ nwg_ingress_fqdn }}"
+
+
+registerHbMs:
+  image: api-ms
+  tag: latest
+
+sessionRequiredQosMs:
+  image: api-ms
+  tag: latest
+
+southboundGateway:
+  image: southbound-gw
+  tag: latest
+  shared_ip: true
+  
+  protocol: https
+  http2: True 
+
+  sgw_host: "{{ sgw_host }}"
+  sgw_port: 8500
+
+  use_capif: "{{ use_capif }}"
+  capif_host: "{{ capif_host }}"
+  capif_http_port: "{{ capif_http_port }}"
+  capif_https_port: "{{ capif_https_port }}"
+
+  nrf_host: "{{ nrf_host }}"
+  nrf_port: "{{ nrf_port }}"
+  amf_host: "{{ amf_host }}"
+  amf_port: "{{ amf_port }}"
+  pcf_host: "{{ pcf_host }}"
+  pcf_port: "{{ pcf_port }}"
+  smf_host: "{{ smf_host }}"
+  smf_port: "{{ smf_port }}"
+  bsf_host: "{{ bsf_host }}"
+  bsf_port: "{{ bsf_port }}"
+  udm_host: "{{ udm_host }}"
+  udm_port: "{{ udm_port }}"
+
+  core_ip: "{{ core_ip }}"
+
+trafficInfluenceMs:
+  image: api-ms
+  tag: latest

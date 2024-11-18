@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  labels: 
+    app: db
+    group: onemnef
+  name: db
+spec: 
+  ports: 
+    - 
+      name: mongodb
+      port: 27017
+      protocol: TCP
+      targetPort: 27017
+    -
+      name: mongo-express
+      port: 8081
+      protocol: TCP
+      targetPort: 8081
+  selector: 
+    app: db
+--- 
+apiVersion: v1
+data: 
+  MONGO_INITDB_ROOT_USERNAME: nef
+  MONGO_INITDB_ROOT_PASSWORD: nef-pw
+  MONGO_INITDB_DATABASE: nef
+kind: ConfigMap
+metadata: 
+  labels: 
+    app: db
+  name: db-config
+--- 
+apiVersion: v1
+data: 
+  ME_CONFIG_MONGODB_ADMINUSERNAME: nef
+  ME_CONFIG_MONGODB_ADMINPASSWORD: nef-pw
+  ME_CONFIG_MONGODB_URL: mongodb://nef:nef-pw@db:27017/
+kind: ConfigMap
+metadata: 
+  labels: 
+    app: db
+  name: web-config
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  labels: 
+    app: db
+    group: onemnef
+  name: db
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: db
+  template: 
+    metadata: 
+      labels: 
+        app: db
+        group: onemnef
+    spec:
+      securityContext:
+        fsGroup: 999
+        fsGroupChangePolicy: "OnRootMismatch" 
+      containers: 
+        - 
+          envFrom: 
+            - 
+              configMapRef: 
+                name: db-config
+          image: "{{ .Values.mongoDb.imageDb }}:{{ .Values.mongoDb.tagDb}}"
+          imagePullPolicy: Always
+          name: db
+          ports: 
+            - 
+              containerPort: 27017
+              name: mongo-db
+        - 
+          envFrom: 
+            - 
+              configMapRef: 
+                name: web-config
+          image: "{{ .Values.mongoDb.imageWeb }}:{{ .Values.mongoDb.tagWeb}}"
+          imagePullPolicy: Always
+          name: web
+          ports: 
+            - 
+              containerPort: 8081
+              name: mongo-express
+      

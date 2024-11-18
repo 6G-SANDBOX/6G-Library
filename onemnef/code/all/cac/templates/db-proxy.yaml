@@ -1,0 +1,86 @@
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  labels: 
+    app: db-proxy
+    group: onemnef
+  name: db-proxy
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: db-proxy
+  template: 
+    metadata: 
+      labels: 
+        app: db-proxy
+        group: onemnef
+    spec:
+      initContainers:
+        -
+          name: wait-db
+          image: busybox
+          command: ["sh", "-c"]
+          args:
+          - |
+            until nc -w 2 db 27017 > /dev/null; do echo waiting for BD; sleep 2; done
+      containers: 
+        - 
+          image: "{{ .Values.global.registry }}{{ .Values.dbProxy.image}}:{{ .Values.dbProxy.tag }}"
+          imagePullPolicy: Always
+          name: db-proxy
+          workingDir: /home/ONEmNEF/dbproxy
+          args:
+          - "python3 main.py"
+          command: 
+          - "sh"
+          - "-c"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+      volumes:
+      - name: config-volume
+        configMap:
+          name: db-proxy-config
+
+---
+apiVersion: v1
+data:
+  config.init: |
+    [general]
+    logs = True
+    heartbeat = False
+    ; DEBUG, INFO, WARNING, ERROR, CRITICAL
+    log_level = DEBUG
+    log_location = logs
+    log_to_console = True
+    log_to_file = True
+    logger_name = DBProxy
+
+    [logger]
+    log_level = DEBUG
+    log_to_file = False
+    log_file_path = ''
+
+    [mqtt]
+    ssl = True
+    verify_ssl = False
+    ca_path = '/home/ONEmNEF/certs/ca.pem'
+    host = {{ .Values.global.mqtt_host }}
+    port = {{ .Values.global.mqtt_port }}
+    retries = 1025
+    workers = 6
+
+    [mongodb]
+    user = {{ .Values.dbProxy.user }}
+    pwd = {{ .Values.dbProxy.pwd }}
+    host = {{ .Values.dbProxy.host }}
+    port = {{ .Values.dbProxy.port }}
+    database = {{ .Values.dbProxy.database }}
+
+
+kind: ConfigMap
+metadata:
+  name: db-proxy-config
+  namespace: onemnef

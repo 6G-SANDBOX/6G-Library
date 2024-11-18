@@ -1,0 +1,71 @@
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  labels: 
+    app: analytics-exposure
+    group: onemnef
+  name: analytics-exposure
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: analytics-exposure
+  template: 
+    metadata: 
+      labels: 
+        app: analytics-exposure
+        group: onemnef
+    spec: 
+      containers: 
+        - 
+          image: "{{ .Values.global.registry }}{{ .Values.analyticsExposureMs.image}}:{{ .Values.analyticsExposureMs.tag }}"
+          imagePullPolicy: Always
+          name: analytics-exposure
+          workingDir: /home/ONEmNEF/API-microservices/Nnef_AnalyticsExposure
+          args:
+          - "python3 main.py"
+          command: 
+          - sh
+          - "-c"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+      volumes:
+      - name: config-volume
+        configMap:
+          name: analytics-exposure-config
+
+---
+apiVersion: v1
+data:
+  config.init: |
+    [general]
+    logs = True
+    heartbeat = False
+    ; DEBUG, INFO, WARNING, ERROR, CRITICAL
+    logger_name = AnalyticsExposure
+    log_level = DEBUG
+    log_location = logs
+    log_to_console = True
+    log_to_file = False
+
+
+    [logger]
+    log_level = DEBUG
+    log_to_file = False
+    log_file_path = ''
+
+    [mqtt]
+    ssl = True
+    verify_ssl = False
+    ca_path = '/home/ONEmNEF/certs/ca.pem'
+    host = {{ .Values.global.mqtt_host }}
+    port = {{ .Values.global.mqtt_port }}
+    retries = 1025
+    workers = 6
+
+kind: ConfigMap
+metadata:
+  name: analytics-exposure-config
+  namespace: onemnef

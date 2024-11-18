@@ -1,0 +1,71 @@
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  labels: 
+    app: register-hb-ms
+    group: onemnef
+  name: register-hb-ms
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels: 
+      app: register-hb-ms
+  template: 
+    metadata: 
+      labels: 
+        app: register-hb-ms
+        group: onemnef
+    spec: 
+      containers: 
+        - 
+          image: "{{ .Values.global.registry }}{{ .Values.registerHbMs.image}}:{{ .Values.registerHbMs.tag }}"
+          imagePullPolicy: Always
+          name: register-hb-ms
+          workingDir: /home/ONEmNEF/API-microservices/Register_Heartbeat
+          args:
+          - "python3 main.py"
+          command: 
+          - sh
+          - "-c"
+          volumeMounts:
+          - name: config-volume
+            mountPath: /etc/config
+      volumes:
+      - name: config-volume
+        configMap:
+          name: register-hb-ms-config
+
+      
+---
+apiVersion: v1
+data:
+  config.init: |
+    [general]
+    logs = True
+    heartbeat = False
+    ; DEBUG, INFO, WARNING, ERROR, CRITICAL
+    logger_name = AsSesReqQos
+    log_level = DEBUG
+    log_location = logs
+    log_to_console = True
+    log_to_file = False
+
+    [logger]
+    log_level = DEBUG
+    log_to_file = False
+    log_file_path = ''
+
+    [mqtt]
+    ssl = True
+    verify_ssl = False
+    ca_path = '/home/ONEmNEF/certs/ca.pem'
+    host = {{ .Values.global.mqtt_host }}
+    port = {{ .Values.global.mqtt_port }}
+    retries = 1025
+    workers = 6
+
+kind: ConfigMap
+metadata:
+  name: register-hb-ms-config
+  namespace: onemnef

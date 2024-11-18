@@ -1,0 +1,29 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+one_onemnef_oneKE: "oneKE-custom_name"
+
+mqtt_host: "message-broker.onemnef.com" 
+mongodb_host: "db.onemnef.com" 
+nwg_ingress_fqdn: "ngw.onemnef.com" 
+# nwg_ip_address: "nwg_ip_address"
+sgw_host: "sgw.onemnef.com" 
+use_capif: false 
+capif_host: false 
+capif_http_port: 80 
+capif_https_port: 443 
+# nrf_host: nrf_host 
+# nrf_port: nrf_port 
+# amf_host: amf_host 
+# amf_port: amf_port 
+# pcf_host: pcf_host 
+# pcf_port: pcf_port 
+# smf_host: smf_host 
+# smf_port: smf_port 
+# bsf_host: bsf_host 
+# bsf_port: bsf_port 
+# udm_host: udm_host 
+# udm_port: udm_port 
+# core_ip: core_ip 
+
+
+
