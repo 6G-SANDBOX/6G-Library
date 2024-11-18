@@ -126,18 +126,18 @@
         upf_p4_sw_metadata_dict: >-
           {
             'proxy': '10.11.3.1',
-            'mcc': '{{ one_upf_p4_sw_open5gs_control.mcc }}',
-            'mnc': '{{ one_upf_p4_sw_open5gs_control.mnc }}',
-            'msin': '{{ one_upf_p4_sw_open5gs_control.msin }}',
-            'key': '{{ one_upf_p4_sw_open5gs_control.key }}',
-            'opc': '{{ one_upf_p4_sw_open5gs_control.opc }}',
-            'apn': '{{ one_upf_p4_sw_open5gs_control.apn }}',
-            'tac': '{{ one_upf_p4_sw_open5gs_control.tac }}',
-            's_nssai_sst': '{{ one_upf_p4_sw_open5gs_control.s_nssai_sst }}',
-            's_nssai_sd': '{{ one_upf_p4_sw_open5gs_control.s_nssai_sd }}',
-            'amf_ip': '{{ one_upf_p4_sw_open5gs_amf.ngap_addr }}',
-            'upf_ip': '{{ one_upf_p4_sw_controller.upf_ipv4_n3 }}',
-            'upf_ipv4_n6': '{{ one_upf_p4_sw_controller.upf_ipv4_n6 }}'
+            'mcc': '{{ one_upf_p4_sw_open5gs_control_mcc }}',
+            'mnc': '{{ one_upf_p4_sw_open5gs_control_mnc }}',
+            'msin': '{{ one_upf_p4_sw_open5gs_control_msin }}',
+            'key': '{{ one_upf_p4_sw_open5gs_control_key }}',
+            'opc': '{{ one_upf_p4_sw_open5gs_control_opc }}',
+            'apn': '{{ one_upf_p4_sw_open5gs_control_apn }}',
+            'tac': '{{ one_upf_p4_sw_open5gs_control_tac }}',
+            's_nssai_sst': '{{ one_upf_p4_sw_open5gs_control_s_nssai_sst }}',
+            's_nssai_sd': '{{ one_upf_p4_sw_open5gs_control_s_nssai_sd }}',
+            'amf_ip': '{{ one_upf_p4_sw_open5gs_amf_ngap_addr }}',
+            'upf_ip': '{{ one_upf_p4_sw_controller_upf_ipv4_n3 }}',
+            'upf_ipv4_n6': '{{ one_upf_p4_sw_controller_upf_ipv4_n6 }}'
           }
 
     - name: Publish node IDs and IPs as a terraform outputs"

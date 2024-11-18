@@ -229,27 +229,27 @@ amf:
       - addr: 127.0.0.5
         port: 7777
     ngap:
-      - addr: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_amf']['ngap_addr'] }}
+      - addr: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_amf_ngap_addr'] }}
       #- addr: 127.0.0.5
     guami:
       - plmn_id:
-          mcc: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control']['mcc'] }}
-          mnc: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control']['mnc'] }}
+          mcc: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control_mcc'] }}
+          mnc: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control_mnc'] }}
         amf_id:
           region: 2
           set: 1
     tai:
       - plmn_id:
-          mcc: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control']['mcc'] }}
-          mnc: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control']['mnc'] }}
-        tac: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control']['tac'] }}
+          mcc: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control_mcc'] }}
+          mnc: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control_mnc'] }}
+        tac: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control_tac'] }}
     plmn_support:
       - plmn_id:
-          mcc: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control']['mcc'] }}
-          mnc: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control']['mnc'] }}
+          mcc: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control_mcc'] }}
+          mnc: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control_mnc'] }}
         s_nssai:
-          - sst: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control']['s_nssai_sst'] }}
-            sd: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control']['s_nssai_sd'] }}
+          - sst: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control_s_nssai_sst'] }}
+            sd: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control_s_nssai_sd'] }}
     security:
         integrity_order : [ NIA2, NIA1, NIA0 ]
         ciphering_order : [ NEA0, NEA1, NEA2 ]

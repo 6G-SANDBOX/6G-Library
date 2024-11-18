@@ -395,7 +395,7 @@ smf:
 #      - addr: ::1
     subnet:
       - addr: {{ hostvars['localhost']['one_upf_p4_sw_ue_pool'] }}
-        dnn: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control']['apn'] }}
+        dnn: {{ hostvars['localhost']['one_upf_p4_sw_open5gs_control_apn'] }}
 #      - addr: 2001:db8:cafe::1/48
     dns:
       - 8.8.8.8
