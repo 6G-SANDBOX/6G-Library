@@ -17,7 +17,7 @@ Below is a summary of the docker components that have been deployed within the v
 * Open5GS Release 16 Docker Containers: One container for each Open5GS service (AMF, SMF, etc) without UPF service.
 
 ## Access to Virtual Machine
-You will be able to access the VM through SSH using the IP {{ ips[one_upf_p4_sw_networks[0] + '.id'] }} with SSH connection via the bastion host.
+You will be able to access the VM through SSH using the IP {{ (ips | first)[1] }} with SSH connection via the bastion host.
 
 ## Connections
 The UPF-P4 BMv2 SW + Open5GS CP has been successfully deployed to connect to:
