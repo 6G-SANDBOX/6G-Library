@@ -65,7 +65,7 @@ input:
 
   one_ueransim_gnb_linked_open5gs:
     description: Name of a previously deployed open5gs instance. Defines the 5G SA core the gNB will try to connect
-    type: open5gs
+    type: open5gs or upf_p4_sw
     required_when: "one_ueransim_run_gnb == 'YES'"
 
   one_ueransim_ue_linked_gnb:
