@@ -11,19 +11,19 @@ use_capif: false
 capif_host: false 
 capif_http_port: 80 
 capif_https_port: 443 
-nrf_host: "nrf_host"
-nrf_port: "nrf_port"
-amf_host: "amf_host"
-amf_port: "amf_port"
-pcf_host: "pcf_host"
-pcf_port: "pcf_port"
-smf_host: "smf_host"
-smf_port: "smf_port"
-bsf_host: "bsf_host"
-bsf_port: "bsf_port"
-udm_host: "udm_host"
-udm_port: "udm_port"
-core_ip: "core_ip"
+nrf_host: "nrf-host"
+nrf_port: "nrf-port"
+amf_host: "amf-host"
+amf_port: "amf-port"
+pcf_host: "pcf-host"
+pcf_port: "pcf-port"
+smf_host: "smf-host"
+smf_port: "smf-port"
+bsf_host: "bsf-host"
+bsf_port: "bsf-port"
+udm_host: "udm-host"
+udm_port: "udm-port"
+core_ip: "core-ip"
 
 
 
