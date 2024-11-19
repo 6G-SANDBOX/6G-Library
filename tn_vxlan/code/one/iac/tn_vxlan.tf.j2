@@ -1,16 +1,16 @@
 # https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_network
 resource "opennebula_virtual_network" "tn_vxlan" {
-  name            = "{{ tn_id }}-tn_vxlan"
-  physical_device = "{{ one_vxlan_physical_device }}"
-  cluster_ids     = {{ site_clusters }}
-  type            = "vxlan"
+  name              = "{{ tn_id }}-tn_vxlan"
+  physical_device   = "{{ one_vxlan_physical_device }}"
+  cluster_ids       = {{ site_clusters }}
+  type              = "vxlan"
   automatic_vlan_id = true
-  mtu             = {{ one_vxlan_mtu }}
-  guest_mtu       = {{ one_vxlan_guest_mtu }}
+  mtu               = {{ one_vxlan_mtu }}
+  guest_mtu         = {{ one_vxlan_guest_mtu }}
 
-  gateway         = "{{ one_vxlan_gw }}"
-  network_mask    = "{{ one_vxlan_netmask }}"
-  dns             = "{{ one_vxlan_dns }}"
+  gateway           = "{{ one_vxlan_first_ip }}"
+  network_mask      = "{{ one_vxlan_netmask }}"
+  dns               = "{{ one_vxlan_first_ip }}"
 }
 
 resource "opennebula_virtual_network_address_range" "tn_vxlan" {

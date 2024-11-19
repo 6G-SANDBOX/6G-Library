@@ -2,8 +2,7 @@
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
 resource "opennebula_virtual_machine" "tn_bastion" {
   name        = "{{ tn_id }}-tn_bastion"
-  {# template_id = {{ site_available_components.tn_bastion.template_id }} #}
-  template_id = 202
+  template_id = {{ site_available_components.tn_bastion.template_id }}
   cpu         = {{ one_bastion_cpu }}
   vcpu        = {{ one_bastion_cpu }}
   memory      = {{ one_bastion_memory }}

@@ -39,20 +39,10 @@ metadata:
 ## Component input
 ####################################
 input:
-  one_vxlan_gw:
-    description: Default gateway of the tn_vxlan subnet
-    type: str
-    default_value: "192.168.199.1"
-    required_when: false
   one_vxlan_netmask:
     description: Network mask of the tn_vxlan subnet
     type: str
     default_value: "255.255.255.0"
-    required_when: false
-  one_vxlan_dns:
-    description: Space-separated list of DNS servers configured in VMs with tn_vxlan as their main Network Interface
-    type: str
-    default_value: "1.1.1.1 1.0.0.1"
     required_when: false
   one_vxlan_first_ip:
     description: First IP address of the VNet range
