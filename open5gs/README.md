@@ -10,8 +10,7 @@ Current versions:
 > In Opennebula, selecting a non-default architecture for the worker templates might be needed.
 
 
-
-## What is Open5GS
+## What is Open5GS
 
 <p align="center">
   <a href="https://open5gs.org/open5gs/docs/">

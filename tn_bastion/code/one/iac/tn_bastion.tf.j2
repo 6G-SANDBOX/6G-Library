@@ -2,7 +2,8 @@
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
 resource "opennebula_virtual_machine" "tn_bastion" {
   name        = "{{ tn_id }}-tn_bastion"
-  template_id = {{ site_available_components.tn_bastion.template_id }}
+  {# template_id = {{ site_available_components.tn_bastion.template_id }} #}
+  template_id = 202
   cpu         = {{ one_bastion_cpu }}
   vcpu        = {{ one_bastion_cpu }}
   memory      = {{ one_bastion_memory }}
@@ -13,6 +14,7 @@ resource "opennebula_virtual_machine" "tn_bastion" {
     USERNAME = "jenkins"
     VPN_PUBLIC_IP = "{{ site_public_ip }}"
     WIREGUARD_ALLOWEDIPS = "{{ one_bastion_wireguard_allowedips }}"
+    ETH0_METRIC = 50
   }
 
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
