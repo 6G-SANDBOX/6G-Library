@@ -8,7 +8,7 @@
   kubernetes.core.helm:
     kubeconfig: /etc/rancher/rke2/rke2.yaml
     name: onemnef
-    chart_ref: "https://github.com/6G-SANDBOX/6G-Library/blob/feature/onemnef-component/onemnef/code/all/cac/"
+    chart_ref: "{{ workspace }}/{{ component_type }}/code/all/cac/"
     chart_version: 1.0.0
     namespace: onemnef
     create_namespace: yes
