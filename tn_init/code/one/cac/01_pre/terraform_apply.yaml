@@ -1,0 +1,30 @@
+---
+- name: Register template files from tn_bastion and tn_vxlan
+  ansible.builtin.find:
+    paths:
+      - "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/iac/"
+      - "{{ workspace }}/tn_vxlan/code/{{ site_hypervisor }}/iac/"
+    patterns: "*.tf.j2"
+  register: terraform_templates
+
+- name: "Prepare {{ entity_name}} terraform manifests"
+  ansible.builtin.template:
+    src: "{{ item.path }}"
+    dest: >-
+      {{
+        workspace + '/.terraform/tf-' + item.path | basename | regex_replace('.tf.j2', '') +
+        (('-' + custom_name) if component_type != entity_name else '') + '.tf'
+      }}
+  loop: "{{ terraform_templates.files }}"
+  register: terraform_manifests
+  
+- name: Terraform apply
+  community.general.terraform:
+    project_path: "{{ workspace }}/.terraform/"
+    state: "present"
+  ignore_errors: true
+  register: terraform_apply
+
+- name: Check if terraform apply failed
+  ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_fail_results.yaml"
+  when: terraform_apply.failed

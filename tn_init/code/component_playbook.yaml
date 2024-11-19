@@ -11,10 +11,10 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
     - name: Terraform apply
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/terraform_apply.yaml"
 
 
-- name: "STAGE 2: Prepare to access the tn_bastion"
+- name: "STAGE 2: Prepare to access the tn_bastion component"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -63,10 +63,10 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
     - name: Create an ed25519 ssh key pair to access the future Trial Network components
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/set_ssh_keypair.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/set_ssh_keypair.yaml"
 
     - name: Fetch VPN config
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/get_vpn_client_tunnel.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/get_vpn_client_tunnel.yaml"
       when: site_hypervisor == "one"
 
 

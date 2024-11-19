@@ -40,6 +40,7 @@ metadata:
     - DNS server
     - VPN Server
 
+    Internally this component works as a wrapper of both components within the same ansible playook.
     NOTE: Current tn_bastion only hosts the VPN Server
   hypervisors: [one]
 

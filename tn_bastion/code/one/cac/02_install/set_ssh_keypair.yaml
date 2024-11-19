@@ -1,7 +1,7 @@
 ---
 - name: Generate an ed25519 ssh keypair
   openssh_keypair:
-    comment: "TrialNetwork@{{ tn_id }}"
+    comment: "tnuser@{{ tn_id }}"
     force: false
     path: "/tmp/id_ed25519"
     type: ed25519
@@ -16,10 +16,11 @@
     src: "/tmp/id_ed25519"
   register: tn_ssh_private_key
 
-- name: Set ssh keys as authorized in the nodes
+- name: Set ssh keys as authorized for the jenkins user
   ansible.posix.authorized_key:
     user: "jenkins"
     state: present
     key: "{{ item }}"
   loop:
     - "{{ site_admin_ssh_public_key }}"
+    - "{{ tn_ssh_public_key.content | b64decode | trim }}"
