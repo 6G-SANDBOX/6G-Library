@@ -4,11 +4,16 @@
     src: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_values_template.yaml"
     dest: "/tmp/helm_values_rendered.yaml"
 
+- name: Copy content of directory 'helms'
+  copy:
+    src:  "{{ workspace }}/{{ component_type }}/code/all/cac/"    
+    dest: /tmp/helms/
+
 - name: Deploy Onemnef helm
   kubernetes.core.helm:
     kubeconfig: /etc/rancher/rke2/rke2.yaml
     name: onemnef
-    chart_ref: "{{ workspace }}/{{ component_type }}/code/all/cac/Chart.yaml"
+    chart_ref: "/tmp/helms/"
     chart_version: 1.0.0
     namespace: onemnef
     create_namespace: yes
