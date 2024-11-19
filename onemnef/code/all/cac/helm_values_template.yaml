@@ -1,6 +1,6 @@
 
 global: # Parameters for ALL the charts and sub-charts 
-  registry: dockerhub.mobilesandbox.cloud:9443/onesource/ # Image Registry
+  registry: oci://dockerhub.mobilesandbox.cloud:9443/onesource/ # Image Registry
   tlsCertificate: onemnef-tls-secret
   mqtt_host: "{{ mqtt_host }}"
   mqtt_port: 8883
