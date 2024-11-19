@@ -57,7 +57,20 @@
             'use_capif': '{{ use_capif }}',
             'capif_host': '{{ capif_host }}',
             'capif_http_port': '{{ capif_http_port }}',
-            'capif_https_port': '{{ capif_https_port }}'
+            'capif_https_port': '{{ capif_https_port }}',
+            'nrf_host': '{{ nrf_host }}',
+            'nrf_port': '{{ nrf_port }}',
+            'amf_host': '{{ amf_host }}',
+            'amf_port': '{{ amf_port }}',
+            'pcf_host': '{{ pcf_host }}',
+            'pcf_port': '{{ pcf_port }}',
+            'smf_host': '{{ smf_host }}',
+            'smf_port': '{{ smf_port }}',
+            'bsf_host': '{{ bsf_host }}',
+            'bsf_port': '{{ bsf_port }}',
+            'udm_host': '{{ udm_host }}',
+            'udm_port': '{{ udm_port }}',
+            'core_ip': '{{ core_ip }}',
 
           }
 
