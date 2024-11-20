@@ -1,6 +1,6 @@
 ---
-# Main playbook to deploy the UPF-P4 SW component
 
+# Main playbook to deploy the UPF-P4 SW component
 - name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
   gather_facts: false
@@ -17,7 +17,7 @@
 
     - name: Terraform apply
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
- 
+
 
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
@@ -55,18 +55,18 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_upf_p4_sw_networks[0] + '-id'] | string}}"
+        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_upf_p4_sw_networks[0] + '-id'] | string }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "upf_p4_sw"
-        ansible_host: "{{ ips[ vnet_id ] }}"
+        ansible_host: "{{ ips[vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
     - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
-      #loop: "{{ node_ips | dict2items }}"
+      # loop: "{{ node_ips | dict2items }}"
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
@@ -94,7 +94,7 @@
         shell: /bin/bash
         groups: sudo
         password: ''
-        
+
     - name: Set TN ssh key as authorized in new user
       become: true
       ansible.posix.authorized_key:
@@ -109,7 +109,7 @@
         harbor_token: "{{ hostvars['localhost']['site_available_components']['upf_p4_sw']['harbor_token'] }}"
 
     - name: UPF P4 SW install
-      ansible.builtin.include_tasks: 
+      ansible.builtin.include_tasks:
         file: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/upf_p4_install.yaml"
 
 
@@ -119,7 +119,7 @@
   connection: local
   tasks:
     # TODO: Maybe it is possible to put more field. I should also add an automation mechanism for mcc, mnc and other fields.
-    # TODO: In future, program/automate some of them 
+    # TODO: In future, program/automate some of them
     # TODO: I don't know clear how to put proxy (to automate) (It is necessary to ueransim component)
     - name: Define UPF-P4(+Open5GS) metadata dictionary
       ansible.builtin.set_fact:
@@ -146,13 +146,13 @@
         custom_outputs:
           - key: "{{ entity_name }}-metadata"
             value: "{{ upf_p4_sw_metadata_dict }}"
-                                                                                          
+
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:
-          metadata_dict: "{{ upf_p4_sw_metadata_dict | b64encode }}"  
+          metadata_dict: "{{ upf_p4_sw_metadata_dict | b64encode }}"
           id: "{{ id | b64encode }}"
           ips: "{{ ips | b64encode }}"
-          #enb_ipv4_n3: "{{ one_upf_p4_sw_controller.enb_ipv4_n3 | b64encode }}"
-          #dn_ipv4_n6: "{{ one_upf_p4_sw_controller.dn_ipv4_n6 | b64encode }}"
+          # enb_ipv4_n3: "{{ one_upf_p4_sw_controller.enb_ipv4_n3 | b64encode }}"
+          # dn_ipv4_n6: "{{ one_upf_p4_sw_controller.dn_ipv4_n6 | b64encode }}"
