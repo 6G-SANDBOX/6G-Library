@@ -15,6 +15,12 @@
 
     - name: Terraform apply
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+    
+    - name: Debug variables 3
+      ansible.builtin.debug:
+        msg:
+          - "one_ueransim_ue_op 3: {{ one_ueransim_ue_op }}"
+          - "one_ueransim_ue_key 3: {{ one_ueransim_ue_key }}"
 
 
 - name: "STAGE 2: Prepare to access the component"

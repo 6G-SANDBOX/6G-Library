@@ -73,7 +73,22 @@
         one_ueransim_ue_default_nssai_sst: "{{ terraform_outputs_open5gs_dict.s_nssai_sst }}"
         one_ueransim_ue_default_nssai_sd: "{{ terraform_outputs_open5gs_dict.s_nssai_sd }}"
 
-  
+- name: Debug variables
+  ansible.builtin.debug:
+    msg:
+      - "one_ueransim_ue_op: {{ one_ueransim_ue_op }}"
+      - "one_ueransim_ue_key: {{ one_ueransim_ue_key }}"
+
+- name: Show complete dictionary
+  ansible.builtin.debug:
+    var: terraform_outputs_open5gs_dict
+
 - name: Overwrite again with explicit values from the input file
   ansible.builtin.include_vars:
     file: "{{ workspace }}/{{ component_type }}/variables/input_file.yaml"
+
+- name: Debug variables 2
+  ansible.builtin.debug:
+    msg:
+      - "one_ueransim_ue_op 2: {{ one_ueransim_ue_op }}"
+      - "one_ueransim_ue_key 2: {{ one_ueransim_ue_key }}"
