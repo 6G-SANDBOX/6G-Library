@@ -37,7 +37,9 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string }}"
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_networks[0] + '-id'] | string }}"
+        #n2n3_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_networks[1] + '-id'] | string }}"
+        ips_dict: {{ ips | dict2items(key_name='id', value_name='ip') }}
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
@@ -83,6 +85,19 @@
         key: "{{ item }}"
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+
+    - name: Install Open5GS and MongoDB
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/install-open5gs.yml"
+      vars:
+        install_webgui: False
+        update_netplan: False
+        n2_ip: {{ ips_dict[1].ip | default(127.0.0.5) }}
+        n3_ip: {{ ips_dict[1].ip | default(127.0.0.7) }}
+        #n6_ip:
+        ue_subnet: 10.45.0.0/16
+        mcc: 001
+        mnc: 01
+        slice_sd: "000001"
 
 
 - name: "STAGE 4: Publish execution results"
