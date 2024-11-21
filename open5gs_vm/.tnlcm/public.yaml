@@ -1,0 +1,79 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
+  short_description: Deploys a Open5GS as Virtual Machine
+  long_description: |
+    A general-purpose Virtual Machine based on Ubuntu 22.04 lTS.
+    Through variable "one_vm_kvm_size", five different types of instances can be deployed
+    - **extra_large**: 32 GiB of memory, 8 vCPU and 100GiB of storage
+    - **large**: 16 GiB of memory, 4 vCPU and 50GiB of storage
+    - **medium**: 8 GiB of memory, 4 vCPU and 25GiB of storage
+    - **small**: 4 GiB of memory, 2 vCPU and 15GiB of storage
+    - **very_small**: 2 GiB of memory, 1 vCPU and 10GiB of storage
+  hypervisors: [one]
+
+####################################
+## Component input
+####################################
+input:
+  one_open5gs_vm_networks:
+    description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
+    required_when: false
+  one_open5gs_vm_size:
+    description: |
+      Select one type of instance according to your hardware requirements
+      - extra_large: 32 GiB of memory, 8 vCPU and 100GiB of storage
+      - large: 16 GiB of memory, 4 vCPU and 50GiB of storage
+      - medium: 8 GiB of memory, 4 vCPU and 25GiB of storage
+      - small: 4 GiB of memory, 2 vCPU and 15GiB of storage
+      - very_small: 2 GiB of memory, 1 vCPU and 10GiB of storage
+    type: str
+    choices:
+      - "extra_large"
+      - "large"
+      - "medium"
+      - "small"
+      - "very_small"
+    required_when: true
+
+####################################
+## Component output
+####################################
+output:
+  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
+  id: VM ID in OpenNebula
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the VM template to use in your OpenNebula environment
+#  image_id: ID of the Ubuntu 22.04 LTS image to use in your OpenNebula environment
