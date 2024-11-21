@@ -1,0 +1,25 @@
+
+network:
+    ethernets:
+# lready done in the installer file?
+#        mgmt:
+#            dhcp4: true
+#            match:
+#              macaddress: 00:50:56:84:da:8f
+#            set-name: mgmt
+        n2:
+            match:
+              macaddress: {{hostvars[inventory_hostname]['n2_mac']}}
+            set-name: n2
+            addresses: [ {{hostvars[inventory_hostname]['n2_ip']}}/24 ]
+        n3:
+            match:
+              macaddress: {{hostvars[inventory_hostname]['n3_mac']}}
+            set-name: n3
+            addresses: [ {{hostvars[inventory_hostname]['n3_ip']}}/24 ]
+        n6:
+            match:
+              macaddress: {{hostvars[inventory_hostname]['n6_mac']}}
+            set-name: n6
+            addresses: [ {{hostvars[inventory_hostname]['n6_ip']}}/24 ]
+    version: 2
