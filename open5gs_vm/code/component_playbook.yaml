@@ -39,7 +39,7 @@
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_networks[0] + '-id'] | string }}"
         n2n3_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_networks[1] + '-id'] | string }}"
-        ips_dict: "{{ ips | dict2items(key_name='id', value_name='ip') }}"
+        ips_dict: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] | dict2items(key_name='id', value_name='ip') }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
@@ -86,8 +86,11 @@
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
     - name: Install Open5GS and MongoDB
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/install-open5gs.yml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install-open5gs.yml"
 
 
 - name: "STAGE 4: Publish execution results"
