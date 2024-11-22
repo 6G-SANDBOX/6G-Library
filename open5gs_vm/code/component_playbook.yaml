@@ -48,7 +48,7 @@
           - "ips: {{ ips }}"
           - "datatype of ips_dict: {{ ips_dict | type_debug }}"
           - "ips_dict: {{ ips_dict }}"
-      when: True
+      when: debug
 
     - name: "DEBUG: Display all variables/facts known for a host"
       ansible.builtin.debug:
@@ -106,7 +106,7 @@
     - name: Display all variables/facts known for a host
       ansible.builtin.debug:
         var: hostvars[inventory_hostname]
-      when: True
+      when: False
 
     - name: Install Open5GS and MongoDB
       vars:
@@ -135,7 +135,7 @@
             's_nssai_sst': '{{ one_open5gs_vm_s_nssai_sst }}',
             's_nssai_sd': '{{ one_open5gs_vm_s_nssai_sd }}',
             'amf_ip': '{{ ips_dict[1]['ip'] }}',
-            'upf_ip': '{{ ips_dict[1]['ip'] }}'
+            'upf_ip': '{{ ips_dict[1]['ip'] }}',
             'ue_count': '{{ one_open5gs_vm_ue_count }}'
           }
 

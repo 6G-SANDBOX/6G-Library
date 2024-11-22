@@ -33,7 +33,7 @@
           - "ue_dnn: {{ ue_dnn }}"
           - "ue_msin: {{ ue_msin }}"
           - "ue_count: {{ ue_count }}"
-      when: true
+      when: debug
 
     - name: Update apt cache
       apt: update_cache=true cache_valid_time=3600
