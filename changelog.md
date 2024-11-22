@@ -9,6 +9,7 @@
 - Updated `loadcore` to use new appliance with OpenNebula contextualization scripts. However, IaC is currently broken. VM is deployed by Ansible itself
 ## Fixed
 - Component TSN: markdown report file `ok_result.md.j2`.
+- Fixed bug where the one_open5gs_upf_ip wasn't correctly set as an output variable
 
 
 ## [v0.3.0] - 2024-10-16
