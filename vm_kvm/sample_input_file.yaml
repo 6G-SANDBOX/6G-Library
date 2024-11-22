@@ -1,0 +1,6 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+one_vm_kvm_size: "small"
+
+# one_vm_kvm_networks: 
+#   - tn_vxlan
