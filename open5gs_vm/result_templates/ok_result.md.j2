@@ -20,7 +20,11 @@ It consists of an Ubuntu 22.04 LTS Virtual Machine for Open5GS and MongoDB
   ```json
   {{ ips }}
   ```
+- n2n3_vnet_id:
+  ```json
+  {{ n2n3_vnet_id | default("UNDEFINED") }}
+  ```
 - ips_dict:
   ```json
-  {{ ips_dict }}
+  {{ ips_dict | default("UNDEFINED") }}
   ```

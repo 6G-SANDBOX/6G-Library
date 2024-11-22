@@ -4,8 +4,8 @@
   vars:
     install_webgui: False
     update_netplan: False
-    n2_ip: {{ n2n3_vnet_id | default(127.0.0.5) }}
-    n3_ip: {{ n2n3_vnet_id | default(127.0.0.7) }}
+    n2_ip: {{ ips[n2n3_vnet_id] | default(127.0.0.5) }}
+    n3_ip: {{ ips[n2n3_vnet_id] | default(127.0.0.7) }}
     #n6_ip:
     ue_subnet: 10.45.0.0/16
     mcc: 001
