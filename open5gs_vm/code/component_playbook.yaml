@@ -48,7 +48,12 @@
           - "ips: {{ ips }}"
           - "datatype of ips_dict: {{ ips_dict | type_debug }}"
           - "ips_dict: {{ ips_dict }}"
-          - "hostvars[localhost]: {{ hostvars['localhost'] }}"
+      when: True
+
+    - name: "DEBUG: Display all variables/facts known for a host"
+      ansible.builtin.debug:
+        var: hostvars[inventory_hostname]
+      when: False
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
@@ -98,6 +103,11 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
+    - name: Display all variables/facts known for a host
+      ansible.builtin.debug:
+        var: hostvars[inventory_hostname]
+      when: True
+
     - name: Install Open5GS and MongoDB
       vars:
         ips_dict: "{{ hostvars['localhost']['ips_dict'] }}"
@@ -124,8 +134,8 @@
             'tac': '{{ one_open5gs_vm_tac }}',
             's_nssai_sst': '{{ one_open5gs_vm_s_nssai_sst }}',
             's_nssai_sd': '{{ one_open5gs_vm_s_nssai_sd }}',
-            'amf_ip': '{{ one_open5gs_vm_amf_ip }}',
-            'upf_ip': '{{ one_open5gs_vm_amf_ip }}'
+            'amf_ip': '{{ ips_dict[1]['ip'] }}',
+            'upf_ip': '{{ ips_dict[1]['ip'] }}'
           }
 
     - name: Publish open5gs metadata as terraform outputs"

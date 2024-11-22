@@ -45,7 +45,7 @@ Current versions:
 - **S-NSSAI (SD)**: `{{ one_open5gs_vm_s_nssai_sd }}`
 - **AMF IP**: `{{ one_open5gs_vm_amf_ip }}`
 - **UPF IP**: `{{ one_open5gs_vm_upf_ip }}`
-- **Web portal URL**: `{{ one_open5gs_vm_webui_subdomain }}.{{ tn_id }}.{{ site_domain }}`
+- **Web portal URL**: `{{ one_open5gs_vm_webui_subdomain | default("UNDEFINED") }}.{{ tn_id }}.{{ site_domain }}`
 - **Web portal credentials**: 
   - `admin`
   - `1423`
