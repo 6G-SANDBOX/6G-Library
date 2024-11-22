@@ -10,7 +10,7 @@
     ue_subnet: "{{ one_open5gs_vm_ue_subnet | default('10.45.0.0/16') }}"
     mcc: "{{ one_open5gs_vm_mcc | default('001') }}"
     mnc: "{{ one_open5gs_vm_mnc | default('01') }}"
-    slice_sd: "{{ one_open5gs_vm_slice_sd | default('000001') }}"
+    slice_sd: "{{ one_open5gs_vm_s_nssai_sd | default('000001') }}"
   block:
     - name: debug input Variables
       debug:

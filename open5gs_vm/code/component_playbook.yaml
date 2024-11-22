@@ -41,12 +41,14 @@
         n2n3_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_networks[1] + '-id'] | string }}"
         ips_dict: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] | dict2items(key_name='id', value_name='ip') }}"
 
-    - debug:
+    - name: "DEBUG: show variables"
+      debug:
         msg:
           - "datatype of ips: {{ ips | type_debug }}"
           - "ips: {{ ips }}"
           - "datatype of ips_dict: {{ ips_dict | type_debug }}"
           - "ips_dict: {{ ips_dict }}"
+          - "hostvars[localhost]: {{ hostvars['localhost'] }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
@@ -107,9 +109,36 @@
   gather_facts: false
   connection: local
   tasks:
+    - name: Define open5gs metadata dictionary
+      ansible.builtin.set_fact:
+        open5gs_metadata_dict: >-
+          {
+            'oneKE': '',
+            'proxy': '',
+            'mcc': '{{ one_open5gs_vm_mcc }}',
+            'mnc': '{{ one_open5gs_vm_mnc }}',
+            'msin': '{{ one_open5gs_vm_msin }}',
+            'key': '{{ one_open5gs_vm_key }}',
+            'opc': '{{ one_open5gs_vm_opc }}',
+            'apn': '{{ one_open5gs_vm_apn }}',
+            'tac': '{{ one_open5gs_vm_tac }}',
+            's_nssai_sst': '{{ one_open5gs_vm_s_nssai_sst }}',
+            's_nssai_sd': '{{ one_open5gs_vm_s_nssai_sd }}',
+            'amf_ip': '{{ one_open5gs_vm_amf_ip }}',
+            'upf_ip': '{{ one_open5gs_vm_amf_ip }}'
+          }
+
+    - name: Publish open5gs metadata as terraform outputs"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-metadata"
+            value: "{{ open5gs_metadata_dict }}"
+
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
+          metadata_dict: "{{ open5gs_metadata_dict | b64encode }}"
