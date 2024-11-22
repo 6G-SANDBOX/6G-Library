@@ -4,3 +4,8 @@ one_open5gs_vm_size: "small"
 
 # one_open5gs_vm_networks: 
 #   - tn_vxlan
+
+# one_open5gs_vm_ue_subnet | default('10.45.0.0/16')
+# one_open5gs_vm_mcc | default('001')
+# one_open5gs_vm_mnc | default('01')
+# one_open5gs_vm_slice_sd | default('000001')

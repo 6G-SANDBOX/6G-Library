@@ -35,3 +35,8 @@ one_open5gs_vm_resources:
     cpu: 1
     memory: 2048
     disk: 10240
+
+one_open5gs_vm_ue_subnet: "10.45.0.0/16"
+one_open5gs_vm_mcc: "001"
+one_open5gs_vm_mnc: "01"
+one_open5gs_vm_slice_sd: "000001"
