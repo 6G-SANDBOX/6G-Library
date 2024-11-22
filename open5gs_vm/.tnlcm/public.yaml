@@ -130,6 +130,12 @@ input:
     default_value: "10.21.12.201"
     required_when: false
 
+  one_open5gs_vm_ue_count:
+    description: Number of UEs to be provisioned staring from MSIN
+    type: int
+    default_value: 20
+    required_when: false
+
 ####################################
 ## Component output
 ####################################
@@ -148,6 +154,7 @@ output:
     s_nssai_sst: input.one_open5gs_vm_s_nssai_sd
     amf_ip: input.one_open5gs_vm_amf_ip
     upf_ip: input.one_open5gs_vm_upf_ip
+    ue_count: input.one_open5gs_vm_ue_count
 
 
 ####################################
