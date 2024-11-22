@@ -4,8 +4,8 @@
   vars:
     install_webgui: False
     update_netplan: False
-    n2_ip: {{ ips[n2n3_vnet_id] | default(127.0.0.5) }}
-    n3_ip: {{ ips[n2n3_vnet_id] | default(127.0.0.7) }}
+    n2_ip: "{{ ips[n2n3_vnet_id] | default(127.0.0.5) }}"
+    n3_ip: "{{ ips[n2n3_vnet_id] | default(127.0.0.7) }}"
     #n6_ip:
     ue_subnet: 10.45.0.0/16
     mcc: 001
@@ -59,31 +59,31 @@
         #  register: config_changed
         - name: render NRF config
           template:
-            src: {{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/nrf.yaml.j2
+            src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/nrf.yaml.j2"
             dest: /etc/open5gs/nrf.yaml
             backup: true
           register: config_changed
         - name: Fill in GTP Addresses in UPF config
           template:
-            src: {{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/upf.yaml.j2
+            src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/upf.yaml.j2"
             dest: /etc/open5gs/upf.yaml
             backup: true
           register: config_changed
         - name: render AMF config
           template:
-            src: {{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/amf.yaml.j2
+            src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/amf.yaml.j2"
             dest: /etc/open5gs/amf.yaml
             backup: true
           register: config_changed
         - name: render SMF config
           template:
-            src: {{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/smf.yaml.j2
+            src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/smf.yaml.j2"
             dest: /etc/open5gs/smf.yaml
             backup: true
           register: config_changed
         - name: render NSSF config
           template:
-            src: {{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/nssf.yaml.j2
+            src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/nssf.yaml.j2"
             dest: /etc/open5gs/nssf.yaml
             backup: true
           register: config_changed
@@ -165,7 +165,7 @@
 
     - name: generate add-test-ue
       template:
-        src: {{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/add-test-ues.sh.j2
+        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/add-test-ues.sh.j2"
         dest: /etc/open5gs/add-test-ues.sh
         backup: true
         mode: +x
@@ -179,7 +179,7 @@
 
     - name: render ue subnet into 99-open5gs.network
       template:
-        src: {{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-open5gs.network.j2
+        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-open5gs.network.j2"
         dest: /etc/systemd/network/99-open5gs.network
         backup: true
       register: networkd_changed
