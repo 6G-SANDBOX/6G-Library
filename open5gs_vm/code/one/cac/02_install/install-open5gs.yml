@@ -12,10 +12,10 @@
     mnc: "{{ one_open5gs_vm_mnc | default('01') }}"
     slice_sd: "{{ one_open5gs_vm_slice_sd | default('000001') }}"
   block:
-    - name: debug inpu vars
+    - name: debug input Variables
       debug:
         msg:
-          - "ips_dict: {{ ips_dict }}"
+          - "ips_dict: {{ ips_dict | default('UNDEFINED') }}"
           - "n2_ip: {{ n2_ip }}"
           - "n3_ip: {{ n3_ip }}"
           - "ue_subnet: {{ ue_subnet }}"
