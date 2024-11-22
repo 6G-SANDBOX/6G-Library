@@ -4,13 +4,13 @@
   vars:
     install_webgui: False
     update_netplan: False
-    n2_ip: "{{ ips[n2n3_vnet_id] | default(127.0.0.5) }}"
-    n3_ip: "{{ ips[n2n3_vnet_id] | default(127.0.0.7) }}"
+    n2_ip: "{{ ips_dict[1]['ip'] | default(127.0.0.5) }}"
+    n3_ip: "{{ ips_dict[1].ip | default(127.0.0.7) }}"
     #n6_ip:
-    ue_subnet: 10.45.0.0/16
-    mcc: 001
-    mnc: 01
-    slice_sd: "000001"
+    ue_subnet: "{{ one_open5gs_vm_ue_subnet | default(10.45.0.0/16) }}"
+    mcc: "{{ one_open5gs_vm_mcc | default(001) }}"
+    mnc: "{{ one_open5gs_vm_mnc | default(01) }}"
+    slice_sd: "{{ one_open5gs_vm_slice_sd | default(000001) }}"
   block:
     - name: Update apt cache and upgrade packages.
       apt: update_cache=true cache_valid_time=3600 upgrade=full

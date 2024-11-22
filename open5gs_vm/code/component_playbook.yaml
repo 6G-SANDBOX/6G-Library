@@ -41,6 +41,13 @@
         n2n3_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_networks[1] + '-id'] | string }}"
         ips_dict: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] | dict2items(key_name='id', value_name='ip') }}"
 
+    - debug:
+        msg:
+          - "datatype of ips: {{ ips | type_debug }}"
+          - "ips: {{ ips }}"
+          - "datatype of ips_dict: {{ ips_dict | type_debug }}"
+          - "ips_dict: {{ ips_dict }}"
+
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "open5gs_vm"
