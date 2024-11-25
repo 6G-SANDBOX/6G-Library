@@ -1,0 +1,165 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
+  short_description: Deploys a Open5GS as Virtual Machine
+  long_description: |
+    A general-purpose Virtual Machine based on Ubuntu 22.04 lTS.
+    The automation is installing Open5GS version 2.7.2 and MongoDB on it.
+    Through variable "one_open5gs_vm_size", five different types of instances can be deployed
+    - **extra_large**: 32 GiB of memory, 8 vCPU and 100GiB of storage
+    - **large**: 16 GiB of memory, 4 vCPU and 50GiB of storage
+    - **medium**: 8 GiB of memory, 4 vCPU and 25GiB of storage
+    - **small**: 4 GiB of memory, 2 vCPU and 15GiB of storage
+    - **very_small**: 2 GiB of memory, 1 vCPU and 10GiB of storage
+  hypervisors: [one]
+
+####################################
+## Component input
+####################################
+input:
+  one_open5gs_vm_networks:
+    description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
+    required_when: false
+  one_open5gs_vm_size:
+    description: |
+      Select one type of instance according to your hardware requirements
+      - extra_large: 32 GiB of memory, 8 vCPU and 100GiB of storage
+      - large: 16 GiB of memory, 4 vCPU and 50GiB of storage
+      - medium: 8 GiB of memory, 4 vCPU and 25GiB of storage
+      - small: 4 GiB of memory, 2 vCPU and 15GiB of storage
+      - very_small: 2 GiB of memory, 1 vCPU and 10GiB of storage
+    type: str
+    choices:
+      - "extra_large"
+      - "large"
+      - "medium"
+      - "small"
+      - "very_small"
+    required_when: true
+
+  one_open5gs_vm_mcc:
+    description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "001"
+    required_when: false
+
+  one_open5gs_vm_mnc:
+    description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "01"
+    required_when: false
+
+  one_open5gs_vm_msin:
+    description: Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "0000000001"
+    required_when: false
+
+  one_open5gs_vm_key:
+    description: Permanent Subscription Key
+    type: str
+    default_value: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+    required_when: false
+
+  one_open5gs_vm_opc:
+    description: Operator Code
+    type: str
+    default_value: "E8ED289DEBA952E4283B54E88E6183CA"
+    required_when: false
+
+  one_open5gs_vm_apn:
+    description: Access Point Name (APN) of the initial PDU session to be stablished
+    type: str
+    default_value: "internet"
+    required_when: false
+
+  one_open5gs_vm_tac:
+    description: Tracking Area Code in the PLMN
+    type: int
+    default_value: 200
+    required_when: false
+
+  one_open5gs_vm_s_nssai_sst:
+    description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    type: int
+    default_value: 1
+    required_when: false
+
+  one_open5gs_vm_s_nssai_sd:
+    description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
+    type: str
+    default_value: "000001"
+    required_when: false
+
+  one_open5gs_vm_amf_ip:
+    description: Address to expose the Core Access and Mobility Management Function (AMF). Requires to be part of the oneKE's one_oneKE_metallb_range
+    type: str
+    default_value: "10.21.12.200"
+    required_when: false
+
+  one_open5gs_vm_upf_ip:
+    description: Address to expose the Core User Plane Function (UPF). Requires to be part of the oneKE's one_oneKE_metallb_range
+    type: str
+    default_value: "10.21.12.201"
+    required_when: false
+
+  one_open5gs_vm_ue_count:
+    description: Number of UEs to be provisioned staring from MSIN
+    type: int
+    default_value: 20
+    required_when: false
+
+####################################
+## Component output
+####################################
+output:
+  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
+  id: VM ID in OpenNebula
+  metadata_dict: #Dictionary with multiple parameters used in the core bootstrap
+    mcc: input.one_open5gs_vm_mcc
+    mnc: input.one_open5gs_vm_mnc
+    msin: input.one_open5gs_vm_msin
+    key: input.one_open5gs_vm_key
+    opc: input.one_open5gs_vm_opc
+    apn: input.one_open5gs_vm_apn
+    tac: input.one_open5gs_vm_tac
+    s_nssai_sd: input.one_open5gs_vm_s_nssai_sst
+    s_nssai_sst: input.one_open5gs_vm_s_nssai_sd
+    amf_ip: input.one_open5gs_vm_amf_ip
+    upf_ip: input.one_open5gs_vm_upf_ip
+    ue_count: input.one_open5gs_vm_ue_count
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the VM template to use in your OpenNebula environment
+  image_id: ID of the Ubuntu 22.04 LTS image to use in your OpenNebula environment
