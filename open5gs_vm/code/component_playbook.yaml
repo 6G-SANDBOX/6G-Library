@@ -38,7 +38,6 @@
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_networks[0] + '-id'] | string }}"
-        n2n3_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_networks[1] + '-id'] | string }}"
         ips_dict: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] | dict2items(key_name='id', value_name='ip') }}"
 
     - name: "DEBUG: show variables"
