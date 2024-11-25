@@ -9,6 +9,11 @@
     src:  "{{ workspace }}/{{ component_type }}/code/all/cac/"    
     dest: /tmp/helms/
 
+- name: Debug User and Password variables
+  ansible.builtin.debug:
+    msg: "Harbor User: {{ site_available_components.onemnef.harbor_user }} Harbor Password: {{ site_available_components.onemnef.harbor_password }}"
+
+
 - name: Deploy Onemnef helm
   kubernetes.core.helm:
     kubeconfig: /etc/rancher/rke2/rke2.yaml

@@ -1,6 +1,6 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
-one_onemnef_oneKE: "oneKE-custom_name"
+one_onemnef_oneKE: "oneKE-k8s"
 
 mqtt_host: "message-broker.onemnef.com" 
 mongodb_host: "db.onemnef.com" 
