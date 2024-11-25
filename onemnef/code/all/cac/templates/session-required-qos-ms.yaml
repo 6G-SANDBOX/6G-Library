@@ -35,6 +35,9 @@ spec:
       - name: config-volume
         configMap:
           name: session-required-qos-config
+      imagePullSecrets: 
+        - 
+          name: {{ .Values.global.imagePullSecrets.name }}
 
 ---
 apiVersion: v1

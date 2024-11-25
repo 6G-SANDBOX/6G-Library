@@ -35,6 +35,10 @@ spec:
       - name: config-volume
         configMap:
           name: event-monitoring-config
+      imagePullSecrets: 
+        - 
+          name: {{ .Values.global.imagePullSecrets.name }}
+
 ---
 apiVersion: v1
 data:

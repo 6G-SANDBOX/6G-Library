@@ -43,6 +43,9 @@ spec:
       - name: config-volume
         configMap:
           name: db-proxy-config
+      imagePullSecrets: 
+        - 
+          name: {{ .Values.global.imagePullSecrets.name }}
 
 ---
 apiVersion: v1

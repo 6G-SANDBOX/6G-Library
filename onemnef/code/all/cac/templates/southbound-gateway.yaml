@@ -80,6 +80,9 @@ spec:
       - name: config-volume
         configMap:
           name: sgw-config
+      imagePullSecrets: 
+        - 
+          name: {{ .Values.global.imagePullSecrets.name }}
 
       
 ---

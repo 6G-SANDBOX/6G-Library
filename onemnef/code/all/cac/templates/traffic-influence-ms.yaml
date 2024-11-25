@@ -35,7 +35,10 @@ spec:
       - name: config-volume
         configMap:
           name: traffic-influence-config
-      
+      imagePullSecrets: 
+        - 
+          name: {{ .Values.global.imagePullSecrets.name }}
+
 ---
 apiVersion: v1
 data:
