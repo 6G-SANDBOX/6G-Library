@@ -33,13 +33,6 @@
 
 
 - name: "DEBUG User and Password variables"
-  hosts: "{{ hostvars['localhost']['one_onemnef_oneKE'] }}-master_0"
-  tasks:
-    - name: Debug
-      ansible.builtin.debug:
-        msg: "Harbor User: {{ site_available_components.onemnef.harbor_user }} Harbor Password: {{ site_available_components.onemnef.harbor_password }}"
-
-- name: "DEBUG User and Password variables"
   hosts: "localhost"
   tasks:
     - name: Debug
