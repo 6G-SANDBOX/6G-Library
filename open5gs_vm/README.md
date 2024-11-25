@@ -10,6 +10,14 @@ Current versions:
 > In Opennebula, selecting a non-default architecture for the worker templates might be needed.
 
 
+This VM supports seperated networks for N2 and N3 but will fall back to use the n2 network for n3 if executed with only 2 networks.
+If the VM is deployed with only one network then this mgmt network will be used for n2 and n3.
+
+| network number | used for | notes |
+| -------------- | -------- | ----- |
+| 1 (eth0)       | management | used as fallback for n2 and n3 if the only interface |
+| 2 (eth1)       | N2 (AMF) | used as fallback for N3 if no n3 network specified |
+| 3 (eth2)       | N3 (UPF) | |
 
 ## What is Open5GS
 
