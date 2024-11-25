@@ -34,6 +34,8 @@
 
 - name: "DEBUG User and Password variables"
   hosts: localhost
+  connection: local
+
   tasks:
     - name: Debug
       ansible.builtin.debug:
