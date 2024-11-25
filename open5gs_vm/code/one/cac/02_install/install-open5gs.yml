@@ -5,8 +5,8 @@
     install_webgui: False
     update_netplan: False
     apt_upgrade: False
-    n2_ip: "{{ ips_dict[1]['ip'] | default('127.0.0.5') }}"
-    n3_ip: "{{ ips_dict[1].ip | default('127.0.0.7') }}"
+    n2_ip: "{{ ips_dict[1]['ip'] if ips_dict|length > 1 else ips_dict[0]['ip'] }}"
+    n3_ip: "{{ ips_dict[2]['ip'] if ips_dict|length > 2 else ips_dict[1].ip if ips_dict|length > 1 else ips_dict[0]['ip'] }}"
     #n6_ip:
     ue_subnet: "{{ one_open5gs_vm_ue_subnet | default('10.45.0.0/16') }}"
     mcc: "{{ one_open5gs_vm_mcc | default('001') }}"
