@@ -1,16 +1,13 @@
 # Changelog
 
-## [v0.2.0] - 2024-06-06
+## [unreleased]
 ### Added
-- New component replacing components:
-  * `vm_kvm_exra_large`
-  * `vm_kvm_large`
-  * `vm_kvm_medium`
-  * `vm_kvm_small`
-  * `vm_kvm_very_small`
+- Inital version of the Open5GS VM component
 
 
 <!-- Change latest version value at every release -->
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.3.0...unreleased
+[v0.3.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.3.0
 [v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
 
 
