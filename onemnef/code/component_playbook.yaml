@@ -33,7 +33,7 @@
 
 
 - name: "DEBUG User and Password variables"
-  hosts: "localhost"
+  hosts: localhost
   tasks:
     - name: Debug
       ansible.builtin.debug:
