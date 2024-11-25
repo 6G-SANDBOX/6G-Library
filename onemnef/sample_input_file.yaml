@@ -11,21 +11,15 @@ use_capif: false
 capif_host: false 
 capif_http_port: 80 
 capif_https_port: 443 
-nrf_host: "nrf-host"
-nrf_port: "nrf-port"
-amf_host: "amf-host"
-amf_port: "amf-port"
-pcf_host: "pcf-host"
-pcf_port: "pcf-port"
-smf_host: "smf-host"
-smf_port: "smf-port"
-bsf_host: "bsf-host"
-bsf_port: "bsf-port"
-udm_host: "udm-host"
-udm_port: "udm-port"
-core_ip: "core-ip"
-
-
-
-
-
+nrf_host: "open5gs-nrf-sbi.open5gs"
+nrf_port: "7777"
+amf_host: "open5gs-amf-sbi.open5gs"
+amf_port: "7777"
+pcf_host: "open5gs-pcf-sbi.open5gs"
+pcf_port: "7777"
+smf_host: "open5gs-smf-sbi.open5gs"
+smf_port: "7777"
+bsf_host: "open5gs-bsf-sbi.open5gs"
+bsf_port: "7777"
+udm_host: "open5gs-udm-sbi.open5gs"
+udm_port: "7777"

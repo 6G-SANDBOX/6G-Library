@@ -40,17 +40,17 @@ spec:
         app: sgw
         group: onemnef
     spec: 
-      hostAliases:
-        - hostnames:
-          - {{ .Values.southboundGateway.amf_host }}
-          - {{ .Values.southboundGateway.nrf_host }}
-          - {{ .Values.southboundGateway.amf_host }}
-          - {{ .Values.southboundGateway.pcf_host }}
-          - {{ .Values.southboundGateway.bsf_host }}
-          - {{ .Values.southboundGateway.udm_host }}
-          - {{ .Values.southboundGateway.sgw_host }}
+      # hostAliases:
+      #   - hostnames:
+      #     - {{ .Values.southboundGateway.amf_host }}
+      #     - {{ .Values.southboundGateway.nrf_host }}
+      #     - {{ .Values.southboundGateway.amf_host }}
+      #     - {{ .Values.southboundGateway.pcf_host }}
+      #     - {{ .Values.southboundGateway.bsf_host }}
+      #     - {{ .Values.southboundGateway.udm_host }}
+      #     - {{ .Values.southboundGateway.sgw_host }}
          
-          ip: {{ .Values.southboundGateway.core_ip }}
+      #     ip: {{ .Values.southboundGateway.core_ip }}
       containers: 
       -  
         image: "{{ .Values.global.registry }}{{ .Values.southboundGateway.image}}:{{ .Values.southboundGateway.tag }}"
