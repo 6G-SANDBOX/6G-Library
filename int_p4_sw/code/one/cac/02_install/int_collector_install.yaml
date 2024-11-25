@@ -1,1 +1,36 @@
-#TODO
+- name: Check InfluxDB service status
+  become: true
+  service_facts:
+  register: services_state
+
+- name: Start InfluxDB service if not running
+  become: true
+  service:
+    name: influxdb
+    state: started
+  when: services_state.ansible_facts.services['influxdb.service'] is not defined or 
+        services_state.ansible_facts.services['influxdb.service'].state != 'running'
+
+#TODO: Task to configure InfluxDB?
+
+- name: Check Grafana service status
+  become: true
+  service_facts:
+  register: services_state
+
+- name: Start Grafana service if not running
+  become: true
+  service:
+    name: grafana-server
+    state: started
+  when: services_state.ansible_facts.services['grafana-server.service'] is not defined or 
+        services_state.ansible_facts.services['grafana-server.service'].state != 'running'
+
+#TODO: Task to configure Grafana?
+
+# Run int-collector
+- name: Run InDBClient.py
+  become: true
+  shell:
+    cmd: "nohup python3 InDBClient.py {{ collector_interface }} -i {{ collector_port }} -l 10 -l_rap 10 --clear y > /var/log/int_collector.log 2>&1 &"
+    chdir: ~/int-collector/collector

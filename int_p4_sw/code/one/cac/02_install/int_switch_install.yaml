@@ -51,11 +51,11 @@
     mode: '0644'
     #directory_mode: '0755'
   
-- name: Get switch type and configuration
+- name: Get switch number
   ansible.builtin.set_fact:
     switch_number: "{{ inventory_hostname | regex_replace('int_p4_switch_(.*)','\\1') }}"
 
-- name: Set switch configuration
+- name: Set switch type and configuration
   ansible.builtin.set_fact:
     switch_type: "{{ hostvars['localhost']['one_int_p4_sw_switches']['int_p4_switch_' + switch_number]['type'] }}"
     switch_config: "{{ hostvars['localhost']['one_int_p4_sw_switches']['int_p4_switch_' + switch_number]['config'] }}"

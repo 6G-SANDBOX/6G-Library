@@ -14,7 +14,7 @@ one_int_p4_sw_disk: 25600
 
 # ----- Config related to the switches INT VMs -----
 # Number of INT-P4 switches
-#one_int_p4_sw_n_switches: 2 #TODO: In the future, calculate this value automatically.
+#one_int_p4_sw_n_switches: 2 #TODO: It is not necessary
 
 # TODO: Check values of the config in each switch (type of switch, interfaces, int_config)
 one_int_p4_sw_switches:
@@ -43,7 +43,6 @@ one_int_p4_sw_switches:
         hop_metadata_len: 5
         max_hop: 4
         ins_mask: "0xEC00"
-
   int_p4_switch_1:
     type: "transit"
     networks:
@@ -66,7 +65,6 @@ one_int_p4_sw_switches:
             priority: 1
         egress_spec: 4
         sink_reporting_port: 5
-
   int_p4_switch_2:
     type: "sink"
     networks:
@@ -106,3 +104,6 @@ one_int_p4_sw_collector:
     - vnet-vnet_1
   config:
     #TODO: Add the collector configuration
+    collector_interface: eth1
+    collector_port: 12345
+    #TODO: Add Grafana configuration
