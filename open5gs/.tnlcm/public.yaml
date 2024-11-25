@@ -115,6 +115,11 @@ input:
     default_value: "10.21.12.201"
     required_when: false
 
+  one_open5gs_ue_count:
+    description: Number of UEs to be provisioned starting from MSIN
+    type: int
+    default_value: 20
+    required_when: false
 
 ####################################
 ## Component output
