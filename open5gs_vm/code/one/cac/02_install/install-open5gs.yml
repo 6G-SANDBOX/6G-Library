@@ -278,5 +278,5 @@
 
     - name: export Variables
       ansible.builtin.set_fact:
-        - n2_ip: "{{ n2_ip }}"
-        - n3_ip: "{{ n3_ip }}"
+        n2_ip: "{{ n2_ip }}"
+        n3_ip: "{{ n3_ip }}"
