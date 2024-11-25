@@ -32,9 +32,12 @@
         ansible_user: "root"
 
 
-- name: DEBUG User and Password variables
-  ansible.builtin.debug:
-    msg: "Harbor User: {{ site_available_components.onemnef.harbor_user }} Harbor Password: {{ site_available_components.onemnef.harbor_password }}"
+- name: "DEBUG User and Password variables"
+  hosts: "{{ hostvars['localhost']['one_onemnef_oneKE'] }}-master_0"
+  tasks:
+    - name: Debug
+      ansible.builtin.debug:
+        msg: "Harbor User: {{ site_available_components.onemnef.harbor_user }} Harbor Password: {{ site_available_components.onemnef.harbor_password }}"
 
 
 - name: "STAGE 2: Apply IaC to deploy the component"
