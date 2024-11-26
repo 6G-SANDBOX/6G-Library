@@ -33,10 +33,6 @@
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
 
-    - name: Verify that the bastion access IP is correctly loaded
-      ansible.builtin.debug:
-        msg: "Network Main Interface is: {{ ips[site_networks_id.default | string] | default('----') }}"
-
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "tn_bastion"
@@ -62,7 +58,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
     - name: Create an ed25519 ssh key pair to access the future Trial Network components
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}code/{{ site_hypervisor }}/cac/02_install/set_ssh_keypair.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}code/{{ site_hypervisor }}/cac/02_install/ssh_keypair.yaml"
 
     - name: Fetch VPN config
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/get_vpn_client_tunnel.yaml"

@@ -34,10 +34,6 @@
         tn_bastion_ips: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'] }}"
         tn_bastion_id: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-id'] }}"
 
-    - name: Verify that the bastion access IP is correctly loaded
-      ansible.builtin.debug:
-        msg: "Network Main Interface is: {{ tn_bastion_ips[site_networks_id.default | string] | default('----') }}"
-
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "tn_bastion"
@@ -46,24 +42,6 @@
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
-
-    # TODO: Quitar esta shit
-    - name: Fetch newly created VM metadata
-      community.general.one_vm:
-        instance_ids: "{{ tn_bastion_id | int }}"
-        api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
-        api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
-        api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
-      register: master_metadata
-    - name: Extract kubeconfig file from master metadata
-      ansible.builtin.debug:
-        msg: "{{ master_metadata }}"
-      when: debug
-
-    - name: Stop playbook execution
-      ansible.builtin.fail:
-        msg: "The playbook execution will fail now. This is totally intended."
-
 
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "tn_bastion"
@@ -74,17 +52,34 @@
         connect_timeout: 5
         timeout: 200
 
+    - name: Wait again until bastion contextualization has finished
+      ansible.builtin.wait_for:
+        path: /etc/one-appliance/status
+        search_regex: bootstrap_success
+
     ### Calling load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
     ### But it makes the code much MUCH cleaner with almost no extra latency
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
     - name: Create an ed25519 ssh key pair to access the future Trial Network components
-      ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/set_ssh_keypair.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/ssh_keypair.yaml"
 
-    - name: Fetch VPN config
-      ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/get_vpn_client_tunnel.yaml"
-      when: site_hypervisor == "one"
+    # TODO: add record for the tn_bastion itself?
+
+    - name: Import tasks to forbid all unauthorized access to private IPs
+      ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/nftables.yaml"
+
+    # TODO
+    # - name: Fetch VPN config
+    #   ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/get_vpn_client_tunnel.yaml"
+    #   when: site_hypervisor == "one"
+
+    - name: Stop playbook execution
+      ansible.builtin.fail:
+        msg: "The playbook execution will fail now. This is totally intended."
+
+
 
 
 - name: "STAGE 4: Publish execution results"
@@ -92,10 +87,28 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: Publish SSH key as a terraform output
+
+  # TODO: Hay más variables que exponer
+    - name: Fetch bastion metadata from OpenNebula
+      community.general.one_vm:
+        instance_ids: "{{ tn_bastion_id }}"  # ¿ | int ?
+        api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
+        api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
+        api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
+      register: bastion_metadata
+    - name: Extract tokens from bastion metadata
+      ansible.builtin.set_fact:
+        one_bastion_dns_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_TOKEN }}"
+        one_bastion_routemanager_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_ROUTEMANAGER_TOKEN }}"
+
+    - name: Publish aditional information as global terraform outputs
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
+          - key: "tn_dns_token"
+            value: "{{ one_bastion_dns_token }}"
+          - key: "tn_routemanager_token"
+            value: "{{ one_bastion_routemanager_token }}"
           - key: "tn_ssh_public_key"
             value: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] | b64decode | trim }}"
 
@@ -106,6 +119,8 @@
           tn_vxlan_id: "{{ tn_vxlan_id | b64encode }}"
           tn_bastion_ips: "{{ tn_bastion_ips | b64encode }}"
           tn_bastion_id: "{{ tn_bastion_id | b64encode }}"
-          vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"
+          tn_dns_token: "{{ one_bastion_dns_token }}"                     # TODO: referenciar en markdown
+          tn_routemanager_token: "{{ one_bastion_routemanager_token }}"   # TODO: referenciar en markdown
           tn_ssh_public_key: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
           tn_ssh_private_key: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"
+          vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"

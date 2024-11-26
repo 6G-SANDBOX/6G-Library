@@ -1,0 +1,27 @@
+---
+- name: Create extra nftables directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /etc/nftables/custom_rules
+    - /etc/nftables/fw_exceptions
+
+- name: Write nftables.conf
+  ansible.builtin.copy:
+    src: "{{ workspace }}/tn_bastion/code/one/cac/02_install/nftables.conf"
+    dest: /etc/nftables.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Write initial firewall exceptions
+  ansible.builtin.template:
+    src: "{{ workspace }}/tn_bastion/code/one/cac/02_install/fw_exceptions.nft.j2"
+    dest: "/etc/nftables/fw_exceptions/tn_init.nft"
+    owner: root
+    group: root
+    mode: '0644'
+
+# TODO:  nft -c -f /etc/nftables    y   systemctl enable --now nftables
