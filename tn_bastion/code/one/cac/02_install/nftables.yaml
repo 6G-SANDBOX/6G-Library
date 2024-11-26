@@ -1,5 +1,6 @@
 ---
 - name: Create extra nftables directories
+  become: true
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -9,16 +10,27 @@
     - /etc/nftables/fw_exceptions
 
 - name: Write nftables.conf
+  become: true
   ansible.builtin.copy:
-    src: "{{ workspace }}/tn_bastion/code/one/cac/02_install/nftables.conf"
+    src: "{{ workspace }}/tn_bastion/code/one/cac/02_install/files/nftables.conf"
     dest: /etc/nftables.conf
     owner: root
     group: root
     mode: '0644'
 
+- name: Get tn_bastion current routes
+  ansible.builtin.command: ip route
+  register: bastion_routes
+  changed_when: false
+
+- name: Get subnets from routes
+  set_fact:
+    bastion_subnets: "{{ bastion_routes.stdout_lines | map('regex_search', '\\d+\\.\\d+\\.\\d+\\.\\d+/\\d+') | select('string') | list }}"
+
 - name: Write initial firewall exceptions
+  become: true
   ansible.builtin.template:
-    src: "{{ workspace }}/tn_bastion/code/one/cac/02_install/fw_exceptions.nft.j2"
+    src: "{{ workspace }}/tn_bastion/code/one/cac/02_install/templates/fw_exceptions.nft.j2"
     dest: "/etc/nftables/fw_exceptions/tn_init.nft"
     owner: root
     group: root

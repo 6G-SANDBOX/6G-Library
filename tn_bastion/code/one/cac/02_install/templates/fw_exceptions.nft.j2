@@ -1,0 +1,5 @@
+#!/usr/sbin/nft -f
+
+{% for subnet in bastion_subnets %}
+ip daddr {{ subnet }} accept
+{% endfor %}

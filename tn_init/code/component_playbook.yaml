@@ -53,6 +53,7 @@
         timeout: 200
 
     - name: Wait again until bastion contextualization has finished
+      become: true
       ansible.builtin.wait_for:
         path: /etc/one-appliance/status
         search_regex: bootstrap_success
@@ -69,6 +70,9 @@
 
     - name: Import tasks to forbid all unauthorized access to private IPs
       ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/nftables.yaml"
+
+    - name: Setup wireguard VPN
+      ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/wireguard.yaml"
 
     # TODO
     # - name: Fetch VPN config

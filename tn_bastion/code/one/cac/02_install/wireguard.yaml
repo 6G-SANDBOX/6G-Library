@@ -1,0 +1,32 @@
+---
+- name: Generate privatekey for the VPN server
+  ansible.buildin.command: wg genkey
+  register: server_privatekey
+  changed_when: false
+
+- name: Get IP from the first interface
+  ansible.buildin.shell: ip -o -4 addr show dev eth0 | awk '{print $4}' | cut -d'/' -f1
+  register: firstip
+  changed_when: false
+
+# TODO: sacar puerto con la IP
+
+- name: Write wg0.conf
+  become: true
+  ansible.builtin.copy:
+    src: "{{ workspace }}/tn_bastion/code/one/cac/02_install/wg0.conf.j2"
+    dest: /etc/wireguard/wg0.conf
+    owner: root
+    group: root
+    mode: '0600'
+
+# - name: Get remote VPN config file content
+#   become: true
+#   ansible.builtin.slurp:
+#     src: "/root/client.conf"
+#   register: client_tunnel
+
+# - name: Debug returned client config
+#   ansible.builtin.debug:
+#     msg: "{{ client_tunnel['content'] | b64decode }}"   
+#   when: debug
