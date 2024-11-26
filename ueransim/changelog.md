@@ -1,11 +1,12 @@
 # Changelog
 
 ## [unreleased]
+
 ### Changed
-- accept open5gs_vm as type for input `one_ueransim_gnb_linked_open5gs`
+- Input variable `one_ueransim_gnb_linked_open5gs` now supports both `upf_p4_sw` and `open5gs_vm` as component type.
 
 ## [v0.3.0]
-### Fixed
+### Fixed
 - Fixed image visualization in README.md and ok_result.md
 
 
