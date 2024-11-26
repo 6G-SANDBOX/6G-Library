@@ -63,6 +63,31 @@ input:
     type: int
     default_value: 254
     required_when: false
+  one_bastion_dns_password:
+    description: For the Technitium DNS, admin user password.
+    type: str
+    default_value: "admin"
+    required_when: false
+  one_bastion_dns_forwarders:
+    description: For the Technitium DNS, comma separated list of forwarders to be used by the DNS server.
+    type: str
+    default_value: "Your site's DNS as defined in variable site_dns. If it doesn't exist, '8.8.8.8,1.1.1.1' will be used"
+    required_when: false
+  one_bastion_dns_domain:
+    description: For the Technitium DNS, domain name for creating the new zone. 
+    type: str
+    default_value: "The TN_ID + your site's domain as defined in variable site_domain. If it doesn't exist, TN_ID + 'tnsdomain.internal' will be used"
+    required_when: false
+  oneapp_bastion_routemanager_token:
+    description: For the route-manager-api, token to authenticate to the API. If not provided, a new one will be generated at instanciate time with `openssl rand -base64 32`.
+    type: str
+    default_value: ""
+    require_when: false
+  one_bastion_routemanager_port:
+    description: For the route-manager-api, TCP port where the API service is be exposed.
+    type: int
+    default_value: 8172
+    required_when: false
   one_bastion_wireguard_allowedips:
     description: List of (comma-separated) subnets overriding 'AllowedIPs' field in the wireguard VPN client config file. Leave this field as is default unless you know what you are doing.
     type: str

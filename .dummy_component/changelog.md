@@ -1,7 +1,8 @@
 # Changelog
 
 ## [unreleased]
-
+### Changed
+- Updated description of what "default_value" in public.yaml is really for
 
 ## [v0.3.0]
 ### Changed

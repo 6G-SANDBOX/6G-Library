@@ -47,6 +47,22 @@
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
 
+    - name: Fetch newly created VM metadata
+      community.general.one_vm:
+        instance_ids: "{{ tn_bastion_id | int }}"
+        api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
+        api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
+        api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
+      register: master_metadata
+    - name: Extract kubeconfig file from master metadata
+      ansible.builtin.debug:
+        msg: "{{ master_metadata }}"
+      when: debug
+
+    - name: Stop playbook execution
+      ansible.builtin.fail:
+        msg: "The playbook execution will fail now. This is totally intended."
+
 
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "tn_bastion"

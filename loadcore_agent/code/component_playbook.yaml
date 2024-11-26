@@ -39,6 +39,7 @@
     - name: "(TEMPORARY) Debug VM metadata"
       ansible.builtin.debug:
         var: created_vm
+      when: debug
 
 
 - name: "STAGE 2: Prepare to access the component"

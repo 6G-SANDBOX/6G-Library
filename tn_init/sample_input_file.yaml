@@ -5,4 +5,9 @@
 #one_vxlan_first_ip: "192.168.199.1"
 #one_vxlan_address_size: 254
 
+#one_bastion_dns_password: "admin"
+#one_bastion_dns_forwarders: "8.8.8.8,1.1.1.1"
+#one_bastion_dns_domain: "{{ tn_id }}.tndomain.internal"
+#one_bastion_routemanager_token: "routemanagertoken"
+#one_bastion_routemanager_port: 8172
 #one_bastion_wireguard_allowedips: "192.168.199.0/24"
