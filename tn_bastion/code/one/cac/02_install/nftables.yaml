@@ -22,7 +22,6 @@
   ansible.builtin.command: ip route
   register: bastion_routes
   changed_when: false
-
 - name: Get subnets from routes
   set_fact:
     bastion_subnets: "{{ bastion_routes.stdout_lines | map('regex_search', '\\d+\\.\\d+\\.\\d+\\.\\d+/\\d+') | select('string') | list }}"

@@ -53,7 +53,7 @@ input:
     default_value: "admin"
     required_when: false
   one_bastion_dns_forwarders:
-    description: For the Technitium DNS, comma separated list of forwarders to be used by the DNS server.
+    description: For the Technitium DNS, comma-separated list of forwarders to be used by the DNS server.
     type: str
     default_value: "Your site's DNS as defined in variable site_dns. If it doesn't exist, '8.8.8.8,1.1.1.1' will be used"
     required_when: false
@@ -72,12 +72,16 @@ input:
     type: int
     default_value: 8172
     required_when: false
-  one_bastion_wireguard_allowedips:
-    description: List of (comma-separated) subnets overriding 'AllowedIPs' field in the wireguard VPN client config file. Leave this field as is default unless you know what you are doing.
-    type: str
-    default_value: "192.168.199.0/24"
+  one_bastion_vpn_clients:
+    description: For the Wireguard VPN, the number of client configurations to generate. Modify it to the number of experimenters expected to access the Trial Network simultaneously.
+    type: int
+    default_value: 1
     required_when: false
-
+  one_bastion_vpn_allowedips:
+    description: For the Wireguard VPN, comma-separated list of subnets that client configurations will route to the bastion.
+    type: str
+    default_value: "The subnet of tn_vxlan"
+    required_when: false
 
 ####################################
 ## Component output

@@ -1,0 +1,14 @@
+# Wireguard VPN configuration based on script https://github.com/Nyr/wireguard-install
+# Copyright (c) 2020 Nyr. Released under the MIT License.
+#
+[Interface]
+Address = 10.7.0.{{ client + 1 }}/24
+DNS = 10.7.0.1
+PrivateKey = {{ client_privatekey.stdout }}
+
+[Peer]
+PublicKey = {{ server_publickey.stdout }}
+PresharedKey = {{ client_psk.stdout }}
+AllowedIPs = {{ one_bastion_vpn_allowedips | default(bastion_subnets[1]) }}
+Endpoint = {{ site_public_ip }}
+PersistentKeepalive = 25

@@ -1,24 +1,42 @@
 ---
-- name: Generate privatekey for the VPN server
+- name: Generate private key for the VPN server
   ansible.buildin.command: wg genkey
   register: server_privatekey
   changed_when: false
 
-- name: Get IP from the first interface
-  ansible.buildin.shell: ip -o -4 addr show dev eth0 | awk '{print $4}' | cut -d'/' -f1
-  register: firstip
+- name: Generate public key for the VPN server
+  ansible.buildin.command: wg pubkey
+  stdin: "{{ server_privatekey }}"
+  register: server_publickey
   changed_when: false
 
-# TODO: sacar puerto con la IP
+# The endpoint port is site_ports_prefix + last (site_ports_length - prefix) digits of the first IP of the bastion, the one supposed to be reachable outside of the Trial Network
+- name: Get IP address from the first interface
+  ansible.builtin.shell: ip -o -4 addr show dev eth0 | awk '{print $4}' | cut -d'/' -f1
+  register: firstip
+  changed_when: false
+- name: Set endpoint's port suffix from the first IP address
+  ansible.builtin.set_fact:
+    port_suffix: "{{ (firstip.stdout | regex_replace('[^0-9]', '') | string)[-(site_ports_digits | int - site_ports_prefix | string | length):] }}"
+
 
 - name: Write wg0.conf
   become: true
-  ansible.builtin.copy:
-    src: "{{ workspace }}/tn_bastion/code/one/cac/02_install/wg0.conf.j2"
+  ansible.builtin.template:
+    src: "{{ workspace }}/tn_bastion/code/one/cac/02_install/templates/wg0.conf.j2"
     dest: /etc/wireguard/wg0.conf
     owner: root
     group: root
     mode: '0600'
+
+- name: Add VPN clients
+  include_tasks: "{{ workspace }}/tn_bastion/code/one/cac/02_install/vpn_client.yaml"
+  vars:
+    client: "{{ item }}"
+  loop: "{{ range(1, one_bastion_vpn_clients + 1) | list }}"
+
+
+# TODO systemctl enable --now wg-quick@wg0.service
 
 # - name: Get remote VPN config file content
 #   become: true

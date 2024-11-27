@@ -74,16 +74,9 @@
     - name: Setup wireguard VPN
       ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/wireguard.yaml"
 
-    # TODO
-    # - name: Fetch VPN config
-    #   ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/get_vpn_client_tunnel.yaml"
-    #   when: site_hypervisor == "one"
-
     - name: Stop playbook execution
       ansible.builtin.fail:
         msg: "The playbook execution will fail now. This is totally intended."
-
-
 
 
 - name: "STAGE 4: Publish execution results"

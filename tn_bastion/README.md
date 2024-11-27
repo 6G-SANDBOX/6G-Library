@@ -10,3 +10,6 @@ It manages external access to the TN and hosting various networking services suc
 - VPN Server
 
 NOTE: Current tn_bastion only hosts the VPN Server
+
+
+KNOWN LIMITATIONS: You can only be connected to one TN at the same time

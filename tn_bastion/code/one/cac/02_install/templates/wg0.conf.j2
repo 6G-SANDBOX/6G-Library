@@ -1,20 +1,18 @@
 # Wireguard VPN configuration based on script https://github.com/Nyr/wireguard-install
 # Copyright (c) 2020 Nyr. Released under the MIT License.
 #
-# Do not alter the commented lines
-# They are used by wireguard-install
-# ENDPOINT ${ip}
+# ENDPOINT {{ site_public_ip }}
 
 [Interface]
 Address = 10.7.0.1/24
 PrivateKey = {{ server_privatekey }}
-ListenPort = ${port}
+ListenPort = {{ site_ports_prefix | string + port_suffix }}
 
-PostUp = nft add rule inet wireguard input udp dport ${port} counter accept
+PostUp = nft add rule inet wireguard input udp dport {{ site_ports_prefix | string + port_suffix }} counter accept
 PostUp = nft add rule inet wireguard forward iifname %i counter accept
 PostUp = nft add rule inet wireguard forward oifname %i counter accept
 PostUp = nft add rule inet wireguard forward ct state related,established counter accept
-PostDown = nft delete rule inet wireguard input udp dport ${port} counter accept
+PostDown = nft delete rule inet wireguard input udp dport {{ site_ports_prefix | string + port_suffix }} counter accept
 PostDown = nft delete rule inet wireguard forward iifname %i counter accept
 PostDown = nft delete rule inet wireguard forward oifname %i counter accept
 PostDown = nft delete rule inet wireguard forward ct state related,established counter accept

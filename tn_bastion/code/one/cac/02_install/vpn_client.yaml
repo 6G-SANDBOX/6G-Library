@@ -1,0 +1,41 @@
+---
+
+### octet = client + 1
+
+- name: Generate private key for the VPN client
+  ansible.buildin.command: wg genkey
+  register: client_privatekey
+  changed_when: false
+
+- name: Generate public key for the VPN client
+  ansible.buildin.command: wg pubkey
+  stdin: "{{ client_privatekey.stdout }}"
+  register: client_publickey
+  changed_when: false
+
+- name: Generate pre-shared key for the VPN client
+  ansible.buildin.command: wg genpsk
+  register: client_psk
+  changed_when: false
+
+- name: Configure client on the server
+  become: true
+  lineinfile:
+    path: /etc/wireguard/wg0.conf
+    insertafter: EOF
+    line: |
+      # BEGIN_PEER wg_client{{ client }}
+      [Peer]
+      PublicKey = {{ client_publickey.stdout }}
+      PresharedKey = {{ client_psk.stdout }}
+      AllowedIPs = 10.7.0.{{ client + 1 }}/32
+      # END_PEER wg_client{{ client }}
+
+- name: "Write wg_client{{ client }} configuration file"
+  become: true
+  ansible.builtin.template:
+    src: "{{ workspace }}/tn_bastion/code/one/cac/02_install/templates/client.conf.j2"
+    dest: "/home/jenkins/wg_client{{ client }}.conf"
+    owner: jenkins
+    group: jenkins
+    mode: '0640'
