@@ -2,7 +2,7 @@
 - name: Append new commponent's name and IP into a .ssh/config.d/ file
   community.general.ssh_config:
     host: "{{ tn_id }}-{{ entity_name }}-{{ item.key }}"
-    hostname: "{{ item.value | default('ERROR_ASSIGNING_IP') }}"
+    hostname: "{{ item.value | default('ERROR_ASSIGNING_IP', true) }}"
     proxyjump: "{% if item.key.startswith('vnf') %}{{ tn_id }}-tn_bastion{% else %}{{ tn_id }}-{{ entity_name }}-vnf_0{% endif %}"
     remote_user: "root"
     identity_file: "/var/lib/jenkins/.ssh/id_ed25519"

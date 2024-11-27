@@ -13,8 +13,8 @@ one_bastion_memory: 1024
 one_bastion_disk: 5120
 
 one_bastion_dns_password: "admin"
-one_bastion_dns_forwarders: "{{ site_dns | default('8.8.8.8,1.1.1.1') }}"
-one_bastion_dns_domain: "{{ tn_id }}.{{ site_domain | default('tndomain.internal') }}"
+one_bastion_dns_forwarders: "{{ site_dns | default('8.8.8.8,1.1.1.1', true) }}"
+one_bastion_dns_domain: "{{ tn_id }}.{{ site_domain | default('tndomain.internal', true) }}"
 one_bastion_routemanager_token: ""
 one_bastion_routemanager_port: 8172
 one_bastion_vpn_clients: 1

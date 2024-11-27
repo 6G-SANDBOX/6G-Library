@@ -9,6 +9,6 @@ PrivateKey = {{ client_privatekey.stdout }}
 [Peer]
 PublicKey = {{ server_publickey.stdout }}
 PresharedKey = {{ client_psk.stdout }}
-AllowedIPs = {{ one_bastion_vpn_allowedips | default(bastion_subnets[1]) }}
+AllowedIPs = {{ one_bastion_vpn_allowedips | default(bastion_subnets[1], true) }}
 Endpoint = {{ site_public_ip }}
 PersistentKeepalive = 25
