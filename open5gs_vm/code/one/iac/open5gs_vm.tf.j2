@@ -36,8 +36,9 @@ nic {
   depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
 }
 
+{% if one_open5gs_vm_internal_vnet | length >= 1 %}
 resource "opennebula_virtual_network_address_range" "amf_ip" {
-  count              = length(one_open5gs_vm_internal_vnet) >= 1 ? 1 : 0
+  count              = 1
   virtual_network_id = opennebula_virtual_network.{{ one_open5gs_vm_internal_vnet[0] }}.id
   ar_type            = "IP4"
   size               = 1
@@ -45,9 +46,11 @@ resource "opennebula_virtual_network_address_range" "amf_ip" {
 
   hold_ips = ["{{ one_open5gs_vm_amf_ip }}"]
 }
+{% endif %}
 
-resource "opennebula_virtual_network_address_range" "upf_ip" {
-  count              = length(one_open5gs_vm_internal_vnet) == 1 ? 1 : 0
+{% if one_open5gs_vm_internal_vnet | length == 1 %}
+resource "opennebula_virtual_network_address_range" "upf_ip_1" {
+  count              = 1
   virtual_network_id = opennebula_virtual_network.{{ one_open5gs_vm_internal_vnet[0] }}.id
   ar_type            = "IP4"
   size               = 1
@@ -55,9 +58,11 @@ resource "opennebula_virtual_network_address_range" "upf_ip" {
 
   hold_ips = ["{{ one_open5gs_vm_upf_ip }}"]
 }
+{% endif %}
 
-resource "opennebula_virtual_network_address_range" "upf_ip" {
-  count              = length(one_open5gs_vm_internal_vnet) >= 2 ? 1 : 0
+{% if one_open5gs_vm_internal_vnet | length >= 2 %}
+resource "opennebula_virtual_network_address_range" "upf_ip_2" {
+  count              = 1
   virtual_network_id = opennebula_virtual_network.{{ one_open5gs_vm_internal_vnet[1] }}.id
   ar_type            = "IP4"
   size               = 1
@@ -65,6 +70,7 @@ resource "opennebula_virtual_network_address_range" "upf_ip" {
 
   hold_ips = ["{{ one_open5gs_vm_upf_ip }}"]
 }
+{% endif %}
 
 output "{{ entity_name }}-id" {
   description = "OpenNebula VM ID"
