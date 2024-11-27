@@ -6,7 +6,8 @@
 
 - name: Generate public key for the VPN server
   ansible.builtin.command: wg pubkey
-  stdin: "{{ server_privatekey }}"
+  args:
+    stdin: "{{ server_privatekey.stdout }}"
   register: server_publickey
   changed_when: false
 
@@ -30,7 +31,7 @@
     mode: '0600'
 
 - name: Add VPN clients
-  include_tasks: "{{ workspace }}/tn_bastion/code/one/cac/02_install/vpn_client.yaml"
+  include_tasks: "{{ workspace }}/tn_bastion/code/one/cac/02_install/wg_client.yaml"
   vars:
     client: "{{ item }}"
   loop: "{{ range(1, one_bastion_vpn_clients + 1) | list }}"

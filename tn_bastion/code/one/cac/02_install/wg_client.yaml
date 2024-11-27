@@ -9,7 +9,8 @@
 
 - name: Generate public key for the VPN client
   ansible.builtin.command: wg pubkey
-  stdin: "{{ client_privatekey.stdout }}"
+  args:
+    stdin: "{{ client_privatekey.stdout }}"
   register: client_publickey
   changed_when: false
 
