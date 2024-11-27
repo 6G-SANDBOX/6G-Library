@@ -40,17 +40,17 @@
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_external_vnet + '-id'] | string }}"
         n2_vnet_id: >-
           {{
-            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[0] + '-ips'][entity_name]
+            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[0] + '-id'][entity_name]
           }}
         n3_vnet_id: >-
           {{
-            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[1] + '-ips'][entity_name]
+            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[1] + '-id'][entity_name]
             if one_open5gs_vm_internal_vnet | length > 1 else
-            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[0] + '-ips'][entity_name]
+            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[0] + '-id'][entity_name]
           }}
         n6_vnet_id: >-
           {{
-            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[2] + '-ips'][entity_name]
+            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[2] + '-id'][entity_name]
             if one_open5gs_vm_internal_vnet | length > 2 else ''
           }}
 
