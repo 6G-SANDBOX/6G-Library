@@ -1,11 +1,11 @@
 ---
 - name: Generate private key for the VPN server
-  ansible.buildin.command: wg genkey
+  ansible.builtin.command: wg genkey
   register: server_privatekey
   changed_when: false
 
 - name: Generate public key for the VPN server
-  ansible.buildin.command: wg pubkey
+  ansible.builtin.command: wg pubkey
   stdin: "{{ server_privatekey }}"
   register: server_publickey
   changed_when: false
