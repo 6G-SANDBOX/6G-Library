@@ -121,13 +121,13 @@ input:
   one_open5gs_vm_amf_ip:
     description: Address to expose the Core Access and Mobility Management Function (AMF). Requires to be part of the oneKE's one_oneKE_metallb_range
     type: str
-    default_value: "10.21.12.200"
+    default_value: "10.10.10.200"
     required_when: false
 
   one_open5gs_vm_upf_ip:
     description: Address to expose the Core User Plane Function (UPF). Requires to be part of the oneKE's one_oneKE_metallb_range
     type: str
-    default_value: "10.21.12.201"
+    default_value: "10.10.10.201"
     required_when: false
 
   one_open5gs_vm_ue_count:

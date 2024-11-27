@@ -5,33 +5,38 @@
     install_webgui: False
     update_netplan: False
     apt_upgrade: False
-    n2_ip: "{{ ips_dict[1]['ip'] if ips_dict|length > 1 else ips_dict[0]['ip'] }}"
-    n3_ip: "{{ ips_dict[2]['ip'] if ips_dict|length > 2 else ips_dict[1].ip if ips_dict|length > 1 else ips_dict[0]['ip'] }}"
     #n6_ip:
     ue_subnet: "{{ one_open5gs_vm_ue_subnet | default('10.45.0.0/16') }}"
     mcc: "{{ one_open5gs_vm_mcc | default('001') }}"
     mnc: "{{ one_open5gs_vm_mnc | default('01') }}"
-    slice_sd: "{{ one_open5gs_vm_s_nssai_sd | default('000001') }}"
-    ue_ki: "{{ one_open5gs_vm_key | default('465B5CE8B199B49FAA5F0A2EE238A6BC') }}"
+    msin: "{{ one_open5gs_vm_msin | default('0000000001') }}"
+    ue_key: "{{ one_open5gs_vm_key | default('465B5CE8B199B49FAA5F0A2EE238A6BC') }}"
     ue_opc: "{{ one_open5gs_vm_opc | default('E8ED289DEBA952E4283B54E88E6183CA') }}"
-    ue_dnn: "{{ one_open5gs_vm_apn | default('internet') }}"
-    ue_msin: "{{ one_open5gs_vm_msin | default('0000000001') }}"
+    ue_apn: "{{ one_open5gs_vm_apn | default('internet') }}"
+    ue_tac: "{{ one_open5gs_vm_tac | default('200') }}"
+    s_nssai_sst: "{{ one_open5gs_vm_s_nssai_sst | default('1') }}"
+    s_nssai_sd: "{{ one_open5gs_vm_s_nssai_sd | default('000001') }}"
+    n2_ip: "{{ one_open5gs_vm_amf_ip }}"
+    n3_ip: "{{ one_open5gs_vm_upf_ip }}"
     ue_count: "{{ one_open5gs_vm_ue_count | default('20') }}"
   block:
     - name: debug input Variables
       debug:
         msg:
-          - "ips_dict: {{ ips_dict | default('UNDEFINED') }}"
           - "n2_ip: {{ n2_ip }}"
           - "n3_ip: {{ n3_ip }}"
           - "ue_subnet: {{ ue_subnet }}"
           - "mcc: {{ mcc }}"
           - "mnc: {{ mnc }}"
-          - "slice_sd: {{ slice_sd }}"
-          - "ue_ki: {{ ue_ki }}"
+          - "msin: {{ msin }}"
+          - "ue_key: {{ ue_key }}"
           - "ue_opc: {{ ue_opc }}"
-          - "ue_dnn: {{ ue_dnn }}"
-          - "ue_msin: {{ ue_msin }}"
+          - "ue_apn: {{ ue_apn }}"
+          - "ue_tac: {{ ue_tac }}"
+          - "s_nssai_sst: {{ s_nssai_sst }}"
+          - "s_nssai_sd: {{ s_nssai_sd }}"
+          - "n2_ip: {{ n2_ip }}"
+          - "n3_ip: {{ n3_ip }}"
           - "ue_count: {{ ue_count }}"
       when: debug
 

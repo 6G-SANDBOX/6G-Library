@@ -2,7 +2,7 @@
 
 ## [unreleased]
 ### Added
-- Inital version of the Open5GS VM component
+- Initial version of the Open5GS VM component.
 
 
 <!-- Change latest version value at every release -->

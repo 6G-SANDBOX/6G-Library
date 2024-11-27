@@ -37,22 +37,22 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_networks[0] + '-id'] | string }}"
-        ips_dict: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] | dict2items(key_name='id', value_name='ip') }}"
-
-    - name: "DEBUG: show variables"
-      debug:
-        msg:
-          - "datatype of ips: {{ ips | type_debug }}"
-          - "ips: {{ ips }}"
-          - "datatype of ips_dict: {{ ips_dict | type_debug }}"
-          - "ips_dict: {{ ips_dict }}"
-      when: debug
-
-    - name: "DEBUG: Display all variables/facts known for a host"
-      ansible.builtin.debug:
-        var: hostvars[inventory_hostname]
-      when: False
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_external_vnet + '-id'] | string }}"
+        n2_vnet_id: >-
+          {{
+            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[0] + '-ips'][entity_name]
+          }}
+        n3_vnet_id: >-
+          {{
+            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[1] + '-ips'][entity_name]
+            if one_open5gs_vm_internal_vnet | length > 1 else
+            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[0] + '-ips'][entity_name]
+          }}
+        n6_vnet_id: >-
+          {{
+            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[2] + '-ips'][entity_name]
+            if one_open5gs_vm_internal_vnet | length > 2 else ''
+          }}
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
@@ -64,6 +64,20 @@
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
 
+    # - name: Configure network interfaces on the VM
+    #   become: true
+    #   template:
+    #     src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-open5gs.network.j2"
+    #     dest: /etc/netplan/99-open5gs.yaml
+    #   vars:
+    #     gateway: "{{ access_vnet_id }}"
+    #     n2_ip: "{{ n2_vnet_id }}"
+    #     n3_ip: "{{ n3_vnet_id }}"
+    #     n6_ip: "{{ n6_vnet_id }}"
+  
+    # - name: Apply Netplan configuration immediately
+    #   become: true
+    #   command: netplan apply
 
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "open5gs_vm"
@@ -108,8 +122,6 @@
       when: False
 
     - name: Install Open5GS and MongoDB
-      vars:
-        ips_dict: "{{ hostvars['localhost']['ips_dict'] }}"
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install-open5gs.yml"
 
 
@@ -122,8 +134,6 @@
       ansible.builtin.set_fact:
         open5gs_metadata_dict: >-
           {
-            'oneKE': '',
-            'proxy': '',
             'mcc': '{{ one_open5gs_vm_mcc }}',
             'mnc': '{{ one_open5gs_vm_mnc }}',
             'msin': '{{ one_open5gs_vm_msin }}',

@@ -21,7 +21,12 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     driver   = "qcow2"
   } #}
 
-{% for network in one_open5gs_vm_networks %}
+nic {
+  model           = "virtio"
+  network_id      = opennebula_virtual_network.{{ one_open5gs_vm_external_vnet }}.id
+}
+
+{% for network in one_open5gs_vm_internal_vnet %}
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
