@@ -5,7 +5,7 @@
 
 [Interface]
 Address = 10.7.0.1/24
-PrivateKey = {{ server_privatekey }}
+PrivateKey = {{ server_privatekey.stdout }}
 ListenPort = {{ site_ports_prefix | string + port_suffix }}
 
 PostUp = nft add rule inet wireguard input udp dport {{ site_ports_prefix | string + port_suffix }} counter accept
