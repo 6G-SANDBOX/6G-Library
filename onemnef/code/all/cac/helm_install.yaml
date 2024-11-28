@@ -9,8 +9,6 @@
     src:  "{{ workspace }}/{{ component_type }}/code/all/cac/"    
     dest: /tmp/helms/
 
-
-
 - name: Deploy Onemnef helm
   kubernetes.core.helm:
     kubeconfig: /etc/rancher/rke2/rke2.yaml
