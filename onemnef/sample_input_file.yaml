@@ -2,11 +2,11 @@
 
 one_onemnef_oneKE: "oneKE-k8s"
 
-mqtt_host: "message-broker.onemnef.com" 
-mongodb_host: "db.onemnef.com" 
-nwg_ingress_fqdn: "ngw.onemnef.com" 
+mqtt_host: "message-broker.onemnef" 
+mongodb_host: "db.onemnef" 
+nwg_ingress_fqdn: "ngw.onemnef" 
 # nwg_ip_address: "nwg_ip_address"
-sgw_host: "sgw.onemnef.com" 
+sgw_host: "sgw.onemnef" 
 use_capif: false 
 capif_host: false 
 capif_http_port: 80 

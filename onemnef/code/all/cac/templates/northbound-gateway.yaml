@@ -63,7 +63,7 @@ spec:
 ---
 apiVersion: v1
 data:
-  config.init: |
+  config.ini: |
     [general]
     logs = True
     heartbeat = False
