@@ -48,3 +48,6 @@ spec:
             - 
               containerPort: 8883
               name: mqttssl
+      imagePullSecrets: 
+        - 
+          name: {{ .Values.global.imagePullSecrets.name }}
