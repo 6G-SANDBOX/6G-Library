@@ -2,10 +2,10 @@
 global: # Parameters for ALL the charts and sub-charts 
   registry: dockerhub.mobilesandbox.cloud:9443/onesource/ # Image Registry
   tlsCertificate: onemnef-tls-secret
-  harborUser: "{{ site_available_components.onemnef.harbor_user }}"
-  harborPassword: "{{ site_available_components.onemnef.harbor_password }}"
+  # harborUser: "{{ site_available_components.onemnef.harbor_user }}"
+  # harborPassword: "{{ site_available_components.onemnef.harbor_password }}"
   imagePullSecrets:
-    name: onemnef-harbor-secret # GitLab token with read-only permissions for pulling the images from the container registry
+    name: harbor-onemnef-secret # GitLab token with read-only permissions for pulling the images from the container registry
   mqtt_host: "{{ mqtt_host }}"
   mqtt_port: 8883
 
