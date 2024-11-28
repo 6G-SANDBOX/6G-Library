@@ -70,7 +70,6 @@
             'bsf_port': '{{ bsf_port }}',
             'udm_host': '{{ udm_host }}',
             'udm_port': '{{ udm_port }}',
-            'core_ip': '{{ core_ip }}',
 
           }
 
