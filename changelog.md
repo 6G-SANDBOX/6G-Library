@@ -1,16 +1,17 @@
 # Changelog
 
-## [v0.3.0]
+## [v0.3.0] - 2024-10-16
 ### Added
+- New component ks8500_runner
 - New component stf_ue
 - New component ocf
 - New component xrext
 - New component elcm
+- New components opensand_gw, opensand_sat and opensand_st
 - New common task `publish_fail_results.yaml`, abstracting tasks from `terraform_apply.yaml`
 - New input variable `one_oneKE_nginx_passthough` in component `oneKE` to enable [SSL/TLS passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough).
 - New output variable `metadata_dict` from component `oneKE` to share its input variables to future components.
 ### Changed
-- Open5GS upgraded to version `v2.7.1`.
 - Component nokia_radio_uma renamed to nokia_radio.
 - Comments modified in .dummy_component to make it less confusing. Also out variable naming recommendation is reflected on public.yaml
 - Ansible hostname from created components no longer contain variables. It only added complexity without benefits.
@@ -21,12 +22,12 @@
 - Removed `pipeline-parameters.yaml` from playbook execution. Pipeline parameters are now sent as extraVars when executing the ansible playbook.
 ### Fixed
 - Component nokia_radio JSON callback is now correctly functional
-- Fixed image in ueransim README.md and ok_result.md
+- Picture in ueransim README.md and ok_result.md not rendering properly
 - tnuser login not working in OneKE vnf_0, as account was created locked
 
 ## [v0.2.1] - 2024-09-02
 ### Added
-- - New component nokia_radio_uma
+- New component nokia_radio_uma
 ### Changed
 - Updated description of pipeline parameters in TN_DEPLOY.groovy and TN_DESTROY.groovy
 ### Fixed
