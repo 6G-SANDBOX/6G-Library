@@ -65,10 +65,6 @@
         ansible_user: "jenkins"
       loop: "{{ switch_ips | dict2items }}"
 
-    - name: Debug switch_ips
-      ansible.builtin.debug:
-        var: switch_ips
-
     # Add collector VM to Ansible Inventory
     - name: Add collector to Ansible Inventory
       ansible.builtin.add_host:
@@ -76,18 +72,6 @@
         ansible_host: "{{ collector_ips[collector_first_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
-
-    - name: Debug collector_ips
-      ansible.builtin.debug:
-        var: collector_ips
-
-    - name: Debug collector_first_vnet_id
-      ansible.builtin.debug:
-        var: collector_ips[collector_first_vnet_id]
-    
-    - name: Debug collector_ips[collector_first_vnet_id]
-      ansible.builtin.debug:
-        var: collector_ips[collector_first_vnet_id]
 
     #- name: Add VMs to SSH config file in the Jenkins-master for debugging purposes
     #  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
