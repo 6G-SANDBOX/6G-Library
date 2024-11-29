@@ -137,11 +137,11 @@
       ansible.builtin.set_fact:
         int_p4_sw_metadata_dict: >-
           {
-            'switch_ips': '{{ switch_ips }}',
-            'switch_ids': '{{ switch_ids | to_json}}',
-            'collector_ip': '{{ collector_ips[collector_first_vnet_id] }}',
-            'collector_id': '{{ collector_id }}',
-            'bastion_ip': '{{ bastion_ip }}'
+            'switch_ips': "{{ switch_ips }}",
+            'switch_ids': "{{ switch_ids | to_json}}",
+            'collector_ip': "{{ collector_ips[collector_first_vnet_id] }}",
+            'collector_id': "{{ collector_id }}",
+            'bastion_ip': "{{ bastion_ip }}"
           }
 
     - name: Publish node IDs and IPs as terraform outputs
@@ -149,7 +149,7 @@
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-metadata"
-            value: "{{ int_p4_sw_metadata_dict }}"
+            value: "{{ int_p4_sw_metadata_dict | to_json }}"
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
