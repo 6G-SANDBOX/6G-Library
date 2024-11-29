@@ -137,11 +137,11 @@
       ansible.builtin.set_fact:
         int_p4_sw_metadata_dict: >-
           {
-            'switch_ips': "{{ switch_ips }}",
-            'switch_ids': "{{ switch_ids }}",
-            'collector_ip': "{{ collector_ips[collector_first_vnet_id] }}",
-            'collector_id': "{{ collector_id }}",
-            'bastion_ip': "{{ bastion_ip }}"
+            'switch_ips': '{{ switch_ips }}',
+            'switch_ids': '{{ switch_ids | to_json}}',
+            'collector_ip': '{{ collector_ips[collector_first_vnet_id] }}',
+            'collector_id': '{{ collector_id }}',
+            'bastion_ip': '{{ bastion_ip }}'
           }
 
     - name: Publish node IDs and IPs as terraform outputs
