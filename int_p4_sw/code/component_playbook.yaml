@@ -143,8 +143,8 @@
               bastion_ip: "{{ bastion_ip }}"
 
     - name: Escape JSON string for Terraform
-    ansible.builtin.set_fact:
-      int_p4_sw_metadata_json_escaped: "{{ int_p4_sw_metadata_dict | to_json | replace('\"', '\\\"') }}"
+      ansible.builtin.set_fact:
+        int_p4_sw_metadata_json_escaped: "{{ int_p4_sw_metadata_dict | to_json | replace('\"', '\\\"') }}"
 
     - name: Publish node IDs and IPs as terraform outputs
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
