@@ -14,12 +14,9 @@
     state: present
     update_cache: yes
 
-- name: Wait for dpkg lock to be released
-  wait_for:
-    path: /var/lib/dpkg/lock-frontend
-    state: absent
-    delay: 10
-    timeout: 300
+- name: Wait for 5 seconds
+  pause:
+    seconds: 5
 
 - name: Install docker engine
   block:
