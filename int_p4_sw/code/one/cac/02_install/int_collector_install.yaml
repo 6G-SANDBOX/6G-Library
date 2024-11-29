@@ -32,5 +32,5 @@
 - name: Run InDBClient.py
   become: true
   shell:
-    cmd: "nohup python3 InDBClient.py {{ hostvars['localhost']['collector_interface'] }} -i {{ hostvars['localhost']['collector_port'] }} -l 10 -l_rap 10 --clear y > /var/log/int_collector.log 2>&1 &"
+    cmd: "nohup python3 InDBClient.py {{ hostvars['localhost']['one_int_p4_sw_collector']['config']['collector_interface'] }} -i {{ hostvars['localhost']['one_int_p4_sw_collector']['config']['collector_port'] }} -l 10 -l_rap 10 --clear y > /var/log/int_collector.log 2>&1 &"
     chdir: ~/int-collector/collector
