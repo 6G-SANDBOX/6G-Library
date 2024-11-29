@@ -139,7 +139,7 @@
           {
             'switch_ips': "{{ switch_ips }}",
             'switch_ids': "{{ switch_ids }}",
-            'collector_ip': "{{ collector_ips[collector_vnet_id] }}",
+            'collector_ip': "{{ collector_ips[collector_first_vnet_id] }}",
             'collector_id': "{{ collector_id }}",
             'bastion_ip': "{{ bastion_ip }}"
           }
@@ -158,4 +158,4 @@
           id: "{{ id | b64encode }}"
           ips: "{{ ips | b64encode }}"
           switch_ips: "{{ switch_ips | to_json | b64encode }}"
-          collector_ip: "{{ collector_ips[collector_vnet_id] | b64encode }}"
+          collector_ip: "{{ collector_ips[collector_first_vnet_id] | b64encode }}"
