@@ -1,0 +1,116 @@
+{
+    "Phoenix": {
+        "Platform": {
+            "Debug": {
+                "level": 5
+            },
+            "ProcessingUnitsMgmt": 0,
+            "MemoryMgmt": {
+                "chunk_size": 4096,
+                "mem_global": {"size_value": 8, "size_metric": "MB"},
+                "mem_session": {"size_value": 8, "size_metric": "MB"},
+                "mem_transaction": {"size_value": 16, "size_metric": "MB"},
+                "mem_packet": {"size_value": 8, "size_metric": "MB"}
+            },
+            "Workerpool": { "count": 2, "queue_size": 8 }
+        },
+        "Module": [
+            {
+                "name": "Command",
+                "version": 1,
+                "binaryFile": "modules/command/command.so",
+                "config": {
+                    "GreetingText": "AUSF>",
+                    "DisablePrompt":"%COMMAND_DISABLED",
+                    "Acceptor": [
+                        { "type": "udp", "port": 10000, "bind": "%AUSF_MGMT_IP" }
+                    ]
+                }
+            },
+            {
+                "name": "httpd_h2o",
+                "version": 1,
+                "binaryFile": "modules/httpd_h2o/httpd_h2o.so",
+                "config": {
+                    "listeners": [ { "host": "%AUSF_CP_IP", "port": 8080 },{ "host": "0.0.0.0", "port": 13025 } ],
+                    "servers":[ { "server_name": "default" } ]
+                }
+            },
+            {
+                "name": "http_client",
+                "version": 1,
+                "binaryFile": "modules/http_client/http_client.so",
+                "config": {
+                    "bind_interface": "%AUSF_CP_IP"
+                }
+            },
+            {
+                "name": "json_rpc",
+                "ignore": "%DISABLE_REMOTE_COMMAND",
+                "version": 1,
+                "binaryFile": "modules/json_rpc/json_rpc.so",
+                "config": { }
+            },
+            {
+                "name": "remote_commandModule",
+                "ignore": "%DISABLE_REMOTE_COMMAND",
+                "version": 1,
+                "binaryFile": "modules/remote_command/remote_command.so",
+                "config": {
+                    "name": "AUSF"
+                }
+            },
+            {
+                "name": "ausf",
+                "version": 1,
+                "binaryFile": "modules/ausf/ausf.so",
+                "config": {
+                }
+            },
+            {
+                "name": "nrf_client",
+                "version": 1,
+                "binaryFile": "modules/nrf_client/nrf_client.so",
+                "config": {
+                    "nf_profile": {
+                        "nfType": "AUSF",
+                        "nfInstanceId": "e501fa69-b31a-47a4-ae32-7ae96a0cd1d1",
+                        "nfStatus": "REGISTERED",
+                        "plmnList": [
+                            {"mcc":"%MCC", "mnc":"%MNC"}
+                         ],
+                        "sNssais": [
+                            { "sst":1 },
+                            { "sst":1, "sd":"1" },
+                            { "sst":1, "sd":"d143a5", "comment": "Nokia example SD" }
+                        ]
+                    },
+                    "nf_instance": {
+                        "addr":"%AUSF_CP_IP",
+                        "port": 8080
+                    },
+                    "nrf_server": {
+                        "addr":"%NRF_CP_IP",
+                        "port": 8080
+                    },
+                	"subscription_path": "/nausf-nfm/v1/subscriptionCallback",
+                	"related_nf": ["UDM"],
+                	"enable_heartbeat": "%NRF_HB_ENABLE"
+                }
+            },
+            {
+                "name": "Monitoring",
+                "version": 1,
+                "binaryFile": "modules/monitoring/monitoring.so",
+                "config": {
+                    "Prometheus": {
+                        "listener": "%AUSF_MGMT_IP",
+                        "port": 9888,
+                        "register_memstat_to_metrics": true,
+                        "enabled": "%PROMETHEUS_ENABLED"
+                    }
+                }
+            }
+        ]
+    }
+}
