@@ -135,21 +135,23 @@
     # TODO: Check and add more metadata if needed (variables related to input files, etc.)
     - name: Define INT-P4 SW metadata dictionary
       ansible.builtin.set_fact:
-        int_p4_sw_metadata_dict: >-
-          {
-            'switch_ips': "{{ switch_ips }}",
-            'switch_ids': "{{ switch_ids | to_json}}",
-            'collector_ip': "{{ collector_ips[collector_first_vnet_id] }}",
-            'collector_id': "{{ collector_id }}",
-            'bastion_ip': "{{ bastion_ip }}"
-          }
+        int_p4_sw_metadata_dict:
+              switch_ips: "{{ switch_ips }}"
+              switch_ids: "{{ switch_ids }}"
+              collector_ip: "{{ collector_ips[collector_first_vnet_id] }}"
+              collector_id: "{{ collector_id }}"
+              bastion_ip: "{{ bastion_ip }}"
+
+    - name: Escape JSON string for Terraform
+    ansible.builtin.set_fact:
+      int_p4_sw_metadata_json_escaped: "{{ int_p4_sw_metadata_dict | to_json | replace('\"', '\\\"') }}"
 
     - name: Publish node IDs and IPs as terraform outputs
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-metadata"
-            value: "{{ int_p4_sw_metadata_dict | to_json }}"
+            value: "{{ int_p4_sw_metadata_json_escaped }}"
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
