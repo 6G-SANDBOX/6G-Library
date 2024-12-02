@@ -31,7 +31,7 @@ metadata:
     Ubuntu 22.04 LTS virtual machine with the ELCM installed.
     It also contains OpenTAP, InfluxDB and Grafana services installed.
   hypervisors: [one]
-  appliance: https://marketplace.mobilesandbox.cloud:9443//appliance/service_ELCM/download/0
+  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM
 
 ####################################
 ## Component input
