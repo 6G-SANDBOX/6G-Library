@@ -12,6 +12,10 @@ p4runtime:
     proto: '/build/int.proto.txt'
     json: '/build/int.json'
 
+clone_session:
+  egress_port: 3
+  instance: 1
+
 tables:
   forward:
 {% for rule in switch_config.int_config.forward_rules %}
