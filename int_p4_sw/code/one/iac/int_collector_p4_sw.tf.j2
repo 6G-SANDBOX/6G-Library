@@ -24,6 +24,9 @@ resource "opennebula_virtual_machine" "{{ entity_name }}_collector" {
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
+    {% if network != 'tn_vxlan' %}
+    virtio_queues   = 4
+    {% endif %}
   }
 {% endfor %}
 
