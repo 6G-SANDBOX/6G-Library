@@ -27,7 +27,13 @@ resource "opennebula_virtual_machine" "{{ entity_name }}_collector" {
   }
 {% endfor %}
 
-  depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
+  depends_on = [ 
+    opennebula_virtual_network_address_range.tn_vxlan,
+    {% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
+    {% set switch_index = loop.index0 %}
+    opennebula_virtual_machine.{{ entity_name }}_{{ switch_index }}{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
 }
 
 output "{{ entity_name }}_collector-id" {
