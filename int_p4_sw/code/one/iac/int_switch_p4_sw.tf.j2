@@ -20,7 +20,12 @@ resource "opennebula_virtual_machine" "{{ entity_name }}_{{ switch_index }}" {
   }
 {% endfor %}
 
-  depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
+  depends_on = [
+    {% if switch_index > 0 %}
+    opennebula_virtual_machine.{{ entity_name }}_{{ switch_index - 1 }},
+    {% endif %}
+    opennebula_virtual_network_address_range.tn_vxlan
+  ]
 }
 
 {% endfor %}
