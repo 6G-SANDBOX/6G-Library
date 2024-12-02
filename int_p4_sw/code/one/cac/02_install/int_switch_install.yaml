@@ -16,7 +16,7 @@
 
 - name: Wait for 5 seconds
   pause:
-    seconds: 5
+    seconds: 10
 
 - name: Install docker engine
   block:
