@@ -18,11 +18,11 @@ clone_session:
 
 tables:
   forward:
-    {% for rule in switch_config.int_config.forward_rules %}
-    - dst_addr: '{{ rule.dst_addr }}&&&0xFFFFFFFFFFFF'
-      port: '{{ rule.port }}'
-      priority: {{ rule.priority }}
-    {% endfor %}
+  {% for rule in switch_config.int_config.forward_rules %}
+  - dst_addr: '{{ rule.dst_addr }}&&&0xFFFFFFFFFFFF'
+    port: '{{ rule.port }}'
+    priority: {{ rule.priority }}
+  {% endfor %}
   int_transit:
     match_all: '1&&&1'
     switch_id: '{{ switch_config.switch_id }}'

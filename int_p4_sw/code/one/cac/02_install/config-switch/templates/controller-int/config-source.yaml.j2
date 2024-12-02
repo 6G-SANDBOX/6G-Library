@@ -14,11 +14,11 @@ p4runtime:
 
 tables:
   forward:
-    {% for rule in switch_config.int_config.forward_rules %}
-    - dst_addr: '{{ rule.dst_addr }}&&&0xFFFFFFFFFFFF'
-      port: '{{ rule.port }}'
-      priority: {{ rule.priority }}
-    {% endfor %}
+  {% for rule in switch_config.int_config.forward_rules %}
+  - dst_addr: '{{ rule.dst_addr }}&&&0xFFFFFFFFFFFF'
+    port: '{{ rule.port }}'
+    priority: {{ rule.priority }}
+  {% endfor %}
   int_source:
     activate_source:
       ingress_port: '{{ switch_config.int_config.ingress_port }}'
@@ -31,3 +31,4 @@ tables:
     match_all: '1&&&1'
     switch_id: '{{ switch_config.switch_id }}'
     priority: 1
+    
