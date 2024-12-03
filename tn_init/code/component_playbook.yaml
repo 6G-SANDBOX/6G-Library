@@ -66,7 +66,7 @@
     - name: Create an ed25519 ssh key pair to access the future Trial Network components
       ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/ssh_keypair.yaml"
 
-    # TODO: add record for the tn_bastion itself?
+    # TODO: Should I add a record for the tn_bastion itself?
 
     - name: Import tasks to forbid all unauthorized access to private IPs
       ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/nftables.yaml"
@@ -74,9 +74,11 @@
     - name: Setup wireguard VPN
       ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/wireguard.yaml"
 
-    - name: Stop playbook execution
-      ansible.builtin.fail:
-        msg: "The playbook execution will fail now. This is totally intended."
+    - name: Remove /etc/resolv.conf file. All resolutions will be done through Technitium forwarders
+      become: true
+      ansible.builtin.file:
+        path: /etc/resolv.conf
+        state: absent
 
 
 - name: "STAGE 4: Publish execution results"
@@ -98,6 +100,48 @@
         one_bastion_dns_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_TOKEN }}"
         one_bastion_routemanager_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_ROUTEMANAGER_TOKEN }}"
 
+    - name: Upload private ssh key to S3
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/misc-{{ entity_name }}-id_ed25519"
+        content_base64: "{{ tn_ssh_private_key.content }}"
+        encrypt: false
+        validate_certs: false
+
+    - name: Upload public ssh key to S3
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/misc-{{ entity_name }}-id_ed25519.pub"
+        content_base64: "{{ tn_ssh_public_key.content }}"
+        encrypt: false
+        validate_certs: false
+
+    - name: Debug wireguard configs
+      ansible.builtin.debug:
+        msg: "{{ hostvars[entity_name]['wg_clients'] }}"
+      when: debug
+
+    - name: Upload wireguard client configs to S3
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/misc-{{ entity_name }}-wg_client{{ item.item }}.conf"
+        content_base64: "{{ item.content }}"
+        encrypt: false
+        validate_certs: false
+      loop: "{{ hostvars[entity_name]['wg_clients']['results'] }}"
+
     - name: Publish aditional information as global terraform outputs
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
@@ -116,8 +160,8 @@
           tn_vxlan_id: "{{ tn_vxlan_id | b64encode }}"
           tn_bastion_ips: "{{ tn_bastion_ips | b64encode }}"
           tn_bastion_id: "{{ tn_bastion_id | b64encode }}"
-          tn_dns_token: "{{ one_bastion_dns_token }}"                     # TODO: referenciar en markdown
-          tn_routemanager_token: "{{ one_bastion_routemanager_token }}"   # TODO: referenciar en markdown
           tn_ssh_public_key: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
           tn_ssh_private_key: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"
           vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"
+          tn_dns_token: "{{ one_bastion_dns_token }}"                     # TODO: referenciar en markdown
+          tn_routemanager_token: "{{ one_bastion_routemanager_token }}"   # TODO: referenciar en markdown

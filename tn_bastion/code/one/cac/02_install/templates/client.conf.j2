@@ -3,12 +3,12 @@
 #
 [Interface]
 Address = 10.7.0.{{ client + 1 }}/24
-DNS = 10.7.0.1
+DNS = {{ ips.stdout.split()[1] }}
 PrivateKey = {{ client_privatekey.stdout }}
 
 [Peer]
 PublicKey = {{ server_publickey.stdout }}
 PresharedKey = {{ client_psk.stdout }}
 AllowedIPs = {{ one_bastion_vpn_allowedips | default(bastion_subnets[1], true) }}
-Endpoint = {{ site_public_ip }}
+Endpoint = {{ site_public_ip }}:{{ site_ports_prefix | string + port_suffix }}
 PersistentKeepalive = 25

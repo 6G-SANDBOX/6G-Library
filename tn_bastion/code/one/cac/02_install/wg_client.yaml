@@ -1,7 +1,4 @@
 ---
-
-### octet = client + 1
-
 - name: Generate private key for the VPN client
   ansible.builtin.command: wg genkey
   register: client_privatekey
@@ -40,3 +37,8 @@
     owner: jenkins
     group: jenkins
     mode: '0640'
+
+- name: Slurp generated file into an encoded variable
+  ansible.builtin.slurp:
+    src: "/home/jenkins/wg_client{{ client }}.conf"
+  register: wg_clients

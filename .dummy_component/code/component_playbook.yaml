@@ -148,15 +148,15 @@
   connection: local
   tasks:
     # You can publish files to the MINIO S3 Storage
-    - name: Upload kubeconfig to S3
+    - name: Upload file to S3
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put
         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/extra-kubeconfig-{{ entity_name }}.yaml"
-        src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
+        object: "{{ tn_id }}/misc-{{ entity_name }}-something.yaml"
+        content_base64: "{{ encoded_variable }}"
         encrypt: false
         validate_certs: false
 
@@ -182,5 +182,5 @@
           id: "{{ id | b64encode }}"
           node_ids: "{{ node_ids | b64encode }}"
           node_ips: "{{ node_ips | b64encode }}"
-          kubeconfig: "{{ kubeconfig | b64encode }}"
+          kubeconfig: "{{ kubeconfig }}"  # if it's already encoded
           skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"
