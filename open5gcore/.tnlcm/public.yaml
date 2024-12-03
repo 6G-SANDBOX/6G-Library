@@ -41,11 +41,18 @@ metadata:
 ## Component input
 ####################################
 input:
-  one_open5gcore_vm_networks:
+  one_open5gcore_vm_external_vnet:
     description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
-    type: "list[tn_vxlan or vnet]"
-    default_value: ["tn_vxlan"]
+    type: "tn_vxlan or vnet"
+    default_value: "tn_vxlan"
+    required_when: true
+
+  one_open5gcore_vm_internal_vnet:
+    description: Ordered list of Virtual Network names the VM will be part of. This networks will be used for n2 and n3. If empty the VM will use the `one_open5gcore_vm_external_vnet` for n2 and n3.
+    type: "list[vnet]"
+    default_value: ["vnet-n2"]
     required_when: false
+
   one_open5gcore_vm_size:
     description: |
       Select one type of instance according to your hardware requirements
@@ -118,13 +125,13 @@ input:
     required_when: false
 
   one_open5gcore_vm_amf_ip:
-    description: Address to expose the Core Access and Mobility Management Function (AMF). Requires to be part of the oneKE's one_oneKE_metallb_range
+    description: Address to expose the Core Access and Mobility Management Function (AMF). Requires to be part of the N2 networks range.
     type: str
     default_value: "10.10.10.200"
     required_when: false
 
   one_open5gcore_vm_upf_ip:
-    description: Address to expose the Core User Plane Function (UPF). Requires to be part of the oneKE's one_oneKE_metallb_range
+    description: Address to expose the Core User Plane Function (UPF). Requires to be part of the N3 networks range.
     type: str
     default_value: "10.10.10.201"
     required_when: false

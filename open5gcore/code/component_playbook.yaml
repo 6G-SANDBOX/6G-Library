@@ -37,16 +37,32 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gcore_vm_networks[0] + '-id'] | string }}"
-        ips_dict: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] | dict2items(key_name='id', value_name='ip') }}"
+        #ips_dict: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] | dict2items(key_name='id', value_name='ip') }}"
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gcore_vm_external_vnet + '-id'] }}"
+        n2_vnet_id: >-
+          {{
+            (terraform_outputs.stdout | from_json)[one_open5gcore_vm_internal_vnet[0] + '-id'] | string
+          }}
+        n3_vnet_id: >-
+          {{
+            (terraform_outputs.stdout | from_json)[one_open5gcore_vm_internal_vnet[1] + '-id'] | string
+            if one_open5gcore_vm_internal_vnet | length > 1 else
+            (terraform_outputs.stdout | from_json)[one_open5gcore_vm_internal_vnet[0] + '-id'] | string
+          }}
+        n6_vnet_id: >-
+          {{
+            (terraform_outputs.stdout | from_json)[one_open5gcore_vm_internal_vnet[2] + '-id'] | string
+            if one_open5gcore_vm_internal_vnet | length > 2 else ''
+          }}
 
     - name: "DEBUG: show variables"
       debug:
-        msg:
-          - "datatype of ips: {{ ips | type_debug }}"
-          - "ips: {{ ips }}"
-          - "datatype of ips_dict: {{ ips_dict | type_debug }}"
-          - "ips_dict: {{ ips_dict }}"
+        var:
+          - ips
+          - access_vnet_id
+          - n2_vnet_id
+          - n3_vnet_id
+          - n6_vnet_id
       when: debug
 
     - name: "DEBUG: Display all variables/facts known for a host"
@@ -83,21 +99,21 @@
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
 
-    - name: Create new user for experimenter access
-      become: true
-      ansible.builtin.user:
-        name: tnuser
-        shell: /bin/bash
-        groups: sudo
-        password: ''
-    - name: Set TN ssh key as authorized in new user
-      become: true
-      ansible.posix.authorized_key:
-        user: tnuser
-        state: present
-        key: "{{ item }}"
-      loop:
-        - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+    #- name: Create new user for experimenter access
+    #  become: true
+    #  ansible.builtin.user:
+    #    name: tnuser
+    #    shell: /bin/bash
+    #    groups: sudo
+    #    password: ''
+    #- name: Set TN ssh key as authorized in new user
+    #  become: true
+    #  ansible.posix.authorized_key:
+    #    user: tnuser
+    #    state: present
+    #    key: "{{ item }}"
+    #  loop:
+    #    - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
@@ -109,7 +125,7 @@
 
     - name: Configure open5gcore
       vars:
-        ips_dict: "{{ hostvars['localhost']['ips_dict'] }}"
+        vm_ips: "{{ hostvars['localhost']['ips'] | dict2items(key_name='id', value_name='ip') }}"
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/setup-open5gcore.yml"
 
 
@@ -136,6 +152,7 @@
             'amf_ip': '{{ hostvars['open5gcore_vm']['n2_ip'] }}',
             'upf_ip': '{{ hostvars['open5gcore_vm']['n3_ip'] }}',
             'ue_count': '{{ one_open5gcore_vm_ue_count }}'
+            'upf_xdp': '{{ one_open5gcore_vm_upf_xdp }}'
           }
 
     - name: Publish open5gcore metadata as terraform outputs"
