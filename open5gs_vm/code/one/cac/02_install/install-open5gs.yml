@@ -226,6 +226,7 @@
       template:
         src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-netplan-aliases.yaml.j2"
         dest: /etc/netplan/99-netplan-aliases.yaml
+        mode: '0600'
         backup: true
       register: netplan_changed
 
