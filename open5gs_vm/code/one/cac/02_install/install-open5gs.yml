@@ -47,6 +47,19 @@
       apt: upgrade=full
       when: apt_upgrade
 
+    - name: render ue subnet into 99-open5gs.network
+      template:
+        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-open5gs.network.j2"
+        dest: /etc/systemd/network/99-open5gs.network
+        backup: true
+      register: networkd_changed
+
+    - name: reload networkctl
+      ansible.builtin.command:
+        cmd: "networkctl reload"
+      changed_when: false
+      when: networkd_changed.changed
+
     - name: add MongoDB 6 PPA
       block:
         - name: MongoDB 6 |no apt key
@@ -208,19 +221,6 @@
       ansible.builtin.command:
         cmd: /etc/open5gs/add-test-ues.sh
       when: add_ue_script.changed
-
-    - name: render ue subnet into 99-open5gs.network
-      template:
-        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-open5gs.network.j2"
-        dest: /etc/systemd/network/99-open5gs.network
-        backup: true
-      register: networkd_changed
-
-    - name: reload networkctl
-      ansible.builtin.command:
-        cmd: "networkctl reload"
-      changed_when: false
-      when: networkd_changed.changed
 
     - name: render netplan aliases
       template:
