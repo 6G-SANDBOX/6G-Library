@@ -126,7 +126,7 @@
     - name: Configure open5gcore
       vars:
         vm_ips: "{{ hostvars['localhost']['ips'] | dict2items(key_name='id', value_name='ip') }}"
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/setup-open5gcore.yml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/setup-open5gcore.yaml"
 
 
 - name: "STAGE 4: Publish execution results"

@@ -48,4 +48,4 @@
       when: netplan_changed.changed
 
     - name: Configure open5gcore
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/configure-open5gcore.yml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/configure-open5gcore.yaml"
