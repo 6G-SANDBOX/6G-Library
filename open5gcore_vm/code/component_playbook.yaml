@@ -138,8 +138,6 @@
       ansible.builtin.set_fact:
         open5gcore_metadata_dict: >-
           {
-            'oneKE': '',
-            'proxy': '',
             'mcc': '{{ one_open5gcore_vm_mcc }}',
             'mnc': '{{ one_open5gcore_vm_mnc }}',
             'msin': '{{ one_open5gcore_vm_msin }}',
@@ -151,7 +149,7 @@
             's_nssai_sd': '{{ one_open5gcore_vm_s_nssai_sd }}',
             'amf_ip': '{{ hostvars['open5gcore_vm']['n2_ip'] }}',
             'upf_ip': '{{ hostvars['open5gcore_vm']['n3_ip'] }}',
-            'ue_count': '{{ one_open5gcore_vm_ue_count }}'
+            'ue_count': '{{ one_open5gcore_vm_ue_count }}',
             'upf_xdp': '{{ one_open5gcore_vm_upf_xdp }}'
           }
 
