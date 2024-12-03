@@ -24,9 +24,10 @@ resource "opennebula_virtual_machine" "{{ entity_name }}_collector" {
   nic {
     {% if network == 'tn_vxlan' %}
     model           = "virtio"
+    {% else %}
+    model           = "e1000e"
     {% endif %}
     network_id      = opennebula_virtual_network.{{ network }}.id
-
   }
 {% endfor %}
 
