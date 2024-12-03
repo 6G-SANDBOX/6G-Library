@@ -32,7 +32,7 @@
     ue_count: "{{ one_open5gcore_vm_ue_count | default('20') }}"
     apt_upgrade: false
     playbookdir: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/"
-    license_crt: site_available_components.open5gcore_vm.license_crt
+    license_crt: "{{ site_available_components.open5gcore_vm.license_crt }}"
   block:
     - name: render netplan aliases
       template:
