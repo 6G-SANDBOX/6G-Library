@@ -222,6 +222,19 @@
       changed_when: false
       when: networkd_changed.changed
 
+    - name: render netplan aliases
+      template:
+        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-netplan-aliases.yaml.j2"
+        dest: /etc/netplan/99-netplan-aliases.yaml
+        backup: true
+      register: netplan_changed
+
+    - name: reload netplan
+      ansible.builtin.command:
+        cmd: "netplan apply"
+      changed_when: false
+      when: netplan_changed.changed
+
     - name: disable UFW
       service:
         name: ufw
