@@ -47,18 +47,19 @@
       apt: upgrade=full
       when: apt_upgrade
 
-    - name: render ue subnet into 99-open5gs.network
+    - name: render netplan aliases
       template:
-        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-open5gs.network.j2"
-        dest: /etc/systemd/network/99-open5gs.network
+        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-netplan-aliases.yaml.j2"
+        dest: /etc/netplan/99-netplan-aliases.yaml
+        mode: '0600'
         backup: true
-      register: networkd_changed
+      register: netplan_changed
 
-    - name: reload networkctl
+    - name: reload netplan
       ansible.builtin.command:
-        cmd: "networkctl reload"
+        cmd: "netplan apply"
       changed_when: false
-      when: networkd_changed.changed
+      when: netplan_changed.changed
 
     - name: add MongoDB 6 PPA
       block:
@@ -222,19 +223,18 @@
         cmd: /etc/open5gs/add-test-ues.sh
       when: add_ue_script.changed
 
-    - name: render netplan aliases
+    - name: render ue subnet into 99-open5gs.network
       template:
-        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-netplan-aliases.yaml.j2"
-        dest: /etc/netplan/99-netplan-aliases.yaml
-        mode: '0600'
+        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-open5gs.network.j2"
+        dest: /etc/systemd/network/99-open5gs.network
         backup: true
-      register: netplan_changed
+      register: networkd_changed
 
-    - name: reload netplan
+    - name: reload networkctl
       ansible.builtin.command:
-        cmd: "netplan apply"
+        cmd: "networkctl reload"
       changed_when: false
-      when: netplan_changed.changed
+      when: networkd_changed.changed
 
     - name: disable UFW
       service:
