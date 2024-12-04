@@ -2,8 +2,9 @@
 
 ## [unreleased]
 ### Added
-- New component `upf_p4_sw`.
-- New component open5gs_vm
+- New component `upf_p4_sw`
+- New component `open5gs_vm`
+- New component `open5gcore_vm`
 
 ### Changed
 - Variable `one_bastion_wireguard_allowedips` promoted as public and user-configurable in components `tn_bastion` and `tn_init`
