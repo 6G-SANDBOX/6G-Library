@@ -1,4 +1,4 @@
-# This file is used to install the INT-P4 switch. It is used in each INT-P4 switch installation.
+# This playbook is used to install the INT-P4 switch. It is used in each INT-P4 switch installation.
 ---
 #TODO: Check if the packages are still required.
 - name: Install some required apt packages
@@ -14,7 +14,7 @@
     state: present
     update_cache: yes
 
-- name: Wait for 5 seconds
+- name: Wait for 10 seconds
   pause:
     seconds: 10
 

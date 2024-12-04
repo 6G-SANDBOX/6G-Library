@@ -1,2 +1,93 @@
-# Substitutes doc/create_component.yaml file
-# TODO
+one_int_p4_sw_switches:
+  int_p4_switch_0:
+    type: "source"
+    networks:
+      - tn_vxlan
+      - vnet-1
+      - vnet-2
+    config:
+      switch_id: 1
+      interfaces:
+        - name: "eth1"
+          id: 1
+        - name: "eth2" 
+          id: 2
+      int_config:
+        forward_rules:
+          - dst_addr: "02:00:0a:0b:01:01"
+            port: 1
+            priority: 1
+          - dst_addr: "02:00:0a:0b:04:02"
+            port: 2
+            priority: 1
+        ingress_port: 1
+        egress_port: 2
+        hop_metadata_len: 5
+        max_hop: 4
+        ins_mask: "0xEC00"
+  int_p4_switch_1:
+    type: "transit"
+    networks:
+      - tn_vxlan
+      - vnet-2
+      - vnet-3
+    config:
+      switch_id: 2
+      interfaces:
+        - name: "eth1"
+          id: 1
+        - name: "eth2" 
+          id: 2
+      int_config:
+        forward_rules:
+          - dst_addr: "02:00:0a:0b:01:01"
+            port: 1
+            priority: 1
+          - dst_addr: "02:00:0a:0b:04:02"
+            port: 2
+            priority: 1
+  int_p4_switch_2:
+    type: "sink"
+    networks:
+      - tn_vxlan
+      - vnet-3
+      - vnet-4
+      - vnet-collector
+    config:
+      switch_id: 3
+      interfaces:
+        - name: "eth1"
+          id: 1
+        - name: "eth2"
+          id: 2
+        - name: "eth3"  # Extra interface for collector
+          id: 3
+      int_config:
+        forward_rules:
+          - dst_addr: "02:00:0a:0b:01:01"
+            port: 1
+            priority: 1
+          - dst_addr: "02:00:0a:0b:04:02"
+            port: 2
+            priority: 1
+        egress_spec: 2
+        sink_reporting_port: 3
+        collector_ip: "10.11.5.2"
+        collector_port: 12345
+        dp_mac: "02:00:0a:0b:05:01"
+        dp_ip: "10.11.5.1"
+        collector_mac: "02:00:0a:0b:05:02"
+        rep_md_bits: 0
+
+
+# ----- Config related to the collector INT VM -----
+# Config related to the collector INT VM
+one_int_p4_sw_collector:
+  networks:
+    - tn_vxlan
+    - vnet-collector
+  config:
+    #TODO: Add the collector configuration
+    collector_interface: eth1
+    collector_port: 12345
+    #TODO: Add Grafana configuration

@@ -1,3 +1,5 @@
+# This playbook installs and configures the INT collector components
+---
 - name: Check InfluxDB service status
   become: true
   service_facts:

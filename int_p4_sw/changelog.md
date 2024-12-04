@@ -1,10 +1,10 @@
-# TODO
 # Changelog
 
 ## [v0.3.0]
 
 ### Added
-- New component
+- New component INT-P4 SW
+- Initial documentation for the INT-P4 SW component
 
 
 <!-- Change latest version value at every release -->

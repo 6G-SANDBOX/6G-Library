@@ -1,11 +1,12 @@
 # {{ tn_id }}-{{ entity_name}}
 
-## Deployment
+## 📋 Deployment Summary
 The INT-P4 SW module has been successfully deployed as part of Trial Network {{ tn_id }}. This deployment includes:
 - {{ switch_ids | length }} INT-P4 switches
 - 1 INT-P4 collector
 
-## Access to Virtual Machines
+
+## 🖥️ Access to Virtual Machines
 ### SSH Access
 All virtual machines are accessible through the bastion host ({{ bastion_ip }}) using the 'tnuser' user.
 
@@ -23,8 +24,11 @@ The INT-P4 collector has been deployed with the following IPs:
 {% for network, ip in collector_ips.items() %}
 - Network {{ network }}: {{ ip }}
 {% endfor %}
+- Collector Port: {{ one_int_p4_sw_collector.config.collector_port }}
+- Collector Interface: {{ one_int_p4_sw_collector.config.collector_interface }}
 
-## Configuration
+
+## 📝 Configuration
 The switches have been deployed with the following configuration:
 {% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
 - {{ switch_name }}:
@@ -57,11 +61,13 @@ The switches have been deployed with the following configuration:
     {% endfor %}
 {% endfor %}
 
+
 ## System Identifiers
 - Switch IDs: {{ switch_ids | join(', ') }}
 - Collector ID: {{ collector_id }}
 
-## Logs
+
+## 📄 Logs
 ### INT-P4 Switches
 ```bash
 # For the INT-P4 switch data plane (Stratum BMv2)
@@ -73,15 +79,14 @@ docker logs p4-int-controller-bmv2
 
 ### INT-P4 Collector
 The INT-P4 collector logs can be found in the following file:
-
 ```bash
+# View collector logs
 cat /var/log/int_collector.log
+
+# Monitor logs in real-time
+tail -f /var/log/int_collector.log
 ```
 
-You can monitor the logs in real-time using:
 
-```bash
-tail -f /var/log/int_collector.log
-
-## Service Status
+## 🔋 Service Status
 ✅ The INT-P4 service is operational and ready for use

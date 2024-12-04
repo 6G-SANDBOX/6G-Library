@@ -25,9 +25,14 @@
 metadata:
   maintainers:
     - Rafael Manuel García Arévalo <rafagarciaa31@uma.es> 
-  short_description: TODO
+  short_description: Deploys multiple virtual machines with INT telemetry P4 module plus a collector virtual machine.
   long_description: |
-    TODO
+    This component is responsible for deploying multiple virtual machines equipped with the INT telemetry P4 module.
+    It also includes a collector virtual machine to gather and process telemetry data. The deployment is designed to 
+    facilitate network monitoring and management by providing detailed insights into network traffic and performance. 
+    The component supports various configurations for source, transit, and sink switches, allowing for flexible 
+    network setups. It is compatible with the 'one' hypervisor and can be customized to meet specific deployment 
+    requirements.  
   hypervisors: [one]
 
 ####################################
@@ -59,14 +64,33 @@ input:
       - type: Type of switch (source, transit, sink)
       - networks: List of networks to connect
       - config: Switch specific configuration including:
-        - switch_id: Unique identifier
-        - interfaces: List of network interfaces
-        - int_config: INT specific configuration
+        - switch_id: Unique identifier (required)
+        - interfaces: List of network interfaces (required)
+          - name: Interface name (required)
+          - id: Interface ID (required)
+        - int_config: INT specific configuration (required)
+          - forward_rules: List of forwarding rules (required)
+            - dst_addr: Destination address (required)
+            - port: Port number (required)
+            - priority: Priority level (required)
+          - ingress_port: Ingress port (source switch)
+          - egress_port: Egress port (source switch)
+          - hop_metadata_len: Hop metadata length (source switch)
+          - max_hop: Maximum hop count (source switch)
+          - ins_mask: Insertion mask (source switch)
+          - egress_spec: Egress specification (sink switch)
+          - sink_reporting_port: Sink reporting port (sink switch)
+          - collector_ip: Collector IP address (sink switch)
+          - collector_port: Collector port (sink switch)
+          - dp_mac: Destination MAC address (sink switch)
+          - dp_ip: Destination IP address (sink switch)
+          - collector_mac: Collector MAC address (sink switch)
+          - rep_md_bits: Reporting metadata bits (sink switch)
     type: dict
     default_value: {
       "int_p4_switch_0": {
         "type": "source",
-        "networks": ["tn_vxlan", "vnet-vnet_1"],
+        "networks": ["tn_vxlan", "vnet-1", "vnet-2"],
         "config": {
           "switch_id": 1,
           "interfaces": [
@@ -75,8 +99,8 @@ input:
           ],
           "int_config": {
             "forward_rules": [
-              {"dst_addr": "00:aa:bb:00:00:14", "port": 1, "priority": 1},
-              {"dst_addr": "00:aa:bb:00:00:16", "port": 2, "priority": 1}
+              {"dst_addr": "02:00:0a:0b:01:01", "port": 1, "priority": 1},
+              {"dst_addr": "02:00:0a:0b:04:02", "port": 2, "priority": 1}
             ],
             "ingress_port": 1,
             "egress_port": 2,
@@ -84,6 +108,49 @@ input:
             "max_hop": 4,
             "ins_mask": "0xEC00"
           }
+        }
+      },
+      "int_p4_switch_1": {
+        "type": "transit",
+        "networks": ["tn_vxlan", "vnet-2", "vnet-3"],
+        "config": {
+          "switch_id": 2,
+          "interfaces": [
+            {"name": "eth1", "id": 1},
+            {"name": "eth2", "id": 2}
+          ],
+          "int_config": {
+            "forward_rules": [
+              {"dst_addr": "02:00:0a:0b:01:01", "port": 1, "priority": 1},
+              {"dst_addr": "02:00:0a:0b:04:02", "port": 2, "priority": 1} 
+            ]
+          }
+        } 
+      },
+      "int_p4_switch_2": {
+        "type": "sink",
+        "networks": ["tn_vxlan", "vnet-3", "vnet-4", "vnet-collector"],
+        "config": {
+          "switch_id": 3,
+          "interfaces": [
+            {"name": "eth1", "id": 1},
+            {"name": "eth2", "id": 2},
+            {"name": "eth3", "id": 3}
+          ],
+          "int_config": {
+            "forward_rules": [
+              {"dst_addr": "02:00:0a:0b:01:01", "port": 1, "priority": 1},
+              {"dst_addr": "02:00:0a:0b:04:02", "port": 2, "priority": 1}
+            ],
+            "egress_spec": 2,
+            "sink_reporting_port": 3,
+            "collector_ip": "10.11.5.2",
+            "collector_port": 12345,
+            "dp_mac": "02:00:0a:0b:05:01",
+            "dp_ip": "10.11.5.1",
+            "collector_mac": "02:00:0a:0b:05:02",
+            "rep_md_bits": 0
+          } 
         }
       }
     }
@@ -94,10 +161,15 @@ input:
       Configuration for INT-P4 collector. Dictionary with:
       - networks: List of networks to connect
       - config: Collector specific configuration
+        - collector_interfaces: Collector interface (required)
+        - collector_port: Collector port (required)
     type: dict
     default_value: {
-      "networks": ["tn_vxlan", "vnet-vnet_1"],
-      "config": {}
+      "networks": ["tn_vxlan", "vnet-collector"],
+      "config": {
+        "collector_interfaces": "eth1",
+        "collector_port": 12345
+      }
     }
     required_when: true
 
@@ -105,7 +177,4 @@ input:
 ## Component output
 ####################################
 output:
-  id: ID of the deployment
-  ips: List of all IPs
-  switch_ips: Dictionary of switch IPs per network
-  collector_ip: IP of the INT collector
+  metadata_dict: Metadata dictionary

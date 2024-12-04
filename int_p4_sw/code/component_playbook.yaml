@@ -73,9 +73,6 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
-    #- name: Add VMs to SSH config file in the Jenkins-master for debugging purposes
-    #  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
-
 
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "int_p4_switch_*:int_p4_collector"
@@ -136,11 +133,11 @@
     - name: Define INT-P4 SW metadata dictionary
       ansible.builtin.set_fact:
         int_p4_sw_metadata_dict:
-              switch_ips: "{{ switch_ips }}"
-              switch_ids: "{{ switch_ids }}"
-              collector_ip: "{{ collector_ips[collector_first_vnet_id] }}"
-              collector_id: "{{ collector_id }}"
-              bastion_ip: "{{ bastion_ip }}"
+          switch_ips: "{{ switch_ips }}"
+          switch_ids: "{{ switch_ids }}"
+          collector_ip: "{{ collector_ips[collector_first_vnet_id] }}"
+          collector_id: "{{ collector_id }}"
+          bastion_ip: "{{ bastion_ip }}"
 
     - name: Escape JSON string for Terraform
       ansible.builtin.set_fact:
@@ -157,7 +154,4 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:
-          id: "{{ id | b64encode }}"
-          ips: "{{ ips | b64encode }}"
-          switch_ips: "{{ switch_ips | to_json | b64encode }}"
-          collector_ip: "{{ collector_ips[collector_first_vnet_id] | b64encode }}"
+          metadata_dict: "{{ int_p4_sw_metadata_json_escaped | b64encode }}"
