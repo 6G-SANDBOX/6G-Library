@@ -120,6 +120,7 @@
       ansible.builtin.set_fact:
         open5gs_metadata_dict: >-
           {
+            'oneKE': '',
             'proxy': '',
             'mcc': '{{ one_open5gs_vm_mcc }}',
             'mnc': '{{ one_open5gs_vm_mnc }}',
