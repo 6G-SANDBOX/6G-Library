@@ -29,6 +29,10 @@
     group: root
     mode: '0600'
 
+- name: Initialize the variable to store client configurations
+  ansible.builtin.set_fact:
+    tn_wg_clients: []
+
 - name: Add VPN clients
   include_tasks: "{{ workspace }}/tn_bastion/code/one/cac/02_install/wg_client.yaml"
   vars:

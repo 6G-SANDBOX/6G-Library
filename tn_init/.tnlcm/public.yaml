@@ -82,10 +82,10 @@ output:
   tn_vxlan_id: VNet ID in OpenNebula
   tn_bastion_ips: "dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
   tn_bastion_id: VM ID in OpenNebula
-  vpn_client_tunnel: VPN Client config to connect to this Trial Network
   tn_ssh_public_key: SSH public key present in the TN VMs for the user tnuser
   tn_ssh_private_key: SSH public key to access the TN VMs with the user tnuser
-
+  tn_wg_clients: List of Wireguard VPN client configuration files to access the VMs inside the tn_vxlan of the Trial Network
+  tn_dns_password: Password for the admin user of the tn_bastion's Technitium DNS server
 
 ####################################
 ## Site-specific variables

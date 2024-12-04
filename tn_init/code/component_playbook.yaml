@@ -106,7 +106,7 @@
         one_bastion_dns_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_TOKEN }}"
         one_bastion_routemanager_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_ROUTEMANAGER_TOKEN }}"
 
-    - name: Upload private ssh key to S3
+    - name: Upload private ssh key to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put
@@ -114,11 +114,11 @@
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
         object: "{{ tn_id }}/misc-{{ entity_name }}-id_ed25519"
-        content_base64: "{{ tn_ssh_private_key.content }}"
+        content_base64: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"
         encrypt: false
         validate_certs: false
 
-    - name: Upload public ssh key to S3
+    - name: Upload public ssh key to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put
@@ -126,7 +126,7 @@
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
         object: "{{ tn_id }}/misc-{{ entity_name }}-id_ed25519.pub"
-        content_base64: "{{ tn_ssh_public_key.content }}"
+        content_base64: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
         encrypt: false
         validate_certs: false
 
@@ -135,18 +135,21 @@
         msg: "{{ hostvars['tn_bastion']['tn_wg_clients'] }}"
       when: debug
 
-    - name: Upload wireguard client configs to S3
+    - name: Upload wireguard client configs to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put
         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/misc-{{ entity_name }}-wg_client{{ item.item }}.conf"
-        content_base64: "{{ item.content }}"
+        object: "{{ tn_id }}/misc-{{ entity_name }}-wg_client{{ ansible_loop.index0 }}.conf"
+        content_base64: "{{ item }}"
         encrypt: false
         validate_certs: false
-      loop: "{{ hostvars['tn_bastion']['tn_wg_clients']['results'] }}"
+      loop: "{{ hostvars['tn_bastion']['tn_wg_clients'] }}"
+      loop_control:
+        extended: true
+        extended_allitems: false
 
     - name: Publish aditional information as global terraform outputs
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
@@ -168,5 +171,5 @@
           tn_bastion_id: "{{ tn_bastion_id | b64encode }}"
           tn_ssh_public_key: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
           tn_ssh_private_key: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"
-          tn_wg_clients: "{{ hostvars['tn_bastion']['tn_wg_clients']['content'] | b64encode }}"   # TODO: Unstable
+          tn_wg_clients: "{{ hostvars['tn_bastion']['tn_wg_clients']['content'] }}"
           tn_dns_password: "{{ one_bastion_dns_password | b64encode }}"
