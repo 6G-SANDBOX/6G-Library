@@ -3,6 +3,6 @@
     "component_type": "{{ component_type | default(None, true) | b64encode }}",
     "custom_name": "{{ custom_name | default(None, true) | b64encode }}",
     "success": "false",
-    "markdown": "{{ fail2markdown['content'] | default() }}",
+    "markdown": "{{ fail2markdown | default() }}",
     "output": {}
 }

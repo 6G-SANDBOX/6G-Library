@@ -51,7 +51,7 @@ Use the private key for ssh access to other component's with user *`tnuser`*
 
 Access to the Trial Network can be performed using one of the following Wireguard VPN client configuration files:
 {% for client in hostvars['tn_bastion']['tn_wg_clients']  %}
-**wg_client{{ loop.index }}**:
+**wg_client{{ loop.index - 1}}**:
 ```TOML
 {{ client | b64decode }}
 ```
