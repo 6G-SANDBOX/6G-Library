@@ -3,7 +3,7 @@
 ## [unreleased]
 
 ### Changed
-- Input variable `one_ueransim_gnb_linked_open5gs` now supports both `upf_p4_sw` and `open5gs_vm` as component type.
+- Input variable `one_ueransim_gnb_linked_open5gs` now supports both `upf_p4_sw` and `open5gs_vm` and `open5gcore_vm` as component type.
 
 ## [v0.3.0]
 ### Fixed
