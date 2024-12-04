@@ -5,12 +5,7 @@ trial_network:
   tn_init:
     type: "tn_init"
     dependencies: []
-    input:
-      one_vxlan_gw: "192.168.197.1"
-      one_vxlan_netmask: "255.255.255.0"
-      one_vxlan_dns: "1.1.1.1 8.8.8.8"
-      one_vxlan_first_ip: "192.168.197.1"
-      one_vxlan_address_size: 254
+    input: {}
   vnet-n2:
     type: "vnet"
     name: "n2"
@@ -66,7 +61,7 @@ trial_network:
     dependencies:
       - "tn_init"
       - "vnet-n2"
-      - "open5gs_vm-core"
+      - "open5gcore_vm-core"
     input:
       one_ueransim_networks:
         - "tn_vxlan"
