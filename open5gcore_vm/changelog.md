@@ -6,15 +6,6 @@
 
 - initial version of Open5gCore VM compoent
 
-### Changed
-
-## [v0.2.0] - 2024-06-06
-
-### Changed
-
-- Component follows the new architecture.
-- Component renamed to `.dummy_component`.
-
 
 <!-- Change latest version value at every release -->
 [unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.3.0...unreleased
