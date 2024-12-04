@@ -1,5 +1,14 @@
 # Changelog
 
+## [unreleased]
+### Added
+- Python and pip for plugins that use python venv
+- Tshark for plugins that use it for data decoding
+
+### Changed
+- Updated to latest stable OpenTap
+- Docker mount of opentap-images to give visibility on host and stability on restart
+
 ## [v0.3.0]
 ### Added
 - New component. Initial version of the automation scripts. Basic deployment and registration with the KS8500 backend has been tested in uma. Verifying actual usage of the Runner is TBD

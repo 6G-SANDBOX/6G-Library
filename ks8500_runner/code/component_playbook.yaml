@@ -53,6 +53,7 @@
       - SessionLogs
       - Settings
       - Storage
+      - OpentapImages
     ks8500runner_path: /opt/KS8500Runner
   hosts: "ks8500runner"
   gather_facts: false
