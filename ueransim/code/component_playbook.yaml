@@ -68,6 +68,17 @@
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
 
+    - name: update gnbSearchList
+      vars:
+        ips: "{{ hostvars['localhost']['ips'] }}"
+        access_vnet_id: "{{ hostvars['localhost']['access_vnet_id'] }}"
+        access_vnet_ip: "{{ ips[access_vnet_id] }}"
+      when: one_ueransim_run_ue == 'YES' and one_ueransim_run_gnb == 'YES'
+      ansible.builtin.shell:
+      args:
+        chdir: "/etc/ueransim"
+        cmd: "yq '.gnbSearchList = [\"{{ access_vnet_ip }}\"]' open5gs-gnb.yaml"
+
     - name: Create new user for experimenter access
       become: true
       ansible.builtin.user:
