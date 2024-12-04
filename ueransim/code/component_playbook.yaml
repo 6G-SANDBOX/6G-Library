@@ -74,6 +74,7 @@
         access_vnet_id: "{{ hostvars['localhost']['access_vnet_id'] }}"
         access_vnet_ip: "{{ ips[access_vnet_id] }}"
       when: hostvars['localhost'].get('one_ueransim_run_ue', 'NO') == 'YES' and hostvars['localhost'].get('one_ueransim_run_gnb', 'NO') == 'YES'
+      become: true
       ansible.builtin.shell:
       args:
         chdir: "/etc/ueransim"
