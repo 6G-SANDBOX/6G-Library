@@ -1,3 +1,15 @@
+<!-- 
+DISCLAIMER!!!! THIS CHANGELOG HAS INFORMATION ABOUT CHANGES IN THE DUMMY COMPONENT.
+
+YOUR NEW COMPONENT's FIRST CHANGELOG JUST NEEDS SMTH LIKE:  
+
+## [unreleased]
+### Added
+- New component `mycomponent` added to the 6G-Library 
+
+PLEASE ALSO UPDATE THE MAIN 6G-LIBRARY CHANGELOG WITH YOUR COMPONENT
+-->
+
 # Changelog
 
 ## [unreleased]

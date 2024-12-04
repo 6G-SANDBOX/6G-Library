@@ -77,7 +77,7 @@
           - key: "tn_ssh_public_key"
             value: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] | b64decode | trim }}"
 
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:

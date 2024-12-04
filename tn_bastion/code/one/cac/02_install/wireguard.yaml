@@ -20,7 +20,6 @@
   ansible.builtin.set_fact:
     port_suffix: "{{ (ips.stdout.split()[0] | regex_replace('[^0-9]', '') | string)[-(site_ports_digits | int - site_ports_prefix | string | length):] }}"
 
-
 - name: Write wg0.conf
   become: true
   ansible.builtin.template:
@@ -37,6 +36,7 @@
   loop: "{{ range(1, one_bastion_vpn_clients + 1) | list }}"
 
 - name: Start wireguard VPN
+  become: true
   ansible.builtin.systemd_service:
     name: wg-quick@wg0.service
     state: started

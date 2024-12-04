@@ -41,4 +41,4 @@
 - name: Slurp generated file into an encoded variable
   ansible.builtin.slurp:
     src: "/home/jenkins/wg_client{{ client }}.conf"
-  register: wg_clients
+  register: tn_wg_clients

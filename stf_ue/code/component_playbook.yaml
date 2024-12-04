@@ -65,7 +65,7 @@
             headers:
               Authorization: "Bearer {{ site_available_components.stf_ue.administrator_token }}"
 
-        - name: Publish failed execution results to TNLCM
+        - name: Publish failed execution results to TNLCM and S3 object storage
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_fail_results.yaml"
 
 
@@ -85,5 +85,5 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

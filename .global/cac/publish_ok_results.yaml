@@ -13,36 +13,44 @@
   loop: "{{ terraform_manifests.results }}"
   when: terraform_apply.failed is defined and terraform_apply.failed == false
 
-- name: Generate OK markdown response
-  ansible.builtin.template:
-    src: "{{ workspace }}/{{ component_type }}/result_templates/ok_result.md.j2"
-    dest: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.md"
-
-- name: Encode OK response into base64
-  ansible.builtin.slurp:
-    src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.md"
-  register: ok2markdown
-
-- name: Generate OK json response
-  ansible.builtin.template:
-    src: "{{ workspace }}/.global/json_templates/ok_result.json.j2"
-    dest: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.json"
-
-- name: Debug OK json response
-  ansible.builtin.debug:
-    msg: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/json_templates/ok_result.json.j2') }}"
+- name: Debug OK markdown results
   when: debug
+  block:
+    - name: Write OK markdown response
+      ansible.builtin.template:
+        src: "{{ workspace }}/{{ component_type }}/result_templates/ok_result.md.j2"
+        dest: "{{ workspace }}/{{ component_type }}/code/ok_result.md"
+
+    - name: Print OK markdown response
+      ansible.builtin.debug:
+        msg: "{{ lookup('ansible.builtin.template', '{{ workspace }}/{{ component_type }}/result_templates/ok_result.md.j2') }}"
+
+- name: Generate OK markdown response
+  ansible.builtin.set_fact:
+    ok2markdown: "{{ lookup('ansible.builtin.template', '{{ workspace }}/{{ component_type }}/result_templates/ok_result.md.j2') | b64encode }}"
+
+- name: Debug OK json results
+  when: debug
+  block:
+    - name: Write OK json response
+      ansible.builtin.template:
+        src: "{{ workspace }}/.global/json_templates/ok_result.json.j2"
+        dest: "{{ workspace }}/{{ component_type }}/code/ok_result.json"
+
+    - name: Print OK json response
+      ansible.builtin.debug:
+        msg: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/json_templates/ok_result.json.j2') }}"
 
 - name: Send OK json response to TNLCM
   ansible.builtin.uri:
     url: "{{ tnlcm_callback }}"
     method: POST
     body_format: json
-    src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.json"
+    body: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/json_templates/ok_result.json.j2') }}"
   register: tnlcm_post
   ignore_errors: true
 
-- name: Send OK markdown response to S3
+- name: Send OK markdown response to S3 object storage
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"
     mode: put
@@ -50,6 +58,6 @@
     secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/ok_result-{{ entity_name }}.md"
-    src: "{{ workspace }}/{{ component_type }}/code/ok_result-{{ entity_name }}.md"
+    content_base64: "{{ ok2markdown }}"
     encrypt: false
     validate_certs: false

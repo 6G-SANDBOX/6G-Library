@@ -14,11 +14,11 @@ resource "opennebula_virtual_machine" "tn_bastion" {
     USERNAME = "jenkins"
     SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
     TOKEN: "YES"
-    ONEAPP_BASTION_DNS_PASSWORD:       "{{ one_bastion_dns_password }}"
-    ONEAPP_BASTION_DNS_FORWARDERS:     "{{ one_bastion_dns_forwarders }}"
-    ONEAPP_BASTION_DNS_DOMAIN:         "{{ one_bastion_dns_domain }}"
-    ONEAPP_BASTION_ROUTEMANAGER_TOKEN: "{{ one_bastion_routemanager_token }}"
-    ONEAPP_BASTION_ROUTEMANAGER_PORT:  "{{ one_bastion_routemanager_port }}"
+    ONEAPP_BASTION_DNS_PASSWORD:       ""
+    ONEAPP_BASTION_DNS_FORWARDERS:     "{{ site_dns }}"
+    ONEAPP_BASTION_DNS_DOMAIN:         "{{ site_domain }}"
+    ONEAPP_BASTION_ROUTEMANAGER_TOKEN: ""
+    ONEAPP_BASTION_ROUTEMANAGER_PORT:  ""
   }
 
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error

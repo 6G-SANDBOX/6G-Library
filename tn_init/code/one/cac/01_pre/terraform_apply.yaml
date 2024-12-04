@@ -7,7 +7,7 @@
     patterns: "*.tf.j2"
   register: terraform_templates
 
-- name: "Prepare {{ entity_name}} terraform manifests"
+- name: "Prepare tn_bastion and tn_vxlan terraform manifests"
   ansible.builtin.template:
     src: "{{ item.path }}"
     dest: >-

@@ -88,7 +88,7 @@
           - key: "{{ entity_name }}-metadata"
             value: "{{ nokia_metadata_dict }}"
 
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:

@@ -1,12 +1,9 @@
-# {{ tn_id }}-tn_init
+# {{ tn_id }}-tn_vxlan
 
-The Trial Network `{{ tn_id }}` has been successfully created.
-The component `{{ tn_id }}-tn_vxlan` is the main subnetwork of the Trial Network, reachable with the bastion's VPN
-Component `{{ tn_id }}-tn_bastion` is a crutial VM of the Trial Network, which serves as its router, firewall and VPN endpoing.
+The component `{{ tn_id }}-tn_vxlan` has been succesfully created.
+The **`tn_vxlan`** is the main subnetwork of the Trial Network, connecting all components, and reachable to the experimenter through the Wireguard VPN server in the **`tn_bastion`**.
 
-## Important information
-
-#### {{ tn_id }}-tn_vxlan
+## Important information:
 
 - **OpenNebula VNet ID**: `{{ tn_vxlan_id }}`
 - **VXLAN first IP**: `{{ one_vxlan_first_ip }}`
@@ -17,7 +14,15 @@ Component `{{ tn_id }}-tn_bastion` is a crutial VM of the Trial Network, which s
 - **VXLAN MTU**: `{{ one_vxlan_mtu }}`
 - **VXLAN guest MTU**: `{{ one_vxlan_guest_mtu }}`
 
-#### {{ tn_id }}-tn_bastion
+---
+
+
+# {{ tn_id }}-tn_bastion
+
+The component `{{ tn_id }}`-tn_bastion has been successfully created.
+The **`tn_bastion`** is the main Virtual Machine of the Trial Network, serving as its default gateway, firewall, DNS server and VPN server.
+
+## Important information:
 
 - **OpenNebula VM ID**: `{{ tn_bastion_id }}`
 - **VM network interfaces**:
@@ -25,14 +30,12 @@ Component `{{ tn_id }}-tn_bastion` is a crutial VM of the Trial Network, which s
   {{ tn_bastion_ips }}
   ```
 
-#### Wireguard VPN client config
-Add this configuration file to your local wireguard client tool.
-```
-{{ hostvars['tn_bastion']['client_tunnel']['content'] | b64decode }}
-```
-
 #### SSH keypair
-Use the private key to access Trial Network VM's with user *tnuser*
+A pair of ed25519 ssh keys is created as part of the **`tn_bastion`**'s deployment.
+Use the private key for ssh access to other component's with user *`tnuser`*
+
+> NOTE
+> The **`tn_bastion`** VM is not meant to be accessed by experimenters, so it has no *`tnuser`* created
 
 **Public key**:
 ```
@@ -43,3 +46,22 @@ Use the private key to access Trial Network VM's with user *tnuser*
 {{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] | b64decode }}
 ```
 
+
+#### Wireguard VPN client config
+
+#TODO: loop for 'one_bastion_vpn_clients' configs
+Access to the Trial Network can be performed using one of the following Wireguard VPN client configuration files:
+**wg_client0**:
+```TOML
+"{{ hostvars['tn_bastion']['tn_wg_clients'] }}"
+```
+
+> NOTE
+> Only one experimenter can use the same VPN client simultaneously.
+
+#### Technitium DNS Server
+
+You can access the Technitium DNS web Portal from http://tn_bastion.{{ tn_id }}.{{ site_domain }}:5380
+Credentials to login are:
+- user: `admin`
+- password: `{{ one_bastion_dns_password }}`

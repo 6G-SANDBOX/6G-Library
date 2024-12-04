@@ -3,24 +3,15 @@
   openssh_keypair:
     comment: "tnuser@{{ tn_id }}"
     force: false
-    path: "/home/jenkins/id_ed25519"
+    path: "/home/jenkins/.ssh/tnuser-id_ed25519"
     type: ed25519
 
 - name: Slurp public ssh key
   ansible.builtin.slurp:
-    src: "/home/jenkins/id_ed25519.pub"
+    src: "/home/jenkins/.ssh/tnuser-id_ed25519.pub"
   register: tn_ssh_public_key
 
 - name: Slurp private ssh key
   ansible.builtin.slurp:
-    src: "/home/jenkins/id_ed25519"
+    src: "/home/jenkins/.ssh/tnuser-id_ed25519"
   register: tn_ssh_private_key
-
-- name: Set ssh keys as authorized for the jenkins user
-  ansible.posix.authorized_key:
-    user: "jenkins"
-    state: present
-    key: "{{ item }}"
-  loop:
-    - "{{ site_admin_ssh_public_key }}"
-    - "{{ tn_ssh_public_key.content | b64decode | trim }}"

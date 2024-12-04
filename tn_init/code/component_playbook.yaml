@@ -63,7 +63,14 @@
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Create an ed25519 ssh key pair to access the future Trial Network components
+    - name: Set site ssh key as authorized in jenkins user
+      ansible.posix.authorized_key:
+        user: jenkins
+        state: present
+        key: "{{ site_admin_ssh_public_key }}"
+      when: site_admin_ssh_public_key is defined and site_admin_ssh_public_key != ''
+
+    - name: Create an ed25519 ssh key pair for experimenter access to authorized Trial Network components
       ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/ssh_keypair.yaml"
 
     # TODO: Should I add a record for the tn_bastion itself?
@@ -86,8 +93,6 @@
   gather_facts: false
   connection: local
   tasks:
-
-  # TODO: Hay más variables que exponer
     - name: Fetch bastion metadata from OpenNebula
       community.general.one_vm:
         instance_ids: "{{ tn_bastion_id }}"  # ¿ | int ?
@@ -97,6 +102,7 @@
       register: bastion_metadata
     - name: Extract tokens from bastion metadata
       ansible.builtin.set_fact:
+        one_bastion_dns_password: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_PASSWORD }}"
         one_bastion_dns_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_TOKEN }}"
         one_bastion_routemanager_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_ROUTEMANAGER_TOKEN }}"
 
@@ -126,7 +132,7 @@
 
     - name: Debug wireguard configs
       ansible.builtin.debug:
-        msg: "{{ hostvars[entity_name]['wg_clients'] }}"
+        msg: "{{ hostvars['tn_bastion']['tn_wg_clients'] }}"
       when: debug
 
     - name: Upload wireguard client configs to S3
@@ -140,7 +146,7 @@
         content_base64: "{{ item.content }}"
         encrypt: false
         validate_certs: false
-      loop: "{{ hostvars[entity_name]['wg_clients']['results'] }}"
+      loop: "{{ hostvars['tn_bastion']['tn_wg_clients']['results'] }}"
 
     - name: Publish aditional information as global terraform outputs
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
@@ -153,7 +159,7 @@
           - key: "tn_ssh_public_key"
             value: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] | b64decode | trim }}"
 
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:
@@ -162,6 +168,5 @@
           tn_bastion_id: "{{ tn_bastion_id | b64encode }}"
           tn_ssh_public_key: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
           tn_ssh_private_key: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"
-          vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"
-          tn_dns_token: "{{ one_bastion_dns_token }}"                     # TODO: referenciar en markdown
-          tn_routemanager_token: "{{ one_bastion_routemanager_token }}"   # TODO: referenciar en markdown
+          tn_wg_clients: "{{ hostvars['tn_bastion']['tn_wg_clients']['content'] | b64encode }}"   # TODO: Unstable
+          tn_dns_password: "{{ one_bastion_dns_password | b64encode }}"
