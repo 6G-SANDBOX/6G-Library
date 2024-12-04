@@ -49,8 +49,8 @@ input:
 
   one_vnet_netmask:
     description: Network mask of the Virtual Network subnet
-    type: str
-    default_value: "255.255.255.0"
+    type: int
+    default_value: 24
     required_when: false
 
   one_vnet_dns:

@@ -12,7 +12,7 @@ trial_network:
       - "tn_init"
     input:
       one_vnet_first_ip: "10.10.10.1"
-      one_vnet_netmask: "255.255.255.0"
+      one_vnet_netmask: 24
       one_vnet_address_size: 100
       one_vnet_gw: "10.10.10.1"
       one_vnet_dns: "1.1.1.1"

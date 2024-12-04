@@ -50,8 +50,8 @@ metadata:
 input:
   one_vxlan_netmask:
     description: Network mask of the tn_vxlan subnet
-    type: str
-    default_value: "255.255.255.0"
+    type: int
+    default_value: 24
     required_when: false
   one_vxlan_first_ip:
     description: First IP address of the VNet range
