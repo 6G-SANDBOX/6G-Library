@@ -4,15 +4,18 @@ trial_network:
 
   tn_init:
     type: "tn_init"
-    dependencies: []
-    input: {}
+    dependencies: ["vnet-n2"]
+    input:
+      one_bastion_networks:
+        - tn_vxlan
+        - "vnet-n2"
   vnet-n2:
     type: "vnet"
     name: "n2"
-    dependencies:
-      - "tn_init"
+    dependencies: []
+      #- "tn_init"
     input:
-      one_vnet_first_ip: "10.10.10.2"
+      one_vnet_first_ip: "10.10.10.1"
       one_vnet_netmask: "255.255.255.0"
       one_vnet_address_size: 253
       one_vnet_gw: "" # there is no gateway in this network
@@ -64,8 +67,8 @@ trial_network:
       - "open5gcore_vm-core"
     input:
       one_ueransim_networks:
-        - "tn_vxlan"
         - "vnet-n2"
+        - "tn_vxlan"
       one_ueransim_run_gnb: "YES"
       one_ueransim_run_ue: "YES"
       one_ueransim_gnb_linked_open5gs: "open5gcore_vm-core"
