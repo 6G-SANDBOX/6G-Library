@@ -26,9 +26,9 @@ The **`tn_bastion`** is the main Virtual Machine of the Trial Network, serving a
 
 - **OpenNebula VM ID**: `{{ tn_bastion_id }}`
 - **VM network interfaces**:
-  ```json
-  {{ tn_bastion_ips | to_nice_json(indent=8) }}
-  ```
+```json
+{{ tn_bastion_ips | to_nice_json(indent=8) }}
+```
 
 #### SSH keypair
 A pair of ed25519 ssh keys is created as part of the **`tn_bastion`**'s deployment.

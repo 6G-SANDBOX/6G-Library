@@ -2,13 +2,13 @@
 # Copyright (c) 2020 Nyr. Released under the MIT License.
 #
 [Interface]
-Address = 10.7.0.{{ client + 1 }}/24
-DNS = {{ ips.stdout.split()[1] }}
+Address = 10.7.0.{{ client + 2 }}/24
+DNS = {{ tn_vxlan_ip }}
 PrivateKey = {{ client_privatekey.stdout }}
 
 [Peer]
 PublicKey = {{ server_publickey.stdout }}
 PresharedKey = {{ client_psk.stdout }}
-AllowedIPs = {{ one_bastion_vpn_allowedips | default(bastion_subnets[1], true) }}
+AllowedIPs = {{ one_bastion_vpn_allowedips | default(tn_vxlan_net, true) }}
 Endpoint = {{ site_public_ip }}:{{ site_ports_prefix | string + port_suffix }}
 PersistentKeepalive = 25

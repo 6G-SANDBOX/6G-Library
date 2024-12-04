@@ -12,13 +12,9 @@
   changed_when: false
 
 # The endpoint port is site_ports_prefix + last (site_ports_length - prefix) digits of the first IP of the bastion, the one supposed to be reachable outside of the Trial Network
-- name: Get the IP addresses from tn_bastion
-  ansible.builtin.command: hostname -I
-  register: ips
-  changed_when: false
 - name: Set endpoint's port suffix from the first IP address
   ansible.builtin.set_fact:
-    port_suffix: "{{ (ips.stdout.split()[0] | regex_replace('[^0-9]', '') | string)[-(site_ports_digits | int - site_ports_prefix | string | length):] }}"
+    port_suffix: "{{ (default_ip | regex_replace('[^0-9]', '') | string)[-(site_ports_digits | int - site_ports_prefix | string | length):] }}"
 
 - name: Write wg0.conf
   become: true
@@ -37,7 +33,7 @@
   include_tasks: "{{ workspace }}/tn_bastion/code/one/cac/02_install/wg_client.yaml"
   vars:
     client: "{{ item }}"
-  loop: "{{ range(1, one_bastion_vpn_clients + 1) | list }}"
+  loop: "{{ range(0, one_bastion_vpn_clients) | list }}"
 
 - name: Start wireguard VPN
   become: true

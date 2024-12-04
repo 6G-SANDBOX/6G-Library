@@ -26,7 +26,7 @@
       [Peer]
       PublicKey = {{ client_publickey.stdout }}
       PresharedKey = {{ client_psk.stdout }}
-      AllowedIPs = 10.7.0.{{ client + 1 }}/32
+      AllowedIPs = 10.7.0.{{ client + 2 }}/32
       # END_PEER wg_client{{ client }}
 
 - name: "Write wg_client{{ client }} configuration file"
