@@ -1,0 +1,12 @@
+- name: Add routes in bastion
+  vars:
+    o5gcore_tn_vxlan_ip: "{{ hostvars['localhost']['ips'][hostvars['localhost']['access_vnet_id']]}}"
+  ansible.builtin.shell: "ip route add {{ item }}"
+  with_items:
+    - "{{ one_open5gcore_vm_ue_subnet }} via {{ o5gcore_tn_vxlan_ip }}"
+  become: yes
+
+#- name: add Routes via networkctl
+#  vars:
+#    bastion_tn_vxlan_if: "eth1"
+#    o5gcore_tn_vxlan_ip: "{{ hostvars['localhost']['ips'][hostvars['localhost']['access_vnet_id']]}}" #ips[access_vnet_id]
