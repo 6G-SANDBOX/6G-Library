@@ -11,9 +11,6 @@
 one_open5gs_vm_cpu: 4
 one_open5gs_vm_memory: 8192
 one_open5gs_vm_disk: 25600
-one_open5gs_vm_networks:
-  - tn_vxlan
-
 one_open5gs_vm_resources:
   extra_large:
     cpu: 8
@@ -36,8 +33,10 @@ one_open5gs_vm_resources:
     memory: 2048
     disk: 10240
 
+one_open5gs_vm_external_vnet: "tn_vxlan"
+one_open5gs_vm_internal_vnet:
+  - "vnet-n2"
 one_open5gs_vm_ue_subnet: "10.45.0.0/16"
-
 one_open5gs_vm_mcc: "001"
 one_open5gs_vm_mnc: "01"
 one_open5gs_vm_msin: "0000000001"
@@ -47,6 +46,6 @@ one_open5gs_vm_apn: "internet"
 one_open5gs_vm_tac: 200
 one_open5gs_vm_s_nssai_sst: 1
 one_open5gs_vm_s_nssai_sd: "000001"
-one_open5gs_vm_amf_ip: "10.21.12.200"
-one_open5gs_vm_upf_ip: "10.21.12.201"
+one_open5gs_vm_amf_ip: "10.10.10.200"
+one_open5gs_vm_upf_ip: "10.10.10.201"
 one_open5gs_vm_ue_count: 20

@@ -21,7 +21,12 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     driver   = "qcow2"
   } #}
 
-{% for network in one_open5gs_vm_networks %}
+nic {
+  model           = "virtio"
+  network_id      = opennebula_virtual_network.{{ one_open5gs_vm_external_vnet }}.id
+}
+
+{% for network in one_open5gs_vm_internal_vnet %}
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
@@ -30,6 +35,42 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 
   depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
 }
+
+{% if one_open5gs_vm_internal_vnet | length >= 1 %}
+resource "opennebula_virtual_network_address_range" "amf_ip" {
+  count              = 1
+  virtual_network_id = opennebula_virtual_network.{{ one_open5gs_vm_internal_vnet[0] }}.id
+  ar_type            = "IP4"
+  size               = 1
+  ip4                = "{{ one_open5gs_vm_amf_ip }}"
+
+  hold_ips = ["{{ one_open5gs_vm_amf_ip }}"]
+}
+{% endif %}
+
+{% if one_open5gs_vm_internal_vnet | length == 1 %}
+resource "opennebula_virtual_network_address_range" "upf_ip_1" {
+  count              = 1
+  virtual_network_id = opennebula_virtual_network.{{ one_open5gs_vm_internal_vnet[0] }}.id
+  ar_type            = "IP4"
+  size               = 1
+  ip4                = "{{ one_open5gs_vm_upf_ip }}"
+
+  hold_ips = ["{{ one_open5gs_vm_upf_ip }}"]
+}
+{% endif %}
+
+{% if one_open5gs_vm_internal_vnet | length >= 2 %}
+resource "opennebula_virtual_network_address_range" "upf_ip_2" {
+  count              = 1
+  virtual_network_id = opennebula_virtual_network.{{ one_open5gs_vm_internal_vnet[1] }}.id
+  ar_type            = "IP4"
+  size               = 1
+  ip4                = "{{ one_open5gs_vm_upf_ip }}"
+
+  hold_ips = ["{{ one_open5gs_vm_upf_ip }}"]
+}
+{% endif %}
 
 output "{{ entity_name }}-id" {
   description = "OpenNebula VM ID"
