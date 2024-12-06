@@ -12,6 +12,8 @@
 - Updated `loadcore` to use new appliance with OpenNebula contextualization scripts. However, IaC is currently broken. VM is deployed by Ansible itself
 - Updated `ueransim` the field `one_ueransim_gnb_linked_open5gs` to support `upf_p4_sw` component.
 - Metadata appliances url.
+- Updated `ueransim-ue` config to correctly reach the gnb in the same VM when in BOTH mode
+
 ## Fixed
 - Component TSN: markdown report file `ok_result.md.j2`.
 - Fixed bug where the one_open5gs_upf_ip wasn't correctly set as an output variable
