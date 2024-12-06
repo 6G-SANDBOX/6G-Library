@@ -1,0 +1,105 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
+  short_description: Enables the capability of using physical RAN in a Trial Network.
+  long_description: |
+    This component enables the integration of RAN physical equipment located at FOKUS with a 5G core deployed in the Trial Network.
+    It is done by enabling the necessary routing path through the use of the element called ‘Route Manager’ (already deployed in the site). 
+    The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
+    - `mcc`: "999"
+    - `mnc`: "38"
+    - `apn`: "internet"
+    - `tac`: 122
+    - `s_nssai_sst`: 1
+    - `s_nssai_sd`: ""
+    - `amf_ip`: "10.10.11.200"
+    - `upf_ip`: "10.10.11.201"
+    NOTE: Currently this component is only available in the site "fokus".
+  hypervisors: [one]
+  destroy_script: true
+
+####################################
+## Component input
+####################################
+
+input:
+  berlin_ran_one_oneKE:
+    description: Name of the oneKE cluster to route Nokia traffic.
+    type: "oneKE"
+    required_when: false
+  berlin_ran_one_reservation_time:
+    description: Time in minutes for the RAN equipment reservation
+    type: int
+    default_value: 60
+    required_when: true
+  berlin_ran_one_linked_open5g:
+    description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
+    type: open5gs or open5gs_vm or open5gcore_vm
+    required_when: false
+
+
+####################################
+## Component output
+####################################
+output:
+  metadata_dict: # Dictionary with multiple parameters about the berlin_ran component
+    reservation_time: input.berlin_ran_one_reservation_time
+    oneKE: input.berlin_ran_one_oneKE
+    ran_subnet: site_variables.subnet
+    #cp_ip: site_variables.cp_ip
+    #up_ip: site_variables.up_ip
+    core_network: site_variables.core_network
+    route_manager_ip1: site_variables.route_manager_ip1
+    #route_manager_ip2: site_variables.route_manager_ip2
+    mcc: site_variables.mcc
+    mnc: site_variables.mnc
+    tac: site_variables.tac
+    s_nssai_sst: site_variables.s_nssai_sst
+    s_nssai_sd: site_variables.s_nssai_sd
+    amf_ip: site_variables.amf_ip
+    upf_ip: site_variables.upf_ip
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  #cp_ip: Address of Nokia Airscale
+  # up_ip:
+  subnet: Subnet used for the RAN N2 and N3 interfaces.
+  core_network: Subnetwork (CIDR) of the private subnet of the input.berlin_ran_one_oneKE. Will be autocompleted in the future
+  route_manager_ip1: First IP address of the route manager that will enable routing between Nokia Airscale and 5G Core.
+  #route_manager_ip2:
+  mcc:   # Unused, will complete other components dependencies in the future
+  mnc:   # Unused, will complete other components dependencies in the future
+  tac:   # Unused, will complete other components dependencies in the future
+  s_nssai_sst:   # Unused, will complete other components dependencies in the future
+  s_nssai_sd:    # Unused, will complete other components dependencies in the future
+  amf_ip:    # Unused, will complete other components dependencies in the future
+  upf_ip:    # Unused, will complete other components dependencies in the future
+  token: Token to authorize the route-manager API

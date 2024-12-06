@@ -1,0 +1,31 @@
+#- name: Execute manage_route script in Router Manager
+#  ansible.builtin.shell:
+#  args:
+#    executable: /bin/bash
+#    cmd: "nohup /root/route-manager.sh {{ tn_id }} {{ site_available_components.berlin_ran.core_network }} {{ hostvars['localhost']['bastion_ip'] }} {{ berlin_ran_one_reservation_time }} > /tmp/route-manager.log 2>&1 &" 
+#  async: 0
+#  poll: 0
+
+- name: enable route via route-manager-api
+  ansible.builtin.uri:
+    url: http://{{ route_manager_ip }}:8172/routes
+    method: POST
+    body_format: json
+    headers:
+      Authorization: "Bearer {{ site_available_components.berlin_ran.token }}"
+    body:
+      - destination: "{{ site_available_components.berlin_ran.core_network }}"
+        gateway: "{{ hostvars['localhost']['bastion_ip'] }}"
+        #create_at: ""
+        #delete_at: "{{ ansible_date_time.minute | int +berlin_ran_one_reservation_time | int }}"
+
+#curl -X 'POST' \
+#  'http://192.168.248.117:8172/routes' \
+#  -H 'accept: application/json' \
+#  -H 'Authorization: Bearer xx' \
+#  -H 'Content-Type: application/json' \
+#  -d '{
+#  "destination": "10.10.11.0/24",
+#  "gateway": "192.168.248.111"
+#}'
+

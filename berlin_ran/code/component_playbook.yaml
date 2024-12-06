@@ -1,0 +1,98 @@
+---
+- name: "STAGE 1: Prepare to access a previous target component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        node_ips: "{{ (terraform_outputs.stdout | from_json)[berlin_ran_one_oneKE + '-node_ips'] | default('{}') }}"
+        core_ips: "{{ (terraform_outputs.stdout | from_json)[berlin_ran_one_linked_open5g + '-ips'] | dict2items(key_name='id', value_name='ip') | default('[]') }}"
+
+    - name: Add Route Manager to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "routemanager"
+        ansible_host: "{{ site_available_components.berlin_ran.route_manager_ip1 }}"
+        ansible_user: "root"
+        ansible_ssh_private_key_file: "/var/lib/jenkins/.ssh/id_ed25519"
+
+    - name: Add the bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+
+- name: "STAGE 2: Apply IaC to deploy the component - STEP 1"
+  hosts: "routemanager"
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Enable routing path in Route Manager
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_manager.yaml"
+
+- name: "STAGE 2: Apply IaC to deploy the component - STEP 2"
+  hosts: "bastion"
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Enable routing path in Bastion
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_bastion.yaml"
+
+
+- name: "STAGE 3: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Define Nokia metadata dictionary
+      ansible.builtin.set_fact:
+        nokia_metadata_dict: >-
+          {
+            'reservation_time': '{{ berlin_ran_one_reservation_time }}',
+            'oneKE': '{{ berlin_ran_one_oneKE }}',
+            'linked_open5g': '{{ berlin_ran_one_linked_open5g }}'
+            'cp_ip': '',
+            'subnet': '{{ site_available_components.berlin_ran.subnet }}''
+            'core_network': '{{ site_available_components.berlin_ran.core_network }}',
+            'route_manager_ip1': '{{ site_available_components.berlin_ran.route_manager_ip1 }}',
+            'mcc': '{{ site_available_components.berlin_ran.mcc }}',
+            'mnc': '{{ site_available_components.berlin_ran.mnc }}',
+            'tac': '{{ site_available_components.berlin_ran.tac }}',
+            's_nssai_sst': '{{ site_available_components.berlin_ran.s_nssai_sst }}',
+            's_nssai_sd': '{{ site_available_components.berlin_ran.s_nssai_sd }}',
+            'amf_ip': '{{ site_available_components.berlin_ran.amf_ip }}',
+            'upf_ip': '{{ site_available_components.berlin_ran.upf_ip }}'
+          }
+    - name: Publish Nokia metadata as terraform outputs"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-metadata"
+            value: "{{ nokia_metadata_dict }}"
+
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        output:
+          metadata_dict: "{{ nokia_metadata_dict | b64encode }}"
