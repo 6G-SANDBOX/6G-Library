@@ -5,6 +5,11 @@
 ### Added
 
 - initial version of Open5gCore VM compoent
+- Add Caddy to expose the WebCLI of Open5GCore
+
+### Changed
+
+- Change default MTU on DN network to 1406 to work with tn_vxlan GUEST_MTU of 1450
 
 
 <!-- Change latest version value at every release -->
