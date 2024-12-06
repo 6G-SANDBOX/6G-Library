@@ -11,7 +11,7 @@ populate:
     pullPolicy: IfNotPresent
   initCommands:
     - >
-      {% for i in range(one_open5gs_ue_count|default(1)|int) %}open5gs-dbctl add_ue_with_slice {{ one_open5gs_mcc | string }}{{ one_open5gs_mnc | string }}{{ ('%010d' if one_open5gs_mnc|length == 2 else '%09d') % (one_open5gs_msin|int + i) }} {{ one_open5gs_key | string }} {{ one_open5gs_opc | string }} {{ one_open5gs_apn | string }} {{ one_open5gs_s_nssai_sst | int }} {{ one_open5gs_s_nssai_sd | string }}{% endfor %}
+      {% for i in range(one_open5gs_ue_count|default(1)|int) %}open5gs-dbctl add_ue_with_slice {{ one_open5gs_mcc | string }}{{ one_open5gs_mnc | string }}{{ ('%0'+(12-one_open5gs_mnc|length)|string +'d') % (one_open5gs_msin|int + i) }} {{ one_open5gs_key | string }} {{ one_open5gs_opc | string }} {{ one_open5gs_apn | string }} {{ one_open5gs_s_nssai_sst | int }} {{ one_open5gs_s_nssai_sd | string }}{% endfor %}
 
 # Common
 mongodb:
