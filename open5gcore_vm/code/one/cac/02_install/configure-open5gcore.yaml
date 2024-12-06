@@ -52,6 +52,7 @@
       with_items:
         - { src: 'open5gcore/systemd_env.j2', dest: '/etc/open5gcore/systemd_env' }
         - { src: 'open5gcore/env.sh.j2', dest: '/etc/open5gcore/env.sh' }
+        - { src: 'open5gcore/smf.json.j2', dest: '/etc/open5gcore/smf.json' }
         #- [ 'open5gcore/upf1_env.j2', '/etc/open5gcore/upf1_env' ]
         - { src: 'open5gcore/sql/udm_db.sql.j2', dest: '/etc/open5gcore/sql/udm_db.sql' }
         - { src: 'open5gcore/sql/zz_test_ue.sql.j2', dest: '/etc/open5gcore/sql/zz_test_ue.sql' }
