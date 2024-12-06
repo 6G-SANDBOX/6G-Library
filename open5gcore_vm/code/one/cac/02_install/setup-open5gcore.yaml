@@ -52,6 +52,9 @@
     - name: Configure open5gcore
       ansible.builtin.include_tasks: "{{ playbookdir }}/configure-open5gcore.yaml"
 
+    - name: Configure caddy for Open5GCore CLI
+      ansible.builtin.include_tasks: "{{ playbookdir }}/install-caddy.yaml"
+
     - name: export Variables as facts
       ansible.builtin.set_fact:
         n2_ip: "{{ n2_ip }}"

@@ -73,11 +73,14 @@
       with_fileglob:
         - "sql/*.sh"
 
-    - name: copy helper script
+    - name: copy helper scripts
       copy:
-        src: "phoenix-journal-tmux.sh"
+        src: "{{ item }}"
         dest: "/usr/local/bin/"
         mode: +x
+      loop:
+        - "phoenix-journal-tmux.sh"
+        - "phoenix-env-export.sh"
 
     - name: generate add-test-ue
       template:
