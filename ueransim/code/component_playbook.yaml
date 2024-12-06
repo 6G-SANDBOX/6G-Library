@@ -68,7 +68,8 @@
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
 
-    - name: fix UE config
+    ## This is removed when the appliance is updated to handle this case correctly
+    - name: (TEMPORARY) fix UE config
       vars:
         ips: "{{ hostvars['localhost']['ips'] }}"
         access_vnet_id: "{{ hostvars['localhost']['access_vnet_id'] }}"
