@@ -54,6 +54,12 @@
             if one_open5gs_vm_internal_vnet | length > 2 else ''
           }}
 
+    - name: Add the bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "open5gs_vm"
@@ -110,6 +116,15 @@
     - name: Install Open5GS and MongoDB
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install-open5gs.yml"
 
+- name: "STAGE 3: Apply CaC to deploy the component - STEP 2 (bastion)"
+  hosts: "bastion"
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Enable routing path in Bastion
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_bastion.yaml"
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
