@@ -138,6 +138,8 @@
       ansible.builtin.set_fact:
         open5gcore_metadata_dict: >-
           {
+            'oneKE': '',
+            'proxy': '',
             'mcc': '{{ one_open5gcore_vm_mcc }}',
             'mnc': '{{ one_open5gcore_vm_mnc }}',
             'msin': '{{ one_open5gcore_vm_msin }}',
