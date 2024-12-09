@@ -5,16 +5,17 @@
     #next_hop_to_core: "{{ o5gcore_ip if o5gcore_ip|length>0 elif oneKE_vnf0_ip if oneKE_vnf0_ip|length>0 else '' }}"
   block:
     - name: debug vars
-      var:
-        - oneKE_vnf0_ip
-        - o5gcore_ip
-      msg:
-        - "oneKE"
-        - "{{ site_available_components.berlin_ran.core_network }} via {{ oneKE_vnf0_ip }}"
-        - "{{ site_available_components.berlin_ran.subnet }} via {{ site_available_components.berlin_ran.route_manager_ip1 }}"
-        - "5g-core VM"
-        - "ip r a {{ site_available_components.berlin_ran.core_network }} via {{ o5gcore_ip }}"
-        - "ip r a {{ site_available_components.berlin_ran.subnet }} via {{ site_available_components.berlin_ran.route_manager_ip1 }}"
+      debug:
+        var:
+          - oneKE_vnf0_ip
+          - o5gcore_ip
+        msg:
+          - "oneKE"
+          - "{{ site_available_components.berlin_ran.core_network }} via {{ oneKE_vnf0_ip }}"
+          - "{{ site_available_components.berlin_ran.subnet }} via {{ site_available_components.berlin_ran.route_manager_ip1 }}"
+          - "5g-core VM"
+          - "ip r a {{ site_available_components.berlin_ran.core_network }} via {{ o5gcore_ip }}"
+          - "ip r a {{ site_available_components.berlin_ran.subnet }} via {{ site_available_components.berlin_ran.route_manager_ip1 }}"
       when: debug
 
     - name: add routes for oneKE
