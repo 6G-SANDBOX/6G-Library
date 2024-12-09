@@ -50,7 +50,7 @@ metadata:
 input:
   berlin_ran_one_oneKE:
     description: Name of the oneKE cluster to route RAN traffic.
-    type: "oneKE"
+    type: "string"
     required_when: false
   berlin_ran_one_reservation_time:
     description: Time in minutes for the RAN equipment reservation
