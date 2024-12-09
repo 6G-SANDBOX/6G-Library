@@ -22,15 +22,13 @@
         mode: 0600
         dest: /opt/phoenix/license.crt
 
-    - name: Copy sysctl.d/10-5g_forwarding.conf
+    - name: Copy sysctl files
       ansible.builtin.copy:
-        src: "sysctl_10-5g_forwarding.conf"
-        dest: /etc/sysctl.d/10-5g_forwarding.conf
-
-    - name: Copy sysctl.d/10-5g_forwarding.conf
-      ansible.builtin.copy:
-        src: "sysctl_20-5g_xdp.conf"
-        dest: /etc/sysctl.d/20-5g_xdp.conf
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      with_items:
+        - { src: 'sysctl_10-5g_forwarding.conf', dest: '/etc/sysctl.d/10-5g_forwarding.conf' }
+        - { src: 'sysctl_20-5g_xdp.conf',        dest: '/etc/sysctl.d/20-5g_xdp.conf' }
 
     - name: reload sysctl
       ansible.builtin.command:
