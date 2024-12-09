@@ -65,7 +65,7 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: Define Nokia metadata dictionary
+    - name: Define metadata dictionary
       ansible.builtin.set_fact:
         berlin_ran_metadata_dict: >-
           {
@@ -84,7 +84,7 @@
             'amf_ip': '{{ site_available_components.berlin_ran.amf_ip }}',
             'upf_ip': '{{ site_available_components.berlin_ran.upf_ip }}'
           }
-    - name: Publish Nokia metadata as terraform outputs"
+    - name: Publish metadata as terraform outputs"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
