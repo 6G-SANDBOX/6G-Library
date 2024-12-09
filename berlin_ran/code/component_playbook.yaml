@@ -25,7 +25,8 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ terraform_output['tn_bastion-ips'][site_networks_id.default | string] }}"
         node_ips: "{{ terraform_output.get(berlin_ran_one_oneKE|default('NONE') + '-node_ips',{}) }}"
-        core_ips: "{{ terraform_output[berlin_ran_one_linked_open5g|default('NONE') + '-ips'] | dict2items(key_name='id', value_name='ip') | default('[]') }}"
+        core_ips: "{{ terraform_output[berlin_ran_one_linked_open5g|default('NONE') + '-ips'] | default('{}') }}"
+        tn_vxlan_id: "{{ terraform_output['tn_vxlan-id'] | string }}"
 
     - name: Add Route Manager to Ansible Inventory
       ansible.builtin.add_host:
