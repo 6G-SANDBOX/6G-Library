@@ -6,6 +6,20 @@
 #  async: 0
 #  poll: 0
 
+- name: first delte the old route via route-manager-api
+  ansible.builtin.uri:
+    url: http://{{ site_available_components.berlin_ran.route_manager_ip1 }}:8172/routes
+    method: DELETE
+    body_format: json
+    status_code: [200, 500, 422]
+    headers:
+      Authorization: "Bearer {{ site_available_components.berlin_ran.token }}"
+    body: >-
+          {
+            'destination': "{{ site_available_components.berlin_ran.core_network }}",
+            'gateway': "{{ hostvars['localhost']['bastion_ip'] }}"
+          }
+
 - name: enable route via route-manager-api
   ansible.builtin.uri:
     url: http://{{ site_available_components.berlin_ran.route_manager_ip1 }}:8172/routes
