@@ -77,9 +77,9 @@
           {
             'reservation_time': '{{ berlin_ran_one_reservation_time }}',
             'oneKE': '{{ berlin_ran_one_oneKE | default('') }}',
-            'linked_open5g': '{{ berlin_ran_one_linked_open5g | default('') }}'
+            'linked_open5g': '{{ berlin_ran_one_linked_open5g | default('') }}',
             'cp_ip': '',
-            'subnet': '{{ site_available_components.berlin_ran.subnet }}''
+            'subnet': '{{ site_available_components.berlin_ran.subnet }}',
             'core_network': '{{ site_available_components.berlin_ran.core_network }}',
             'route_manager_ip1': '{{ site_available_components.berlin_ran.route_manager_ip1 }}',
             'mcc': '{{ site_available_components.berlin_ran.mcc }}',
