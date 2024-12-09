@@ -13,11 +13,11 @@
     body_format: json
     headers:
       Authorization: "Bearer {{ site_available_components.berlin_ran.token }}"
-    body:
-      - destination: "{{ site_available_components.berlin_ran.core_network }}"
-        gateway: "{{ hostvars['localhost']['bastion_ip'] }}"
-        #create_at: ""
-        #delete_at: "{{ ansible_date_time.minute | int +berlin_ran_one_reservation_time | int }}"
+    body: >-
+          {
+            'destination': "{{ site_available_components.berlin_ran.core_network }}",
+            'gateway': "{{ hostvars['localhost']['bastion_ip'] }}"
+          }
 
 #curl -X 'POST' \
 #  'http://192.168.248.117:8172/routes' \
