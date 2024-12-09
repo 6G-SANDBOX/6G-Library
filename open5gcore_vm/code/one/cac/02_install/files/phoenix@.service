@@ -1,10 +1,10 @@
 [Unit]
 Description=open5Gcore - %I
 #After=dev-%i.device systemd-user-sessions.service
+PartOf=open5gcore.service
 
 [Service]
 Type=simple
-#User=ubuntu
 
 EnvironmentFile=/etc/open5gcore/systemd_env
 # this one is optional
@@ -15,8 +15,9 @@ ConditionPathExists=/etc/open5gcore/%i.json
 
 ExecStart=/opt/phoenix/dist/bin/phoenix -j /etc/open5gcore/%i.json -l -p /opt/phoenix/dist/lib -i /tmp/phoenix-%i.pid
 
+TimeoutStopSec=8
 Restart=always
 RestartSec=5
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=open5gcore.service

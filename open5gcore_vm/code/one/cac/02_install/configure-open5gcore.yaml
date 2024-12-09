@@ -121,11 +121,14 @@
       changed_when: false
       when: networkd_changed.changed
 
-    - name: install phoenix@ service
+    - name: install services
       copy:
-        src: "phoenix@.service"
+        src: "{{ item }}"
         dest: /etc/systemd/system/
       register: systemdfiles
+      loop:
+        - "phoenix@.service"
+        - "open5gcore.service"
 
     - name: "systemd daemon-reload"
       ansible.builtin.systemd:
@@ -134,29 +137,13 @@
 
     - name: enable & start services
       service:
-        name: "{{ item }}"
+        name: "open5gcore"
         state: started
         enabled: true
-      loop:
-          - "phoenix@nrf"
-          - "phoenix@amf"
-          - "phoenix@smf"
-          - "phoenix@upf1"
-          - "phoenix@udm"
-          - "phoenix@ausf"
-          - "phoenix@pcf"
 
     - name: restart services
       service:
-        name: "{{ item }}"
+        name: "open5gcore"
         state: restarted
         enabled: true
-      loop:
-          - "phoenix@nrf"
-          - "phoenix@amf"
-          - "phoenix@smf"
-          - "phoenix@upf1"
-          - "phoenix@udm"
-          - "phoenix@ausf"
-          - "phoenix@pcf"
       when: systemdfiles.changed or config_changed.changed
