@@ -20,10 +20,12 @@
       changed_when: false
 
     - name: Set Terraform outputs as playbook facts
+      vars:
+        terraform_output: "{{terraform_outputs.stdout | from_json}}"
       ansible.builtin.set_fact:
-        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-        node_ips: "{{ (terraform_outputs.stdout | from_json)[berlin_ran_one_oneKE + '-node_ips'] | default('{}') }}"
-        core_ips: "{{ (terraform_outputs.stdout | from_json)[berlin_ran_one_linked_open5g + '-ips'] | dict2items(key_name='id', value_name='ip') | default('[]') }}"
+        bastion_ip: "{{ terraform_output['tn_bastion-ips'][site_networks_id.default | string] }}"
+        node_ips: "{{ terraform_output.get(berlin_ran_one_oneKE|default('NONE') + '-node_ips',{}) }}"
+        core_ips: "{{ terraform_output[berlin_ran_one_linked_open5g|default('NONE') + '-ips'] | dict2items(key_name='id', value_name='ip') | default('[]') }}"
 
     - name: Add Route Manager to Ansible Inventory
       ansible.builtin.add_host:
