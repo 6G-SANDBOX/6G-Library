@@ -1,0 +1,130 @@
+######################################################
+##
+## Component public variables
+##
+## Variables accesible to the experimenter.
+##
+## They are contained inside 3 global variables
+## with all required info:
+##
+##   1. metadata: General information like mantainers,
+##      component dependencies and allowed platforms
+##
+##   2. input: Customizable variables for each
+##      deployment to be filled by the experimenter
+##      or the TNLCM
+##
+##   3. output: Values sent to the TNLCM callback to
+##      keep track of the TN deployments
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+  short_description: Enables the capability of using RIS in a Trial Network.
+  long_description: |
+    As RIS is envisaged to be a new enabling candidate wireless technology for the control of the radio signals 
+    between a transmitter and a receiver in a dynamic and goal-oriented way, turning the wireless environment into a service. 
+    This has motivated a host of potential new use cases targeting at:
+
+      - the enhancement of various system key-performance-indicators (KPIs), and
+      - the support of new wireless technology applications and capabilities.
+
+    These include enhancements to the capacity, coverage, positioning, security, and sustainability, as well as the support 
+    of further sensing, wireless power transfer, and ambient backscattering capabilities.
+
+    The configuration exposed by the RIS is:
+
+    - ris_ip_address: "Ip address of RIS"
+    - ris_f0: "Frequency (GHz). 26.5GHz – 29.5Ghz"
+    - ris_dist: "Distance (m)"
+    - ris_phi_t: "Incident angle azimuth (degrees 0-360)"
+    - ris_theta_t: "Incident angle polar (degrees 0-90)"
+    - ris_num_phi_r: "Number of azimuth segments (1, num_phi_r * num_theta_r <= 256)"
+    - ris_phi_r_low: "Receiver azimuth low (degrees 0-360)"
+    - ris_phi_r_high: "Receiver azimuth high (degrees 0-360)"
+    - ris_num_theta_r: "Number of polar segments (1, num_phi_r * num_theta_r <= 256)"
+    - ris_theta_r_low: "Receiver polar low (degrees 0-360)"
+    - ris_theta_r_high: "Receiver polar high (degrees 0-360)"
+    - ris_reservation_time: "Time that is reserved to be used (minutes)"
+
+    Note: Currently this component is only available in the site "uma".
+  hypervisors: [one]
+  destroy_script: true
+
+####################################
+## Component input
+####################################
+
+input:
+  ris_f0:
+    description: Frequency (GHz). 26.5GHz – 29.5Ghz
+    type: float
+    required_when: true
+  ris_dist:
+    description: Distance (m)
+    type: float
+    required_when: true
+  ris_phi_t:
+    description: Incident angle azimuth (degrees 0-360)
+    type: float
+    required_when: true
+  ris_theta_t:
+    description: Incident angle polar (degrees 0-90)
+    type: float
+    required_when: true
+  ris_fris_num_phi_r:
+    description: Number of azimuth segments (1, num_phi_r * num_theta_r <= 256)
+    type: int
+    required_when: true
+  ris_phi_r_low:
+    description: Receiver azimuth low (degrees 0-360)
+    type: float
+    required_when: true
+  ris_phi_r_high:
+    description: Receiver azimuth high (degrees 0-360)
+    type: float
+    required_when: true
+  ris_num_theta_r:
+    description: Number of polar segments (1, num_phi_r * num_theta_r <= 256)
+    type: int
+    required_when: true
+  ris_theta_r_low:
+    description: Receiver polar low (degrees 0-360)
+    type: float
+    required_when: true
+  ris_theta_r_high:
+    description: Receiver polar high (degrees 0-360)
+    type: float
+    required_when: true
+  ris_reservation_time:
+    description: Time in minutes for the RIS reservation
+    type: int
+    default_value: 60
+    required_when: true
+####################################
+## Component output
+####################################
+output:
+  metadata_dict: # Dictionary with multiple parameters about the RIS component
+    ris_ip_address: site_variables.ip
+    ris_f0: input.ris_f0
+    ris_dist: input.ris_dist
+    ris_phi_t: input.ris_phi_t
+    ris_theta_t: input.ris_theta_t
+    ris_fris_num_phi_r: input.ris_fris_num_phi_r
+    ris_phi_r_low: input.ris_phi_r_low
+    ris_phi_r_high: input.ris_phi_r_high
+    ris_num_theta_r: input.ris_num_theta_r
+    ris_theta_r_low: input.ris_theta_r_low
+    ris_theta_r_high: input.ris_theta_r_high
+
+####################################
+## Site-specific variables
+####################################
+site_variables:

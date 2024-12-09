@@ -1,0 +1,13 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+ris_f0: "28.9"
+ris_dist: "2.2"
+ris_phi_t: "12"
+ris_theta_t: "11"
+ris_num_phi_r: "1"
+ris_phi_r_low: "0)"
+ris_phi_r_high: "0"
+ris_num_theta_r: "10"
+ris_theta_r_low: "20"
+ris_theta_r_high: "160"
+ris_reservation_time: 180
