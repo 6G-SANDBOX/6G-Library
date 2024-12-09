@@ -1,10 +1,17 @@
 ---
-- name: download caddy (TEMPORARY until appliance is updated)
+- name: check if Caddy is already installed
+  stat:
+    path: /usr/local/bin/caddy_server
+  register: caddy_bin
+
+- name: download caddy
   become: true
   ansible.builtin.get_url:
     url: "https://caddyserver.com/api/download?os=linux&arch=amd64&idempotency=63113367019600"
     dest: /usr/local/bin/caddy_server
     mode: "+x"
+  when: not caddy_bin.stat.exists
+
 - name: create caddy directory
   file:
     path: "/etc/open5gcore/caddy"
