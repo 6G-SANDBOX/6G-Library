@@ -76,8 +76,8 @@
         berlin_ran_metadata_dict: >-
           {
             'reservation_time': '{{ berlin_ran_one_reservation_time }}',
-            'oneKE': '{{ berlin_ran_one_oneKE }}',
-            'linked_open5g': '{{ berlin_ran_one_linked_open5g }}'
+            'oneKE': '{{ berlin_ran_one_oneKE | default('') }}',
+            'linked_open5g': '{{ berlin_ran_one_linked_open5g | default('') }}'
             'cp_ip': '',
             'subnet': '{{ site_available_components.berlin_ran.subnet }}''
             'core_network': '{{ site_available_components.berlin_ran.core_network }}',
