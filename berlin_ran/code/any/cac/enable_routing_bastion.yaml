@@ -4,11 +4,15 @@
     o5gcore_ip: "{{ hostvars['localhost']['core_ips'][0]['ip'] if hostvars['localhost']['core_ips'] | length >=1 else '' }}"
     #next_hop_to_core: "{{ o5gcore_ip if o5gcore_ip|length>0 elif oneKE_vnf0_ip if oneKE_vnf0_ip|length>0 else '' }}"
   block:
-    - name: debug vars
+    - name: debug variables
       debug:
         var:
           - oneKE_vnf0_ip
           - o5gcore_ip
+      when: debug
+
+    - name: debug inputs
+      debug:
         msg:
           - "oneKE"
           - "{{ site_available_components.berlin_ran.core_network }} via {{ oneKE_vnf0_ip }}"
