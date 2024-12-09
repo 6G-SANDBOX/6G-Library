@@ -67,7 +67,7 @@
   tasks:
     - name: Define Nokia metadata dictionary
       ansible.builtin.set_fact:
-        nokia_metadata_dict: >-
+        berlin_ran_metadata_dict: >-
           {
             'reservation_time': '{{ berlin_ran_one_reservation_time }}',
             'oneKE': '{{ berlin_ran_one_oneKE }}',
@@ -89,10 +89,10 @@
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-metadata"
-            value: "{{ nokia_metadata_dict }}"
+            value: "{{ berlin_ran_metadata_dict }}"
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:
-          metadata_dict: "{{ nokia_metadata_dict | b64encode }}"
+          metadata_dict: "{{ berlin_ran_metadata_dict | b64encode }}"
