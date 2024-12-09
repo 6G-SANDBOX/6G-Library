@@ -70,6 +70,7 @@ output:
   metadata_dict: # Dictionary with multiple parameters about the berlin_ran component
     reservation_time: input.berlin_ran_one_reservation_time
     oneKE: input.berlin_ran_one_oneKE
+    linked_open5g: input.berlin_ran_one_linked_open5g
     ran_subnet: site_variables.subnet
     #cp_ip: site_variables.cp_ip
     #up_ip: site_variables.up_ip
