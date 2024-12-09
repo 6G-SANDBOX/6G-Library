@@ -43,13 +43,13 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_opensand_gw_networks[0] + '-id'] | string}}"
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_opensand_gw_networks[0] + '-id'] | string}}"
 
     # Include the deployed component/s as Inventory host/s.
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[vnet_id] }}"
+        ansible_host: "{{ ips[access_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
