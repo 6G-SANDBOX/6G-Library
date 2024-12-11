@@ -39,7 +39,6 @@ metadata:
 ## Component input
 ####################################
 input:
-  input:
   one_int_p4_sw_cpu:
     description: Number of CPUs for all VMs (switches and collector)
     type: int
