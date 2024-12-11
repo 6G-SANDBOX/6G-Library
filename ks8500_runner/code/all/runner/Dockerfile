@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/runtime:8.0-alpine AS prod
 
 ARG OPENTAPVERSION=9.27.0
-ARG RUNNERVERSION=1.11.2
+ARG RUNNERVERSION=1.11.4
 ENV OPENTAP_RUNNER_HealthEndpoint=true
 EXPOSE 20111
 
