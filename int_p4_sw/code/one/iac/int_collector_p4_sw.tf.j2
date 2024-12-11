@@ -1,7 +1,7 @@
 resource "opennebula_virtual_machine" "{{ entity_name }}_collector" {
   name        = "{{ tn_id }}-{{ entity_name }}-collector"
-  template_id = {{ site_available_components.collector_int.template_id }} 
-  #template_id = 90
+  #template_id = {{ site_available_components.collector_int.template_id }} 
+  template_id = 90
   cpu         = {{ one_int_p4_sw_cpu }}
   vcpu        = {{ one_int_p4_sw_cpu }}
   memory      = {{ one_int_p4_sw_memory }}
