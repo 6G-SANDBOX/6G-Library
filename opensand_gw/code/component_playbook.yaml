@@ -1,0 +1,121 @@
+---
+- name: "STAGE 1: Apply IAC to deploy the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+
+      # Loads information, Metadata, public and private variables and pipeline parameters
+      - name: Load enviromental variables from different sources
+        ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+      # Creates a terraform working directory at .terraform
+      - name: Prepare terraform working directory
+        ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+      # Templates all manifests from {{ component_type }}/code/{{ site_hypervisor }}/iac/*.tf.j2, writes them at .terraform
+      # Task also has error handling, and if apply fails, will send a notification to the TNLCM with the stderr, and text from {{ component_type }}/result_templates/fail_result.md.j2
+      - name: Terraform apply
+        ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+      
+
+# Post-terraform preliminary tasks. Still no component configuration.
+- name: "STAGE 2: Prepare to access the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:     
+
+    # Module to retrieve all generated outputs from the terraform working directory in JSON with a key-value format
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false  
+
+    # Save some of the outputs as playbook facts (variables). Some of them will be surelly be used as future output values
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_opensand_gw_networks[0] + '-id'] | string}}"
+
+    # Include the deployed component/s as Inventory host/s.
+    - name: Add new VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "{{ entity_name }}"
+        ansible_host: "{{ ips[access_vnet_id] }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+    # While not used by the Jenkins, we included the configuration of a .ssh/config per TN in the Jenkins for debugging purposes.
+    - name: Create SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"   
+
+
+# Configuration play. Modules executed in the deployment component.
+# Remember in Ansible variables are loaded in each host, so if you change the host, you can either
+# - Set the variables again (with the load_variables.yaml global taskfile or similar)
+# - Refer to the hostvars of localhost.   
+- name: "STAGE 3: Apply CAC to prepare the component"
+  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  gather_facts: false
+  tasks:
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        timeout: 200
+
+
+    - name: Set site ssh key as authorized in jenkins user
+      ansible.posix.authorized_key:
+        user: jenkins
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
+      when: item != ''
+
+    # Any deployed VM should create a "tnuser" user for the experimenter's access. All components can be accessed through that user with the ssh key created in tn_init
+    - name: Create new user for experimenter access
+      become: true
+      ansible.builtin.user:
+        name: tnuser
+        shell: /bin/bash
+        groups: sudo
+        password: ''
+
+    - name: Set TN ssh key as authorized in new user
+      become: true
+      ansible.posix.authorized_key:
+        user: tnuser
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+
+    
+    - name: Download and install packages to VM
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/03_post/install_packages.yaml"   
+      
+
+# Final phase of the deployments. Gather information and publish it
+- name: "STAGE 4: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Merge all component component outputs into one "output" variable
+      ansible.builtin.set_fact:
+        output:
+          ips: "{{ ips | b64encode }}"
+          id: "{{ id | b64encode }}"
+
+
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
