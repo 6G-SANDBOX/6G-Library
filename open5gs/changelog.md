@@ -1,6 +1,6 @@
 # Changelog
 
-## [unreleased]
+## [v0.3.1]
 ### Changed
 - Updated helm chart reference URL to point the 6G-Sandbox dockerhub
 - Fixed bug where the one_open5gs_upf_ip wasn't correctly set as an output variable
