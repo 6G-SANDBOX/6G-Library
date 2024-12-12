@@ -1,10 +1,10 @@
 # Changelog
 
-## [v0.3.0]
+## [v1.0.0]
 
 ### Added
-- New component INT-P4 SW
-- Initial documentation for the INT-P4 SW component
+- First complete working version of the INT-P4 SW component
+- Initial documentation for the component
 
 
 <!-- Change latest version value at every release -->
