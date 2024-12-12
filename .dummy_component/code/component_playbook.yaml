@@ -62,14 +62,19 @@
       register: terraform_outputs
       changed_when: false
 
-    # Save some of the outputs as playbook facts (variables). Some of them will be surelly be used as future output values
+    # Save some of the outputs as playbook facts (variables). Some of them will surelly be used as future output values
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
+        # defined in the tn_init deployment
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        # defined in the tn_init deployment
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        # IPs of the newly created VM
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
+        # ID of the newly created VM in OpenNebula
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string }}"
+        # ID of the first VNet used in this VM. It must be reachable to the Jenkins VM
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_dummy_component_networks[0] + '-id'] | string }}"
 
     # Inclusion of a task file to to still do preliminatory tasks out of the main playbook
     - name: Fetch cluster node IPs
@@ -80,7 +85,7 @@
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "new_host"
-        ansible_host: "{{ ips[vnet_id] }}"
+        ansible_host: "{{ ips[access_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 

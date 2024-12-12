@@ -62,7 +62,7 @@
             's_nssai_sst': '{{ one_open5gs_s_nssai_sst }}',
             's_nssai_sd': '{{ one_open5gs_s_nssai_sd }}',
             'amf_ip': '{{ one_open5gs_amf_ip }}',
-            'upf_ip': '{{ one_open5gs_amf_ip }}'
+            'upf_ip': '{{ one_open5gs_upf_ip }}'
           }
 
     - name: Publish open5gs metadata as terraform outputs"

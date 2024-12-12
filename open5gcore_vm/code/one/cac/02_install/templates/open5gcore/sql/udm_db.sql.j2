@@ -1,0 +1,438 @@
+-- MariaDB dump 10.19  Distrib 10.6.12-MariaDB, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: udm_db
+-- ------------------------------------------------------
+-- Server version	10.6.12-MariaDB-0ubuntu0.22.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Current Database: `udm_db`
+--
+
+/*!40000 DROP DATABASE IF EXISTS `udm_db`*/;
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `udm_db` /*!40100 DEFAULT CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci */;
+
+USE `udm_db`;
+
+--
+-- Table structure for table `am_data`
+--
+
+DROP TABLE IF EXISTS `am_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `am_data` (
+  `supi` varchar(255) NOT NULL,
+  `access_and_mobility_sub_data` longtext NOT NULL,
+  PRIMARY KEY (`supi`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Access and Mobility Subscription Data';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `capabilities`
+--
+
+DROP TABLE IF EXISTS `capabilities`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `capabilities` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_set` varchar(255) NOT NULL,
+  `capability` tinyint(4) NOT NULL DEFAULT 0,
+  `is_mandatory` tinyint(1) NOT NULL DEFAULT 0,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Capabilities';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `charging_info`
+--
+
+DROP TABLE IF EXISTS `charging_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `charging_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `pri_ecf` varchar(255) DEFAULT NULL,
+  `sec_ecf` varchar(255) DEFAULT NULL,
+  `pri_ccf` varchar(255) DEFAULT NULL,
+  `sec_ccf` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Charging info';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `db_version`
+--
+
+DROP TABLE IF EXISTS `db_version`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `db_version` (
+  `version` int(11) NOT NULL,
+  `compatible` int(11) DEFAULT NULL,
+  PRIMARY KEY (`version`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Current version of DB and the minimum version for compatibility';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `dnn_configurations`
+--
+
+DROP TABLE IF EXISTS `dnn_configurations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dnn_configurations` (
+  `supi` varchar(255) DEFAULT NULL,
+  `plmnid` varchar(8) DEFAULT NULL,
+  `sst` int(8) DEFAULT NULL,
+  `dnn` varchar(255) NOT NULL,
+  `json` longtext NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='DNN Configurations for SUPI, PLMNID and Slice/Service Type combinations';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `gpsi`
+--
+
+DROP TABLE IF EXISTS `gpsi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `gpsi` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `identity` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_gpsi_identity` (`identity`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Generic Public Subscription Identifier';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `gpsi_supi_association`
+--
+
+DROP TABLE IF EXISTS `gpsi_supi_association`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `gpsi_supi_association` (
+  `gpsi_id` int(11) NOT NULL,
+  `supi_id` int(11) NOT NULL,
+  PRIMARY KEY (`gpsi_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='GPSI-SUPI association';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `group_identifier`
+--
+
+DROP TABLE IF EXISTS `group_identifier`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `group_identifier` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `internal_group_id` varchar(255) NOT NULL,
+  `external_group_id` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_internal_group_id` (`internal_group_id`),
+  UNIQUE KEY `idx_external_group_id` (`external_group_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Group Identifier';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `home_network_keys`
+--
+
+DROP TABLE IF EXISTS `home_network_keys`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `home_network_keys` (
+  `home_network_pki` int(11) NOT NULL,
+  `protection_scheme` int(11) NOT NULL,
+  `pub_key` varchar(130) DEFAULT NULL,
+  `pvt_key` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`home_network_pki`,`protection_scheme`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Home Network Keys';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `impi`
+--
+
+DROP TABLE IF EXISTS `impi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `impi` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_supi` int(11) NOT NULL DEFAULT 0,
+  `private_identity` varchar(255) NOT NULL DEFAULT '',
+  `scscf_name` varchar(255) DEFAULT NULL,
+  `reassignment_pending` tinyint(1) NOT NULL DEFAULT 0,
+  `id_capabilities_set` int(11) DEFAULT NULL,
+  `auth_scheme` int(11) NOT NULL DEFAULT 1,
+  `default_auth_scheme` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  KEY `idx_id_supi` (`id_supi`),
+  KEY `idx_id_capabilities_set` (`id_capabilities_set`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='IMPI';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `impi_impu`
+--
+
+DROP TABLE IF EXISTS `impi_impu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `impi_impu` (
+  `id_impi` int(11) NOT NULL DEFAULT 0,
+  `id_impu` int(11) NOT NULL DEFAULT 0,
+  `user_state` tinyint(4) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id_impi`,`id_impu`),
+  KEY `idx_id_impi` (`id_impi`),
+  KEY `idx_id_impu` (`id_impu`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='IMPI IMPU Associations';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `impu`
+--
+
+DROP TABLE IF EXISTS `impu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `impu` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `public_identity` varchar(255) NOT NULL DEFAULT '',
+  `type` tinyint(4) NOT NULL DEFAULT 0,
+  `barring` tinyint(4) NOT NULL DEFAULT 0,
+  `can_register` tinyint(4) NOT NULL DEFAULT 1,
+  `user_state` tinyint(4) NOT NULL DEFAULT 1,
+  `service_profile` tinyint(4) NOT NULL DEFAULT 0,
+  `id_charging_info` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_id_charging_info` (`id_charging_info`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='IMPU';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `supi`
+--
+
+DROP TABLE IF EXISTS `supi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `supi` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `identity` varchar(255) NOT NULL,
+  `k` tinyblob DEFAULT NULL,
+  `amf` tinyblob DEFAULT NULL,
+  `op` tinyblob DEFAULT NULL,
+  `sqn` varchar(64) NOT NULL DEFAULT '000000000000',
+  `auth_type` int(11) NOT NULL,
+  `op_is_opc` tinyint(1) NOT NULL DEFAULT 0,
+  `usim_type` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_supi_identity` (`identity`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Subscriber Permanent Identifier';
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2023-06-12 15:05:07
+-- MariaDB dump 10.19  Distrib 10.6.12-MariaDB, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: udm_db
+-- ------------------------------------------------------
+-- Server version	10.6.12-MariaDB-0ubuntu0.22.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Current Database: `udm_db`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `udm_db` /*!40100 DEFAULT CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci */;
+
+USE `udm_db`;
+
+--
+-- Dumping data for table `am_data`
+--
+
+LOCK TABLES `am_data` WRITE;
+/*!40000 ALTER TABLE `am_data` DISABLE KEYS */;
+INSERT INTO `am_data` VALUES ('0','{\"subscribedUeAmbr\": {\"uplink\": \"1.25 Gbps\", \"downlink\": \"1.75 Gbps\"}, \"nssai\": {\"supportedFeatures\": \"Supported Features here\", \"defaultSingleNssais\": [{\"sst\": 1}, {\"sst\": 1, \"sd\": \"{{ s_nssai_sd }}\"}]}}');
+/*!40000 ALTER TABLE `am_data` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `capabilities`
+--
+
+LOCK TABLES `capabilities` WRITE;
+/*!40000 ALTER TABLE `capabilities` DISABLE KEYS */;
+/*!40000 ALTER TABLE `capabilities` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `charging_info`
+--
+
+LOCK TABLES `charging_info` WRITE;
+/*!40000 ALTER TABLE `charging_info` DISABLE KEYS */;
+/*!40000 ALTER TABLE `charging_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `db_version`
+--
+
+LOCK TABLES `db_version` WRITE;
+/*!40000 ALTER TABLE `db_version` DISABLE KEYS */;
+INSERT INTO `db_version` VALUES (10,10);
+/*!40000 ALTER TABLE `db_version` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `dnn_configurations`
+--
+
+LOCK TABLES `dnn_configurations` WRITE;
+/*!40000 ALTER TABLE `dnn_configurations` DISABLE KEYS */;
+INSERT INTO `dnn_configurations` VALUES ('default_data',NULL,1,'default','{ \"pduSessionTypes\": { \"defaultSessionType\": \"IPV4\" }, \"sscModes\": { \"defaultSscMode\": \"SSC_MODE_1\" }, \"iwkEpsInd\": false, \"5gQosProfile\": { \"5qi\": 9, \"arp\": {  \"priorityLevel\": 2,  \"preemptCap\": \"NOT_PREEMPT\",  \"preemptVuln\": \"NOT_PREEMPTABLE\" } }, \"sessionAmbr\": { \"uplink\": \"1.25 Gbps\", \"downlink\": \"1.75 Gbps\" }  }');
+INSERT INTO `dnn_configurations` VALUES ('default_data',NULL,1,'ims','{ \"pduSessionTypes\": { \"defaultSessionType\": \"IPV4\" }, \"sscModes\": { \"defaultSscMode\": \"SSC_MODE_1\" }, \"iwkEpsInd\": false, \"5gQosProfile\": { \"5qi\": 5, \"arp\": {  \"priorityLevel\": 2,  \"preemptCap\": \"NOT_PREEMPT\",  \"preemptVuln\": \"NOT_PREEMPTABLE\" } }, \"sessionAmbr\": { \"uplink\": \"1.25 Mbps\", \"downlink\": \"1.75 Mbps\" }  }');
+INSERT INTO `dnn_configurations` VALUES ('default_data',NULL,1,'{{ ue_apn }}','{ \"pduSessionTypes\": { \"defaultSessionType\": \"IPV4\" }, \"sscModes\": { \"defaultSscMode\": \"SSC_MODE_1\" }, \"iwkEpsInd\": false, \"5gQosProfile\": { \"5qi\": 9, \"arp\": {  \"priorityLevel\": 2,  \"preemptCap\": \"NOT_PREEMPT\",  \"preemptVuln\": \"NOT_PREEMPTABLE\" } }, \"sessionAmbr\": { \"uplink\": \"1.25 Gbps\", \"downlink\": \"1.75 Gbps\" }  }');
+INSERT INTO `dnn_configurations` VALUES ('default_data',NULL,1,'bt5g','{ \"pduSessionTypes\": { \"defaultSessionType\": \"IPV4\" }, \"sscModes\": { \"defaultSscMode\": \"SSC_MODE_1\" }, \"iwkEpsInd\": false, \"5gQosProfile\": { \"5qi\": 9, \"arp\": {  \"priorityLevel\": 2,  \"preemptCap\": \"NOT_PREEMPT\",  \"preemptVuln\": \"NOT_PREEMPTABLE\" } }, \"sessionAmbr\": { \"uplink\": \"1.25 Gbps\", \"downlink\": \"1.75 Gbps\" }  }');
+INSERT INTO `dnn_configurations` VALUES ('default_data',NULL,1,'ethnet','{ \"pduSessionTypes\": { \"defaultSessionType\": \"ETHERNET\" }, \"sscModes\": { \"defaultSscMode\": \"SSC_MODE_1\" }, \"iwkEpsInd\": false, \"5gQosProfile\": { \"5qi\": 9, \"arp\": {  \"priorityLevel\": 2,  \"preemptCap\": \"NOT_PREEMPT\",  \"preemptVuln\": \"NOT_PREEMPTABLE\" } }, \"sessionAmbr\": { \"uplink\": \"1.25 Gbps\", \"downlink\": \"1.75 Gbps\" }  }');
+/*!40000 ALTER TABLE `dnn_configurations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `gpsi`
+--
+
+LOCK TABLES `gpsi` WRITE;
+/*!40000 ALTER TABLE `gpsi` DISABLE KEYS */;
+INSERT INTO `gpsi` VALUES (1,'msisdn-991011234567890');
+INSERT INTO `gpsi` VALUES (2,'msisdn-991011234567891');
+INSERT INTO `gpsi` VALUES (3,'msisdn-991011234567892');
+INSERT INTO `gpsi` VALUES (4,'msisdn-991011234567893');
+INSERT INTO `gpsi` VALUES (5,'msisdn-991011234567894');
+INSERT INTO `gpsi` VALUES (6,'msisdn-991011234567899');
+/*!40000 ALTER TABLE `gpsi` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `gpsi_supi_association`
+--
+
+LOCK TABLES `gpsi_supi_association` WRITE;
+/*!40000 ALTER TABLE `gpsi_supi_association` DISABLE KEYS */;
+INSERT INTO `gpsi_supi_association` VALUES (1,1);
+INSERT INTO `gpsi_supi_association` VALUES (2,2);
+INSERT INTO `gpsi_supi_association` VALUES (3,3);
+INSERT INTO `gpsi_supi_association` VALUES (4,4);
+INSERT INTO `gpsi_supi_association` VALUES (5,5);
+INSERT INTO `gpsi_supi_association` VALUES (6,6);
+/*!40000 ALTER TABLE `gpsi_supi_association` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `group_identifier`
+--
+
+LOCK TABLES `group_identifier` WRITE;
+/*!40000 ALTER TABLE `group_identifier` DISABLE KEYS */;
+INSERT INTO `group_identifier` VALUES (1,'TestGroup1','TestGroup1@domain.com');
+/*!40000 ALTER TABLE `group_identifier` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `home_network_keys`
+--
+
+LOCK TABLES `home_network_keys` WRITE;
+/*!40000 ALTER TABLE `home_network_keys` DISABLE KEYS */;
+INSERT INTO `home_network_keys` VALUES (1,1,'5A8D38864820197C3394B92613B20B91633CBD897119273BF8E4A6F4EEC0A650','C53C22208B61860B06C62E5406A7B330C2B577AA5558981510D128247D38BD1D');
+INSERT INTO `home_network_keys` VALUES (2,2,'0272DA71976234CE833A6907425867B82E074D44EF907DFB4B3E21C1C2256EBCD1','F1AB1074477EBCC7F554EA1C5FC368B1616730155E0041AC447D6301975FECDA');
+INSERT INTO `home_network_keys` VALUES (3,2,'0472DA71976234CE833A6907425867B82E074D44EF907DFB4B3E21C1C2256EBCD15A7DED52FCBB097A4ED250E036C7B9C8C7004C4EEDC4F068CD7BF8D3F900E3B4','F1AB1074477EBCC7F554EA1C5FC368B1616730155E0041AC447D6301975FECDA');
+/*!40000 ALTER TABLE `home_network_keys` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `impi`
+--
+
+LOCK TABLES `impi` WRITE;
+/*!40000 ALTER TABLE `impi` DISABLE KEYS */;
+/*!40000 ALTER TABLE `impi` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `impi_impu`
+--
+
+LOCK TABLES `impi_impu` WRITE;
+/*!40000 ALTER TABLE `impi_impu` DISABLE KEYS */;
+/*!40000 ALTER TABLE `impi_impu` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `impu`
+--
+
+LOCK TABLES `impu` WRITE;
+/*!40000 ALTER TABLE `impu` DISABLE KEYS */;
+/*!40000 ALTER TABLE `impu` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Dumping data for table `supi`
+--
+
+LOCK TABLES `supi` WRITE;
+/*!40000 ALTER TABLE `supi` DISABLE KEYS */;
+INSERT INTO `supi` VALUES (1,'001011234567891',0x00000000000000000000000000000000,0x8000,0x00000000000000000000000000000000,'000000000017',0,0,0);
+INSERT INTO `supi` VALUES (2,'001010123456789',0x00112233445566778899AABBCCDDEEFF,0x8000,0x00000000000000000000000000000000,'000000000000',0,0,1);
+/*!40000 ALTER TABLE `supi` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2023-06-12 15:05:07
+# DB access rights
+grant delete,insert,select,update on udm_db.* to udm@'%' identified by 'udm';
+grant delete,insert,select,update on udm_db.* to provisioning@'%' identified by 'provi';

@@ -1,8 +1,23 @@
 # Changelog
 
-## [unreleased] - XXXX-XX-XX
+## [unreleased]
+### Added
+- New component `upf_p4_sw`
+- New component `open5gs_vm`
+- New component `open5gcore_vm`
+
+### Changed
+- Variable `one_bastion_wireguard_allowedips` promoted as public and user-configurable in components `tn_bastion` and `tn_init`
+- Updated `open5gs` helm chart reference URL to point the 6G-Sandbox dockerhub
+- Updated `loadcore` to use new appliance with OpenNebula contextualization scripts. However, IaC is currently broken. VM is deployed by Ansible itself
+- Updated `ueransim` the field `one_ueransim_gnb_linked_open5gs` to support `upf_p4_sw` component.
+- Metadata appliances url.
+- Updated `ueransim-ue` config to correctly reach the gnb in the same VM when in BOTH mode
+
 ## Fixed
 - Component TSN: markdown report file `ok_result.md.j2`.
+- Fixed bug where the one_open5gs_upf_ip wasn't correctly set as an output variable
+
 
 ## [v0.3.0] - 2024-10-16
 ### Added
@@ -11,6 +26,7 @@
 - New component ocf
 - New component xrext
 - New component elcm
+- New component loadcore_agent
 - New components opensand_gw, opensand_sat and opensand_st
 - New common task `publish_fail_results.yaml`, abstracting tasks from `terraform_apply.yaml`
 - New input variable `one_oneKE_nginx_passthough` in component `oneKE` to enable [SSL/TLS passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough).

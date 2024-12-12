@@ -72,6 +72,11 @@ input:
     type: int
     default_value: 254
     required_when: false
+  one_bastion_wireguard_allowedips:
+    description: List of (comma-separated) subnets overriding 'AllowedIPs' field in the wireguard VPN client config file. Leave this field as is default unless you know what you are doing.
+    type: str
+    default_value: "192.168.199.0/24"
+    required_when: false
 
 
 ####################################

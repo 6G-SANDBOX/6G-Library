@@ -1,0 +1,24 @@
+
+# this goes into /etc/systemd/network/
+[Match]
+Name=n6tun
+Kind=tun
+
+#[Network]
+#Address=10.45.0.1/16
+
+## same as open5gs
+[Route]
+Destination={{ ue_subnet }}
+
+## DNN default
+#[Route]
+#Destination=10.45.0.0/24
+
+## DNN internet
+#[Route]
+#Destination=10.45.1.0/24
+
+[Link]
+MTUBytes=1456
+RequiredForOnline=false

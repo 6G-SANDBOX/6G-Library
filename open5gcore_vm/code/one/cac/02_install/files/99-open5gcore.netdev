@@ -1,0 +1,6 @@
+
+# this goes into /etc/systemd/network/
+[NetDev]
+Description=tun interface for n6 traffic on the UPF
+Name=n6tun
+Kind=tun

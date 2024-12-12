@@ -1,0 +1,232 @@
+{
+    "Phoenix":{
+        "Platform":{
+            "Debug":{
+                "level": 5
+            },
+            "ProcessingUnitsMgmt":0,
+            "MemoryMgmt":{
+                "chunk_size":3072,
+                "mem_global": {"size_value": 16, "size_metric": "MB"},
+                "mem_session": {"size_value": 128, "size_metric": "MB"},
+                "mem_transaction": {"size_value": 64, "size_metric": "MB", "chunksize":4096},
+                "mem_packet": {"size_value": 64, "size_metric": "MB", "chunksize":  4096}
+            },
+            "Workerpool":{
+                "count":8,
+                "queue_size":32
+            }
+        },
+        "Module":[
+            {
+                "name":"Command",
+                "version":1,
+                "binaryFile":"modules/command/command.so",
+                "config":{
+                    "GreetingText":"SMF>",
+                    "DisablePrompt":"%COMMAND_DISABLED",
+                    "Acceptor":[
+                        { "type":"udp", "port":10000, "bind":"%SMF_MGMT_IP" }
+                    ]
+                }
+            },
+            {
+                "name": "httpd_h2o",
+                "version": 1,
+                "binaryFile": "modules/httpd_h2o/httpd_h2o.so",
+                "config": {
+                    "listeners": [ { "host": "%SMF_CP_IP", "port": 8080 },{ "host": "0.0.0.0", "port": 13040 } ],
+                    "servers":[ { "server_name": "default" } ]
+                }
+            },
+            {
+                "name": "http_client",
+                "version": 1,
+                "binaryFile": "modules/http_client/http_client.so",
+                "config": {
+                    "bind_interface": "%SMF_CP_IP"
+                }
+            },
+            {
+                "name": "json_rpc",
+                "ignore": "%DISABLE_REMOTE_COMMAND",
+                "version": 1,
+                "binaryFile": "modules/json_rpc/json_rpc.so",
+                "config": { }
+            },
+            {
+                "name": "remote_commandModule",
+                "ignore": "%DISABLE_REMOTE_COMMAND",
+                "version": 1,
+                "binaryFile": "modules/remote_command/remote_command.so",
+                "config": {
+                    "name": "NRF"
+                }
+            },
+            {
+                "name": "Monitoring",
+                "version": 1,
+                "binaryFile": "modules/monitoring/monitoring.so",
+                "config": {
+                    "Prometheus": {
+                        "listener": "%SMF_MGMT_IP",
+                        "port": 9888,
+                        "enabled": "%PROMETHEUS_ENABLED"
+                    }
+                }
+            },
+            {
+                "name":"SMF",
+                "version":1,
+                "binaryFile":"modules/smf/smf.so",
+                "config":{
+                    "mcc":"%MCC",
+                    "mnc":"%MNC",
+                    "id":"smf1.cluster1.net2",
+                    "hashSize":32,
+                    "timers":{
+                        "msgRetransmission":{
+                            "default":5,
+                            "maxAttempt":3
+                        }
+                    },
+                    "mtu": 1456,
+                    "dnn":[
+                        { "ignore": 1 , "name": "", "ipaddr": "", "slice": [{"sst": 1, "sd": "000001"}],"ipv4_allocation": [{"supi": "", "ipaddr": ""}, {"mac": "", "ipaddr": ""}], "dns": [""] },
+                        { "name": "ims", "ipaddr": "10.45.3.0/24", "reserved_ip": ["10.45.3.254"], "dns": ["8.8.8.8"] },
+                        { "name": "%DNN", "ipaddr": "%DNN_SUBNET", "dns": ["8.8.8.8"] },
+                        { "name": "default", "ipaddr": "10.45.1.0/24", "reserved_ip":["10.45.1.1"], "dns": ["8.8.8.8"] }
+                    ],
+                    "hacks": {
+                        "im_cn_subsystem_signaling_flag": true,
+                        "#ims_pcscf_ipv4": "192.168.11.253",
+                        "# pdu_dns_v4": "8.8.8.8"
+                    }
+                }
+            },
+            {
+                "name": "nrf_client",
+                "version": 1,
+                "binaryFile": "modules/nrf_client/nrf_client.so",
+                "config": {
+                    "nf_profile": {
+                        "nfType": "SMF",
+                        "nfInstanceId": "da176f01-5cb0-429a-afef-7445b61984f8",
+                        "nfStatus": "REGISTERED",
+                        "plmnList": [
+                            {"mcc":"%MCC", "mnc":"%MNC"}
+                        ],
+                        "sNssais": [
+                            { "sst": 1 },
+                            { "sst": 1, "sd": "1" }
+                        ]
+                    },
+                    "nf_instance": {
+                        "addr": "%SMF_CP_IP",
+                        "port": 8080
+                    },
+                    "nrf_server": {
+                        "addr": "%NRF_CP_IP",
+                        "port": 8080
+                    },
+                    "subscription_path": "/nsmf-nfm/v1/subscriptionCallback",
+                    "related_nf": ["AMF","PCF","UDM"],
+                    "enable_heartbeat": "%NRF_HB_ENABLE"
+                }
+            },
+            {
+                "name":"nas",
+                "version":1,
+                "binaryFile":"modules/nas5/nas5.so",
+                "config":{ }
+            },
+            {
+                "name":"ngap",
+                "version":1,
+                "binaryFile":"modules/ngap/ngap.so",
+                "config":{
+                    "threads":1
+                }
+            },
+            {
+                "name":"mysql",
+                "version":1,
+                "binaryFile":"modules/mysql/mysql.so",
+                "config":{ }
+            },
+            {
+                "name":"pfcp",
+                "version":1,
+                "binaryFile":"modules/pfcp/pfcp.so",
+                "config":{
+                    "mode":"CP",
+                    "LocalNodeID":{
+                        "IPv4":"%SMF_N4_IP"
+                    },
+                    "Associations":{
+                        "msg_response_timeout":3,
+                        "max_msg_retries":2,
+                        "conn_attempt_interval":7,
+                        "heartbeat_interval":1,
+                        "max_heartbeat_retries":1,
+                        "htable_size":32,
+                        "Acceptor":[
+                            { "type":"udp", "port":8805, "bind":"%SMF_N4_IP" }
+                        ],
+                        "Peer":[
+                            { "type":"udp", "port":8805, "bind":"%UPF1_N4_IP", "comment":"" }
+                        ]
+                    }
+                }
+            },
+            {
+                "name":"SDN routing topo",
+                "version":1,
+                "binaryFile":"modules/sdn_routing_topology/sdn_routing_topology.so",
+                "config": {
+                    "static_mode":1,
+                    "Topology": {
+                        "Link": [
+                            {
+                                "comment": "Default link from any gNb to UPF1",
+                                "weight":1, "default":1,
+                                "Node_A":{ "type":"enodeB", "port":1, "id":0, "ip":"unspecified" },
+                                "Node_B":{ "type":"upf", "port":1, "id":"%UPF1_N4_IP", "ip":"%UPF1_N3_IP" }
+                            },
+                            {
+                                "comment": "Link from gnb1->upf1",
+                                "weight":1,
+                                "Node_A":{ "type":"enodeB", "port":1, "id":1001, "ip":"ignored" },
+                                "Node_B":{ "type":"upf", "id":"%UPF1_N4_IP", "port":1, "ip":"%UPF1_N3_IP" }
+                            },
+                            {
+                                "comment": "Single switch from upf1->igw(dnn:default)",
+                                "weight":1,
+                                "Node_A":{ "type":"upf", "id":"%UPF1_N4_IP", "port":0, "ip":"%UPF1_N6_IP" },
+                                "Node_B":{ "type":"apn", "id":"default", "port":0, "ip":"ignored" }
+                            },
+                            {
+                                "comment": "Single switch from upf1->igw(dnn:ims)",
+                                "weight":1,
+                                "Node_A":{ "type":"upf", "id":"%UPF1_N4_IP", "port":0, "ip":"%UPF1_N6_IP" },
+                                "Node_B":{ "type":"apn", "id":"ims", "port":0, "ip":"ignored" }
+                            },
+                            {
+                                "comment": "Single switch from upf1->igw(dnn:bt5g)",
+                                "weight":1,
+                                "Node_A":{ "type":"upf", "id":"%UPF1_N4_IP", "port":0, "ip":"%UPF1_N6_IP" },
+                                "Node_B":{ "type":"apn", "id":"bt5g", "port":0, "ip":"ignored" }
+                            },
+                            {
+                                "comment": "Single switch from upf1->igw(dnn:%DNN)",
+                                "weight":1,
+                                "Node_A":{ "type":"upf", "id":"%UPF1_N4_IP", "port":0, "ip":"%UPF1_N6_IP" },
+                                "Node_B":{ "type":"apn", "id":"%DNN", "port":0, "ip":"ignored" }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

@@ -1,6 +1,7 @@
 # Changelog
 
 ## [v0.3.0]
+
 ### Added
 - New input variable `one_oneKE_nginx_passthough` to enable [SSL/TLS passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough).
 - New output variable `metadata_dict` to share OneKE input variables to the future components
