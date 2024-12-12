@@ -51,7 +51,7 @@
         hostname: "{{ entity_name }}"
         ansible_host: "{{ ips[access_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
-        ansible_user: "jenkins"        
+        ansible_user: "jenkins"
 
     # While not used by the Jenkins, we included the configuration of a .ssh/config per TN in the Jenkins for debugging purposes.
     - name: Create SSH config file in the Jenkins-master for debugging purposes
@@ -101,13 +101,9 @@
 
     
     - name: Download and install packages to VM
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/install_packages.yaml"   
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/03_post/install_packages.yaml"   
 
-
-    # Example of included task files common to all hypervisors, like helm charts, or bash/python/ruby sripts.
-    #- name: Helm install
-    #  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_install.yaml"        
-
+    
 # Final phase of the deployments. Gather information and publish it
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
