@@ -30,6 +30,7 @@
     ##
     upf_xdp: "{{ one_open5gcore_vm_upf_xdp | default(false) }}"
     ue_count: "{{ one_open5gcore_vm_ue_count | default('20') }}"
+    dnn_mtu: 1406 #when GUEST_MTU == 1450
     apt_upgrade: false
     playbookdir: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/"
     license_crt: "{{ site_available_components.open5gcore_vm.license_crt }}"
@@ -50,6 +51,9 @@
 
     - name: Configure open5gcore
       ansible.builtin.include_tasks: "{{ playbookdir }}/configure-open5gcore.yaml"
+
+    - name: Configure caddy for Open5GCore CLI
+      ansible.builtin.include_tasks: "{{ playbookdir }}/install-caddy.yaml"
 
     - name: export Variables as facts
       ansible.builtin.set_fact:

@@ -9,3 +9,4 @@ services:
       - ./SessionLogs:/opt/tap/SessionLogs:rw
       - ./Settings:/opt/tap/Settings:rw
       - ./Storage:/opt/tap/Storage:rw
+      - ./OpentapImages:/tmp/opentap-images:rw

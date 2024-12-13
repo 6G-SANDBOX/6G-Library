@@ -60,7 +60,7 @@
                 "version": 1,
                 "binaryFile": "modules/remote_command/remote_command.so",
                 "config": {
-                    "name": "NRF"
+                    "name": "SMF"
                 }
             },
             {
@@ -90,7 +90,7 @@
                             "maxAttempt":3
                         }
                     },
-                    "mtu": 1456,
+                    "mtu": {{ dnn_mtu }},
                     "dnn":[
                         { "ignore": 1 , "name": "", "ipaddr": "", "slice": [{"sst": 1, "sd": "000001"}],"ipv4_allocation": [{"supi": "", "ipaddr": ""}, {"mac": "", "ipaddr": ""}], "dns": [""] },
                         { "name": "ims", "ipaddr": "10.45.3.0/24", "reserved_ip": ["10.45.3.254"], "dns": ["8.8.8.8"] },

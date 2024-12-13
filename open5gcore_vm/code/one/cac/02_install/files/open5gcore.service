@@ -1,0 +1,19 @@
+[Unit]
+Description=Fraunhofer FOKUS Open5GCore 5G Core Network
+After=network-online.target mysql.service
+Wants=phoenix@nrf.service
+Wants=phoenix@amf.service
+Wants=phoenix@smf.service
+Wants=phoenix@upf1.service
+Wants=phoenix@udm.service
+Wants=phoenix@ausf.service
+Wants=phoenix@pcf.service
+
+
+[Service]
+Type=oneshot
+ExecStart=/bin/true
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

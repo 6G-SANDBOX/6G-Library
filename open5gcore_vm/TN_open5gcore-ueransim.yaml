@@ -57,6 +57,7 @@ trial_network:
       one_open5gcore_vm_amf_ip: "10.10.10.200"
       one_open5gcore_vm_upf_ip: "10.10.10.201"
       one_open5gcore_vm_ue_count: 20
+      #one_open5gcore_vm_upf_xdp: false
 #######
   ueransim-both:
     type: "ueransim"

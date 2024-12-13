@@ -65,10 +65,18 @@
           - n6_vnet_id
       when: debug
 
-    - name: "DEBUG: Display all variables/facts known for a host"
-      ansible.builtin.debug:
-        var: hostvars[inventory_hostname]
-      when: False
+    #- name: Add Route Manager to Ansible Inventory
+    #  ansible.builtin.add_host:
+    #    hostname: "routemanager"
+    #    ansible_host: "{{ site_available_components.nokia_radio.route_manager_ip1 }}"
+    #    ansible_user: "root"
+    #    ansible_ssh_private_key_file: "/var/lib/jenkins/.ssh/id_ed25519"
+
+    - name: Add the bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
+        ansible_user: "jenkins"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
@@ -81,7 +89,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
 
 
-- name: "STAGE 3: Apply CAC to prepare the component"
+- name: "STAGE 3: Apply CAC to prepare the component (open5gcore_vm)"
   hosts: "open5gcore_vm"
   gather_facts: false
   tasks:
@@ -118,16 +126,20 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Display all variables/facts known for a host
-      ansible.builtin.debug:
-        var: hostvars[inventory_hostname]
-      when: False
-
     - name: Configure open5gcore
       vars:
         vm_ips: "{{ hostvars['localhost']['ips'] | dict2items(key_name='id', value_name='ip') }}"
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/setup-open5gcore.yaml"
 
+- name: "STAGE 3: Apply CaC to deploy the component - STEP 2 (bastion)"
+  hosts: "bastion"
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Enable routing path in Bastion
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_bastion.yaml"
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost

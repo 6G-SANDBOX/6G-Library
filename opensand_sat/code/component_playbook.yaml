@@ -49,7 +49,7 @@
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[ access_vnet_id ] }}"
+        ansible_host: "{{ ips[access_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"       
 
@@ -100,13 +100,11 @@
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
     
+    # - name: Download and install packages to VM
+    #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/install_packages.yaml"   
     - name: Download and install packages to VM
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/install_packages.yaml"   
-
-
-    # Example of included task files common to all hypervisors, like helm charts, or bash/python/ruby sripts.
-    #- name: Helm install
-    #  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_install.yaml"        
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/03_post/install.yaml"   
+     
 
 # Final phase of the deployments. Gather information and publish it
 - name: "STAGE 4: Publish execution results"

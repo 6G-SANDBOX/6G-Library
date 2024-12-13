@@ -6,8 +6,10 @@
 - New component `open5gs_vm`
 - New component `open5gcore_vm`
 - New component `int_p4_sw`
+- New component `berlin_ran`
 
 ### Changed
+- Updated `ks8500_runner` Added python dependencies. Updated to latest stable OpenTap
 - Variable `one_bastion_wireguard_allowedips` promoted as public and user-configurable in components `tn_bastion` and `tn_init`
 - Updated `open5gs` helm chart reference URL to point the 6G-Sandbox dockerhub
 - Updated `loadcore` to use new appliance with OpenNebula contextualization scripts. However, IaC is currently broken. VM is deployed by Ansible itself
