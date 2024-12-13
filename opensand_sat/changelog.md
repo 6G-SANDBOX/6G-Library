@@ -1,44 +1,11 @@
 # Changelog
 
-## [unreleased]
+## [v0.3.1]
+
 ### Changed
 - Added to the Component inputs the one_opensand_sat_networks 
 
 ## [v0.3.0]
+
 ### Added
 - New component opensand_sat
-
-
-
-<!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...HEAD
-[v0.3.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.3.0
-
-
-
-<!-- FIELDS PER VERSION -->
-<!--
-### Added
-
-- New features
-
-### Changed
-
-- Changes in existing functionality
-
-### Deprecated
-
-- Soon-to-be removed features
-
-### Removed
-
-- Removed features
-
-### Fixed
-
-- Bug fixes
-
-### Security
-
-- Vulnerability warnings
--->
