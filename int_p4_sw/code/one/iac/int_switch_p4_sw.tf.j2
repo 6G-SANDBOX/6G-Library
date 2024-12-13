@@ -1,0 +1,56 @@
+{% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
+{% set switch_index = loop.index0 %}
+resource "opennebula_virtual_machine" "{{ entity_name }}_{{ switch_index }}" {
+  name        = "{{ tn_id }}-{{ entity_name }}-{{ switch_index }}"
+  template_id = {{ site_available_components.vm_kvm.template_id }}
+  cpu         = {{ one_int_p4_sw_cpu }}
+  vcpu        = {{ one_int_p4_sw_cpu }}
+  memory      = {{ one_int_p4_sw_memory }}
+
+  context = {
+    NETWORK = "YES"
+    SET_HOSTNAME = "$NAME"
+    USERNAME = "jenkins"
+  }
+
+{% for network in switch_config.networks %}
+  nic {
+    model           = "virtio"
+    network_id      = opennebula_virtual_network.{{ network }}.id
+  }
+{% endfor %}
+
+  depends_on = [
+    {% if switch_index > 0 %}
+    opennebula_virtual_machine.{{ entity_name }}_{{ switch_index - 1 }},
+    {% endif %}
+    opennebula_virtual_network_address_range.tn_vxlan
+  ]
+}
+
+{% endfor %}
+
+output "{{ entity_name }}_switches-ids" {
+  description = "List of OpenNebula INT Switch VM IDs"
+  value       = [
+    {% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
+    {% set switch_index = loop.index0 %}
+    opennebula_virtual_machine.{{ entity_name }}_{{ switch_index }}.id,
+    {% endfor %}
+  ]
+}
+
+output "{{ entity_name }}_switches-ips" {
+  description = "OpenNebula INT Switch VM Network Assignments for all VMs"
+  value = {
+    {% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
+    {% set switch_index = loop.index0 %}
+    "{{ switch_index }}": {
+      {% for network in switch_config.networks %}
+      {% set nic_index = loop.index0 %}
+      "{{ network }}": opennebula_virtual_machine.{{ entity_name }}_{{ switch_index }}.nic[{{ nic_index }}].computed_ip,
+      {% endfor %}
+    },
+    {% endfor %}
+  }
+}

@@ -5,6 +5,7 @@
 - New component `upf_p4_sw`
 - New component `open5gs_vm`
 - New component `open5gcore_vm`
+- New component `int_p4_sw`
 - New component `berlin_ran`
 
 ### Changed

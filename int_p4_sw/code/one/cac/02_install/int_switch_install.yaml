@@ -1,0 +1,81 @@
+# This playbook is used to install the INT-P4 switch. It is used in each INT-P4 switch installation.
+---
+#TODO: Check if the packages are still required.
+- name: Install some required apt packages
+  become: true
+  apt:
+    name: 
+      - net-tools
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: present
+    update_cache: yes
+
+- name: Wait for 10 seconds
+  pause:
+    seconds: 10
+
+- name: Install docker engine
+  block:
+    - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_install.yaml"
+  become: true
+
+- name: Configure Harbor Container Registry authentication
+  block:
+    - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_configuration.yaml"
+  become: true
+
+- name: Copy docker-compose file
+  copy:
+    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker-compose.yaml"
+    dest: "/home/jenkins/docker-compose.yaml"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+
+# At the moment, the static config is the same for all the INT-P4 switches.
+# TODO: Maybe in the future, we will have different static configurations for each INT-P4 switch.
+- name: Copy static config folder recursively
+  become: true
+  ansible.builtin.copy:
+    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config-switch/static/"
+    dest: "/home/jenkins/config"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+    #directory_mode: '0755'
+  
+- name: Get switch number
+  ansible.builtin.set_fact:
+    switch_number: "{{ inventory_hostname | regex_replace('int_p4_switch_(.*)','\\1') }}"
+
+- name: Set switch type and configuration
+  ansible.builtin.set_fact:
+    switch_type: "{{ hostvars['localhost']['one_int_p4_sw_switches']['int_p4_switch_' + switch_number]['type'] }}"
+    switch_config: "{{ hostvars['localhost']['one_int_p4_sw_switches']['int_p4_switch_' + switch_number]['config'] }}"
+
+- name: Validate switch type
+  ansible.builtin.fail:
+    msg: "Invalid switch type: {{ switch_type }}. Must be one of: source, transit, sink"
+  when: switch_type not in ['source', 'transit', 'sink']
+
+- name: Apply switch configuration templates
+  template:
+    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config-switch/templates/{{ item.src }}"
+    dest: "/home/jenkins/config/{{ item.dest }}"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+  loop:
+    - { src: 'controller-int/config-{{ switch_type }}.yaml.j2', dest: 'controller-int/config.yaml' }
+    - { src: 'stratum-int/chassis_config.pb.txt.j2', dest: 'stratum-int/chassis_config.pb.txt' }
+
+- name: Execute docker-compose up
+  become: true
+  become_user: jenkins
+  command: docker compose -f /home/jenkins/docker-compose.yaml up -d
+  args:
+    chdir: /home/jenkins
