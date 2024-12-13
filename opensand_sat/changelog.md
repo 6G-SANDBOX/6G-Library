@@ -1,9 +1,13 @@
 # Changelog
 
+## [unreleased]
+### Changed
+- Added to the Component inputs the one_opensand_sat_networks 
 
 ## [v0.3.0]
 ### Added
-- New component
+- New component opensand_sat
+
 
 
 <!-- Change latest version value at every release -->

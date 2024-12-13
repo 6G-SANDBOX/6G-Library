@@ -1,9 +1,14 @@
 # Changelog
 
+## [unreleased]
+### Changed
+- Added to the Component inputs the one_opensand_st_networks 
 
 ## [v0.3.0]
 ### Added
-- New component
+- New component opensand_st
+
+
 
 
 <!-- Change latest version value at every release -->
