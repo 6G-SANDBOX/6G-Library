@@ -1,9 +1,12 @@
 # Changelog
 
+## [unreleased]
+### Changed
+- Added to the Component inputs the one_opensand_gw_networks 
 
 ## [v0.3.0]
 ### Added
-- New component
+- New component opensand_gw
 
 
 <!-- Change latest version value at every release -->
