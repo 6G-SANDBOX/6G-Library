@@ -1,0 +1,47 @@
+---
+- name: check if Caddy is already installed
+  stat:
+    path: /usr/local/bin/caddy_server
+  register: caddy_bin
+
+- name: download caddy
+  become: true
+  ansible.builtin.get_url:
+    url: "https://caddyserver.com/api/download?os=linux&arch=amd64&idempotency=63113367019600"
+    dest: /usr/local/bin/caddy_server
+    mode: "+x"
+  when: not caddy_bin.stat.exists
+
+- name: create caddy directory
+  file:
+    path: "/etc/open5gcore/caddy"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: copy files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    mode: 0660
+    dest: /etc/open5gcore/caddy/
+  loop:
+  - "caddy/Caddyfile"
+  - "caddy/index.html"
+
+- name: install caddy service
+  copy:
+    src: "caddy-open5gcore.service"
+    dest: /etc/systemd/system/
+  register: systemdfiles
+
+- name: "systemd daemon-reload"
+  ansible.builtin.systemd:
+    daemon_reload: yes
+  when: systemdfiles.changed
+
+- name: enable & start services
+  service:
+    name: "caddy-open5gcore"
+    state: started
+    enabled: true

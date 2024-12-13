@@ -1,0 +1,34 @@
+:80 {
+	handle_path /amf/* {
+		reverse_proxy {env.AMF_CP_IP}:8080
+	}
+	handle_path /nrf/* {
+		reverse_proxy {env.NRF_CP_IP}:8080
+	}
+	handle_path /gnb1/* {
+		reverse_proxy {env.GNB1_CP_IP}:8080
+	}
+	handle_path /upf1/* {
+		reverse_proxy {env.UPF1_MGMT_IP}:8080
+	}
+	handle_path /udm/* {
+		reverse_proxy {env.UDM_CP_IP}:8080
+	}
+	handle_path /pcf/* {
+		reverse_proxy {env.PCF_CP_IP}:8080
+	}
+	handle_path /ue1/* {
+		reverse_proxy {env.UE1_MGMT_IP}:8080
+	}
+	handle_path /ausf/* {
+		reverse_proxy {env.AUSF_CP_IP}:8080
+	}
+	handle_path /smf/* {
+		reverse_proxy {env.SMF_CP_IP}:8080
+	}
+
+	handle_path / {
+		root * /etc/open5gcore/caddy/index.html
+		file_server
+	}
+}
