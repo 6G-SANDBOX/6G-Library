@@ -1,6 +1,6 @@
 # Changelog
 
-## [unreleased]
+## [v1.0.0]
 ### Added
 - Python and pip for plugins that use python venv
 - Tshark for plugins that use it for data decoding
