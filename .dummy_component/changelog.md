@@ -3,41 +3,37 @@ DISCLAIMER!!!! THIS CHANGELOG HAS INFORMATION ABOUT CHANGES IN THE DUMMY COMPONE
 
 YOUR NEW COMPONENT's FIRST CHANGELOG JUST NEEDS SMTH LIKE:  
 
-## [unreleased]
+## v1.0.0
 ### Added
-- New component `mycomponent` added to the 6G-Library 
+- Initial release of `mycomponent` component to the 6G-Library.
+
+THE VERSION IS THE ONE OF YOUR COMPONENT, NOT THE 6G-LIBRARY OR THE SANDBOX RELEASE
 
 PLEASE ALSO UPDATE THE MAIN 6G-LIBRARY CHANGELOG WITH YOUR COMPONENT
 -->
 
 # Changelog
 
-## [unreleased]
+## unreleased
 ### Changed
-- Updated description of what "default_value" in public.yaml is really for
+- Updated description of what "default_value" in public.yaml is really for.
 
-## [v0.3.0]
+
+## v0.3.0
 ### Changed
-- Modified comments to make it less confusing
+- Modified comments to make it less confusing.
 - Ansible hostname of created component no longer uses variables. It only added complexity without benefits.
-- Variable naming recommendation is now reflected on public.yaml
+- Variable naming recommendations are now reflected on public.yaml.
 
 
-## [v0.2.0] - 2024-06-06
+## v0.2.0
 ### Changed
 - Component follows the new architecture.
-- Component renamed to `.dummy_component`.
 
 
-## [v0.1.0] - 2024-04-29
+## v0.1.0
+### Added
 Initial release of the 6G Library. Changes will be kept on track for now on.
-
-
-<!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.3.0...HEAD
-[v0.3.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.3.0
-[v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
-[v0.1.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.1.0
 
 
 

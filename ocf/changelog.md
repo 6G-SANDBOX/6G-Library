@@ -1,6 +1,5 @@
 # Changelog
 
-## [v1.0.0]
-
+## v1.0.0
 ### Added
-- New component
+- Initial release of `ofc` component to the 6G-Library.

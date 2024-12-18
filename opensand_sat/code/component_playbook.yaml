@@ -26,7 +26,7 @@
         cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
         executable: /bin/bash
       register: terraform_outputs
-      changed_when: false  
+      changed_when: false
 
     # Save some of the outputs as playbook facts (variables). Some of them will be surelly be used as future output values
     - name: Set Terraform outputs as playbook facts
@@ -72,7 +72,6 @@
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
 
-    # Any deployed VM should create a "tnuser" user for the experimenter's access. All components can be accessed through that user with the ssh key created in tn_init
     - name: Create new user for experimenter access
       become: true
       ansible.builtin.user:

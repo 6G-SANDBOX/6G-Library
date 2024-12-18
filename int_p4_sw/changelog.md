@@ -1,7 +1,5 @@
 # Changelog
 
-## [v1.0.0]
-
+## v1.0.0
 ### Added
-- First complete working version of the INT-P4 SW component
-- Initial documentation for the component
+- Initial release of `int_p4_sw` component to the 6G-Library. First version of compomponent documentation

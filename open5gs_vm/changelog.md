@@ -1,7 +1,5 @@
 # Changelog
 
-## [v0.3.1]
-
+## unreleased
 ### Added
-- Initial version of the Open5GS VM component.
-- Automatically configure a route on the `bastion` for the `ue_subnet` back to the core-VM
+- Initial release of `open5gs_vm` component to the 6G-Library. 
