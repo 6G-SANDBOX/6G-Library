@@ -1,0 +1,50 @@
+# {{ tn_id }}-{{ entity_name}}
+
+The component `{{ tn_id }}-{{ entity_name}}` has been succesfully created.
+
+<img src="https://cdn0.scrvt.com/fokus/736fbda3b8aaa2ed/8f84ea246d5c/v/5a67a1cf6669/NGNI_logo_open5gcore.jpg" />
+
+[Open5Gcore](https://www.open5gcore.org/), an 5G SA core network implementation, has been successfully deployed as a VM as part of the Trial Network **{{ tn_id }}**.
+
+Below is a summary of the components that have been deployed:
+
+* NRF - NF Repository Function
+* AMF - Access and Mobility Management Function
+* SMF - Session Management Function
+* UPF - User Plane Function
+* AUSF - Authentication Server Function
+* UDM - Unified Data Management
+* PCF - Policy and Charging Function
+
+Current versions:
+- Open5GCore `v9.1.0`
+- Ubuntu 22.04
+
+## Important information
+
+- **OpenNebula VM ID**: `{{ id }}`
+- **VM memory**: `{{ one_open5gcore_vm_memory}} MiB`
+- **VM VCPUs**: `{{ one_open5gcore_vm_cpu }}`
+- **VM available storage**: `6 GiB`
+- **VM network interfaces**:
+  ```yaml
+  {{ ips }}
+  ```
+- **PLMN ID (MCC)**: `{{ one_open5gcore_vm_mcc }}`
+- **PLMN ID (MNC)**: `{{ one_open5gcore_vm_mnc }}`
+- **TAC**: `{{ one_open5gcore_vm_tac }}`
+- **S-NSSAI (SST)**: `{{ one_open5gcore_vm_s_nssai_sst }}`
+- **S-NSSAI (SD)**: `{{ one_open5gcore_vm_s_nssai_sd }}`
+- **AMF IP**: `{{ open5gcore_metadata_dict['amf_ip'] }}`
+- **UPF IP**: `{{ open5gcore_metadata_dict['upf_ip'] }}`
+- **UPF XDP mode**: `{{ open5gcore_metadata_dict['upf_xdp'] }}`
+- **Web CLI URL**: `{{ entity_name | default("UNDEFINED") }}.{{ tn_id }}.{{ site_domain }}`
+  - AMF:  [port 13020](http://{{ entity_name | default("UNDEFINED") }}.{{ tn_id }}.{{ site_domain }}:13020/cli)
+  - AUSF: [port 13025](http://{{ entity_name | default("UNDEFINED") }}.{{ tn_id }}.{{ site_domain }}:13025/cli)
+  - NRF:  [port 13035](http://{{ entity_name | default("UNDEFINED") }}.{{ tn_id }}.{{ site_domain }}:13035/cli)
+  - SMF:  [port 13040](http://{{ entity_name | default("UNDEFINED") }}.{{ tn_id }}.{{ site_domain }}:13040/cli)
+  - UDM:  [port 13030](http://{{ entity_name | default("UNDEFINED") }}.{{ tn_id }}.{{ site_domain }}:13030/cli)
+  - UPF:  [port 13045](http://{{ entity_name | default("UNDEFINED") }}.{{ tn_id }}.{{ site_domain }}:13045/cli)
+
+
+**Note**: To access the dashboard, you must add the domain to the /etc/hosts file of your machine mapping it with the IP address of your VM Machine.

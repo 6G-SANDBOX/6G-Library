@@ -1,0 +1,92 @@
+# {{ tn_id }}-{{ entity_name}}
+
+## 📋 Deployment Summary
+The INT-P4 SW module has been successfully deployed as part of Trial Network {{ tn_id }}. This deployment includes:
+- {{ switch_ids | length }} INT-P4 switches
+- 1 INT-P4 collector
+
+
+## 🖥️ Access to Virtual Machines
+### SSH Access
+All virtual machines are accessible through the bastion host ({{ bastion_ip }}) using the 'tnuser' user.
+
+### INT-P4 Switches
+The INT-P4 switches are deployed with the following IPs:
+{% for switch_index, switch_ip_dict in switch_ips.items() %}
+- Switch {{ switch_index }}:
+  {% for network, ip in switch_ip_dict.items() %}
+  - Network {{ network }}: {{ ip }}
+  {% endfor %}
+{% endfor %}
+
+### INT-P4 Collector
+The INT-P4 collector has been deployed with the following IPs:
+{% for network, ip in collector_ips.items() %}
+- Network {{ network }}: {{ ip }}
+{% endfor %}
+- Collector Port: {{ one_int_p4_sw_collector.config.collector_port }}
+- Collector Interface: {{ one_int_p4_sw_collector.config.collector_interface }}
+
+
+## 📝 Configuration
+The switches have been deployed with the following configuration:
+{% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
+- {{ switch_name }}:
+  - Type: {{ switch_config.type }}
+  - Networks: {% for network in switch_config.networks %}{{ network }}{% if not loop.last %}, {% endif %}{% endfor %}
+  - Switch ID: {{ switch_config.config.switch_id }}
+  - Interfaces: {% for interface in switch_config.config.interfaces %}{{ interface.name }} (ID: {{ interface.id }}){% if not loop.last %}, {% endif %}{% endfor %}
+  {% if switch_config.type == 'source' %}
+  - INT Source Configuration:
+    - Ingress Port: {{ switch_config.config.int_config.ingress_port }}
+    - Egress Port: {{ switch_config.config.int_config.egress_port }}
+    - Hop Metadata Length: {{ switch_config.config.int_config.hop_metadata_len }}
+    - Max Hop: {{ switch_config.config.int_config.max_hop }}
+    - Instruction Mask: {{ switch_config.config.int_config.ins_mask }}
+  {% elif switch_config.type == 'transit' %}
+  - INT Transit Configuration:
+    - Switch ID: {{ switch_config.config.switch_id }}
+  {% elif switch_config.type == 'sink' %}
+  - INT Sink Configuration:
+    - Egress Spec: {{ switch_config.config.int_config.egress_spec }}
+    - Sink Reporting Port: {{ switch_config.config.int_config.sink_reporting_port }}
+    - Collector Configuration:
+      - MAC: {{ switch_config.config.int_config.collector_mac }}
+      - IP: {{ switch_config.config.int_config.collector_ip }}
+      - Port: {{ switch_config.config.int_config.collector_port }}
+  {% endif %}
+  - Forwarding Rules:
+    {% for rule in switch_config.config.int_config.forward_rules %}
+    - Destination: {{ rule.dst_addr }}, Port: {{ rule.port }}, Priority: {{ rule.priority }}
+    {% endfor %}
+{% endfor %}
+
+
+## System Identifiers
+- Switch IDs: {{ switch_ids | join(', ') }}
+- Collector ID: {{ collector_id }}
+
+
+## 📄 Logs
+### INT-P4 Switches
+```bash
+# For the INT-P4 switch data plane (Stratum BMv2)
+docker logs int-p4-bmv2-stratum-optimized
+
+# For the INT-P4 switch control plane
+docker logs p4-int-controller-bmv2
+```
+
+### INT-P4 Collector
+The INT-P4 collector logs can be found in the following file:
+```bash
+# View collector logs
+cat /var/log/int_collector.log
+
+# Monitor logs in real-time
+tail -f /var/log/int_collector.log
+```
+
+
+## 🔋 Service Status
+✅ The INT-P4 service is operational and ready for use

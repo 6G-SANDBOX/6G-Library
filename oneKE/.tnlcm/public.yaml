@@ -36,6 +36,7 @@ metadata:
 
     NOTE: Cluster customization will be progresivelly incorporated ad the OpenNebula Terraform provider gets more functionalities
   hypervisors: [one]
+  appliance: https://marketplace.opennebula.io/appliance/591dd3f1-220f-46a5-83f4-31031c753b8a
 
 ####################################
 ## Component input

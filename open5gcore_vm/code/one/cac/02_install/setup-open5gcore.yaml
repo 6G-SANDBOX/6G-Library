@@ -1,0 +1,61 @@
+####################################
+##
+## Ansible YAML Playbook Template
+##
+####################################
+---
+- name: "Setup Open5GCore on a Host"
+  become: true
+  vars:
+    #gitlab_deploy_token: "" # Please define in inventory or cmdline! -e gitlab_deploy_token=foo
+    ue_subnet: "{{ one_open5gcore_vm_ue_subnet | default('10.45.0.0/16') }}"
+    mcc: "{{ one_open5gcore_vm_mcc | default('001') }}"
+    mnc: "{{ one_open5gcore_vm_mnc | default('01') }}"
+    msin: "{{ one_open5gcore_vm_msin | default('0000000001') }}"
+    ue_key: "{{ one_open5gcore_vm_key | default('465B5CE8B199B49FAA5F0A2EE238A6BC') }}"
+    ue_opc: "{{ one_open5gcore_vm_opc | default('E8ED289DEBA952E4283B54E88E6183CA') }}"
+    ue_apn: "{{ one_open5gcore_vm_apn | default('internet') }}"
+    ue_tac: "{{ one_open5gcore_vm_tac | default('200') }}"
+    s_nssai_sst: "{{ one_open5gcore_vm_s_nssai_sst | default('1') }}"
+    s_nssai_sd: "{{ one_open5gcore_vm_s_nssai_sd | default('000001') }}"
+    n2_ip: "{{ one_open5gcore_vm_amf_ip | default('10.10.10.2') }}"
+    #n2_ip: "{{ vm_ips[1]['ip'] if vm_ips|length > 1 else vm_ips[0]['ip'] }}"
+    ##
+    n3_ip: "{{ one_open5gcore_vm_upf_ip | default('10.10.10.2') }}"
+    #n3_ip: "{{ vm_ips[2]['ip'] if vm_ips|length > 2 else vm_ips[1].ip if vm_ips|length > 1 else vm_ips[0]['ip'] }}"
+    n3_if: "{{ 'eth2' if vm_ips|length > 2 else 'eth1' if vm_ips|length > 1 else 'eth0' }}"
+    ##
+    n6_ip: "{{ vm_ips[0]['ip'] }}"
+    n6_if: "{{ 'eth0' }}"
+    ##
+    upf_xdp: "{{ one_open5gcore_vm_upf_xdp | default(false) }}"
+    ue_count: "{{ one_open5gcore_vm_ue_count | default('20') }}"
+    dnn_mtu: 1406 #when GUEST_MTU == 1450
+    apt_upgrade: false
+    playbookdir: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/"
+    license_crt: "{{ site_available_components.open5gcore_vm.license_crt }}"
+  block:
+    - name: render netplan aliases
+      template:
+        src: "{{ playbookdir }}/templates/99-netplan-aliases.yaml.j2"
+        dest: /etc/netplan/99-aliases.yaml
+        mode: '0600'
+        backup: true
+      register: netplan_changed
+
+    - name: reload netplan
+      ansible.builtin.command:
+        cmd: "netplan apply"
+      changed_when: false
+      when: netplan_changed.changed
+
+    - name: Configure open5gcore
+      ansible.builtin.include_tasks: "{{ playbookdir }}/configure-open5gcore.yaml"
+
+    - name: Configure caddy for Open5GCore CLI
+      ansible.builtin.include_tasks: "{{ playbookdir }}/install-caddy.yaml"
+
+    - name: export Variables as facts
+      ansible.builtin.set_fact:
+        n2_ip: "{{ n2_ip }}"
+        n3_ip: "{{ n3_ip }}"

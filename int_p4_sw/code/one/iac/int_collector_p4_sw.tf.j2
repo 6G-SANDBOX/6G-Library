@@ -1,0 +1,50 @@
+resource "opennebula_virtual_machine" "{{ entity_name }}_collector" {
+  name        = "{{ tn_id }}-{{ entity_name }}-collector"
+  template_id = {{ site_available_components.int_p4_sw.template_id }}
+  cpu         = {{ one_int_p4_sw_cpu }}
+  vcpu        = {{ one_int_p4_sw_cpu }}
+  memory      = {{ one_int_p4_sw_memory }}
+
+  context = {
+    NETWORK = "YES"
+    SET_HOSTNAME = "$NAME"
+    USERNAME = "jenkins"
+  }
+
+{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+  disk {
+    image_id = {{ site_available_components.dummy_component.image_id }}
+    size     = {{ one_dummy_componentdisk }}
+    target   = "vda"
+    driver   = "qcow2"
+  } #}
+
+{% for network in one_int_p4_sw_collector.networks %}
+  nic {
+    {% if network == 'tn_vxlan' %}
+    model           = "virtio"
+    {% else %}
+    model           = "e1000e"
+    {% endif %}
+    network_id      = opennebula_virtual_network.{{ network }}.id
+  }
+{% endfor %}
+
+  depends_on = [ 
+    opennebula_virtual_network_address_range.tn_vxlan,
+    {% for switch_name, switch_config in one_int_p4_sw_switches.items() %}
+    {% set switch_index = loop.index0 %}
+    opennebula_virtual_machine.{{ entity_name }}_{{ switch_index }}{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+
+output "{{ entity_name }}_collector-id" {
+  description = "OpenNebula Collector VM ID"
+  value = opennebula_virtual_machine.{{ entity_name }}_collector.id
+}
+
+output "{{ entity_name }}_collector-ips" {
+  description = "OpenNebula Collector VM Network Assignments"
+  value = { for nic in opennebula_virtual_machine.{{ entity_name }}_collector.nic[*] : nic.network_id => nic.computed_ip }
+}

@@ -1,0 +1,51 @@
+# TODO: This file is not used. Maybe it will be used in the future.
+# ---- INT-P4 Controller Switch Configuration Parameters ----
+session:
+  id: 1
+
+p4runtime:
+  device_id: 1
+  grpc_addr: '127.0.0.1:9559'
+  election_id:
+    high: 0
+    low: 1
+  file_paths:
+    proto: '/build/int.proto.txt'
+    json: '/build/int.json'
+
+clone_session:
+  egress_port: 5
+  instance: 1
+
+tables:
+  forward:
+    - dst_addr: '00:aa:bb:00:00:14&&&0xFFFFFFFFFFFF'
+      port: '2'
+      priority: 1
+    - dst_addr: '00:aa:bb:00:00:16&&&0xFFFFFFFFFFFF'
+      port: '4'
+      priority: 1
+  int_source:
+    activate_source:
+      ingress_port: '1'
+    int_watchlist_source:
+      ingress_port: '1'
+      hop_metadata_len: '5'
+      max_hop: '4'
+      ins_mask: '0xEC00' # 0xFC00 --> 1110 1100 0000 0000
+  int_transit:
+    match_all: '1&&&1'
+    switch_id: '1'
+    priority: 1
+  int_sink:
+    egress_spec: '4'
+    sink_reporting_port: '5'
+  int_report:
+    match_all: '1&&&1'
+    dp_mac: '00:50:56:32:09:16'
+    dp_ip: '10.0.5.1'
+    collector_mac: '00:50:56:3E:4C:56'
+    collector_ip: '10.0.5.2'
+    collector_port: '12345'
+    rep_md_bits: '0'
+    priority: 1

@@ -1,0 +1,10 @@
+---
+- name: "Set VM Resources according to the instance type"
+  ansible.builtin.set_fact:
+    one_open5gcore_vm_cpu: "{{ one_open5gcore_vm_resources[one_open5gcore_vm_size].cpu }}"
+    one_open5gcore_vm_memory: "{{ one_open5gcore_vm_resources[one_open5gcore_vm_size].memory }}"
+    one_open5gcore_vm_disk: "{{one_open5gcore_vm_resources[one_open5gcore_vm_size].disk }}"
+
+- name: Overwrite again with explicit values from the input file
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/{{ component_type }}/variables/input_file.yaml"
