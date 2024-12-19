@@ -40,7 +40,7 @@
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string }}"
         domain_name: |
-          {{ component_type | regex_replace('_', '') }}-{{ custom_name | regex_replace('_', '') }}. {{ tn_id }}.{{ site_domain }}
+          {{ component_type | regex_replace('_', '') }}-{{ custom_name | regex_replace('_', '') }}.{{ tn_id }}.{{ site_domain }}
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
@@ -99,7 +99,7 @@
     - name: Set DNS record for the component
       ansible.builtin.uri:
         url: |
-          http://127.0.0.1:5380/api/zones/records/add?token={{ tn_dns_token }}&domain={{ domain_name }}&type=A&ipAddress={{ ips[access_vnet_id] }}
+          http://{{ ips[access_vnet_id] }}:5380/api/zones/records/add?token={{ tn_dns_token }}&domain={{ domain_name }}&type=A&ipAddress={{ ips[access_vnet_id] }}
         method: POST
         body_format: json
         status_code: [200]
