@@ -44,18 +44,6 @@
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
 
-    - name: Fetch bastion metadata from OpenNebula
-      community.general.one_vm:
-        instance_ids: "{{ tn_bastion_id }}"
-        api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
-        api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
-        api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
-      register: bastion_metadata
-    - name: Extract tokens from bastion metadata
-      ansible.builtin.set_fact:
-        tn_bastion_dns_password: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_PASSWORD }}"
-        tn_bastion_dns_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_TOKEN }}"
-        tn_bastion_routemanager_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_ROUTEMANAGER_TOKEN }}"
 
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "tn_bastion"
@@ -64,7 +52,6 @@
     default_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.site_networks_id.default | string] }}"
     tn_vxlan_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.tn_vxlan_id | string] }}"
     tn_vxlan_net: "{{ hostvars.localhost.tn_vxlan_net }}"
-    dns_token: "{{ hostvars.localhost.tn_bastion_dns_token }}"
   tasks:
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
@@ -113,6 +100,19 @@
   gather_facts: false
   connection: local
   tasks:
+    - name: Fetch bastion metadata from OpenNebula
+      community.general.one_vm:
+        instance_ids: "{{ tn_bastion_id }}"
+        api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
+        api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
+        api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
+      register: bastion_metadata
+    - name: Extract tokens from bastion metadata
+      ansible.builtin.set_fact:
+        tn_bastion_dns_password: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_PASSWORD }}"
+        tn_bastion_dns_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_TOKEN }}"
+        tn_bastion_routemanager_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_ROUTEMANAGER_TOKEN }}"
+
     - name: Upload private ssh key to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"

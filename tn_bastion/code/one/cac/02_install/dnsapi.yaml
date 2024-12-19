@@ -1,4 +1,15 @@
 ---
+- name: Fetch VM information from onegate 
+  become: true
+  ansible.builtin.command:
+    cmd: "onegate vm show --json"
+  changed_when: false
+  register: onegate
+
+- name: Parse dns token from onegate information
+  ansible.builtin.set_fact:
+    dns_token: "{{ onegate.stdout | from_json | json_query('VM.USER_TEMPLATE.ONEAPP_BASTION_DNS_TOKEN') }}"
+
 - name: Fetch current DNS API configuration
   ansible.builtin.uri:
     url: "http://127.0.0.1:5380/api/settings/get?token={{ dns_token }}"
