@@ -1,0 +1,29 @@
+---
+- name: Fetch current DNS API configuration
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:5380/api/settings/get?token={{ dns_token }}"
+    method: GET
+    body_format: json
+    status_code: [200]
+    # headers:
+    #   Content-Type: application/json
+  register: dns_settings
+
+- name: Parse old DNS API endpoints
+  ansible.builtin.set_fact:
+    old_dns_endpoints: "{{ dns_settings.stdout | from_json | json_query('response.dnsServerLocalEndPoints') }}"
+
+- name: Add new IP addresses to the DNS API endpoints
+  set_fact:
+    new_dns_endpoints: "{{ (old_dns_endpoints + [default_ip + ':53', tn_vxlan_ip + ':53']) | unique | join(',') }}"
+
+- name: Fetch current DNS API configuration
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:5380/api/settings/set?token={{ dns_token }}&dnsServerLocalEndPoints={{ new_dns_endpoints }}"
+    method: POST
+    body_format: json
+    status_code: [200]
+    # headers:
+    #   Content-Type: application/json
+
+# TODO: Should I add a record for the tn_bastion itself?
