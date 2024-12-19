@@ -46,7 +46,7 @@
       changed_when: false
     - name: Set tn_vxlan_net variable
       ansible.builtin.set_fact:
-        tn_vxlan_net: "{{ tn_bastion_ips[tn_vxlan_id] | ansible.utils.ipsubnet(one_vxlan_netmask.stdout) }}"
+        tn_vxlan_net: "{{ tn_bastion_ips[tn_vxlan_id] | ansible.utils.ipsubnet(tn_vxlan_netmask.stdout) }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
