@@ -99,7 +99,7 @@
     - name: Set DNS record for the component
       ansible.builtin.uri:
         url: |
-          http://{{ ips[access_vnet_id] }}:5380/api/zones/records/add?token={{ tn_dns_token }}&domain={{ domain_name | trim }}&type=A&ipAddress={{ ips[access_vnet_id] }}
+          http://{{ bastion_ip }}:5380/api/zones/records/add?token={{ tn_dns_token }}&domain={{ domain_name | trim }}&type=A&ipAddress={{ ips[access_vnet_id] }}
         method: POST
         body_format: json
         status_code: [200]
