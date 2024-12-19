@@ -32,7 +32,7 @@
 - name: "Write wg_client{{ client }} configuration file"
   become: true
   ansible.builtin.template:
-    src: "{{ workspace }}/tn_bastion/code/one/cac/02_install/templates/client.conf.j2"
+    src: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/templates/client.conf.j2"
     dest: "/home/jenkins/wg_client{{ client }}.conf"
     owner: jenkins
     group: jenkins

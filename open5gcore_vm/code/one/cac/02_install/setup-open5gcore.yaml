@@ -32,7 +32,7 @@
     ue_count: "{{ one_open5gcore_vm_ue_count | default('20') }}"
     dnn_mtu: 1406 #when GUEST_MTU == 1450
     apt_upgrade: false
-    playbookdir: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/"
+    playbookdir: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/"
     license_crt: "{{ site_available_components.open5gcore_vm.license_crt }}"
   block:
     - name: render netplan aliases

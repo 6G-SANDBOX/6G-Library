@@ -51,7 +51,7 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         switch_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_switches-ips'] }}"
         switch_ids: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_switches-ids'] }}"
-        collector_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-ips'] }}" 
+        collector_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-ips'] }}"
         collector_id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-id'] }}"
         switch_first_vnet_id: "{{ one_int_p4_sw_switches.int_p4_switch_0.networks[0] }}"  # Using the first network of the first switch. Should be tn_vxlan
         collector_first_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_int_p4_sw_collector.networks[0] + '-id'] | string }}"
@@ -72,7 +72,7 @@
         ansible_host: "{{ collector_ips[collector_first_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
-    
+
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
 
@@ -104,7 +104,7 @@
           shell: /bin/bash
           groups: sudo
           password: ''
-          
+
       - name: Set TN ssh key as authorized in new user
         become: true
         ansible.posix.authorized_key:
@@ -117,13 +117,13 @@
   - name: Install specific components
     block:
       - name: INT Switch installation
-        ansible.builtin.include_tasks: 
-          file: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/int_switch_install.yaml"
+        ansible.builtin.include_tasks:
+          file: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/int_switch_install.yaml"
         when: inventory_hostname is match("int_p4_switch_*")
 
       - name: INT Collector installation
         ansible.builtin.include_tasks:
-          file: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/int_collector_install.yaml"
+          file: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/int_collector_install.yaml"
         when: inventory_hostname == 'int_p4_collector'
 
 

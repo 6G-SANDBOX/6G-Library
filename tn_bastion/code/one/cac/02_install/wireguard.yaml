@@ -19,7 +19,7 @@
 - name: Write wg0.conf
   become: true
   ansible.builtin.template:
-    src: "{{ workspace }}/tn_bastion/code/one/cac/02_install/templates/wg0.conf.j2"
+    src: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/templates/wg0.conf.j2"
     dest: /etc/wireguard/wg0.conf
     owner: root
     group: root
@@ -30,7 +30,7 @@
     tn_wg_clients: []
 
 - name: Add VPN clients
-  include_tasks: "{{ workspace }}/tn_bastion/code/one/cac/02_install/wg_client.yaml"
+  include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/wg_client.yaml"
   vars:
     client: "{{ item }}"
   loop: "{{ range(0, one_bastion_vpn_clients) | list }}"

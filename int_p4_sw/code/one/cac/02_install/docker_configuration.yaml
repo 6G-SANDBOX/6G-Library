@@ -9,7 +9,7 @@
 
 - name: Create Docker config file
   template:
-    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_config.json.j2"
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/docker_config.json.j2"
     #src: docker_config.json.j2
     dest: /home/jenkins/.docker/config.json
     mode: '0600'
