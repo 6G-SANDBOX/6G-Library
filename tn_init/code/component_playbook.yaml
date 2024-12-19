@@ -31,6 +31,7 @@
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         tn_vxlan_id: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-id'] }}"
+        tn_vxlan_net: "{{ one_vxlan_first_ip | ansible.utils.ipsubnet(one_vxlan_netmask) }}"
         tn_bastion_ips: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'] }}"
         tn_bastion_id: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-id'] }}"
 
@@ -41,7 +42,7 @@
         ansible_user: "jenkins"
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
@@ -50,7 +51,7 @@
   vars:
     default_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.site_networks_id.default | string] }}"
     tn_vxlan_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.tn_vxlan_id | string] }}"
-    tn_vxlan_net: "{{ one_vxlan_first_ip | ansible.utils.ipsubnet(one_vxlan_netmask) }}"
+    tn_vxlan_net: "{{ hostvars.localhost.tn_vxlan_net }}"
   tasks:
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
@@ -119,7 +120,7 @@
         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/misc-{{ entity_name }}-id_ed25519"
+        object: "{{ tn_id }}/misc-{{ tn_id }}-id_ed25519"
         content_base64: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"
         encrypt: false
         validate_certs: false
@@ -131,15 +132,10 @@
         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/misc-{{ entity_name }}-id_ed25519.pub"
+        object: "{{ tn_id }}/misc-{{ tn_id }}-id_ed25519.pub"
         content_base64: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
         encrypt: false
         validate_certs: false
-
-    - name: Debug wireguard configs
-      ansible.builtin.debug:
-        msg: "{{ hostvars['tn_bastion']['tn_wg_clients'] }}"
-      when: debug
 
     - name: Upload wireguard client configs to S3 object storage
       amazon.aws.s3_object:
@@ -148,7 +144,7 @@
         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/misc-{{ entity_name }}-wg_client{{ ansible_loop.index0 }}.conf"
+        object: "{{ tn_id }}/misc-{{ tn_id }}-wg_client{{ ansible_loop.index0 }}.conf"
         content_base64: "{{ item }}"
         encrypt: false
         validate_certs: false

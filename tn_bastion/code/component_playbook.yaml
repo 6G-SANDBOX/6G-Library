@@ -30,14 +30,28 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
-        ips: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'] }}"
-        id: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-id'] }}"
+        tn_bastion_ips: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'] }}"
+        tn_bastion_id: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-id'] }}"
         tn_vxlan_id: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-id'] | string }}"
+
+    # Ugly syntax, I know, but this is a deprecated component, so do not complain and use tn_init
+    - name: Get tn_vxlan netmask
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: |
+          set -o pipefail && terraform show --json | jq '.values.root_module.resources[] | select(.type == "opennebula_virtual_network") | .values.network_mask'
+        executable: /bin/bash
+      register: tn_vxlan_netmask
+      changed_when: false
+    - name: Set tn_vxlan_net variable
+      ansible.builtin.set_fact:
+        tn_vxlan_net: "{{ tn_bastion_ips[tn_vxlan_id] | ansible.utils.ipsubnet(one_vxlan_netmask.stdout) }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "tn_bastion"
-        ansible_host: "{{ ips[site_networks_id.default | string] }}"
+        ansible_host: "{{ tn_bastion_ips[site_networks_id.default | string] }}"
         ansible_user: "jenkins"
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
@@ -48,8 +62,9 @@
   hosts: "tn_bastion"
   gather_facts: false
   vars:
-    default_ip: "{{ hostvars['localhost']['ips'][hostvars.localhost.site_networks_id.default | string] }}"
-    tn_vxlan_ip: "{{ hostvars['localhost']['ips'][hostvars.localhost.tn_vxlan_id | string] }}"
+    default_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.site_networks_id.default | string] }}"
+    tn_vxlan_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.tn_vxlan_id | string] }}"
+    tn_vxlan_net: "{{ hostvars.localhost.tn_vxlan_net }}"
   tasks:
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
@@ -98,10 +113,67 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: Publish SSH key as a terraform output
+    - name: Fetch bastion metadata from OpenNebula
+      community.general.one_vm:
+        instance_ids: "{{ tn_bastion_id }}"
+        api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
+        api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
+        api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
+      register: bastion_metadata
+    - name: Extract tokens from bastion metadata
+      ansible.builtin.set_fact:
+        tn_bastion_dns_password: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_PASSWORD }}"
+        tn_bastion_dns_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_TOKEN }}"
+        tn_bastion_routemanager_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_ROUTEMANAGER_TOKEN }}"
+
+    - name: Upload private ssh key to S3 object storage
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/misc-{{ tn_id }}-id_ed25519"
+        content_base64: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"
+        encrypt: false
+        validate_certs: false
+
+    - name: Upload public ssh key to S3 object storage
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/misc-{{ tn_id }}-id_ed25519.pub"
+        content_base64: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
+        encrypt: false
+        validate_certs: false
+
+    - name: Upload wireguard client configs to S3 object storage
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/misc-{{ tn_id }}-wg_client{{ ansible_loop.index0 }}.conf"
+        content_base64: "{{ item }}"
+        encrypt: false
+        validate_certs: false
+      loop: "{{ hostvars['tn_bastion']['tn_wg_clients'] }}"
+      loop_control:
+        extended: true
+        extended_allitems: false
+
+    - name: Publish aditional information as global terraform outputs
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
+          - key: "tn_dns_token"
+            value: "{{ tn_bastion_dns_token }}"
+          - key: "tn_routemanager_token"
+            value: "{{ tn_bastion_routemanager_token }}"
           - key: "tn_ssh_public_key"
             value: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] | b64decode | trim }}"
 
@@ -109,8 +181,10 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:
-          ips: "{{ ips | b64encode }}"
-          id: "{{ id | b64encode }}"
-          vpn_client_tunnel: "{{ hostvars['tn_bastion']['client_tunnel']['content'] }}"
+          tn_bastion_ips: "{{ tn_bastion_ips | b64encode }}"
+          tn_bastion_id: "{{ tn_bastion_id | b64encode }}"
           tn_ssh_public_key: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
           tn_ssh_private_key: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"
+          tn_wg_clients: "{{ hostvars['tn_bastion']['tn_wg_clients']['content'] }}"
+          tn_dns_password: "{{ tn_bastion_dns_password | b64encode }}"
+

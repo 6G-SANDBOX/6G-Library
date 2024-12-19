@@ -2,7 +2,7 @@
 - name: Append new commponent's name and IP into a .ssh/config.d/ file
   community.general.ssh_config:
     host: "{{ tn_id }}-tn_bastion"
-    hostname: "{{ ips[site_networks_id.default | string] | default('ERROR_ASSIGNING_IP', true) }}"
+    hostname: "{{ tn_bastion_ips[site_networks_id.default | string] | default('ERROR_ASSIGNING_IP', true) }}"
     remote_user: "jenkins"
     identity_file: "/var/lib/jenkins/.ssh/id_ed25519"
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"

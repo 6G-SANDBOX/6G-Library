@@ -1,11 +1,11 @@
 # {{ tn_id }}-tn_vxlan
 
-The component `{{ tn_id }}-tn_vxlan` is the main subnetwork of the Trial Network, reachable with the bastion's VPN.
-
+The component `{{ tn_id }}-tn_vxlan` has been succesfully created.
+The **`tn_vxlan`** is the main subnetwork of the Trial Network, connecting all components, and reachable to the experimenter through the Wireguard VPN server in the **`tn_bastion`**.
 
 ## Important information:
 
-- **OpenNebula VNet ID**: `{{ id }}`
+- **OpenNebula VNet ID**: `{{ tn_vxlan_id }}`
 - **VXLAN first IP**: `{{ one_vxlan_first_ip }}`
 - **VXLAN address size**: `{{ one_vxlan_address_size }}`
 - **VXLAN netmask**: `{{ one_vxlan_netmask }}`
