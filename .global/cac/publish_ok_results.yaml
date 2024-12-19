@@ -21,10 +21,10 @@
     secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
     bucket: "{{ site_s3_server.bucket }}"
     object: "{{ tn_id }}/misc-{{ tn_id }}-ssh_config"
-    src: "{{ workspace }}/ssh_config"
+    src: "{{ workspace }}/misc-{{ tn_id }}-ssh_config"
     encrypt: false
     validate_certs: false
-  when: tnuser_ssh_config is defined and tnuser_ssh_config == false
+  when: tnuser_ssh_config is defined and tnuser_ssh_config.changed
 
 - name: Debug OK markdown results
   when: debug
