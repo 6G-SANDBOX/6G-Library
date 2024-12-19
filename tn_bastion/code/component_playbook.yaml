@@ -1,5 +1,4 @@
 ---
-# TODO: Redo to match tn_init
 - name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
   gather_facts: false
@@ -31,8 +30,9 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
-        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
-        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+        ips: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'] }}"
+        id: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-id'] }}"
+        tn_vxlan_id: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-id'] | string }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
@@ -47,23 +47,50 @@
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "tn_bastion"
   gather_facts: false
+  vars:
+    default_ip: "{{ hostvars['localhost']['ips'][hostvars.localhost.site_networks_id.default | string] }}"
+    tn_vxlan_ip: "{{ hostvars['localhost']['ips'][hostvars.localhost.tn_vxlan_id | string] }}"
   tasks:
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
         connect_timeout: 5
         timeout: 200
 
+    - name: Wait again until bastion contextualization has finished
+      become: true
+      ansible.builtin.wait_for:
+        path: /etc/one-appliance/status
+        search_regex: bootstrap_success
+
     ### Calling load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
     ### But it makes the code much MUCH cleaner with almost no extra latency
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Create an ed25519 ssh key pair to access the future Trial Network components
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}code/{{ site_hypervisor }}/cac/02_install/ssh_keypair.yaml"
+    - name: Set site ssh key as authorized in jenkins user
+      ansible.posix.authorized_key:
+        user: jenkins
+        state: present
+        key: "{{ site_admin_ssh_public_key }}"
+      when: site_admin_ssh_public_key is defined and site_admin_ssh_public_key != ''
 
-    - name: Fetch VPN config
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/get_vpn_client_tunnel.yaml"
-      when: site_hypervisor == "one"
+    - name: Create an ed25519 ssh key pair for experimenter access to authorized Trial Network components
+      ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/ssh_keypair.yaml"
+
+    - name: Add IP addresses to DNS API server
+      ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/dnsapi.yaml"
+
+    - name: Import tasks to forbid all unauthorized access to private IPs
+      ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/nftables.yaml"
+
+    - name: Setup wireguard VPN
+      ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/wireguard.yaml"
+
+    - name: Remove /etc/resolv.conf file. All resolutions will be done through Technitium forwarders
+      become: true
+      ansible.builtin.file:
+        path: /etc/resolv.conf
+        state: absent
 
 
 - name: "STAGE 4: Publish execution results"

@@ -31,7 +31,6 @@
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         tn_vxlan_id: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-id'] }}"
-        tn_vxlan_net: "{{ one_vxlan_first_ip | ansible.utils.ipsubnet(one_vxlan_netmask) }}"
         tn_bastion_ips: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'] }}"
         tn_bastion_id: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-id'] }}"
 
@@ -51,7 +50,7 @@
   vars:
     default_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.site_networks_id.default | string] }}"
     tn_vxlan_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.tn_vxlan_id | string] }}"
-    tn_vxlan_net: "{{ hostvars.localhost.tn_vxlan_net }}"
+    tn_vxlan_net: "{{ one_vxlan_first_ip | ansible.utils.ipsubnet(one_vxlan_netmask) }}"
   tasks:
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
