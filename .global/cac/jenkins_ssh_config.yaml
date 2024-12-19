@@ -7,3 +7,4 @@
     remote_user: "jenkins"
     ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
     state: present
+  register: jenkins_ssh_config

@@ -59,7 +59,7 @@
       loop: "{{ node_ips | dict2items }}"
 
     - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
       loop: "{{ node_ips | dict2items }}"
 
 
@@ -137,7 +137,7 @@
       ansible.builtin.set_fact:
         kubeconfig: "{{ master_metadata.instances[0].attributes.ONEKE_KUBECONFIG }}"
 
-    - name: Upload kubeconfig to S3
+    - name: Upload kubeconfig to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put

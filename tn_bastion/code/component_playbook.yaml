@@ -1,4 +1,5 @@
 ---
+# TODO: Redo to match tn_init
 - name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
   gather_facts: false
@@ -40,7 +41,7 @@
         ansible_user: "jenkins"
 
     - name: Create SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"

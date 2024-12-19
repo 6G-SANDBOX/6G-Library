@@ -1,5 +1,5 @@
 ---
-- name: Upload terraform manifest to S3
+- name: Upload terraform manifest to S3 object storage
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"
     mode: put
@@ -12,6 +12,20 @@
     validate_certs: false
   loop: "{{ terraform_manifests.results }}"
   when: terraform_apply.failed is defined and terraform_apply.failed == false
+
+# TODO
+# - name: Update Trial Network ssh_config file to S3 object storage
+#   amazon.aws.s3_object:
+#     endpoint_url: "{{ site_s3_server.endpoint }}"
+#     mode: put
+#     access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
+#     secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
+#     bucket: "{{ site_s3_server.bucket }}"
+#     object: "{{ tn_id }}/misc-ssh_config-{{ tn_id }}"
+#     src: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+#     encrypt: false
+#     validate_certs: false
+#   when: tnuser_ssh_config is defined and tnuser_ssh_config == false
 
 - name: Debug OK markdown results
   when: debug

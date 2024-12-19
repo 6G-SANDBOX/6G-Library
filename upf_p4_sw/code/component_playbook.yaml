@@ -65,7 +65,7 @@
         ansible_user: "jenkins"
 
     - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/ssh_config.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
