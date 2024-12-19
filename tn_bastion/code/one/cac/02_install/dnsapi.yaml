@@ -22,7 +22,7 @@
 
 - name: Parse old DNS API endpoints
   ansible.builtin.set_fact:
-    old_dns_endpoints: "{{ dns_settings.stdout | from_json | json_query('response.dnsServerLocalEndPoints') }}"
+    old_dns_endpoints: "{{ dns_settings.json.response.dnsServerLocalEndPoints }}"
 
 - name: Add new IP addresses to the DNS API endpoints
   set_fact:
