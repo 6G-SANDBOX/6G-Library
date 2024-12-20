@@ -103,7 +103,7 @@
           {{
             'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
             '&domain=' ~ domain_name ~
-            '&type=A&ptr=true&ipAddress=' ~ ips[access_vnet_id] | trim
+            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ ips[access_vnet_id] | trim
           }}
         method: POST
         body_format: json
