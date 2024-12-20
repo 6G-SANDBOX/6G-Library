@@ -15,7 +15,7 @@ resource "opennebula_virtual_machine" "tn_bastion" {
     SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
     TOKEN: "YES"
     ONEAPP_BASTION_DNS_PASSWORD:       ""
-    ONEAPP_BASTION_DNS_FORWARDERS:     "{{ site_dns }}"
+    ONEAPP_BASTION_DNS_FORWARDERS:     "{{ site_dns | default('8.8.8.8,1.1.1.1') }}"
     ONEAPP_BASTION_DNS_DOMAIN:         "{{ tn_id }}.{{ site_domain }}"
     ONEAPP_BASTION_ROUTEMANAGER_TOKEN: ""
     ONEAPP_BASTION_ROUTEMANAGER_PORT:  ""

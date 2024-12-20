@@ -49,8 +49,8 @@
   hosts: "tn_bastion"
   gather_facts: false
   vars:
-    default_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.site_networks_id.default] }}"
-    tn_vxlan_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.tn_vxlan_id] }}"
+    default_ip: "{{ hostvars.localhost.tn_bastion_ips[hostvars.localhost.site_networks_id.default | string] }}"
+    tn_vxlan_ip: "{{ hostvars.localhost.tn_bastion_ips[hostvars.localhost.tn_vxlan_id | string] }}"
     tn_vxlan_net: "{{ hostvars.localhost.tn_vxlan_net }}"
   tasks:
     - name: Wait for system to become reachable

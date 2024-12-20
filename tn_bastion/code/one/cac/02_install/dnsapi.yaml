@@ -23,7 +23,7 @@
     old_dns_endpoints: "{{ dns_settings.json.response.dnsServerLocalEndPoints }}"
 
 - name: Add new IP addresses to the DNS API endpoints
-  set_fact:
+  ansible.builtin.set_fact:
     new_dns_endpoints: "{{ (old_dns_endpoints + [default_ip + ':53', tn_vxlan_ip + ':53']) | unique | join(',') }}"
 
 - name: Set new DNS API endpoints
