@@ -57,7 +57,7 @@ input:
     description: Version of the OneKE Appliance. 127A and 129A to be added in the future. Default value is "129"
     type: str
     default_value: "129"
-    choices: ["127", "129"]
+    choices: ["129"]
     required_when: false
 
   one_oneKE_multus:

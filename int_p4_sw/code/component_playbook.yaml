@@ -1,6 +1,4 @@
 ---
-# Main playbook to deploy the INT-P4 SW component
-
 - name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
   gather_facts: false
@@ -12,6 +10,7 @@
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
+    # @alvaro: This task looks completely redundant. Same steps are done before in load_variables.yaml right?
     - name: Configure VM resources
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/vm_resources.yaml"
 

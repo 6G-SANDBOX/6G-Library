@@ -4,14 +4,14 @@
   gather_facts: false
   connection: local
   tasks:
-      - name: Load enviromental variables from different sources
-        ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-      - name: Prepare terraform working directory
-        ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
-      - name: Terraform apply
-        ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+    - name: Terraform apply
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
 
 - name: "STAGE 2: Prepare to access the component"
@@ -28,7 +28,6 @@
       register: terraform_outputs
       changed_when: false
 
-    # Save some of the outputs as playbook facts (variables). Some of them will be surelly be used as future output values
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
@@ -37,7 +36,6 @@
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_opensand_sat_networks[0] + '-id'] | string}}"
 
-    # Include the deployed component/s as Inventory host/s.
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: opensand_sat
@@ -45,15 +43,10 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
-    # While not used by the Jenkins, we included the configuration of a .ssh/config per TN in the Jenkins for debugging purposes.
     - name: Create SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
 
 
-# Configuration play. Modules executed in the deployment component.
-# Remember in Ansible variables are loaded in each host, so if you change the host, you can either
-# - Set the variables again (with the load_variables.yaml global taskfile or similar)
-# - Refer to the hostvars of localhost.
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "opensand_sat"
   gather_facts: false
@@ -89,14 +82,10 @@
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
-
-    # - name: Download and install packages to VM
-    #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/install_packages.yaml"
     - name: Download and install packages to VM
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/03_post/install.yaml"
 
 
-# Final phase of the deployments. Gather information and publish it
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
@@ -107,7 +96,6 @@
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
-
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

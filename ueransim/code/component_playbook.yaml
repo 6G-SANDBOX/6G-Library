@@ -10,7 +10,7 @@
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
-    - name: Overwrite defaults with correct values
+    - name: Variable autocompletion
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/variable_autocompletion.yaml"
 
     - name: Terraform apply
