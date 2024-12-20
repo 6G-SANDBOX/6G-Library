@@ -7,8 +7,8 @@
     create: true
     block: |
       Host espantosin-{{ entity_name }}
-          hostname {{ ips[access_vnet_id] | default('ERROR_ASSIGNING_IP', true) }}
-          user tnuser
-          identity_file: "~/.ssh/misc-{{ tn_id }}-id_ed25519"
+          HostName {{ domain_name }}
+          User tnuser
+          IdentityFile ~/.ssh/misc-{{ tn_id }}-id_ed25519
     insertafter: EOF
   register: tnuser_ssh_config

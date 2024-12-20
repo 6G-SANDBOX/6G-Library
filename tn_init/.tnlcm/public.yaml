@@ -79,6 +79,7 @@ input:
 ####################################
 output:
   tn_vxlan_id: VNet ID in OpenNebula
+  tn_vxlan_net: Subnet of the VNet in CIDR format
   tn_bastion_ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
   tn_bastion_id: VM ID in OpenNebula
   tn_ssh_public_key: SSH public key present in the TN VMs for the user tnuser

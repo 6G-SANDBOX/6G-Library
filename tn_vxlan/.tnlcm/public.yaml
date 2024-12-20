@@ -60,8 +60,8 @@ input:
 ## Component output
 ####################################
 output:
-  id: VNet ID in OpenNebula
-
+  tn_vxlan_id: VNet ID in OpenNebula
+  tn_vxlan_net: Subnet of the VNet in CIDR format
 
 ####################################
 ## Site-specific variables

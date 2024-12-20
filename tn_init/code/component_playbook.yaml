@@ -49,8 +49,8 @@
   hosts: "tn_bastion"
   gather_facts: false
   vars:
-    default_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.site_networks_id.default | string] }}"
-    tn_vxlan_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.tn_vxlan_id | string] }}"
+    default_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.site_networks_id.default] }}"
+    tn_vxlan_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.tn_vxlan_id] }}"
     tn_vxlan_net: "{{ hostvars.localhost.tn_vxlan_net }}"
   tasks:
     - name: Wait for system to become reachable
@@ -157,6 +157,8 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
+          - key: "tn_vxlan_net"
+            value: "{{ tn_vxlan_net }}"
           - key: "tn_dns_token"
             value: "{{ tn_bastion_dns_token }}"
           - key: "tn_routemanager_token"
@@ -169,6 +171,7 @@
       vars:
         output:
           tn_vxlan_id: "{{ tn_vxlan_id | b64encode }}"
+          tn_vxlan_net: "{{ tn_vxlan_net | b64encode }}"
           tn_bastion_ips: "{{ tn_bastion_ips | b64encode }}"
           tn_bastion_id: "{{ tn_bastion_id | b64encode }}"
           tn_ssh_public_key: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"

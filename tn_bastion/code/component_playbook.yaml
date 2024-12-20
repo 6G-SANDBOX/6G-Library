@@ -30,23 +30,10 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
+        tn_vxlan_id: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-id'] }}"
+        tn_vxlan_net: "{{ one_vxlan_first_ip | ansible.utils.ipsubnet(one_vxlan_netmask) }}"
         tn_bastion_ips: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'] }}"
         tn_bastion_id: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-id'] }}"
-        tn_vxlan_id: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-id'] | string }}"
-
-    # Ugly syntax, I know, but this is a deprecated component, so do not complain and use tn_init
-    - name: Get tn_vxlan netmask
-      ansible.builtin.shell:
-      args:
-        chdir: "{{ workspace }}/.terraform/"
-        cmd: |
-          set -o pipefail && terraform show --json | jq '.values.root_module.resources[] | select(.type == "opennebula_virtual_network") | .values.network_mask'
-        executable: /bin/bash
-      register: tn_vxlan_netmask
-      changed_when: false
-    - name: Set tn_vxlan_net variable
-      ansible.builtin.set_fact:
-        tn_vxlan_net: "{{ tn_bastion_ips[tn_vxlan_id] | ansible.utils.ipsubnet(tn_vxlan_netmask.stdout | int) }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
@@ -62,8 +49,8 @@
   hosts: "tn_bastion"
   gather_facts: false
   vars:
-    default_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.site_networks_id.default | string] }}"
-    tn_vxlan_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.tn_vxlan_id | string] }}"
+    default_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.site_networks_id.default] }}"
+    tn_vxlan_ip: "{{ hostvars['localhost']['tn_bastion_ips'][hostvars.localhost.tn_vxlan_id] }}"
     tn_vxlan_net: "{{ hostvars.localhost.tn_vxlan_net }}"
   tasks:
     - name: Wait for system to become reachable
