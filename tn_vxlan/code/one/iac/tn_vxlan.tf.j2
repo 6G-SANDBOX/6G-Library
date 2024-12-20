@@ -21,6 +21,11 @@ resource "opennebula_virtual_network_address_range" "tn_vxlan" {
 }
 
 output "tn_vxlan-id" {
-  description = "OpenNebula Network ID"
+  description = "VNet ID in OpenNebula"
   value       = opennebula_virtual_network.tn_vxlan.id
+}
+
+output "tn_vxlan-net" {
+  description = "Subnet of the VNet in CIDR format"
+  value = cidrsubnet("${opennebula_virtual_network_address_range.tn_vxlan.ip4}/${opennebula_virtual_network.tn_vxlan.network_mask}",0,0)
 }

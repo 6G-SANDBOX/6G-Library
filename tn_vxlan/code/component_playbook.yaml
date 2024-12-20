@@ -31,14 +31,7 @@
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         tn_vxlan_id: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-id'] }}"
-        tn_vxlan_net: "{{ one_vxlan_first_ip | ansible.utils.ipsubnet(one_vxlan_netmask) }}"
-
-    - name: Publish aditional information as global terraform outputs
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
-      vars:
-        custom_outputs:
-          - key: "tn_vxlan_net"
-            value: "{{ tn_vxlan_net }}"
+        tn_vxlan_net: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-net'] }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

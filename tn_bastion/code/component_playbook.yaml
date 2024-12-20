@@ -31,7 +31,7 @@
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         tn_vxlan_id: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-id'] }}"
-        tn_vxlan_net: "{{ one_vxlan_first_ip | ansible.utils.ipsubnet(one_vxlan_netmask) }}"
+        tn_vxlan_net: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-net'] }}"
         tn_bastion_ips: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'] }}"
         tn_bastion_id: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-id'] }}"
 
