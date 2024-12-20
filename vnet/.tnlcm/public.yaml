@@ -37,6 +37,7 @@ metadata:
     The maximum value for a full /24 subnet starting from X.X.X.1 should be 254
   hypervisors: [one]
 
+
 ####################################
 ## Component input
 ####################################
@@ -46,33 +47,38 @@ input:
     type: str
     default_value: "10.21.12.1"
     required_when: false
-
   one_vnet_netmask:
     description: Network mask of the Virtual Network subnet
     type: int
     default_value: 24
     required_when: false
-
   one_vnet_dns:
     description: Space-separated list of DNS servers configured in VMs with tn_vxlan as their main Network Interface
     type: str
     default_value: "1.1.1.1 1.0.0.1"
     required_when: false
-
   one_vnet_first_ip:
     description: First IP address of the Virtual Network range
     type: str
     default_value: "10.21.12.1"
     required_when: false
-
   one_vnet_address_size:
     description: Amount of IP addresses that compose the Virtual Network range
     type: int
     default_value: 100
     required_when: false
 
+
 ####################################
 ## Component output
 ####################################
 output:
   id: VNet ID in OpenNebula
+  net: Subnet of the VNet in CIDR format
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  # None

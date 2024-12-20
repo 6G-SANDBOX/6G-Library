@@ -24,3 +24,8 @@ output "{{ entity_name }}-id" {
   description = "OpenNebula Network ID"
   value       = opennebula_virtual_network.{{ entity_name }}.id
 }
+
+output "{{ entity_name }}-net" {
+  description = "Subnet of the VNet in CIDR format"
+  value = cidrsubnet("${opennebula_virtual_network_address_range.{{ entity_name }}.ip4}/${opennebula_virtual_network.{{ entity_name }}.network_mask}",0,0)
+}
