@@ -33,11 +33,14 @@
     body_format: json
     status_code: [200]
 
-- name: Set record for bastion in zone 
+- name: Set record for bastion in zone
   ansible.builtin.uri:
     url: >-
-      http://127.0.0.1:5380/api/zones/records/add?token={{ dns_token }}
-      &domain=bastion.{{ tn_id }}.{{ site_domain }}&type=A&ipAddress={{ tn_vxlan_ip }}&ptr=true
+      {{
+        'http://127.0.0.1:5380/api/zones/records/add?token=' ~ dns_token ~
+        '&domain=bastion.' ~ tn_id ~ '.' ~ site_domain ~
+        '&type=A&ptr=true&ipAddress=' ~ tn_vxlan_ip | trim
+      }}
     method: POST
     body_format: json
     status_code: [200]
