@@ -8,10 +8,10 @@ Address = 10.7.0.1/24
 PrivateKey = {{ server_privatekey.stdout }}
 ListenPort = {{ site_ports_prefix | string + port_suffix }}
 
-PostUp = nft add rule inet wireguard input udp dport {{ site_ports_prefix | string + port_suffix }} counter accept
-PostUp = nft add rule inet wireguard forward iifname %i counter accept
-PostUp = nft add rule inet wireguard forward oifname %i counter accept
-PostUp = nft add rule inet wireguard forward ct state related,established counter accept
+PostUp = nft insert rule inet wireguard input udp dport {{ site_ports_prefix | string + port_suffix }} counter accept
+PostUp = nft insert rule inet wireguard forward iifname %i counter accept
+PostUp = nft insert rule inet wireguard forward oifname %i counter accept
+PostUp = nft insert rule inet wireguard forward ct state related,established counter accept
 PostDown = nft delete rule inet wireguard input udp dport {{ site_ports_prefix | string + port_suffix }} counter accept
 PostDown = nft delete rule inet wireguard forward iifname %i counter accept
 PostDown = nft delete rule inet wireguard forward oifname %i counter accept
