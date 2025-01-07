@@ -1,6 +1,6 @@
-# Open5GS
+# Open5GS for Kubernetes
 
-The **Open5GS** 6G-Library component deploys a 5G SA Core inside a Kubernetes cluster using a Helm Chart.
+The **open5gs_k8s** 6G-Library component deploys a 5G SA Core inside a Kubernetes cluster using a Helm Chart.
 Current versions:
 - Open5GS v2.7.0
 - Used Helm Chart v2.2.2

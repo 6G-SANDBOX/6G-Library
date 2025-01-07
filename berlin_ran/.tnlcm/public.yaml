@@ -59,7 +59,7 @@ input:
     required_when: true
   berlin_ran_one_linked_open5g:
     description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
-    type: open5gs or open5gs_vm or open5gcore_vm
+    type: open5gs_k8s or open5gs_vm or open5gcore_vm
     required_when: false
 
 

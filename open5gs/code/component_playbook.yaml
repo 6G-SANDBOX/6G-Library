@@ -23,7 +23,7 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
-        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_target + '-node_ips'] }}"
+        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_k8s_target + '-node_ips'] }}"
         domain_name: >-
           {{ (component_type | regex_replace('_', '')) ~ '-' ~ (custom_name | regex_replace('_', '')) ~ '.' ~ tn_id ~ '.' ~ site_domain | trim }}"
 
@@ -53,20 +53,20 @@
       ansible.builtin.set_fact:
         open5gs_metadata_dict: >-
           {
-            'oneKE': '{{ one_open5gs_target }}',
+            'oneKE': '{{ one_open5gs_k8s_target }}',
             'proxy': '{{ node_ips.vnf_0 }}',
-            'mcc': '{{ one_open5gs_mcc }}',
-            'mnc': '{{ one_open5gs_mnc }}',
-            'msin': '{{ one_open5gs_msin }}',
-            'key': '{{ one_open5gs_key }}',
-            'opc': '{{ one_open5gs_opc }}',
-            'apn': '{{ one_open5gs_apn }}',
-            'tac': '{{ one_open5gs_tac }}',
-            's_nssai_sst': '{{ one_open5gs_s_nssai_sst }}',
-            's_nssai_sd': '{{ one_open5gs_s_nssai_sd }}',
-            'amf_ip': '{{ one_open5gs_amf_ip }}',
-            'upf_ip': '{{ one_open5gs_upf_ip }}',
-            'ue_count': '{{ one_open5gs_ue_count }}'
+            'mcc': '{{ one_open5gs_k8s_mcc }}',
+            'mnc': '{{ one_open5gs_k8s_mnc }}',
+            'msin': '{{ one_open5gs_k8s_msin }}',
+            'key': '{{ one_open5gs_k8s_key }}',
+            'opc': '{{ one_open5gs_k8s_opc }}',
+            'apn': '{{ one_open5gs_k8s_apn }}',
+            'tac': '{{ one_open5gs_k8s_tac }}',
+            's_nssai_sst': '{{ one_open5gs_k8s_s_nssai_sst }}',
+            's_nssai_sd': '{{ one_open5gs_k8s_s_nssai_sd }}',
+            'amf_ip': '{{ one_open5gs_k8s_amf_ip }}',
+            'upf_ip': '{{ one_open5gs_k8s_upf_ip }}',
+            'ue_count': '{{ one_open5gs_k8s_ue_count }}'
           }
 
     - name: Publish open5gs metadata as terraform outputs"

@@ -1,12 +1,12 @@
-# Open5GS
+# Open5GS as a standalone Virtual Machine
 
-The **Open5GS** 6G-Library component deploys a 5G SA Core inside a Kubernetes cluster using a Helm Chart.
+The **open5gs_vm** 6G-Library component deploys a 5G SA Core inside an Ubuntu VM using scripts.
 Current versions:
 - Open5GS v2.7.2
 
 
 > [!NOTE]  
-> The VM need a CPU architecture with the vmx instructions set.
+> The VM needs a CPU architecture with the vmx instructions set.
 > In Opennebula, selecting a non-default architecture for the worker templates might be needed.
 
 

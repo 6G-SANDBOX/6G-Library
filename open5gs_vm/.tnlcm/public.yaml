@@ -26,9 +26,9 @@
 metadata:
   maintainers:
     - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
-  short_description: Deploys a Open5GS as Virtual Machine
+  short_description: Deploys a Open5GS as a standalone Virtual Machine
   long_description: |
-    A general-purpose Virtual Machine based on Ubuntu 22.04 lTS.
+    Deploys a Open5GS over a general-purpose Virtual Machine based on Ubuntu 22.04 lTS.
     The automation is installing Open5GS version 2.7.2 and MongoDB on it.
     Through variable "one_open5gs_vm_size", five different types of instances can be deployed
     - **extra_large**: 32 GiB of memory, 8 vCPU and 100GiB of storage
@@ -121,13 +121,13 @@ input:
   one_open5gs_vm_amf_ip:
     description: Address to expose the Core Access and Mobility Management Function (AMF). Requires to be part of the oneKE's one_oneKE_metallb_range
     type: str
-    default_value: "10.10.10.200"
+    default_value: "10.21.12.200"
     required_when: false
 
   one_open5gs_vm_upf_ip:
     description: Address to expose the Core User Plane Function (UPF). Requires to be part of the oneKE's one_oneKE_metallb_range
     type: str
-    default_value: "10.10.10.201"
+    default_value: "10.21.12.201"
     required_when: false
 
   one_open5gs_vm_ue_count:
@@ -143,6 +143,8 @@ output:
   ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
   id: VM ID in OpenNebula
   metadata_dict: #Dictionary with multiple parameters used in the core bootstrap
+    oneKE: empty
+    proxy: empty
     mcc: input.one_open5gs_vm_mcc
     mnc: input.one_open5gs_vm_mnc
     msin: input.one_open5gs_vm_msin
