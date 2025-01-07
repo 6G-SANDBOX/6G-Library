@@ -136,4 +136,4 @@ webui:
   ingress:
     enabled: true
     ingressClassName: nginx
-    hostname: "{{ one_open5gs_webui_subdomain | string }}.{{ tn_id }}.{{ site_domain }}"
+    hostname: "{{ hostvars['localhost']['site_domain'] }}"

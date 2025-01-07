@@ -8,8 +8,6 @@
 ##
 ######################################################
 
-one_open5gs_webui_subdomain: "open5gs"
-
 one_open5gs_mcc: "001"
 one_open5gs_mnc: "01"
 one_open5gs_msin: "0000000001"

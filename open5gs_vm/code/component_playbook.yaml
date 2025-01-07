@@ -35,9 +35,12 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_external_vnet + '-id'] }}"
+        domain_name: >-
+          {{ (component_type | regex_replace('_', '')) ~ '-' ~ (custom_name | regex_replace('_', '')) ~ '.' ~ tn_id ~ '.' ~ site_domain | trim }}"
         n2_vnet_id: >-
           {{
             (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[0] + '-id'] | string
@@ -111,10 +114,10 @@
     - name: Display all variables/facts known for a host
       ansible.builtin.debug:
         var: hostvars[inventory_hostname]
-      when: False
+      when: false
 
     - name: Install Open5GS and MongoDB
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install-open5gs.yml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/install-open5gs.yml"
 
 - name: "STAGE 3: Apply CaC to deploy the component - STEP 2 (bastion)"
   hosts: "bastion"
@@ -157,6 +160,18 @@
         custom_outputs:
           - key: "{{ entity_name }}-metadata"
             value: "{{ open5gs_metadata_dict }}"
+
+    - name: Set DNS record for the component
+      ansible.builtin.uri:
+        url: >-
+          {{
+            'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
+            '&domain=' ~ domain_name ~
+            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ ips[access_vnet_id] | trim
+          }}
+        method: POST
+        body_format: json
+        status_code: [200]
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

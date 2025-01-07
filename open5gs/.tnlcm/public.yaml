@@ -43,12 +43,6 @@ input:
     type: "oneKE"
     required_when: true
 
-  one_open5gs_webui_subdomain:
-    description: Subdomain of the open5gs dashboard Web App
-    type: str
-    default_value: "open5gs"
-    required_when: false
-
   one_open5gs_mcc:
     description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
     type: str
