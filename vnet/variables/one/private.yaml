@@ -10,7 +10,6 @@
 
 ### opennebula_virtual_network resource
 one_vnet_gw: "10.21.12.1"
-one_vnet_dns: "1.1.1.1 1.0.0.1"
 one_vnet_netmask: 24
 one_vnet_mtu: 1500
 one_vnet_guest_mtu: 1450

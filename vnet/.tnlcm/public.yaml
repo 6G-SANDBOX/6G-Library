@@ -53,9 +53,9 @@ input:
     default_value: 24
     required_when: false
   one_vnet_dns:
-    description: Space-separated list of DNS servers configured in VMs with tn_vxlan as their main Network Interface
+    description: Space-separated list of DNS servers configured in VMs with vnet as their main Network Interface
     type: str
-    default_value: "1.1.1.1 1.0.0.1"
+    default_value: ""
     required_when: false
   one_vnet_first_ip:
     description: First IP address of the Virtual Network range
