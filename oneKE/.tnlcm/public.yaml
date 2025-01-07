@@ -133,12 +133,6 @@ input:
     choices: ["YES", "NO"]
     required_when: false 
 
-  one_oneKE_dns:
-    description: Space-separated list of DNS servers configured in the OneKE VNF
-    type: str
-    default_value: "1.1.1.1 8.8.8.8"
-    required_when: false
-
   one_oneKE_nginx_passthough:
     description: |
       Variable to enable or disable SSL/TLS passthrough in the Ingress-Nginx controller.
@@ -163,7 +157,6 @@ output:
     cilium_range: input.one_oneKE_cilium_range
     metallb_range: input.one_oneKE_metallb_range
     longhorn: input.one_oneKE_longhorn
-    dns: input.one_oneKE_dns
     nginx_passthrough: input.one_oneKE_nginx_passthrough
   kubeconfig: Kubeconfig file with keys and endpoints to manage the cluster
   skooner_token: Generated Token to login to the skooner dashboard Web App

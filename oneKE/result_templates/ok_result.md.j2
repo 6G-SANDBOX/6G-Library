@@ -33,7 +33,6 @@ OneKE Service has four different Roles:
 - **metallb enabled**: `{{ one_oneKE_metallb }}`
 - **metallb IP pool**: `{{ one_oneKE_metallb_range }}`
 - **traefik enabled**: `{{ one_oneKE_traefik }}`
-- **VNF upstream DNS**: `{{ one_oneKE_dns }}`
 - **SSL/TLS passthrough enabled in the nginx-ingress**: `{{ one_oneKE_nginx_passthough }}`
 - **Skooner Dashboard URL**: `skooner.{{ tn_id }}.{{ site_domain }}`
 - **Skooner Dashboard token**: `{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] }}`

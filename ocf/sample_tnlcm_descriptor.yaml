@@ -32,7 +32,6 @@ trial_network:
       one_oneKE_metallb: "YES"
       one_oneKE_metallb_range: "10.10.10.200-10.10.10.240"
       one_oneKE_traefik: "NO"
-      one_oneKE_dns: "1.1.1.1 8.8.8.8"
       one_oneKE_nginx_passthough: true
   ocf-openCapif:
     type: "ocf"
