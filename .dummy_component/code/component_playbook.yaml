@@ -34,7 +34,7 @@
     # - name: Set Terraform outputs as playbook facts
     #   ansible.builtin.set_fact:
     #     bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-    #     node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_oneKE + '-node_ips'] }}"
+    #     node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_target + '-node_ips'] }}"
 
 
     # More than just a simple terraform apply. Templates all manifests from {{ component_type }}/code/{{ site_hypervisor }}/iac/*.tf.j2, writes them

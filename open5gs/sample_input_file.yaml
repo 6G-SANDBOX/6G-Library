@@ -1,6 +1,6 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
-one_open5gs_oneKE: "oneKE-custom_name"
+one_open5gs_target: "oneKE-custom_name"
 
 #one_open5gs_mcc: "001"
 #one_open5gs_mnc: "01"

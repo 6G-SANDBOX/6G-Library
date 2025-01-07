@@ -23,7 +23,7 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
-        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_oneKE + '-node_ips'] }}"
+        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_target + '-node_ips'] }}"
         domain_name: >-
           {{ (component_type | regex_replace('_', '')) ~ '-' ~ (custom_name | regex_replace('_', '')) ~ '.' ~ tn_id ~ '.' ~ site_domain | trim }}"
 
@@ -53,7 +53,7 @@
       ansible.builtin.set_fact:
         open5gs_metadata_dict: >-
           {
-            'oneKE': '{{ one_open5gs_oneKE }}',
+            'oneKE': '{{ one_open5gs_target }}',
             'proxy': '{{ node_ips.vnf_0 }}',
             'mcc': '{{ one_open5gs_mcc }}',
             'mnc': '{{ one_open5gs_mnc }}',
