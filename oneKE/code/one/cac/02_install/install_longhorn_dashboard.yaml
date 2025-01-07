@@ -27,7 +27,7 @@
       spec:
         ingressClassName: nginx
         rules:
-        - host: "longhorn.{{ hostvars['localhost']['tn_id'] }}.{{ hostvars['localhost']['site_domain'] }}"
+        - host: "longhorn.{{ hostvars['localhost']['domain_name'] }}"
           http:
             paths:
             - pathType: Prefix

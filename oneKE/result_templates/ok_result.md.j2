@@ -34,9 +34,9 @@ OneKE Service has four different Roles:
 - **metallb IP pool**: `{{ one_oneKE_metallb_range }}`
 - **traefik enabled**: `{{ one_oneKE_traefik }}`
 - **SSL/TLS passthrough enabled in the nginx-ingress**: `{{ one_oneKE_nginx_passthough }}`
-- **Skooner Dashboard URL**: `skooner.{{ tn_id }}.{{ site_domain }}`
+- **Skooner Dashboard URL**: `skooner.{{ domain_name }}`
 - **Skooner Dashboard token**: `{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] }}`
-- **Longhorn Dashboard URL**: `longhorn.{{ tn_id }}.{{ site_domain }}`
+- **Longhorn Dashboard URL**: `longhorn.{{ domain_name }}`
 - **base64 encoded KubeConfig file**:
   ```
   {{ kubeconfig }}

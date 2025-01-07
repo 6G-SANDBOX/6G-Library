@@ -32,8 +32,11 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         cluster_roles: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-roles'] }}"
+        domain_name: >-
+          {{ (component_type | regex_replace('_', '')) ~ '-' ~ (custom_name | regex_replace('_', '')) ~ '.' ~ tn_id ~ '.' ~ site_domain | trim }}"
 
     - name: Fetch cluster node IDs
       ansible.builtin.set_fact:
@@ -174,6 +177,23 @@
             value: "{{ node_ips }}"
           - key: "{{ entity_name }}-metadata"
             value: "{{ oneke_metadata_dict }}"
+
+    - name: Set DNS record for the component
+      ansible.builtin.uri:
+        url: >-
+          {{
+            'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
+            '&domain=' ~ item ~ '.' ~ domain_name ~
+            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ node_ips.vnf_0 | trim
+          }}
+        method: POST
+        body_format: json
+        status_code: [200]
+      loop:
+        - skooner
+        - longhorn
+      loop_control:
+        label: "{{ item }}.{{ domain_name }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
