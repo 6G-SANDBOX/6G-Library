@@ -10,7 +10,7 @@ resource "opennebula_virtual_network" "{{ entity_name }}" {
 
   gateway         = "{{ one_vnet_gw }}"
   network_mask    = "{{ one_vnet_netmask }}"
-  dns             = "{{ one_vnet_dns }}"           {# "{{ one_vnet_dns | default('') }}" #}
+  dns             = "{{ one_vnet_dns | default('') }}"
 }
 
 resource "opennebula_virtual_network_address_range" "{{ entity_name }}" {

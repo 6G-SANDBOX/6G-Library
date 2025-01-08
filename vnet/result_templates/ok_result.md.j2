@@ -11,7 +11,7 @@ It works as a secondary subnet inside your Trial Network components
 - **VNET address size**: `{{ one_vnet_address_size }}`
 - **VNET netmask**: `{{ one_vnet_netmask }}`
 - **VNET gateway**: `{{ one_vnet_gw }}`
-- **VNET DNS**: `{{ hostvars['localhost'].get('one_vnet_dns', '') }}`
+- **VNET DNS**: `{{ one_vnet_dns | default('') }}`
 - **VNET MTU**: `{{ one_vnet_mtu }}`
 - **VNET guest MTU**: `{{ one_vnet_guest_mtu }}`
 
