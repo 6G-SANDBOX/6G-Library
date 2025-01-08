@@ -174,4 +174,3 @@
           tn_ssh_private_key: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"
           tn_wg_clients: "{{ hostvars['tn_bastion']['tn_wg_clients'] }}"
           tn_dns_password: "{{ tn_bastion_dns_password | b64encode }}"
-
