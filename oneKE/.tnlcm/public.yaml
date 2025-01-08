@@ -112,7 +112,7 @@ input:
       The range has to be inside the "one_oneKE_internal_vnet" subnet, but preferably outside it's address range.
       Syntax is <min_IPv4>-<max_IPv4>
     type: str
-    default_value: "10.10.12.200-10.10.12.240"
+    default_value: "10.21.12.200-10.21.12.240"
     required_when: "one_oneKE_metallb == 'YES'"
 
   one_oneKE_longhorn:
