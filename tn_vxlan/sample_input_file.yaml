@@ -2,5 +2,5 @@
 # This component does not need any input file
 
 #one_vxlan_netmask: 24
-#one_vxlan_first_ip: "192.168.199.1"
+#one_vxlan_first_ip: "192.168.214.1"
 #one_vxlan_address_size: 254

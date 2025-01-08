@@ -45,6 +45,10 @@
 - name: Debug OK json results
   when: debug
   block:
+    - name: Print output variables for the json response
+      ansible.builtin.debug:
+        var: output
+
     - name: Write OK json response
       ansible.builtin.template:
         src: "{{ workspace }}/.global/json_templates/ok_result.json.j2"

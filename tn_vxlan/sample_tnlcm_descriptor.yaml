@@ -1,0 +1,5 @@
+trial_network:
+  tn_vxlan:
+    type: "tn_vxlan"
+    dependencies: []
+    input: {}

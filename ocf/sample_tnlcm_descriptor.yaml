@@ -1,4 +1,3 @@
-# Result: pass
 trial_network:
 
   tn_init:
@@ -40,5 +39,3 @@ trial_network:
     input:
       ocf_one_oneKE: "oneKE-k8s"
       ocf_any_branch: "staging"
-
-
