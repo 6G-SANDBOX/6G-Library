@@ -14,10 +14,10 @@ It is based on RKE2 - Rancher’s Next Generation Kubernetes Distribution with p
 
 OneKE Service has four different Roles:
 
-* VNF: Load Balancer for Control-Plane and Ingress Traffic
-* Master: Control-Plane nodes
-* Worker: Nodes to run application workloads
-* Storage: Dedicated storage nodes for Persistent Volume replicas
+* **VNF**: Load Balancer for Control-Plane and Ingress Traffic.
+* **Master**: Control-Plane nodes
+* **Worker**: Nodes to run application workloads
+* **Storage**: Dedicated storage nodes for Persistent Volume replicas
 
 <img src="https://docs.opennebula.io/6.6/_images/oneke-architecture.png" />
 
@@ -34,12 +34,16 @@ OneKE Service has four different Roles:
 - **metallb IP pool**: `{{ one_oneKE_metallb_range }}`
 - **traefik enabled**: `{{ one_oneKE_traefik }}`
 - **SSL/TLS passthrough enabled in the nginx-ingress**: `{{ one_oneKE_nginx_passthough }}`
-- **Skooner Dashboard URL**: `skooner.{{ domain_name }}`
+- **Skooner Dashboard URL**: [https://skooner.{{ domain_name }}](https://skooner.{{ domain_name }})
 - **Skooner Dashboard token**: `{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] }}`
-- **Longhorn Dashboard URL**: `longhorn.{{ domain_name }}`
+- **Longhorn Dashboard URL**: [https://longhorn.{{ domain_name }}](https://longhorn.{{ domain_name }})
 - **base64 encoded KubeConfig file**:
   ```
   {{ kubeconfig }}
+  ```
+- Node IPs:
+  ```json
+  {{ tn_bastion_ips | to_nice_json(indent=8) }}
   ```
 
 **NOTE**: If you need detailed information about OneKE you can visit the official documentation: https://github.com/OpenNebula/one-apps/wiki/oneke_ops#operating-oneke
@@ -52,30 +56,16 @@ More info here: https://github.com/skooner-k8s/skooner
 
 
 
-#### Accessing K8s API via SSH tunnels
+#### How to debug OneKE
 
-By default Kubernetes API Server's extra SANs are set to `localhost,127.0.0.1` which allows you to access Kubernetes API via SSH tunnels.
+In case access to the Kubernetes cluster via the kubeconfig file is not enough to troubleshoot issues, you might need to access OneKE's nodes via ssh.
+To do so, please paste the content of file `misc-{{ tn_id }}-ssh_config` into your current ssh configuration.
 
-> We recommend using the `ProxyCommand` SSH feature.
-
-Use kubeconfig file at the bottom of this file:
-
-> The `{{ node_ips.vnf_0 }}` is the **public** VNF address, `{{ node_ips.master_0 }}` is the **private** address of a master node inside the **private** VNET.
-
-Create SSH tunnel, forward the `6443` TCP port:
-
-```shell
-$ ssh -o ProxyCommand='ssh -A root@{{ node_ips.vnf_0 }} -W %h:%p' -L 6443:localhost:6443 root@{{ node_ips.master_0 }}
-```
-
-and then run `kubectl` in another terminal:
-
-```shell
-$ kubectl get nodes
-NAME                    STATUS   ROLES                       AGE    VERSION
-oneke-ip-172-20-0-101   Ready    control-plane,etcd,master   58m    v1.29.2+rke2r1
-oneke-ip-172-20-0-102   Ready    <none>                      52m    v1.29.2+rke2r1
-oneke-ip-172-20-0-103   Ready    <none>                      52m    v1.29.2+rke2r1
-oneke-ip-172-20-0-104   Ready    control-plane,etcd,master   31m    v1.29.2+rke2r1
-oneke-ip-172-20-0-105   Ready    control-plane,etcd,master   29m    v1.29.2+rke2r1
+```bash
+ssh {{ tn_id }}-{{ entity_name }}-vnf_0
+ssh {{ tn_id }}-{{ entity_name }}-master_0
+ssh {{ tn_id }}-{{ entity_name }}-worker_0
+ssh {{ tn_id }}-{{ entity_name }}-storage_0
+ssh {{ tn_id }}-{{ entity_name }}-storage_1
+ssh {{ tn_id }}-{{ entity_name }}-storage_2
 ```
