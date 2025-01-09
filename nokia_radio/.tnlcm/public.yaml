@@ -28,10 +28,10 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  short_description: Enables the capability of using Nokia Radio in a Trial Network.
+  short_description: Enables routing between Nokia Airscale and a previously deployed 5G Core.
   long_description: |
-    This component enables the integration of Nokia Airscale physical equipment located at UMA with a 5G core deployed in the Trial Network.
-    It is done by enabling the necessary routing path through the use of the element called ‘Route Manager’ (already deployed in the site). 
+    Component to integrate the Nokia Airscale physical equipment with a 5G core already deployed inside the Trial Network.
+    It is done by enabling the necessary routing path using a [6G-Sandbox route-manager-api](https://marketplace.mobilesandbox.cloud:9443/appliance/service_routemanager) VM expected to be already deployed in the site.
     The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
     - `mcc`: "214" 
     - `mnc`: "702"
@@ -86,11 +86,11 @@ output:
 ## Site-specific variables
 ####################################
 site_variables:
-  cp_ip: Address of Nokia Airscale
-  # up_ip:
+  cp_ip: Nokia Airscale IP address
+  #up_ip: TODO: Currently unused
+  route_manager_ip1: 6G-Sandbox route-manager-api IP address reachable to the Jenkins-master
+  #route_manager_ip2: TODO: Currently unused
   core_network: Subnetwork (CIDR) of the private subnet of the input.nokia_radio_one_oneKE. Will be autocompleted in the future
-  route_manager_ip1: First IP address of the route manager that will enable routing between Nokia Airscale and 5G Core.
-  #route_manager_ip2:
   mcc:   # Unused, will complete other components dependencies in the future
   mnc:   # Unused, will complete other components dependencies in the future
   tac:   # Unused, will complete other components dependencies in the future
@@ -98,3 +98,4 @@ site_variables:
   s_nssai_sd:    # Unused, will complete other components dependencies in the future
   amf_ip:    # Unused, will complete other components dependencies in the future
   upf_ip:    # Unused, will complete other components dependencies in the future
+  #quantity: TODO: Currently unused
