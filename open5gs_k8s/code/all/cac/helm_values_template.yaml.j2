@@ -11,7 +11,7 @@ populate:
     pullPolicy: IfNotPresent
   initCommands:
     - >
-      {% for i in range(one_open5gs_k8s_ue_count|default(1)|int) %}open5gs-dbctl add_ue_with_slice {{ one_open5gs_k8s_mcc | string }}{{ one_open5gs_k8s_mnc | string }}{{ ('%0'+(12-one_open5gs_k8s_mnc|length)|string +'d') % (one_open5gs_k8s_msin|int + i) }} {{ one_open5gs_k8s_key | string }} {{ one_open5gs_k8s_opc | string }} {{ one_open5gs_k8s_apn | string }} {{ one_open5gs_k8s_s_nssai_sst | int }} {{ one_open5gs_k8s_s_nssai_sd | string }}{% endfor %}
+      {% for i in range(one_open5gs_k8s_ue_count|default(1)|int) %}open5gs-dbctl add_ue_with_slice {{ one_open5gs_k8s_mcc | string }}{{ one_open5gs_k8s_mnc | string }}{{ ('%0'+(12-one_open5gs_k8s_mnc|length)|string +'d') % (one_open5gs_k8s_msin|int + i) }} {{ one_open5gs_k8s_key | string }} {{ one_open5gs_k8s_opc | string }} {{ one_open5gs_k8s_apn | string }} {{ one_open5gs_k8s_s_nssai_sst | int }} {{ one_open5gs_k8s_s_nssai_sd | string }}; {% endfor %}
 
 # Common
 mongodb:
