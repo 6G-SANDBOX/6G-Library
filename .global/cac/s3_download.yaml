@@ -21,7 +21,7 @@
     dest: "{{ workspace }}/.terraform/{{ item | basename }}"
     validate_certs: false
   when: item.endswith('.tf')
-  with_items: "{{ s3_bucket_items.s3_keys }}"
+  loop: "{{ s3_bucket_items.s3_keys }}"
 
 - name: Download experimenter ssh_config file if exists
   amazon.aws.s3_object:
@@ -34,4 +34,4 @@
     dest: "{{ workspace }}/{{ item | basename }}"
     validate_certs: false
   when: item.endswith('-ssh_config')
-  with_items: "{{ s3_bucket_items.s3_keys }}"
+  loop: "{{ s3_bucket_items.s3_keys }}"
