@@ -187,15 +187,16 @@
         url: >-
           {{
             'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
-            '&domain=' ~ item ~ '.' ~ domain_name ~
+            '&domain=' ~ (item ~ domain_name) | trim ~
             '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ node_ips.vnf_0 | trim
           }}
         method: POST
         body_format: json
         status_code: [200]
       loop:
-        - skooner
-        - longhorn
+        - ""
+        - "skooner."
+        - "longhorn."
       loop_control:
         label: "{{ item }}.{{ domain_name }}"
 
