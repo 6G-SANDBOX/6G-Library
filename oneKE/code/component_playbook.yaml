@@ -36,7 +36,7 @@
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         cluster_roles: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-roles'] }}"
         domain_name: >-
-          {{ (component_type | regex_replace('_', '')) ~ '-' ~ (custom_name | regex_replace('_', '')) ~ '.' ~ tn_id ~ '.' ~ site_domain | trim }}"
+          {{ (component_type | regex_replace('_', '')) ~ '-' ~ (custom_name | regex_replace('_', '')) ~ '.' ~ tn_id ~ '.' ~ site_domain | lower | trim }}"
 
     - name: Fetch cluster node IDs
       ansible.builtin.set_fact:
@@ -66,7 +66,7 @@
       loop: "{{ node_ips | dict2items }}"
 
     - name: Add new VMs to an SSH config file ment to be usable by the experimenter
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/tnuser_ssh_config.yaml"
       loop: "{{ node_ips | dict2items }}"
 
 

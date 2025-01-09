@@ -40,7 +40,7 @@
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_external_vnet + '-id'] }}"
         domain_name: >-
-          {{ (component_type | regex_replace('_', '')) ~ '-' ~ (custom_name | regex_replace('_', '')) ~ '.' ~ tn_id ~ '.' ~ site_domain | trim }}"
+          {{ (component_type | regex_replace('_', '')) ~ '-' ~ (custom_name | regex_replace('_', '')) ~ '.' ~ tn_id ~ '.' ~ site_domain | lower | trim }}"
         n2_vnet_id: >-
           {{
             (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[0] + '-id'] | string
