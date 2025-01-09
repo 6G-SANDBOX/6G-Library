@@ -36,7 +36,7 @@
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         cluster_roles: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-roles'] }}"
         domain_name: >-
-          {{ (component_type | regex_replace('_', '')) ~ '-' ~ (custom_name | regex_replace('_', '')) ~ '.' ~ tn_id ~ '.' ~ site_domain | lower | trim }}"
+          {{ (component_type | regex_replace('_', '')) ~ '-' ~ (custom_name | regex_replace('_', '')) ~ '.' ~ tn_id ~ '.' ~ site_domain | trim | lower }}"
 
     - name: Fetch cluster node IDs
       ansible.builtin.set_fact:
