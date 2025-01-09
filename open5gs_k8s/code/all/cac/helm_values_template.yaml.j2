@@ -86,7 +86,7 @@ amf:
     taiList:
       - plmn_id:
           mcc: "{{ one_open5gs_k8s_mcc | string }}"
-          mnc: "{{ one_open5g_k8s_mnc | string }}"
+          mnc: "{{ one_open5gs_k8s_mnc | string }}"
         tac: [ {{ one_open5gs_k8s_tac | int }} ]
     plmnList:
       - plmn_id:
