@@ -65,6 +65,10 @@
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
       loop: "{{ node_ips | dict2items }}"
 
+    - name: Add new VMs to an SSH config file ment to be usable by the experimenter
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
+      loop: "{{ node_ips | dict2items }}"
+
 
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "OneKE_VMs"
