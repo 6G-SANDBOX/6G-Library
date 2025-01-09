@@ -9,6 +9,6 @@ open5gs-dbctl reset
 
 {% for i in range(ue_count|int) %}
 #open5gs-dbctl add_ue_with_slice {{ mcc }}{{ mnc }}{{ '%010d' % (msin|int + i) }} {{ ue_key }} {{ ue_opc }} {{ ue_apn }} 1 {{ s_nssai_sd }}
-/etc/open5gcore/sql/provision_user.sh -S {{ mcc }}{{ mnc }}{{ ('%0'+(12-mnc|length)|string +'d') % (msin|int + i) }} -k {{ ue_key }} -o {{ ue_opc }} -c 1 -u 0 -T {{ '1%010d' % (msin|int + i) }}
+/etc/open5gcore/sql/provision_user.sh -S {{ mcc }}{{ mnc }}{{ ('%0'+(12-mnc|length)|string +'d') % (msin|int + i) }} -k {{ ue_key }} -o {{ ue_opc }} -c 1 -u 0 -T {{ '1%010d' % (msin|int + i) }};
 {% endfor %}
 

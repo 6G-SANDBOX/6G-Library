@@ -9,5 +9,5 @@ open5gs-dbctl reset
 open5gs-dbctl add_ue_with_slice {{ mcc }}{{ mnc }}{{ '%010d' % (msin|int + i) }} {{ ue_key }} {{ ue_opc }} {{ ue_apn }} 1 {{ s_nssai_sd }}
 {% endfor %}
 
-open5gs-dbctl add_ue_with_slice ${MCC}${MNC}1100000001 00000000000000000000000000000000 66E94BD4EF8A2C3B884CFA59CA342B2E {{ ue_apn }} 1 {{ s_nssai_sd }}
-open5gs-dbctl add_ue_with_slice ${MCC}${MNC}1100000002 00000000000000000000000000000000 66E94BD4EF8A2C3B884CFA59CA342B2E {{ ue_apn }} 1 {{ s_nssai_sd }}
+open5gs-dbctl add_ue_with_slice ${MCC}${MNC}1100000001 00000000000000000000000000000000 66E94BD4EF8A2C3B884CFA59CA342B2E {{ ue_apn }} 1 {{ s_nssai_sd }};
+open5gs-dbctl add_ue_with_slice ${MCC}${MNC}1100000002 00000000000000000000000000000000 66E94BD4EF8A2C3B884CFA59CA342B2E {{ ue_apn }} 1 {{ s_nssai_sd }};
