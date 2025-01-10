@@ -41,12 +41,11 @@
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string }}"
         domain_name: >-
           {{
-            ((component_type | regex_replace('_', '') | lower) ~ '-' ~ 
-            (custom_name | regex_replace('_', '') | lower) ~ '.' ~ 
-            (tn_id | lower) ~ '.' ~ 
+            ((component_type | regex_replace('_', '') | lower) ~ '-' ~
+            (custom_name | regex_replace('_', '') | lower) ~ '.' ~
+            (tn_id | lower) ~ '.' ~
             (site_domain | lower)) | trim
           }}
-
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:

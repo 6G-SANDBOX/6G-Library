@@ -1,13 +1,7 @@
 #!/bin/sh
 
-MCC="{{ mcc }}"
-MNC="{{ mnc }}"
-
 open5gs-dbctl reset
 
-{% for i in range(ue_count|int) %}
-open5gs-dbctl add_ue_with_slice {{ mcc }}{{ mnc }}{{ '%010d' % (msin|int + i) }} {{ ue_key }} {{ ue_opc }} {{ ue_apn }} 1 {{ s_nssai_sd }}
+{% for i in range(one_open5gs_vm_ue_count|int) %}
+open5gs-dbctl add_ue_with_slice {{ one_open5gs_vm_mcc | string }}{{ one_open5gs_vm_mnc | string }}{{ ('%0'+(12-one_open5gs_vm_mnc|length)|string +'d') % (one_open5gs_vm_msin|int + i) }} {{ one_open5gs_vm_key | string }} {{ one_open5gs_vm_opc | string }} {{ one_open5gs_vm_apn | string }} {{ one_open5gs_k8s_s_nssai_sst | int }} {{ one_open5gs_vm_s_nssai_sd | string }};
 {% endfor %}
-
-open5gs-dbctl add_ue_with_slice ${MCC}${MNC}1100000001 00000000000000000000000000000000 66E94BD4EF8A2C3B884CFA59CA342B2E {{ ue_apn }} 1 {{ s_nssai_sd }};
-open5gs-dbctl add_ue_with_slice ${MCC}${MNC}1100000002 00000000000000000000000000000000 66E94BD4EF8A2C3B884CFA59CA342B2E {{ ue_apn }} 1 {{ s_nssai_sd }};

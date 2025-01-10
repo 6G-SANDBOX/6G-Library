@@ -59,7 +59,7 @@
 
     - name: Add new VMs to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}-{{ item.key }}"
+        hostname: "{{ item.key }}"
         groups: "OneKE_VMs"
         ansible_host: "{{ item.value }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}{% if not item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
@@ -118,7 +118,7 @@
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
     - name: Apply extra Helm charts
-      when: inventory_hostname == hostvars['localhost']['entity_name'] + '-master_0'
+      when: inventory_hostname == 'master_0'
       block:
         - name: Apply ingress-nginx helm chart
           ansible.builtin.include_tasks: >-
@@ -214,4 +214,4 @@
           node_ips: "{{ node_ips | b64encode }}"
           metadata_dict: "{{ oneke_metadata_dict | b64encode }}"
           kubeconfig: "{{ kubeconfig }}"  # already encoded
-          skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"
+          skooner_token: "{{ hostvars['master_0']['skooner_token']['stdout'] | b64encode }}"

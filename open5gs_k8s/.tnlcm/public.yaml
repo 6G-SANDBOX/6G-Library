@@ -30,7 +30,7 @@ metadata:
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   short_description: Deploys a 5G Core inside a Kubernetes cluster 
   long_description: |
-    Helm Chart deploying a 5G SA Core inside a Kubernetes cluster
+    The **open5gs_k8s** 6G-Library component deploys a 5G SA Core inside a Kubernetes cluster using the [Helm Chart from Gradiant](https://artifacthub.io/packages/helm/open5gs/open5gs).
     More info in the official documentation: https://open5gs.org/open5gs/docs/
   hypervisors: [one]
 

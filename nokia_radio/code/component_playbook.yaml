@@ -24,19 +24,12 @@
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         node_ips: "{{ (terraform_outputs.stdout | from_json)[nokia_radio_one_oneKE + '-node_ips'] }}"
 
-    # - name: Add Route Manager to Ansible Inventory
-    #   ansible.builtin.add_host:
-    #     hostname: "routemanager"
-    #     ansible_host: "{{ site_available_components.nokia_radio.route_manager_ip1 }}"
-    #     ansible_user: "root"
-    #     ansible_ssh_private_key_file: "/var/lib/jenkins/.ssh/id_ed25519"           # TODO: Borrar auth key del routemanager
-
     - name: Get current time and date with RFC 3339 section 5.6 format
       ansible.builtin.command: "date -u +'%Y-%m-%dT%H:%M:%SZ'"
       register: start_time
       changed_when: false
 
-    - name: Get end of lease time and date with RFC 3339 section 5.6 format         # TODO: Usar estos tiempos
+    - name: Get end of lease time and date with RFC 3339 section 5.6 format         # TODO: Usar estos tiempos
       ansible.builtin.shell: |
         date -u -d "{{ start_time.stdout }} + {{ nokia_radio_any_duration }} seconds" +'%Y-%m-%dT%H:%M:%SZ'
       register: stop_time
@@ -71,19 +64,22 @@
       ansible.builtin.set_fact:
         nokia_metadata_dict: >-
           {
-            'reservation_time': '{{ nokia_radio_one_reservation_time }}',
             'oneKE': '{{ nokia_radio_one_oneKE }}',
+            'duration': '{{ nokia_radio_any_duration }}',
             'cp_ip': '{{ site_available_components.nokia_radio.cp_ip }}'
             'core_network': '{{ site_available_components.nokia_radio.core_network }}',
             'route_manager_ip1': '{{ site_available_components.nokia_radio.route_manager_ip1 }}',
-            'mcc': '{{ site_available_components.nokia_radio.mcc }}',
-            'mnc': '{{ site_available_components.nokia_radio.mnc }}',
-            'tac': '{{ site_available_components.nokia_radio.tac }}',
-            's_nssai_sst': '{{ site_available_components.nokia_radio.s_nssai_sst }}',
-            's_nssai_sd': '{{ site_available_components.nokia_radio.s_nssai_sd }}',
-            'amf_ip': '{{ site_available_components.nokia_radio.amf_ip }}',
-            'upf_ip': '{{ site_available_components.nokia_radio.upf_ip }}'
           }
+
+        #   'mcc': '{{ site_available_components.nokia_radio.mcc }}',
+        #   'mnc': '{{ site_available_components.nokia_radio.mnc }}',
+        #   'tac': '{{ site_available_components.nokia_radio.tac }}',
+        #   's_nssai_sst': '{{ site_available_components.nokia_radio.s_nssai_sst }}',
+        #   's_nssai_sd': '{{ site_available_components.nokia_radio.s_nssai_sd }}',
+        #   'amf_ip': '{{ site_available_components.nokia_radio.amf_ip }}',
+        #   'upf_ip': '{{ site_available_components.nokia_radio.upf_ip }}'
+        # }
+
     - name: Publish Nokia metadata as terraform outputs"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:

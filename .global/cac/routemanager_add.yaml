@@ -21,3 +21,4 @@
 - name: Display response content
   debug:
     var: api_response.content
+  when: debug

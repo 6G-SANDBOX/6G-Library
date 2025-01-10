@@ -37,6 +37,6 @@ PROMETHEUS_ENABLED=0
 DISABLE_XDP="{{ 0 if upf_xdp else 1 }}"
 NRF_HB_ENABLE=0
 
-TAC="{{ ue_tac }}"
-DNN="{{ ue_apn }}"
-DNN_SUBNET="{{ ue_subnet }}"
+TAC="{{ one_open5gcore_vm_tac }}"
+DNN="{{ one_open5gcore_vm_apn }}"
+DNN_SUBNET="{{ one_open5gcore_vm_ue_subnet }}"

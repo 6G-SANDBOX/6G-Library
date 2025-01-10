@@ -11,6 +11,7 @@
 one_open5gs_vm_cpu: 4
 one_open5gs_vm_memory: 8192
 one_open5gs_vm_disk: 25600
+
 one_open5gs_vm_resources:
   extra_large:
     cpu: 8

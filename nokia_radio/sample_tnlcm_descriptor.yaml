@@ -50,9 +50,7 @@ trial_network:
       - "open5gs-core"
     input:
       nokia_radio_one_oneKE: "oneKE-cluster"
-      nokia_radio_one_main_ip: "10.182.32.39"
-      nokia_radio_one_route_manager_ip: "10.11.28.134"
-      nokia_radio_one_reservation_time: 180
+      nokia_radio_any_duration: 180
   stf_ue-movil:
     type: "stf_ue"
     name: "movil"
