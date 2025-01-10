@@ -9,7 +9,6 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 
   context = {
     NETWORK = "YES"
-    NETCFG_TYPE: "interfaces"
     SET_HOSTNAME = "$NAME"
     USERNAME = "jenkins"
     SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"

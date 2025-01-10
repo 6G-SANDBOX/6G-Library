@@ -32,7 +32,7 @@ metadata:
   long_description: |
     Component to integrate the Nokia Airscale physical equipment with a 5G core already deployed inside the Trial Network.
     It is done by enabling the necessary routing path using a [6G-Sandbox route-manager-api](https://marketplace.mobilesandbox.cloud:9443/appliance/service_routemanager) VM expected to be already deployed in the site.
-    The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
+    WARNING: This component may only work if the configurations for the related 5G Core and UE are set as follows:
     - `mcc`: "214" 
     - `mnc`: "702"
     - `apn`: "internet"
@@ -50,15 +50,16 @@ metadata:
 ####################################
 
 input:
-  nokia_radio_one_oneKE:
-    description: Name of the oneKE cluster to route Nokia traffic.
-    type: "oneKE"
+  nokia_radio_one_open5gs:
+    description: Name of a previosly deployed Open5GS 5G Core
+    type: "open5gs_vm or open5gs_k8s"
     required_when: true
+
   nokia_radio_any_duration:
-    description: Time in minutes for the Nokia Airsale reservation
+    description: Time in seconds for the Nokia Airsale reservation
     type: int
-    default_value: 60
-    required_when: true
+    default_value: 3600
+    required_when: false
 
 
 ####################################
@@ -66,12 +67,11 @@ input:
 ####################################
 output:
   metadata_dict: # Dictionary with multiple parameters about the nokia_radio component
-    oneKE: input.nokia_radio_one_oneKE
-    duration: input.nokia_radio_any_duration
-    cp_ip: site_variables.cp_ip
+    open5gs: input.nokia_radio_one_open5gs
+    duration: ipnut.nokia_radio_any_duration
     # up_ip: site_variables.up_ip
-    core_network: site_variables.core_network
-    route_manager_ip1: site_variables.route_manager_ip1
+    # core_network: site_variables.core_network
+    # route_manager_ip1: site_variables.route_manager_ip1
     # route_manager_ip2: site_variables.route_manager_ip2
     # mcc: site_variables.mcc
     # mnc: site_variables.mnc
@@ -87,10 +87,10 @@ output:
 ####################################
 site_variables:
   cp_ip: Nokia Airscale IP address
-  #up_ip: TODO: Currently unused
-  route_manager_ip1: 6G-Sandbox route-manager-api IP address reachable to the Jenkins-master
-  #route_manager_ip2: TODO: Currently unused
-  core_network: Subnetwork (CIDR) of the private subnet of the input.nokia_radio_one_oneKE. Will be autocompleted in the future
+  up_ip: Nokia Airscale IP address   # TODO: Diferencia??
+  # route_manager_ip1: 6G-Sandbox route-manager-api IP address reachable to the Jenkins-master
+  # route_manager_ip2: TODO: Currently unused
+  # core_network: Subnetwork (CIDR) of the private subnet of the input.nokia_radio_one_oneKE. Will be autocompleted in the future
   # mcc:   # Unused, will complete other components dependencies in the future
   # mnc:   # Unused, will complete other components dependencies in the future
   # tac:   # Unused, will complete other components dependencies in the future

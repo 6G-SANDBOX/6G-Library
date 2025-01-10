@@ -168,7 +168,7 @@
 
     # Common task to create custom terraform outputs with information of interest for future component deployments.
     # Variables here may or may NOT be intended to be seen by the experimenters. They remain PRIVATE
-    - name: Publish node IDs and IPs as a terraform outputs"
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:

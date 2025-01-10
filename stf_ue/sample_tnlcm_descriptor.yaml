@@ -46,3 +46,10 @@ trial_network:
     input:
       nokia_radio_one_open5gs: "open5gs_k8s-core"
       nokia_radio_any_duration: 7200
+  stf_ue-movil:
+    type: "stf_ue"
+    name: "movil"
+    dependencies:
+      - "nokia_radio-RAN"
+    input: 
+      stf_ue_any_lease: 10800

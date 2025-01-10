@@ -40,7 +40,7 @@ metadata:
 # ####################################
 input:
   stf_ue_any_lease:
-    description: Requested time to book the UE device. In seconds.
+    description: Time in seconds for the Nokia Airsale reservation
     type: int
     default_value: 3600
     required_when: false

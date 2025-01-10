@@ -144,7 +144,7 @@
           ansible.builtin.set_fact:
             output: "{{ output | combine({'gnb_metadata_dict': gnb_metadata_dict | b64encode}) }}"
 
-        - name: Publish gNB metadata as terraform outputs
+        - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
             custom_outputs:
@@ -174,7 +174,7 @@
           ansible.builtin.set_fact:
             output: "{{ output | combine({'ue_metadata_dict': ue_metadata_dict | b64encode}) }}"
 
-        - name: Publish UE metadata as terraform outputs
+        - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
             custom_outputs:

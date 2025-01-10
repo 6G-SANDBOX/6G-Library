@@ -176,7 +176,7 @@
             'nginx_passthough': '{{ one_oneKE_nginx_passthough }}'
           }
 
-    - name: Publish node IDs and IPs as a terraform outputs"
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:

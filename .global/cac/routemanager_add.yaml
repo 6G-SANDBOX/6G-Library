@@ -5,15 +5,15 @@
     method: POST
     headers:
       accept: application/json
-      Authorization: "{{ site_available_components.site_routemanager.token }}"
+      Authorization: "{{ site_routemanager.token }}"
       Content-Type: application/json
     body_format: json
     body: >
       {
         "destination": "{{ item.destination }}",
         "gateway": "{{ item.gateway }}",
-        "create_at": "{{ start_time }}",
-        "delete_at": "{{ stop_time }}"
+        "create_at": "{{ start_time.stdout }}",
+        "delete_at": "{{ stop_time.stdout }}"
       }
     return_content: yes
   register: api_response

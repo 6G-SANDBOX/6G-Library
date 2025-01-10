@@ -153,7 +153,7 @@
         extended: true
         extended_allitems: false
 
-    - name: Publish aditional information as global terraform outputs
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:

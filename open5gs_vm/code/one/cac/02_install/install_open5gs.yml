@@ -1,5 +1,5 @@
 ---
-- name: render netplan aliases
+- name: Render netplan aliases
   ansible.builtin.template:
     src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-netplan-aliases.yaml.j2"
     dest: /etc/netplan/99-netplan-aliases.yaml
@@ -7,7 +7,7 @@
     backup: true
   register: netplan_changed
 
-- name: reload netplan
+- name: Reload netplan
   ansible.builtin.command:
     cmd: "netplan apply"
   changed_when: false

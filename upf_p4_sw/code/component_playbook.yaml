@@ -139,7 +139,7 @@
             'upf_ipv4_n6': '{{ one_upf_p4_sw_controller_upf_ipv4_n6 }}'
           }
 
-    - name: Publish node IDs and IPs as a terraform outputs"
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:

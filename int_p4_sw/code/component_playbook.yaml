@@ -145,7 +145,7 @@
       ansible.builtin.set_fact:
         int_p4_sw_metadata_json_escaped: "{{ int_p4_sw_metadata_dict | to_json | replace('\"', '\\\"') }}"
 
-    - name: Publish node IDs and IPs as terraform outputs
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:

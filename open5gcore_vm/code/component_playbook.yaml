@@ -167,7 +167,7 @@
             'upf_xdp': '{{ one_open5gcore_vm_upf_xdp }}'
           }
 
-    - name: Publish open5gcore metadata as terraform outputs"
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:

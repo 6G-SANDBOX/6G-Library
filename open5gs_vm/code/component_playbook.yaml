@@ -155,7 +155,7 @@
             'ue_count': '{{ one_open5gs_vm_ue_count }}'
           }
 
-    - name: Publish open5gs metadata as terraform outputs"
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:

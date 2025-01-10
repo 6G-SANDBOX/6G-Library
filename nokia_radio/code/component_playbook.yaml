@@ -1,5 +1,5 @@
 ---
-- name: "STAGE 1: Prepare to access a previous target component"
+- name: "STAGE 1: Set new routes in route-manager-api and tn_bastion"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -22,37 +22,45 @@
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-        node_ips: "{{ (terraform_outputs.stdout | from_json)[nokia_radio_one_oneKE + '-node_ips'] }}"
+        proxy: "{{ (terraform_outputs.stdout | from_json)[nokia_radio_one_open5gs + '-metadata']['proxy'] }}"
+        amf_ip: "{{ (terraform_outputs.stdout | from_json)[nokia_radio_one_open5gs + '-metadata']['amf_ip'] }}"
+        upf_ip: "{{ (terraform_outputs.stdout | from_json)[nokia_radio_one_open5gs + '-metadata']['upf_ip'] }}"
 
     - name: Get current time and date with RFC 3339 section 5.6 format
       ansible.builtin.command: "date -u +'%Y-%m-%dT%H:%M:%SZ'"
       register: start_time
       changed_when: false
 
-    - name: Get end of lease time and date with RFC 3339 section 5.6 format         # TODO: Usar estos tiempos
+    - name: Get end of lease time and date with RFC 3339 section 5.6 format
       ansible.builtin.shell: |
         date -u -d "{{ start_time.stdout }} + {{ nokia_radio_any_duration }} seconds" +'%Y-%m-%dT%H:%M:%SZ'
       register: stop_time
       changed_when: false
 
-    - name: Enable routing path in Route Manager
-      # ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_manager.yaml"
+    - name: Submit routes in route-manager-api from the Nokia Airscale to the 5G Core
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
       vars:
-        endpoint: "{{ site_available_components.site_routemanager.endpoint }}"
+        endpoint: "{{ site_routemanager.endpoint }}"
       loop:
-        - { destination: "{{ site_available_components.nokia_radio.core_network }}", gateway: "{{ basion_ip }}" }
+        - { destination: "{{ amf_ip }}", gateway: "{{ bastion_ip }}" }
+        - { destination: "{{ upf_ip }}", gateway: "{{ bastion_ip }}" }
 
-    - name: Enable routing path in Bastion
-      # ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_bastion.yaml"
+    - name: Submit routes in tn_bastion from the Trial Network to the Nokia Airscale
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
       vars:
         endpoint: "{{ bastion_ip }}"
       loop:
-        - { destination: "{{ site_available_components.nokia_radio.core_network }}", gateway: "{{ hostvars['localhost']['node_ips'].vnf_0 }}" }
-        - { destination: "{{ site_available_components.nokia_radio.cp_ip }}", gateway: "{{ site_available_components.nokia_radio.route_manager_ip1 }}" }
-        - { destination: "{{ site_available_components.nokia_radio.up_ip }}", gateway: "{{ site_available_components.nokia_radio.route_manager_ip1 }}" }
+        - { destination: "{{ site_available_components.nokia_radio.cp_ip }}", gateway: "{{ site_routemanager.endpoint }}" }
+        - { destination: "{{ site_available_components.nokia_radio.up_ip }}", gateway: "{{ site_routemanager.endpoint }}" }
 
+    - name: If required, submit routes in tn_bastion for proxy access to the 5G Core
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ bastion_ip }}"
+      loop:
+        - { destination: "{{ amf_ip }}", gateway: "{{ proxy }}" }
+        - { destination: "{{ upf_ip }}", gateway: "{{ proxy }}" }
+      when: proxy is defined and proxy != ''
 
 
 - name: "STAGE 3: Publish execution results"
@@ -60,27 +68,7 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: Define Nokia metadata dictionary
-      ansible.builtin.set_fact:
-        nokia_metadata_dict: >-
-          {
-            'oneKE': '{{ nokia_radio_one_oneKE }}',
-            'duration': '{{ nokia_radio_any_duration }}',
-            'cp_ip': '{{ site_available_components.nokia_radio.cp_ip }}'
-            'core_network': '{{ site_available_components.nokia_radio.core_network }}',
-            'route_manager_ip1': '{{ site_available_components.nokia_radio.route_manager_ip1 }}',
-          }
-
-        #   'mcc': '{{ site_available_components.nokia_radio.mcc }}',
-        #   'mnc': '{{ site_available_components.nokia_radio.mnc }}',
-        #   'tac': '{{ site_available_components.nokia_radio.tac }}',
-        #   's_nssai_sst': '{{ site_available_components.nokia_radio.s_nssai_sst }}',
-        #   's_nssai_sd': '{{ site_available_components.nokia_radio.s_nssai_sd }}',
-        #   'amf_ip': '{{ site_available_components.nokia_radio.amf_ip }}',
-        #   'upf_ip': '{{ site_available_components.nokia_radio.upf_ip }}'
-        # }
-
-    - name: Publish Nokia metadata as terraform outputs"
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
