@@ -66,9 +66,10 @@ input:
 ## Component output
 ####################################
 output:
-  metadata_dict: # Dictionary with multiple parameters about the nokia_radio component
-    open5gs: input.nokia_radio_one_open5gs
-    duration: ipnut.nokia_radio_any_duration
+  open5gs: input.nokia_radio_one_open5gs
+  # metadata_dict: # Dictionary with multiple parameters about the nokia_radio component
+  #   open5gs: input.nokia_radio_one_open5gs
+  #   duration: ipnut.nokia_radio_any_duration
     # up_ip: site_variables.up_ip
     # core_network: site_variables.core_network
     # route_manager_ip1: site_variables.route_manager_ip1

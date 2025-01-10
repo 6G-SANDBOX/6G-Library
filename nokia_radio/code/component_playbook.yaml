@@ -62,8 +62,47 @@
         - { destination: "{{ upf_ip }}", gateway: "{{ proxy }}" }
       when: proxy is defined and proxy != ''
 
+- name: "STAGE 2: Prepare access to tn_bastion to allow access to the STF webUI"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Add the bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
+        ansible_user: "jenkins"
 
-- name: "STAGE 3: Publish execution results"
+- name: "STAGE 3: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
+  gather_facts: false
+  tasks:
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Write firewall exception for the STF web UI
+      become: true
+      ansible.builtin.template:
+        src: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/templates/fw_exceptions.nft.j2"
+        dest: "/etc/nftables/fw_exceptions/routemanager.nft"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Check nftables syntax
+      become: true
+      ansible.builtin.command: nft -c -f /etc/nftables.conf
+      register: nft_check
+      failed_when: nft_check.rc != 0
+      changed_when: false
+
+    - name: Reload nftables rules
+      become: true
+      ansible.builtin.systemd_service:
+        name: nftables.service
+        state: restarted
+        enabled: true
+
+- name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -72,11 +111,11 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-metadata"
-            value: "{{ nokia_metadata_dict }}"
+          - key: "{{ entity_name }}-open5gs"
+            value: "{{ nokia_radio_one_open5gs }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:
-          metadata_dict: "{{ nokia_metadata_dict | b64encode }}"
+          open5gs: "{{ nokia_radio_one_open5gs | b64encode }}"
