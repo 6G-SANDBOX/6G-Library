@@ -5,7 +5,7 @@
     method: POST
     headers:
       accept: application/json
-      Authorization: "{{ site_routemanager.token }}"
+      Authorization: "{{ token }}"
       Content-Type: application/json
     body_format: json
     body: >
