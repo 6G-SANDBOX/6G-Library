@@ -155,6 +155,8 @@ output:
   ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
   id: VM ID in OpenNebula
   metadata_dict: #Dictionary with multiple parameters used in the core bootstrap
+    oneKE: empty
+    proxy: empty
     mcc: input.one_open5gcore_vm_mcc
     mnc: input.one_open5gcore_vm_mnc
     msin: input.one_open5gcore_vm_msin

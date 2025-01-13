@@ -75,7 +75,7 @@
     - name: Add new VM to an SSH config file ment to be usable by the experimenter
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
-    - name: Enable routing path in Bastion
+    - name: Enable routing path in Bastion           # TODO:Add start_time
       # ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_bastion.yaml"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
       vars:

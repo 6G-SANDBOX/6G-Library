@@ -12,8 +12,8 @@
       {
         "destination": "{{ item.destination }}",
         "gateway": "{{ item.gateway }}",
-        "create_at": "{{ start_time.stdout }}",
-        "delete_at": "{{ stop_time.stdout }}"
+        "create_at": "{{ start_time }}",
+        "delete_at": "{{ stop_time }}"
       }
     return_content: yes
   register: api_response
