@@ -1,0 +1,4 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+iswireless_radio_one_oneKE: "oneKE-main"
+iswireless_radio_one_reservation_time: 180
