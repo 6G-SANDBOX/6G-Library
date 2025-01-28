@@ -45,8 +45,8 @@
         endpoint: "{{ site_routemanager.api_endpoint }}"
         token: "{{ site_routemanager.token }}"
       loop:
-        - { destination: "{{ open5gs_metadata['amf_ip'] }}", gateway: "{{ bastion_ip }}" }
-        - { destination: "{{ open5gs_metadata['upf_ip'] }}", gateway: "{{ bastion_ip }}" }
+        - { to: "{{ open5gs_metadata['amf_ip'] }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ bastion_ip }}" }
 
     - name: Submit routes in tn_bastion from the Trial Network to the Nokia Airscale
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
@@ -54,8 +54,8 @@
         endpoint: "{{ bastion_ip }}"
         token: "{{ tn_routemanager_token }}"
       loop:
-        - { destination: "{{ site_available_components.nokia_radio.cp_ip }}", gateway: "{{ site_routemanager.api_endpoint }}" }
-        - { destination: "{{ site_available_components.nokia_radio.up_ip }}", gateway: "{{ site_routemanager.api_endpoint }}" }
+        - { to: "{{ site_available_components.nokia_radio.cp_ip }}", via: "{{ site_routemanager.api_endpoint }}" }
+        - { to: "{{ site_available_components.nokia_radio.up_ip }}", via: "{{ site_routemanager.api_endpoint }}" }
 
     - name: If required, submit routes in tn_bastion for proxy access to the 5G Core
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
@@ -63,8 +63,8 @@
         endpoint: "{{ bastion_ip }}"
         token: "{{ tn_routemanager_token }}"
       loop:
-        - { destination: "{{ open5gs_metadata['amf_ip'] }}", gateway: "{{ open5gs_metadata['proxy'] }}" }
-        - { destination: "{{ open5gs_metadata['upf_ip'] }}", gateway: "{{ open5gs_metadata['proxy'] }}" }
+        - { to: "{{ open5gs_metadata['amf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
+        - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
       when: proxy is defined and proxy != ''
 
 - name: "STAGE 2: Prepare access to tn_bastion to allow access to the STF webUI"
@@ -84,7 +84,7 @@
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
-    - name: Write firewall exception for the STF web UI
+    - name: Write firewall exception for the route-manager-api of your site
       become: true
       ansible.builtin.template:
         src: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/templates/fw_exceptions.nft.j2"
