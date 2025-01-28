@@ -111,7 +111,7 @@
       ansible.builtin.set_fact:
         tn_bastion_dns_password: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_PASSWORD }}"
         tn_bastion_dns_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_TOKEN }}"
-        tn_bastion_routemanager_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_ROUTEMANAGER_TOKEN }}"
+        tn_bastion_routemanager_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_ROUTEMANAGER_APITOKEN }}"
 
     - name: Upload private ssh key to S3 object storage
       amazon.aws.s3_object:
