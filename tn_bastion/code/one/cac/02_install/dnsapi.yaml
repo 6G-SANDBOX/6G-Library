@@ -20,15 +20,19 @@
 
 - name: Add new IP addresses to the DNS API endpoints
   ansible.builtin.set_fact:
-    new_dns_endpoints: "{{ (old_dns_endpoints + [default_ip + ':53', tn_vxlan_ip + ':53']) | unique | join(',') }}"
+    new_dns_endpoints: "{{ (old_dns_endpoints + [default_ip + ':53', tn_vxlan_ip + ':53']) | unique }}"
   vars:
     old_dns_endpoints: "{{ dns_settings.json.response.dnsServerLocalEndPoints }}"
 
 - name: Set new DNS API endpoints
   ansible.builtin.uri:
-    url: "http://127.0.0.1:5380/api/settings/set?token={{ dns_token }}&dnsServerLocalEndPoints={{ new_dns_endpoints }}"
+    url: "http://127.0.0.1:5380/api/settings/set?token={{ dns_token }}"
     method: POST
     body_format: json
+    body:
+      dnsServerLocalEndPoints: "{{ new_dns_endpoints }}"
+    headers:
+      Content-Type: application/json
     status_code: [200]
 
 - name: Set record for bastion in zone
