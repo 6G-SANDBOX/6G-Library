@@ -1,7 +1,7 @@
 ---
 - name: "Make a PUT request to the tn_bastion's route-manager-api"
   ansible.builtin.uri:
-    url: "http://{{ endpoint }}:8172/routes"
+    url: "http://{{ endpoint }}:8172/routes/"
     method: PUT
     headers:
       accept: application/json

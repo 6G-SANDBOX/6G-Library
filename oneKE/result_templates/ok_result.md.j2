@@ -35,7 +35,7 @@ OneKE Service has four different Roles:
 - **traefik enabled**: `{{ one_oneKE_traefik }}`
 - **SSL/TLS passthrough enabled in the nginx-ingress**: `{{ one_oneKE_nginx_passthough }}`
 - **Skooner Dashboard URL**: [https://skooner.{{ domain_name }}](https://skooner.{{ domain_name }})
-- **Skooner Dashboard token**: `{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] }}`
+- **Skooner Dashboard token**: `{{ hostvars['master_0']['skooner_token']['stdout'] }}`
 - **Longhorn Dashboard URL**: [https://longhorn.{{ domain_name }}](https://longhorn.{{ domain_name }})
 - **base64 encoded KubeConfig file**:
   ```
@@ -43,7 +43,7 @@ OneKE Service has four different Roles:
   ```
 - Node IPs:
   ```json
-  {{ tn_bastion_ips | to_nice_json(indent=8) }}
+  {{ node_ips | to_nice_json(indent=8) }}
   ```
 
 **NOTE**: If you need detailed information about OneKE you can visit the official documentation: https://github.com/OpenNebula/one-apps/wiki/oneke_ops#operating-oneke

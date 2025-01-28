@@ -28,16 +28,16 @@ trial_network:
     dependencies:
       - "oneKE-cluster"
     input:
-      one_open5gs_target: "oneKE-cluster"
-      one_open5gs_mcc: "214"
-      one_open5gs_mnc: "702"
-      one_open5gs_apn: "internet"
-      one_open5gs_tac: 1
-      one_open5gs_s_nssai_sst: 1
-      one_open5gs_s_nssai_sd: "000009"
-      one_open5gs_amf_ip: "10.10.12.200"
-      one_open5gs_upf_ip: "10.10.12.201"
-      one_open5gs_k8s_ue_count: 1
+      one_open5gs_k8s_target: "oneKE-cluster"
+      one_open5gs_k8s_mcc: "214"
+      one_open5gs_k8s_mnc: "702"
+      one_open5gs_k8s_apn: "internet"
+      one_open5gs_k8s_tac: 1
+      one_open5gs_k8s_s_nssai_sst: 1
+      one_open5gs_k8s_s_nssai_sd: "000009"
+      one_open5gs_k8s_amf_ip: "10.10.12.200"
+      one_open5gs_k8s_upf_ip: "10.10.12.201"
+      one_open5gs_k8s_k8s_ue_count: 1
   nokia_radio-RAN:
     type: "nokia_radio"
     name: "RAN"
