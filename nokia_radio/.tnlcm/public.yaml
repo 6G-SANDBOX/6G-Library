@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -45,10 +33,18 @@ metadata:
   hypervisors: [one]
   destroy_script: true
 
-####################################
-## Component input
-####################################
 
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  cp_ip: Nokia Airscale Control Plane IP address
+  up_ip: Nokia Airscale User Plane IP address
+
+
+####################################
+## Input variables
+####################################
 input:
   nokia_radio_one_open5gs:
     description: Name of a previosly deployed Open5GS 5G Core
@@ -57,7 +53,7 @@ input:
 
   nokia_radio_any_start_time:
     description: |
-      Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00'.
+      Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
       If unspecified, value takes current time and date.
     type: str
     default_value: Current time and date
@@ -71,15 +67,7 @@ input:
 
 
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  open5gs: input.nokia_radio_one_open5gs
-
-
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  cp_ip: Nokia Airscale Control Plane IP address
-  up_ip: Nokia Airscale User Plane IP address
+terraform_outputs:
+  __entity_name__open5gs: input.nokia_radio_one_open5gs

@@ -1,5 +1,5 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
 nokia_radio_one_open5gs: "open5gs_k8s-core"
-# nokia_radio_any_start_time: "2025-01-13T09:12:00"
+# nokia_radio_any_start_time: "2025-01-13T09:12:00+00:00"
 # nokia_radio_any_duration: 7200

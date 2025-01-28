@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -38,8 +26,17 @@ metadata:
   hypervisors: [one]
   appliance: https://marketplace.opennebula.io/appliance/591dd3f1-220f-46a5-83f4-31031c753b8a
 
+
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  129:
+    template_id: ID of the OneKE v1.29 template to use in your OpenNebula environment
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_oneKE_external_vnet:
@@ -142,13 +139,14 @@ input:
     required_when: false
 
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  id: Service ID in OpenNebula
-  node_ids: "dictionary of VM IDs in OpenNebula: key='VM name', value='the VM ID'"
-  node_ips: "dictionary of VM addresses: key='VM name', value='the VM main address'"
-  metadata_dict: # Dictionary with multiple parameters used in the cluster bootstrap
+terraform_outputs:
+  __entity_name__id: "Service ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__roles: "Array with service roles information. Generated from Terraform Manifest"
+  __entity_name__node_ids: "Dictionary of VM IDs in OpenNebula: key='VM name', value='the VM ID'"
+  __entity_name__node_ips: "Dictionary of VM addresses: key='VM name', value='the VM main address'"
+  __entity_name__metadata_dict:
     external_vnet: input.one_oneKE_external_vnet
     internal_vnet: input.one_oneKE_internal_vnet
     version: input.one_oneKE_version
@@ -158,12 +156,3 @@ output:
     metallb_range: input.one_oneKE_metallb_range
     longhorn: input.one_oneKE_longhorn
     nginx_passthrough: input.one_oneKE_nginx_passthrough
-  kubeconfig: Kubeconfig file with keys and endpoints to manage the cluster
-  skooner_token: Generated Token to login to the skooner dashboard Web App
-
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  129:
-    template_id: ID of the OneKE v1.29 template to use in your OpenNebula environment

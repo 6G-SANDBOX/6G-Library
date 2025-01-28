@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -44,7 +32,15 @@ metadata:
 
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  # None
+  # Currently, site variables from tn_bastion and tn_vxlan are used instead
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_vxlan_netmask:
@@ -75,22 +71,22 @@ input:
 
 
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  tn_vxlan_id: VNet ID in OpenNebula
-  tn_vxlan_net: Subnet of the VNet in CIDR format
-  tn_bastion_ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  tn_bastion_id: VM ID in OpenNebula
-  tn_ssh_public_key: SSH public key present in the TN VMs for the user tnuser
-  tn_ssh_private_key: SSH public key to access the TN VMs with the user tnuser
-  tn_wg_clients: List of Wireguard VPN client configuration files to access the VMs inside the tn_vxlan of the Trial Network
-  tn_dns_password: Password for the admin user of the tn_bastion's Technitium DNS server
+terraform_outputs:
+  __tn_vxlan__id: "VNet ID in Opennebula. Generated from Terraform Manifest"
+  __tn_vxlan__net: "Subnet of the VNet in CIDR format. Generated from Terraform Manifest"
+  __tn_bastion__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __tn_bastion__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
+  tn_dns_token: Token to authenticate to the tn_bastion DNS Server
+  tn_routemanager_token: Bearer token to authenticate to the tn_bastion route-manager-api.
+  tn_ssh_public_key: SSH public key to include in TN Virtual Machines for login with user tnuser
 
 
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  # None
-  # Currently, site variables from tn_bastion and tn_vxlan are used instead
+# ####################################
+# ## Generated terraform outputs
+# # __entity_name__ refers to the name of the component inside the TN. Actual terraform output uses dashes which are a forbidden character for ansible variables
+# ####################################
+# terraform_outputs:
+#   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+#   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Gemerated from Terraform Manifest"

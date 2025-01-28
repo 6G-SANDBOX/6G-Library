@@ -166,11 +166,3 @@
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          tn_bastion_ips: "{{ tn_bastion_ips | b64encode }}"
-          tn_bastion_id: "{{ tn_bastion_id | b64encode }}"
-          tn_ssh_public_key: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
-          tn_ssh_private_key: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"
-          tn_wg_clients: "{{ hostvars['tn_bastion']['tn_wg_clients'] | b64encode }}"
-          tn_dns_password: "{{ tn_bastion_dns_password | b64encode }}"

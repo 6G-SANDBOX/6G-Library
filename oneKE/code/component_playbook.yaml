@@ -207,11 +207,3 @@
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          id: "{{ id | b64encode }}"
-          node_ids: "{{ node_ids | b64encode }}"
-          node_ips: "{{ node_ips | b64encode }}"
-          metadata_dict: "{{ oneke_metadata_dict | b64encode }}"
-          kubeconfig: "{{ kubeconfig }}"  # already encoded
-          skooner_token: "{{ hostvars['master_0']['skooner_token']['stdout'] | b64encode }}"

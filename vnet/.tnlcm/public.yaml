@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -39,7 +27,14 @@ metadata:
 
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  # None
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_vnet_gw:
@@ -70,15 +65,8 @@ input:
 
 
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  id: VNet ID in OpenNebula
-  net: Subnet of the VNet in CIDR format
-
-
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  # None
+terraform_outputs:
+  __entity_name__id: "VNet ID in Opennebula. Generated from Terraform Manifest"
+  __entity_name__net: "Subnet of the VNet in CIDR format"

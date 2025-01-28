@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -34,8 +22,16 @@ metadata:
     More info in the official documentation: https://open5gs.org/open5gs/docs/
   hypervisors: [one]
 
+
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  # None
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_open5gs_target:
@@ -115,11 +111,12 @@ input:
     default_value: 20
     required_when: false
 
+
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  metadata_dict: #Dictionary with multiple parameters used in the core bootstrap
+terraform_outputs:
+  __entity_name__metadata_dict:
     oneKE: input.one_open5gs_k8s_target
     proxy: vnf_0 IP from input.one_open5gs_k8s_target
     mcc: input.one_open5gs_k8s_mcc
@@ -134,10 +131,3 @@ output:
     amf_ip: input.one_open5gs_k8s_amf_ip
     upf_ip: input.one_open5gs_k8s_upf_ip
     ue_count: input.one_open5gs_k8s_ue_count
-
-
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  # None

@@ -35,7 +35,3 @@
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          tn_vxlan_id: "{{ tn_vxlan_id | b64encode }}"
-          tn_vxlan_net: "{{ tn_vxlan_net | b64encode }}"
