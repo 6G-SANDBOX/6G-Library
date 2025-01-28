@@ -89,6 +89,7 @@
 - name: "STAGE 2: Prepare access to tn_bastion to allow access to the STF webUI"
   hosts: localhost
   gather_facts: false
+  connection: local
   tasks:
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
