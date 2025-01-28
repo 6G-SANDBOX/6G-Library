@@ -44,5 +44,5 @@ trial_network:
     dependencies:
       - "open5gs_k8s-core"
     input:
-      nokia_radio_one_open5gs: "open5gs_k8s-core"
-      nokia_radio_any_duration: 7200
+      one_nokia_radio_open5gs: "open5gs_k8s-core"
+      any_nokia_radio_duration: 7200

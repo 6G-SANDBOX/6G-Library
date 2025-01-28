@@ -23,21 +23,15 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
-        open5gs_metadata: "{{ (terraform_outputs.stdout | from_json)[nokia_radio_one_open5gs + '-metadata'] }}"
+        open5gs_metadata: "{{ (terraform_outputs.stdout | from_json)[one_nokia_radio_open5gs + '-metadata'] }}"
 
     - name: Set start of lease time and date with RFC 3339 section 5.6 format
       ansible.builtin.set_fact:
-        start_time: "{{ nokia_radio_any_start_time | default(lookup('pipe', 'date -u +\"%Y-%m-%dT%H:%M:%SZ\"'), true) }}"
+        start_time: "{{ any_nokia_radio_start_time | default(lookup('pipe', 'date -u +\"%Y-%m-%dT%H:%M:%SZ\"'), true) }}"
 
     - name: Set end of lease time and date with RFC 3339 section 5.6 format
       ansible.builtin.set_fact:
-        stop_time: "{{ lookup('pipe', 'date -u -d \"' ~ start_time ~ ' + ' ~ nokia_radio_any_duration ~ ' seconds\" +\"%Y-%m-%dT%H:%M:%SZ\"') }}"
-
-    - name: Debug start_time and stop_time
-      ansible.builtin.debug:
-        msg:
-          - "Start time: {{ start_time }}"
-          - "Stop time: {{ stop_time }}"
+        stop_time: "{{ lookup('pipe', 'date -u -d \"' ~ start_time ~ ' + ' ~ any_nokia_radio_duration ~ ' seconds\" +\"%Y-%m-%dT%H:%M:%SZ\"') }}"
 
     - name: Submit routes in route-manager-api from the Nokia Airscale to the 5G Core
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
@@ -81,13 +75,13 @@
   hosts: bastion
   gather_facts: false
   tasks:
-    - name: Prepare terraform working directory
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
     - name: Write firewall exception for the route-manager-api of your site
       become: true
       ansible.builtin.template:
-        src: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/templates/fw_exceptions.nft.j2"
+        src: "{{ workspace }}/{{ component_type }}/code/any/cac/02_install/templates/fw_exceptions.nft.j2"
         dest: "/etc/nftables/fw_exceptions/routemanager.nft"
         owner: root
         group: root
@@ -117,7 +111,7 @@
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-open5gs"
-            value: "{{ nokia_radio_one_open5gs }}"
+            value: "{{ one_nokia_radio_open5gs }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

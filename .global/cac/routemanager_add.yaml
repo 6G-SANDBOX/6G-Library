@@ -16,6 +16,7 @@
         "delete_at": "{{ stop_time }}"
       }
     return_content: yes
+    status_code: [200,201]
   register: api_response
 
 - name: Display response content

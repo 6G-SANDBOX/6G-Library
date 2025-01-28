@@ -46,12 +46,12 @@ site_variables:
 ## Input variables
 ####################################
 input:
-  nokia_radio_one_open5gs:
+  one_nokia_radio_open5gs:
     description: Name of a previosly deployed Open5GS 5G Core
     type: "open5gs_vm or open5gs_k8s"
     required_when: true
 
-  nokia_radio_any_start_time:
+  any_nokia_radio_start_time:
     description: |
       Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
       If unspecified, value takes current time and date.
@@ -59,7 +59,7 @@ input:
     default_value: Current time and date
     required_when: false
 
-  nokia_radio_any_duration:
+  any_nokia_radio_duration:
     description: Time in seconds for the Nokia Airsale reservation
     type: int
     default_value: 3600
@@ -70,4 +70,4 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__open5gs: input.nokia_radio_one_open5gs
+  __entity_name__open5gs: input.one_nokia_radio_open5gs
