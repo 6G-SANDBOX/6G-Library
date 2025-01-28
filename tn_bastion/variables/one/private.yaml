@@ -8,8 +8,8 @@
 ##
 ######################################################
 
-one_bastion_cpu: 2
-one_bastion_memory: 1024
+one_bastion_cpu: 4
+one_bastion_memory: 2024
 one_bastion_disk: 5120
 
 one_bastion_vpn_clients: 1
