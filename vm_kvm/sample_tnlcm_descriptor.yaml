@@ -1,0 +1,15 @@
+trial_network:
+
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  vm_kvm-ubuntu22_04:
+    type: "vm_kvm"
+    name: "ubuntu22_04"
+    dependencies:
+      - "tn_init"
+    input:
+      one_vm_kvm_size: "small" # extra_large, large, medium, small, very_small
+      one_vm_kvm_networks:
+        - "tn_vxlan"

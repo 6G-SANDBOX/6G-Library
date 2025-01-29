@@ -1,0 +1,11 @@
+trial_network:
+
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  xrext-nokia:
+    type: "xrext"
+    name: "nokia"
+    dependencies: ["tn_init"]
+    input: {}

@@ -40,11 +40,22 @@ trial_network:
       one_open5gs_k8s_amf_ip: "10.10.10.200"
       one_open5gs_k8s_upf_ip: "10.10.10.201"
       one_open5gs_k8s_k8s_ue_count: 1
-  nokia_radio-RAN:
-    type: "nokia_radio"
-    name: "RAN"
+  loadcore_agent-dn:
+    type: "loadcore_agent"
+    name: "dn"
     dependencies:
-      - "open5gs_k8s-core"
+    - "vnet-internal"
     input:
-      one_nokia_radio_open5gs: "open5gs_k8s-core"
-      any_nokia_radio_duration: 7200
+      one_loadcore_agent_networks:
+        - "tn_vxlan"
+        - "vnet-internal"
+  loadcore_agent-gnb:
+    type: "loadcore_agent"
+    name: "gnb"
+    dependencies:
+    - "vnet-internal"
+    input:
+      one_loadcore_agent_networks:
+        - "tn_vxlan"
+        - "vnet-internal"
+        - "vnet-internal"

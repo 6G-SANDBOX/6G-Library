@@ -1,0 +1,101 @@
+trial_network:
+
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  vnet-n1_n3:
+    type: "vnet"
+    name: "n1_n3"
+    dependencies:
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.11.3.1"
+      one_vnet_netmask: 24
+      one_vnet_address_size: 100
+      one_vnet_gw: "192.168.199.1"
+  vnet-n6:
+    type: "vnet"
+    name: "n6"
+    dependencies:
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.11.6.1"
+      one_vnet_netmask: 24
+      one_vnet_address_size: 100
+      one_vnet_gw: "192.168.199.1"
+  upf_p4_sw-upf:
+    type: "upf_p4_sw"
+    name: "upf"
+    dependencies:
+      - "tn_init"
+      - "vnet-n1_n3"
+      - "vnet-n6"
+    input:
+      one_upf_p4_sw_networks:
+        - tn_vxlan
+        - vnet-n1_n3
+        - vnet-n6
+      one_upf_p4_sw_controller_enb_ipv4_n3: "10.11.3.2"
+      one_upf_p4_sw_controller_dn_ipv4_n6: "10.11.6.2"
+      one_upf_p4_sw_controller_upf_ipv4_n3: "10.11.3.1"
+      one_upf_p4_sw_controller_upf_ipv4_n6: "10.11.6.1"
+      one_upf_p4_sw_open5gs_amf_ngap_addr: "10.11.3.1"
+  ueransim-gnb:
+    type: "ueransim"
+    name: "gnb"
+    dependencies:
+      - "tn_init"
+      - "upf_p4_sw-upf"
+      - "vnet-n1_n3"
+    input:
+      one_ueransim_networks:
+        - "tn_vxlan"
+        - "vnet-n1_n3"
+      one_ueransim_run_gnb: "YES"
+      one_ueransim_run_ue: "NO"
+      one_ueransim_gnb_linked_open5gs: "upf_p4_sw-upf"
+      one_ueransim_gnb_proxy: ""
+      one_ueransim_gnb_mcc: "001"
+      one_ueransim_gnb_mnc: "01"
+      one_ueransim_gnb_tac: 200
+      one_ueransim_gnb_amf_address: "10.11.3.1"
+      one_ueransim_gnb_slices_sst: 1
+      one_ueransim_gnb_slices_sd: "000001"
+  ueransim-ue:
+    type: "ueransim"
+    name: "ue"
+    dependencies:
+      - "tn_init"
+      - "upf_p4_sw-upf"
+      - "ueransim-gnb"
+    input:
+      one_ueransim_networks: 
+        - "tn_vxlan"
+      one_ueransim_run_gnb: "NO"
+      one_ueransim_run_ue: "YES"
+      one_ueransim_ue_linked_gnb: "ueransim-gnb"
+      one_ueransim_ue_supi: "imsi-001010000000001"
+      one_ueransim_ue_mcc: "001"
+      one_ueransim_ue_mnc: "01"
+      one_ueransim_ue_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+      one_ueransim_ue_op: "E8ED289DEBA952E4283B54E88E6183CA"
+      one_ueransim_ue_gnbSearchList: ""
+      one_ueransim_ue_session_apn: "internet"
+      one_ueransim_ue_session_sst: 1
+      one_ueransim_ue_session_sd: "000001"
+      one_ueransim_ue_configured_nssai_sst: 1
+      one_ueransim_ue_configured_nssai_sd: "000001"
+      one_ueransim_ue_default_nssai_sst: 1
+      one_ueransim_ue_default_nssai_sd: "000001"
+  vm_kvm-pdn:
+    type: "vm_kvm"
+    name: "pdn"
+    dependencies:
+      - "tn_init"
+      - "upf_p4_sw-upf"
+    input:
+      one_vm_kvm_size: "small" # extra_large, large, medium, small, very_small
+      one_vm_kvm_networks:
+        - "tn_vxlan"
+        - "vnet-n6"

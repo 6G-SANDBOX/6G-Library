@@ -14,18 +14,18 @@ trial_network:
       one_vnet_netmask: 24
       one_vnet_address_size: 100
       one_vnet_gw: "10.10.10.1"
-  oneKE-k8s:
+  oneKE-cluster:
     type: "oneKE"
-    name: "k8s"
+    name: "cluster"
     dependencies:
       - "tn_init"
       - "vnet-private_oneKE"
     input:
       one_oneKE_internal_vnet: "vnet-private_oneKE"
-      one_oneKE_version: "129" # (127 not working)
+      one_oneKE_version: "129"
       one_oneKE_multus: "YES"
       one_oneKE_cni_plugin: "canal"
-      one_oneKE_cilium_range: "" # In case of one_k8s_cni_plugin is cilium
+      one_oneKE_cilium_range: ""
       one_oneKE_longhorn: "YES"
       one_oneKE_metallb: "YES"
       one_oneKE_metallb_range: "10.10.10.200-10.10.10.240"
@@ -35,7 +35,7 @@ trial_network:
     type: "ocf"
     name: "openCapif"
     dependencies:
-      - "oneKE-k8s"
+      - "oneKE-cluster"
     input:
-      ocf_one_oneKE: "oneKE-k8s"
+      ocf_one_oneKE: "oneKE-cluster"
       ocf_any_branch: "staging"
