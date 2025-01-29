@@ -34,7 +34,7 @@ site_variables:
 ## Input variables
 ####################################
 input:
-  one_open5gs_target:
+  one_open5gs_k8s_target:
     description: Name of the oneKE cluster used to deploy the Helm Chart
     type: "oneKE"
     required_when: true
