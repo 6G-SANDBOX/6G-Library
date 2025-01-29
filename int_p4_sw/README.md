@@ -93,3 +93,5 @@ For INT collector:
 # View logs in real-time
 tail -f /var/log/int_collector.log
 ```
+
+![int_p4_sw](img/int_p4_sw.png)

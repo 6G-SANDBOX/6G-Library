@@ -8,3 +8,5 @@ It manages external access to the TN and hosts various networking services such 
 - Port forwarding (not yet)
 - DNS server
 - VPN Server
+
+![tn_bastion](img/tn_bastion.png)

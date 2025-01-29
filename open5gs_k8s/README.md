@@ -20,3 +20,5 @@ Current versions:
 
 [**Open5GS**](https://github.com/open5gs/open5gs) is an advanced, open-source project designed for building and managing your own NR/LTE mobile network. Whether you’re setting up a private network for testing, research, or deployment, Open5GS offers a robust solution for configuring both 5G (NR) and LTE (evolved) networks (Release-17).
 More info in the official documentation: https://open5gs.org/open5gs/docs/
+
+![open5gs_k8s](img/open5gs_k8s.png)
