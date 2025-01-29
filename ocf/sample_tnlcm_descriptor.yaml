@@ -4,9 +4,9 @@ trial_network:
     type: "tn_init"
     dependencies: []
     input: {}
-  vnet-private_oneKE:
+  vnet-internal:
     type: "vnet"
-    name: "private_oneKE"
+    name: "internal"
     dependencies:
       - "tn_init"
     input:
@@ -19,9 +19,9 @@ trial_network:
     name: "cluster"
     dependencies:
       - "tn_init"
-      - "vnet-private_oneKE"
+      - "vnet-internal"
     input:
-      one_oneKE_internal_vnet: "vnet-private_oneKE"
+      one_oneKE_internal_vnet: "vnet-internal"
       one_oneKE_version: "129"
       one_oneKE_multus: "YES"
       one_oneKE_cni_plugin: "canal"
