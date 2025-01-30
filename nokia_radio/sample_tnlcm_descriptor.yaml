@@ -10,10 +10,10 @@ trial_network:
     dependencies:
       - "tn_init"
     input:
-      one_vnet_first_ip: "10.10.10.1"
+      one_vnet_first_ip: "10.10.12.1"
       one_vnet_netmask: 24
       one_vnet_address_size: 100
-      one_vnet_gw: "10.10.10.1"
+      one_vnet_gw: "10.10.12.1"
   oneKE-cluster:
     type: "oneKE"
     name: "cluster"
@@ -23,7 +23,7 @@ trial_network:
       one_oneKE_external_vnet: "tn_vxlan"
       one_oneKE_internal_vnet: "vnet-internal"
       one_oneKE_metallb: "YES"
-      one_oneKE_metallb_range: "10.10.10.200-10.10.10.240"
+      one_oneKE_metallb_range: "10.10.12.200-10.10.12.240"
   open5gs_k8s-core:
     type: "open5gs_k8s"
     name: "core"
@@ -37,8 +37,8 @@ trial_network:
       one_open5gs_k8s_tac: 1
       one_open5gs_k8s_s_nssai_sst: 1
       one_open5gs_k8s_s_nssai_sd: "000009"
-      one_open5gs_k8s_amf_ip: "10.10.10.200"
-      one_open5gs_k8s_upf_ip: "10.10.10.201"
+      one_open5gs_k8s_amf_ip: "10.10.12.200"
+      one_open5gs_k8s_upf_ip: "10.10.12.201"
       one_open5gs_k8s_k8s_ue_count: 1
   nokia_radio-RAN:
     type: "nokia_radio"
