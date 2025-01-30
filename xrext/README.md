@@ -29,7 +29,7 @@ This component is based on an Ubuntu 22.04 minimal image with the latest NaC and
 <img src="https://img.shields.io/badge/3GPP-R17-orange" />
 </p>
 
-![alt text](xrext_concept.png "XRext architecture")
+![xrext_concept](img/xrext_concept.png)
 
 The XR extension (**XRext**) is an abstraction layer that acts as a bridge, enabling the translation of high-level network configuration and management commands to run XR applications into actions that the 5G network can execute. 
 

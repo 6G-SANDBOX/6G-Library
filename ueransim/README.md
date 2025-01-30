@@ -12,13 +12,8 @@ Depending on the chosen behaviour (with input variables `one_ueransim_run_gnb` a
 - If `one_ueransim_run_gnb == 'YES'`, a previously deployed open5gs component needs to be selected in the `one_ueransim_gnb_linked_open5gs` input variable
 - If `one_ueransim_run_gnb == 'NO' and one_ueransim_run_ue == 'YES'`, a previously deployed ueransim with `run_gnb == 'YES'` needs to be selected in the `one_ueransim_ue_linked_gnb` input variable
 
-
-
-
-
-
-
 ## What is UERANSIM
+
 <p align="center">
   <a href="https://github.com/aligungr/UERANSIM">
     <img src="https://raw.githubusercontent.com/aligungr/UERANSIM/master/.github/logo.png" width="125" title="UERANSIM">
@@ -48,3 +43,11 @@ On the other hand, UERANSIM does not fully provide physical layer. 5G-NR radio i
 <img src="https://img.shields.io/badge/Control%20Plane-functional-green" alt="OS Linux"/>  
 <img src="https://img.shields.io/badge/User%20Plane-functional-green" alt="OS Linux"/>
 </p>
+
+### Ueransim both configuration
+
+![ueransim_both](img/ueransim_both.png)
+
+### Ueransim split configuration
+
+![ueransim_split](img/ueransim_split.png)
