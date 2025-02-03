@@ -16,7 +16,7 @@ PLEASE ALSO UPDATE THE MAIN 6G-LIBRARY CHANGELOG WITH YOUR COMPONENT
 
 ## unreleased
 ### Changed
-- Updated description of what "default_value" in public.yaml is really for.
+- Comments rewritten to address new/modified functionalities of a component's deployment.
 
 
 ## v0.3.0

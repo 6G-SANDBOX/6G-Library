@@ -6,9 +6,15 @@
 - New component `int_p4_sw` at version `v1.0.0`.
 - New component `open5gs_vm` at version `v1.0.0`.
 - New component `open5gcore_vm` at version `unreleased`.
-- New component `upf_p4_sw` at version `unreleased`
+- New component `upf_p4_sw` at version `unreleased`.
+- 2 new ansible task files in `.global/cac`:
+  - `tnuser_ssh_config.yaml`: Used to create/update the ssh_config file the experimenter can use to ssh their VMs once the TN has been deployed. This decouples the code used to create the ssh_config the Jenkins uses (file `jenkins_ssh_config.yaml`, previously just `ssh_config.yaml`) as ssh access as Jenkins user should be reserved to site administrators.
+  - `routemanager_add`: Utility task to send requests to a `route-manager-api`. It works both for the `route-manager-api` service inside the `tn_bastion`, or for standalone `route-manager-api` VMs deployed from the marketplace appliance.
+- Tasks in `publish_fail_results.yaml` and `publish_ok_results.yaml` now only write the generated files locally if flag `debug` is enabled. Code is also optimized.
 ### Changed
-- Updated download URL of appliances in their respective components.
+- Field `metadata` in `.tnlcm/public.yaml` includes three new optional variables: `destroy_script`, `resource_manager` and `appliance`. More information about them in the dummy component.
+- Field `output` in `.tnlcm/public.yaml`renamed to `terraform_outputs` and repurposed to document the values each component saves as terraform outputs.
+- Components that upload an utility file to the minIO, now prefix them with with `misc-`, to diferenciate them from other files such as terraform manifests (`tf-`) or success markdowns (`ok_result-`).
 - `.dummy_component` upgraded to version `unreleased`. Updated description of what "default_value" in public.yaml is really for.
 - `ks8500_runner` upgraded to version `v1.11.4.0`. Added python dependencies. Updated to latest stable OpenTap.
 - `loadcore_agent` upgraded to version `unreleased`. Now using new appliance with OpenNebula contextualization scripts. However, *IaC* is currently broken. VM is deployed by Ansible itself.
