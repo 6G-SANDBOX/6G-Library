@@ -38,7 +38,7 @@
         tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string }}"
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ixc_endpoint_networks[0] + '-id'] | string }}"
         domain_name: >-
           {{
             ((component_type | regex_replace('_', '') | lower) ~ '-' ~
@@ -49,9 +49,15 @@
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "vm_kvm"
+        hostname: "endpoint"
         ansible_host: "{{ ips[access_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+    - name: Add the bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
         ansible_user: "jenkins"
 
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
@@ -62,7 +68,7 @@
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "vm_kvm"
+  hosts: "endpoint"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -96,7 +102,21 @@
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
 
-- name: "STAGE 4: Publish execution results"
+- name: "STAGE 3: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Write firewall exception for the IxChariot Registration Server
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        exceptions:
+          - "{{ site_available_components.stf_ue.origin }}"
+
+
+- name: "STAGE 5: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local

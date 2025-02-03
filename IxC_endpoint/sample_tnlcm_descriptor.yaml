@@ -1,0 +1,14 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  IxC_endpoint-first:
+    type: "IxC_endpoint"
+    name: "first"
+    dependencies:
+      - "tn_init"
+    input:
+      one_ixc_endpoint_rs: "10.11.31.98"
+      # one_ixc_endpoint_networks:
+      #   - "tn_vxlan"

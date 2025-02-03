@@ -1,0 +1,5 @@
+#!/usr/sbin/nft -f
+
+{% for exception in exceptions %}
+ip daddr {{ exception }} accept
+{% endfor %}

@@ -8,30 +8,5 @@
 ##
 ######################################################
 
-one_vm_kvm_cpu: 4
-one_vm_kvm_memory: 8192
-one_vm_kvm_disk: 25600
-one_vm_kvm_networks: 
+one_ixc_endpoint_networks: 
   - tn_vxlan
-
-one_vm_kvm_resources:
-  extra_large:
-    cpu: 8
-    memory: 32768
-    disk: 102400
-  large:
-    cpu: 4
-    memory: 16384
-    disk: 51200
-  medium:
-    cpu: 4
-    memory: 8192
-    disk: 25600
-  small:
-    cpu: 2
-    memory: 4096
-    disk: 15360
-  very_small:
-    cpu: 1
-    memory: 2048
-    disk: 10240

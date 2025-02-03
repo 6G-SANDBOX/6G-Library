@@ -20,19 +20,19 @@
   block:
     - name: Write FAIL json response
       ansible.builtin.template:
-        src: "{{ workspace }}/.global/json_templates/fail_result.json.j2"
+        src: "{{ workspace }}/.global/templates/fail_result.json.j2"
         dest: "{{ workspace }}/{{ component_type }}/code/fail_result.json"
 
     - name: Print FAIL json response
       ansible.builtin.debug:
-        msg: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/json_templates/fail_result.json.j2') }}"
+        msg: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/templates/fail_result.json.j2') }}"
 
 - name: Send FAIL json response to TNLCM
   ansible.builtin.uri:
     url: "{{ tnlcm_callback }}"
     method: POST
     body_format: json
-    body: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/json_templates/fail_result.json.j2') }}"
+    body: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/templates/fail_result.json.j2') }}"
   register: tnlcm_post
   ignore_errors: true
 
