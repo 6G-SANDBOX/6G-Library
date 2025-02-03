@@ -1,0 +1,14 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  elcm-exp:
+    type: "elcm"
+    name: "exp"
+    dependencies: ["tn_init"]
+    input:
+      one_elcm_influxdb_user: "admin"
+      one_elcm_influxdb_password: "admin"
+      one_elcm_influxdb_database: "elcmdb"
+      one_elcm_grafana_password: "admin"

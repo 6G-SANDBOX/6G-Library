@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v0.4.0
 Fiesta por aquí # TODO
 ### Changed
 - Variable `one_bastion_wireguard_allowedips` promoted as public and user-configurable.

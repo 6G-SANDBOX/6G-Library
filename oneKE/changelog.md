@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v0.4.0
 ### Removed
 - OneKE v1.27 is no longer allowed
 

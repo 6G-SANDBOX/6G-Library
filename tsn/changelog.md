@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v0.4.0
 ### Fixed
 - Component TSN: markdown report file `ok_result.md.j2`.
 

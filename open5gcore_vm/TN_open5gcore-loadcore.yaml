@@ -1,7 +1,6 @@
 # Result: pass
 # Platform: BERLIN
 trial_network:
-
   tn_init:
     type: "tn_init"
     dependencies: []
@@ -74,4 +73,3 @@ trial_network:
         - "tn_vxlan"
         - "vnet-n2"
         - "vnet-n2" # "vnet-n3"
-

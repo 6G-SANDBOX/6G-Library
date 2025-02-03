@@ -14,7 +14,7 @@ PLEASE ALSO UPDATE THE MAIN 6G-LIBRARY CHANGELOG WITH YOUR COMPONENT
 
 # Changelog
 
-## unreleased
+## v0.4.0
 ### Changed
 - Comments rewritten to address new/modified functionalities of a component's deployment.
 

@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v0.4.0
 ### Changed
 - Updated helm chart reference URL to point the 6G-Sandbox dockerhub.
 - New input variable `one_open5gs_ue_count`.

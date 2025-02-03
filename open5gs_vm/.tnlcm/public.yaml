@@ -36,6 +36,12 @@ input:
     default_value: ["tn_vxlan"]
     required_when: false
 
+  one_open5gs_vm_internal_vnet:
+    description: List of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
+    required_when: false
+
   one_open5gs_vm_size:
     description: |
       Select one type of instance according to your hardware requirements
@@ -52,6 +58,12 @@ input:
       - "small"
       - "very_small"
     required_when: true
+
+  one_open5gs_vm_ue_subnet:
+    description: Subnet to be used by the UEs
+    type: str
+    default_value: "10.45.0.0/16"
+    required_when: false
 
   one_open5gs_vm_mcc:
     description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15

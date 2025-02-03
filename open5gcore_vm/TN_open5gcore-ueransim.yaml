@@ -1,7 +1,6 @@
 # Result: pass
 # Platform: BERLIN
 trial_network:
-
   tn_init:
     type: "tn_init"
     dependencies: ["vnet-n2"]
@@ -90,4 +89,3 @@ trial_network:
       one_ueransim_ue_configured_nssai_sd: "1"
       one_ueransim_ue_default_nssai_sst: 1
       one_ueransim_ue_default_nssai_sd: "1"
-
