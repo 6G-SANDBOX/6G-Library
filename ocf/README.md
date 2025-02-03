@@ -6,4 +6,4 @@ Helm Chart deploying OpenCAPIF inside kubernetes cluster
 
 More info in the official documentation: https://ocf.etsi.org/documentation/latest/
 
-![ocf](img/ocf.png)
+![ocf](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/ocf.png)

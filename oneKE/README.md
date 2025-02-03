@@ -8,4 +8,4 @@ Template needs to have a non-Default CPU architecture, just like the MinIO
 
 NOTE: Cluster customization will be progresivelly incorporated ad the OpenNebula Terraform provider gets more functionalities
 
-![oneKE](img/oneKE.png)
+![oneKE](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/oneKE.png)

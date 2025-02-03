@@ -12,4 +12,4 @@ First component of any Trial Network, composed of two sepparate entities: tn_vxl
 
 > NOTE: Internally this component works as a wrapper of both components within the same ansible playook.
 
-![tn_init](img/tn_init.png)
+![tn_init](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/tn_init.png)

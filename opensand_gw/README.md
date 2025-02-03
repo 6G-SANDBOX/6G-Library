@@ -1,3 +1,3 @@
 # opensand_gw
 
-![opensand](img/opensand.png)
+![opensand](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/opensand.png)

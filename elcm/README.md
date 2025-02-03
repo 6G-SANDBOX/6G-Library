@@ -6,4 +6,4 @@ More info in the official documentation:
 
 - Frontend: https://github.com/6G-SANDBOX/portal
 
-![elcm](img/elcm.png)
+![elcm](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/elcm.png)

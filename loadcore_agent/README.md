@@ -6,8 +6,8 @@ After booting, the agent register itself with the LoadCore Middleware server.
 
 ### Loadcore open5gs k8s configuration
 
-![loadcore_open5gs_k8s](img/loadcore_open5gs_k8s.png)
+![loadcore_open5gs_k8s](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/loadcore_open5gs_k8s.png)
 
 ### Loadcore open5gs vm configuration
 
-![loadcore_open5gs_vm](img/loadcore_open5gs_vm.png)
+![loadcore_open5gs_vm](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/loadcore_open5gs_vm.png)

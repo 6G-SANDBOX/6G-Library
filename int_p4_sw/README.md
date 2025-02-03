@@ -94,4 +94,4 @@ For INT collector:
 tail -f /var/log/int_collector.log
 ```
 
-![int_p4_sw](img/int_p4_sw.png)
+![int_p4_sw](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/int_p4_sw.png)

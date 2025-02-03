@@ -15,4 +15,4 @@ The configuration exposed by this component should be synchronized with the 5G c
 > [!NOTE]  
 > Currently this component is only available in the site "uma".
 
-![nokia_radio](img/nokia_radio.png)
+![nokia_radio](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/nokia_radio.png)

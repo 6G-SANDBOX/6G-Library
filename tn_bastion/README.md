@@ -9,4 +9,4 @@ It manages external access to the TN and hosts various networking services such 
 - DNS server
 - VPN Server
 
-![tn_bastion](img/tn_bastion.png)
+![tn_bastion](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/tn_bastion.png)

@@ -209,4 +209,4 @@ By default, the `upf-dn-bmv2-stratum` service runs in normal mode. To enable deb
 
 TODO: Explain how to do NAT (in other VMs)
 
-![upf_p4_sw](img/upf_p4_sw.png)
+![upf_p4_sw](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/upf_p4_sw.png)

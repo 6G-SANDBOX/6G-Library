@@ -46,8 +46,8 @@ On the other hand, UERANSIM does not fully provide physical layer. 5G-NR radio i
 
 ### Ueransim both configuration
 
-![ueransim_both](img/ueransim_both.png)
+![ueransim_both](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/ueransim_both.png)
 
 ### Ueransim split configuration
 
-![ueransim_split](img/ueransim_split.png)
+![ueransim_split](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/ueransim_split.png)

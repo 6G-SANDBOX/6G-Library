@@ -4,4 +4,4 @@ Component that enables the capability of using TSN endpoints in the Trial Networ
 
 NOTE: Currently tsn is only available in the site "uma"
 
-![tsn](img/tsn.png)
+![tsn](https://github.com/6G-SANDBOX/6G-Library/blob/assets/images/tsn.png)
