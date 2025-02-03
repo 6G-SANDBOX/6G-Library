@@ -3,7 +3,8 @@
 ## unreleased
 Fiesta por aquí # TODO
 ### Changed
-- Variable `one_bastion_wireguard_allowedips` promoted as public and user-configurable
+- Variable `one_bastion_wireguard_allowedips` promoted as public and user-configurable.
+
 
 ## v0.3.0
 ### Deprecated
@@ -11,11 +12,13 @@ Fiesta por aquí # TODO
 ### Removed
 - Deleted ansible task overwriting `entity_name` with the component type. `entity_name` is now only defined during the Jenkins Pipeline.
 
+
 ## v0.2.0
 ### Changed
 - Component follows the new architecture.
 ### Deprecated
 - Component is now deprecated, try to use `tn_init` instead.
+
 
 ## v0.1.0
 ### Added
