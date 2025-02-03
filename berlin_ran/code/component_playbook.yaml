@@ -89,7 +89,7 @@
             'amf_ip': '{{ site_available_components.berlin_ran.amf_ip }}',
             'upf_ip': '{{ site_available_components.berlin_ran.upf_ip }}'
           }
-    - name: Publish metadata as terraform outputs"
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:

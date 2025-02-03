@@ -1,31 +1,51 @@
 # {{ tn_id }}-tn_bastion
 
-The component `{{ tn_id }}`-tn_bastion has been successfully created.
-The BASTION is a crutial VM of the Trial Network, which serves as its router, firewall and VPN endpoing.
+The component `{{ tn_id }}-tn_bastion` has been successfully created.
+The **`tn_bastion`** is the main Virtual Machine of the Trial Network, serving as its default gateway, firewall, DNS server and VPN server.
 
 ## Important information:
 
-- **OpenNebula VM ID**: `{{ id }}`
+- **OpenNebula VM ID**: `{{ tn_bastion_id }}`
 - **VM network interfaces**:
-  ```json
-  {{ ips }}
-  ```
-
-#### Wireguard VPN client config
-Add this configuration file to your local wireguard client tool.
-```
-{{ hostvars['tn_bastion']['client_tunnel']['content'] | b64decode }}
+```json
+{{ tn_bastion_ips | to_nice_json(indent=8) }}
 ```
 
 #### SSH keypair
-Use the private key to access Trial Network VM's with user *tnuser*
+A pair of ed25519 ssh keys is created as part of the **`tn_bastion`**'s deployment. Use the private key for ssh access to other component's with user *`tnuser`*
+To use them, please write the private key on a new file on `.ssh/misc-{{ tn_id }}-id_ed25519` and give it permissions `0600`.
+You might incur ssh silent warnings if the permissions are not set. Debug ssh connections with flag `-v`.
+
+> WARNING
+> The **`tn_bastion`** VM is not meant to be accessed by experimenters, so it has no *`tnuser`* created
 
 **Public key**:
 ```
-{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] | b64decode }}
+{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] | b64decode | trim }}
 ```
 **Private key**:
 ```
-{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] | b64decode }}
+{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] | b64decode | trim }}
 ```
 
+#### Wireguard VPN client config
+
+Access to the Trial Network can be performed using one of the following Wireguard VPN client configuration files:
+{% for client in hostvars['tn_bastion']['tn_wg_clients']  %}
+**wg_client{{ loop.index - 1}}**:
+```TOML
+{{ client | b64decode }}
+```
+{% endfor %}
+
+> WARNING
+> Only one experimenter can use the same VPN client simultaneously.
+
+#### Technitium DNS Server
+
+You can access the Technitium DNS web Portal from [http://bastion.{{ tn_id }}.{{ site_domain }}:5380](http://bastion.{{ tn_id }}.{{ site_domain }}:5380)
+Credentials to login are:
+- user: `admin`
+- password: `{{ tn_bastion_dns_password }}`
+
+---

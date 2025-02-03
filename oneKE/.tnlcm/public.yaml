@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -38,8 +26,17 @@ metadata:
   hypervisors: [one]
   appliance: https://marketplace.opennebula.io/appliance/591dd3f1-220f-46a5-83f4-31031c753b8a
 
+
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  129:
+    template_id: ID of the OneKE v1.29 template to use in your OpenNebula environment
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_oneKE_external_vnet:
@@ -57,7 +54,7 @@ input:
     description: Version of the OneKE Appliance. 127A and 129A to be added in the future. Default value is "129"
     type: str
     default_value: "129"
-    choices: ["127", "129"]
+    choices: ["129"]
     required_when: false
 
   one_oneKE_multus:
@@ -112,7 +109,7 @@ input:
       The range has to be inside the "one_oneKE_internal_vnet" subnet, but preferably outside it's address range.
       Syntax is <min_IPv4>-<max_IPv4>
     type: str
-    default_value: "10.10.12.200-10.10.12.240"
+    default_value: "10.21.12.200-10.21.12.240"
     required_when: "one_oneKE_metallb == 'YES'"
 
   one_oneKE_longhorn:
@@ -133,12 +130,6 @@ input:
     choices: ["YES", "NO"]
     required_when: false 
 
-  one_oneKE_dns:
-    description: Space-separated list of DNS servers configured in the OneKE VNF
-    type: str
-    default_value: "1.1.1.1 8.8.8.8"
-    required_when: false
-
   one_oneKE_nginx_passthough:
     description: |
       Variable to enable or disable SSL/TLS passthrough in the Ingress-Nginx controller.
@@ -148,13 +139,14 @@ input:
     required_when: false
 
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  id: Service ID in OpenNebula
-  node_ids: "dictionary of VM IDs in OpenNebula: key='VM name', value='the VM ID'"
-  node_ips: "dictionary of VM addresses: key='VM name', value='the VM main address'"
-  metadata_dict: # Dictionary with multiple parameters used in the cluster bootstrap
+terraform_outputs:
+  __entity_name__id: "Service ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__roles: "Array with service roles information. Generated from Terraform Manifest"
+  __entity_name__node_ids: "Dictionary of VM IDs in OpenNebula: key='VM name', value='the VM ID'"
+  __entity_name__node_ips: "Dictionary of VM addresses: key='VM name', value='the VM main address'"
+  __entity_name__metadata_dict:
     external_vnet: input.one_oneKE_external_vnet
     internal_vnet: input.one_oneKE_internal_vnet
     version: input.one_oneKE_version
@@ -163,14 +155,4 @@ output:
     cilium_range: input.one_oneKE_cilium_range
     metallb_range: input.one_oneKE_metallb_range
     longhorn: input.one_oneKE_longhorn
-    dns: input.one_oneKE_dns
     nginx_passthrough: input.one_oneKE_nginx_passthrough
-  kubeconfig: Kubeconfig file with keys and endpoints to manage the cluster
-  skooner_token: Generated Token to login to the skooner dashboard Web App
-
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  129:
-    template_id: ID of the OneKE v1.29 template to use in your OpenNebula environment

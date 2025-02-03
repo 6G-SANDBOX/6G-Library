@@ -1,8 +1,0 @@
-- name: Add routes in bastion
-  vars:
-    o5gs_tn_vxlan_ip: "{{ hostvars['localhost']['ips'][hostvars['localhost']['access_vnet_id']]}}"
-  ansible.builtin.shell: "ip route add {{ item }} || ip route change {{ item }}"
-  with_items:
-    - "{{ one_open5gs_vm_ue_subnet }} via {{ o5gs_tn_vxlan_ip }}"
-  become: yes
-

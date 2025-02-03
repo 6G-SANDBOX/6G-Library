@@ -11,6 +11,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
     USERNAME = "jenkins"
+    SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
   }
 
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error

@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -26,9 +14,9 @@
 metadata:
   maintainers:
     - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
-  short_description: Deploys a Open5GS as Virtual Machine
+  short_description: Deploys a Open5GS as a standalone Virtual Machine
   long_description: |
-    A general-purpose Virtual Machine based on Ubuntu 22.04 lTS.
+    Deploys a Open5GS over a general-purpose Virtual Machine based on Ubuntu 22.04 lTS.
     The automation is installing Open5GS version 2.7.2 and MongoDB on it.
     Through variable "one_open5gs_vm_size", five different types of instances can be deployed
     - **extra_large**: 32 GiB of memory, 8 vCPU and 100GiB of storage
@@ -47,6 +35,7 @@ input:
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
     required_when: false
+
   one_open5gs_vm_size:
     description: |
       Select one type of instance according to your hardware requirements
@@ -100,19 +89,19 @@ input:
     default_value: "internet"
     required_when: false
 
-  one_open5gs_vm_tac:
+  one_open5gs_vm_tac:                 # TODO: Remove if unused
     description: Tracking Area Code in the PLMN
     type: int
     default_value: 200
     required_when: false
 
-  one_open5gs_vm_s_nssai_sst:
+  one_open5gs_vm_s_nssai_sst:         # TODO: Remove if unused
     description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
     type: int
     default_value: 1
     required_when: false
 
-  one_open5gs_vm_s_nssai_sd:
+  one_open5gs_vm_s_nssai_sd:          # TODO: Remove if unused
     description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
     type: str
     default_value: "000001"
@@ -121,13 +110,13 @@ input:
   one_open5gs_vm_amf_ip:
     description: Address to expose the Core Access and Mobility Management Function (AMF). Requires to be part of the oneKE's one_oneKE_metallb_range
     type: str
-    default_value: "10.10.10.200"
+    default_value: "10.21.12.200"
     required_when: false
 
   one_open5gs_vm_upf_ip:
     description: Address to expose the Core User Plane Function (UPF). Requires to be part of the oneKE's one_oneKE_metallb_range
     type: str
-    default_value: "10.10.10.201"
+    default_value: "10.21.12.201"
     required_when: false
 
   one_open5gs_vm_ue_count:
@@ -143,6 +132,8 @@ output:
   ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
   id: VM ID in OpenNebula
   metadata_dict: #Dictionary with multiple parameters used in the core bootstrap
+    oneKE: empty
+    proxy: empty
     mcc: input.one_open5gs_vm_mcc
     mnc: input.one_open5gs_vm_mnc
     msin: input.one_open5gs_vm_msin

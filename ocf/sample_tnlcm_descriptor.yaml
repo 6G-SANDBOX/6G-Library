@@ -1,4 +1,3 @@
-# Result: pass
 trial_network:
 
   tn_init:
@@ -12,10 +11,9 @@ trial_network:
       - "tn_init"
     input:
       one_vnet_first_ip: "10.10.10.1"
-      one_vnet_netmask: "255.255.255.0"
+      one_vnet_netmask: 24
       one_vnet_address_size: 100
       one_vnet_gw: "10.10.10.1"
-      one_vnet_dns: "1.1.1.1"
   oneKE-k8s:
     type: "oneKE"
     name: "k8s"
@@ -32,7 +30,6 @@ trial_network:
       one_oneKE_metallb: "YES"
       one_oneKE_metallb_range: "10.10.10.200-10.10.10.240"
       one_oneKE_traefik: "NO"
-      one_oneKE_dns: "1.1.1.1 8.8.8.8"
       one_oneKE_nginx_passthough: true
   ocf-openCapif:
     type: "ocf"
@@ -42,5 +39,3 @@ trial_network:
     input:
       ocf_one_oneKE: "oneKE-k8s"
       ocf_any_branch: "staging"
-
-

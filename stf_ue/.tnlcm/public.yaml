@@ -2,22 +2,11 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 4 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
+
 
 ####################################
 ## Component metadata
@@ -35,23 +24,6 @@ metadata:
   hypervisors: [one]
   destroy_script: true
 
-# ####################################
-# ## Component input
-# ####################################
-input:
-  stf_ue_any_lease:
-    description: Requested time to book the UE device. In seconds.
-    type: int
-    default_value: 3600
-    required_when: false
-
-
-# ####################################
-# ## Component output
-# ####################################
-output:
-  # None
-
 
 ####################################
 ## Site-specific variables
@@ -61,3 +33,29 @@ site_variables:
   administrator_token: Token to authenticate as the administrator user in the STF API
   device: Mobile device ID to book to the user "tnuser"
   user_mail: Mail of the user "tnuser"
+
+
+####################################
+## Input variables
+####################################
+input:
+  any_stf_ue_start_time:
+    description: |
+      Time and date from which the UE is reserved, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
+      If unspecified, value takes current time and date.
+    type: str
+    default_value: Current time and date
+    required_when: false
+  
+  any_stf_ue_duration:
+    description: Time in seconds for the UE reservation
+    type: int
+    default_value: 3600
+    required_when: false
+
+
+####################################
+## Generated terraform outputs
+####################################
+output:
+  # None

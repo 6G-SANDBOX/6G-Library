@@ -93,7 +93,7 @@
             'password': '{{ ocf_any_password }}',
           }
 
-    - name: Upload Vault keys to S3
+    - name: Upload Vault keys to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put
@@ -105,7 +105,7 @@
         encrypt: false
         validate_certs: false
 
-    - name: Upload Tests results keys to S3
+    - name: Upload Tests results keys to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put
@@ -117,7 +117,7 @@
         encrypt: false
         validate_certs: false
 
-    - name: Upload Create User Results keys to S3
+    - name: Upload Create User Results keys to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put
@@ -129,14 +129,14 @@
         encrypt: false
         validate_certs: false
 
-    - name: Publish OpenCAPIF metadata as terraform outputs"
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-metadata"
             value: "{{ metadata_dict }}"
 
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
       vars:
         output:

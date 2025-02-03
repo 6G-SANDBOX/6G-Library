@@ -1,6 +1,5 @@
 # Changelog
 
-## [v0.3.1]
-
+## unreleased
 ### Added
-- New component UPF-P4(+Open5GS) SW
+- Initial release of `upf_p4_sw` component to the 6G-Library. 

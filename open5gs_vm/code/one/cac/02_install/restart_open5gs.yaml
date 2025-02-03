@@ -1,0 +1,25 @@
+---
+- name: Restart UPF daemon
+  ansible.builtin.service:
+    name: open5gs-upfd
+    state: restarted
+
+- name: Restart SMF daemon
+  ansible.builtin.service:
+    name: open5gs-smfd
+    state: restarted
+
+- name: Restart NRF daemon
+  ansible.builtin.service:
+    name: open5gs-nrfd
+    state: restarted
+
+- name: Restart AMF daemon
+  ansible.builtin.service:
+    name: open5gs-amfd
+    state: restarted
+
+- name: Restart NSSF daemon
+  ansible.builtin.service:
+    name: open5gs-nssfd
+    state: restarted

@@ -8,11 +8,12 @@
 ##
 ######################################################
 
-one_bastion_cpu: 2
-one_bastion_memory: 1024
-one_bastion_disk: 10240   # Size of the Image. Future plans to downsize it
+one_bastion_cpu: 4
+one_bastion_memory: 2024
+one_bastion_disk: 5120
 
-one_bastion_wireguard_allowedips: "192.168.199.0/24"
+one_bastion_vpn_clients: 1
+one_bastion_vpn_allowedips: ""
 
 one_bastion_networks: 
   - tn_vxlan

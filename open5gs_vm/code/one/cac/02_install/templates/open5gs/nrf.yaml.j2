@@ -11,8 +11,8 @@ global:
 nrf:
   serving:  # 5G roaming requires PLMN in NRF
     - plmn_id:
-        mcc: "{{ mcc }}"
-        mnc: "{{ mnc }}"
+        mcc: "{{ one_open5gs_vm_mcc }}"
+        mnc: "{{ one_open5gs_vm_mnc }}"
   sbi:
     server:
       - address: 127.0.0.10

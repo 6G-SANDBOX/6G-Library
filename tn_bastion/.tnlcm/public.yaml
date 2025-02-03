@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -28,39 +16,18 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  short_description: This is a VM that acts as bastion for a Trial Network
+  short_description: Legacy bridge VM to access the Trial Network
   long_description: |
-    Legacy bootrap VM in any Trial Network. tn_init is the new recommended component for starting Trial Networks
-    It manages external access to the TN and hosting various networking services such as:
-    - DHCP server
-    - NTP server
+    Legacy bootstrap VM of any Trial Network. `tn_init` is the new recommended component for bootstraping Trial Networks
+    It manages external access to the TN and hosts various networking services such as:
+    - DHCP server (not yet)
+    - NTP server (not yet)
     - Public network masquerading
-    - Port forwarding
+    - Port forwarding (not yet)
     - DNS server
     - VPN Server
-
-    NOTE: Current tn_bastion only hosts the VPN Server
   hypervisors: [one]
-
-####################################
-## Component input
-####################################
-input:
-  one_bastion_wireguard_allowedips:
-    description: List of (comma-separated) subnets overriding 'AllowedIPs' field in the wireguard VPN client config file. Leave this field as is default unless you know what you are doing.
-    type: str
-    default_value: "192.168.199.0/24"
-    required_when: false
-
-####################################
-## Component output
-####################################
-output:
-  ips: "dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  id: VM ID in OpenNebula
-  vpn_client_tunnel: VPN Client config to connect to this Trial Network
-  tn_ssh_public_key: SSH public key present in the TN VMs for the user tnuser
-  tn_ssh_private_key: SSH public key to access the TN VMs with the user tnuser
+  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/service_bastion
 
 
 ####################################
@@ -69,3 +36,30 @@ output:
 site_variables:
   template_id: ID of the BASTION VM template to use in your OpenNebula environment
   image_id: ID of the BASTION image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
+####################################
+input:
+  one_bastion_vpn_clients:
+    description: For the Wireguard VPN, the number of client configurations to generate. Modify it to the number of experimenters expected to access the Trial Network simultaneously.
+    type: int
+    default_value: 1
+    required_when: false
+  one_bastion_vpn_allowedips:
+    description: For the Wireguard VPN, comma-separated list of subnets that client configurations will route to the bastion.
+    type: str
+    default_value: "The subnet of tn_vxlan"
+    required_when: false
+
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __tn_bastion__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __tn_bastion__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
+  tn_dns_token: Token to authenticate to the tn_bastion DNS Server
+  tn_routemanager_token: Bearer token to authenticate to the tn_bastion route-manager-api.
+  tn_ssh_public_key: SSH public key to include in TN Virtual Machines for login with user tnuser

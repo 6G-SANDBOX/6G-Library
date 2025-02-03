@@ -10,7 +10,7 @@
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
-    - name: Overwrite defaults with correct values
+    - name: Variable autocompletion
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/variable_autocompletion.yaml"
 
     - name: Terraform apply
@@ -46,8 +46,8 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
-    - name: Create SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+    - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
 
 
 - name: "STAGE 3: Apply CaC to prepare the component"
@@ -144,7 +144,7 @@
           ansible.builtin.set_fact:
             output: "{{ output | combine({'gnb_metadata_dict': gnb_metadata_dict | b64encode}) }}"
 
-        - name: Publish gNB metadata as terraform outputs
+        - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
             custom_outputs:
@@ -174,7 +174,7 @@
           ansible.builtin.set_fact:
             output: "{{ output | combine({'ue_metadata_dict': ue_metadata_dict | b64encode}) }}"
 
-        - name: Publish UE metadata as terraform outputs
+        - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
             custom_outputs:
@@ -183,5 +183,5 @@
               - key: "{{ entity_name }}-run_ue"
                 value: "YES"
 
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

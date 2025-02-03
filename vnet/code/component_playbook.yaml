@@ -28,12 +28,10 @@
       register: terraform_outputs
       changed_when: false
 
-    - name: Set Terraform outputs as playbook facts
+    - name: Set new terraform outputs
       ansible.builtin.set_fact:
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+        net: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-net'] }}"
 
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          id: "{{ id | b64encode }}"
