@@ -3,8 +3,8 @@ trial_network:
     type: "tn_init"
     dependencies: []
     input: {}
-  IxC_endpoint-first:
-    type: "IxC_endpoint"
+  ixc_endpoint-first:
+    type: "ixc_endpoint"
     name: "first"
     dependencies:
       - "tn_init"
