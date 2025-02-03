@@ -65,7 +65,7 @@ For the sake of simplicity, two aspects are closed for every component: usable t
 
 These are the selected tools used to automate how to create and configure a component:
 
-<img width="800" alt="component_structure" src="https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/images/tools_logo.png">
+<img width="800" alt="tools_logo" src="https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/tools_logo.png">
 
 + **[Terraform](https://www.terraform.io/)**: To create virtual infrastructure on the private cloud providers. Components like virtual networks, virtual machines, containers, k8s clusters, etc...
 + **[Ansible](https://www.ansible.com/)**: To configure components, equipments, integrations. Fine fine-grained actions over the Trial Network components. Idempotent warranty.
