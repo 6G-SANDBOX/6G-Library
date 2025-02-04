@@ -7,3 +7,5 @@
 ## Some of them are modifiable through input variables
 ##
 ######################################################
+
+any_iswireless_radio_duration: 3600

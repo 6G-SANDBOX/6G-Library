@@ -22,7 +22,8 @@
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_iswireless_radio_open5gs + '-node_ips'] }}"
+        tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
+        open5gs_metadata: "{{ (terraform_outputs.stdout | from_json)[one_iswireless_radio_open5gs + '-metadata'] }}"
 
     - name: Set start of lease time and date with RFC 3339 section 5.6 format
       ansible.builtin.set_fact:
@@ -35,8 +36,8 @@
     - name: Submit routes in route-manager-api from the ISWIRELESS RADIO the 5G Core
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
       vars:
-        endpoint: "{{ site_iswirelles_routemanager.api_endpoint }}"
-        token: "{{ site_iswirelles_routemanager.token }}"
+        endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
+        token: "{{ site_iswireless_routemanager.token }}"
       loop:
         - { to: "{{ open5gs_metadata['amf_ip'] }}", via: "{{ bastion_ip }}" }
         - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ bastion_ip }}" }
