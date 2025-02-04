@@ -27,11 +27,11 @@
 
     - name: Set start of lease time and date with RFC 3339 section 5.6 format
       ansible.builtin.set_fact:
-        start_time: "{{ any_iswireless_start_time | default(lookup('pipe', 'date -u +\"%Y-%m-%dT%H:%M:%SZ\"'), true) }}"
+        start_time: "{{ any_iswireless_radio_start_time | default(lookup('pipe', 'date -u +\"%Y-%m-%dT%H:%M:%SZ\"'), true) }}"
 
     - name: Set end of lease time and date with RFC 3339 section 5.6 format
       ansible.builtin.set_fact:
-        stop_time: "{{ lookup('pipe', 'date -u -d \"' ~ start_time ~ ' + ' ~ any_iswireless_duration ~ ' seconds\" +\"%Y-%m-%dT%H:%M:%SZ\"') }}"
+        stop_time: "{{ lookup('pipe', 'date -u -d \"' ~ start_time ~ ' + ' ~ any_iswireless_radio_duration ~ ' seconds\" +\"%Y-%m-%dT%H:%M:%SZ\"') }}"
 
     - name: Submit routes in route-manager-api from the ISWIRELESS RADIO the 5G Core
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
