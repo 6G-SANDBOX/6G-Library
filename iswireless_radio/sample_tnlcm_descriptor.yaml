@@ -21,8 +21,8 @@ trial_network:
     input:
       one_oneKE_external_vnet: "tn_vxlan"
       one_oneKE_internal_vnet: "vnet-internal"
-      one_oneKE_cni_plugin: "canal"   # Optional variable. Already the default
-      one_oneKE_metallb: YES          # Optional variable. Already the default
+      one_oneKE_cni_plugin: "canal"   # Optional variable. Already the defaul
+      one_oneKE_metallb: YES          # Optional variable. Already the defaul
       one_oneKE_metallb_range: "10.10.12.200-10.10.12.240"
   open5gs_k8s-core:
     type: "open5gs_k8s"
@@ -31,8 +31,8 @@ trial_network:
       - "oneKE-cluster"
     input:
       one_open5gs_k8s_target: "oneKE-cluster"
-      one_open5gs_k8s_mcc: "214"
-      one_open5gs_k8s_mnc: "702"
+      one_open5gs_k8s_mcc: "001"
+      one_open5gs_k8s_mnc: "01"
       one_open5gs_k8s_apn: "internet"
       one_open5gs_k8s_tac: 1
       one_open5gs_k8s_s_nssai_sst: 1
@@ -40,11 +40,11 @@ trial_network:
       one_open5gs_k8s_amf_ip: "10.10.12.200"
       one_open5gs_k8s_upf_ip: "10.10.12.201"
       one_open5gs_k8s_ue_count: 1
-  nokia_radio-RAN:
-    type: "nokia_radio"
+  iswireless_radio-RAN:
+    type: "iswireless_radio"
     name: "RAN"
     dependencies:
       - "open5gs_k8s-core"
     input:
-      one_nokia_radio_open5gs: "open5gs_k8s-core"
-      any_nokia_radio_duration: 7200
+      one_iswireless_radio_open5gs: "open5gs_k8s-core"
+      any_iswireless_radio_duration: 7200
