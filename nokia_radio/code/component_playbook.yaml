@@ -61,6 +61,7 @@
         - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
       when: proxy is defined and proxy != ''
 
+
 - name: "STAGE 2: Prepare access to tn_bastion to allow access to the STF webUI"
   hosts: localhost
   gather_facts: false
@@ -71,6 +72,7 @@
         ansible_host: "{{ bastion_ip }}"
         ansible_user: "jenkins"
 
+
 - name: "STAGE 3: Access tn_bastion to set firewall exceptions"
   hosts: bastion
   gather_facts: false
@@ -79,27 +81,11 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
     - name: Write firewall exception for the route-manager-api of your site
-      become: true
-      ansible.builtin.template:
-        src: "{{ workspace }}/{{ component_type }}/code/any/cac/02_install/templates/fw_exceptions.nft.j2"
-        dest: "/etc/nftables/fw_exceptions/routemanager.nft"
-        owner: root
-        group: root
-        mode: '0644'
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        exceptions:
+          - "{{ site_routemanager.api_endpoint }}"
 
-    - name: Check nftables syntax
-      become: true
-      ansible.builtin.command: nft -c -f /etc/nftables.conf
-      register: nft_check
-      failed_when: nft_check.rc != 0
-      changed_when: false
-
-    - name: Reload nftables rules
-      become: true
-      ansible.builtin.systemd_service:
-        name: nftables.service
-        state: restarted
-        enabled: true
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost

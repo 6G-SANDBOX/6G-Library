@@ -78,12 +78,12 @@
 
     - name: "Debug OK json response"
       ansible.builtin.debug:
-        msg: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/json_templates/ok_result.json.j2') }}"
+        msg: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/templates/ok_result.json.j2') }}"
       when: debug
 
     - name: Generate OK json response
       ansible.builtin.template:
-        src: "{{ workspace }}/.global/json_templates/ok_result.json.j2"
+        src: "{{ workspace }}/.global/templates/ok_result.json.j2"
         dest: "{{ workspace }}/ok_result-tn_destroy.json"
         mode: "640"
       when: debug
@@ -93,7 +93,7 @@
         url: "{{ tnlcm_callback }}"
         method: POST
         body_format: json
-        body: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/json_templates/ok_result.json.j2') }}"
+        body: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/templates/ok_result.json.j2') }}"
         # src: "{{ workspace }}/ok_result-tn_destroy.json"
       register: tnlcm_post
       ignore_errors: true

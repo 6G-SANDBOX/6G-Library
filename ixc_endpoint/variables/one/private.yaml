@@ -1,0 +1,12 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_ixc_endpoint_networks: 
+  - tn_vxlan
