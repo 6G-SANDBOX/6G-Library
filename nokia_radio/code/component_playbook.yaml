@@ -85,7 +85,7 @@
       vars:
         exceptions:
           - "{{ site_routemanager.api_endpoint }}"
-
+          
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost

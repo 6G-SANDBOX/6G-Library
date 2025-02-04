@@ -1,7 +1,0 @@
-- name: Execute manage_route script in Router Manager
-  ansible.builtin.shell:
-  args:
-    executable: /bin/bash
-    cmd: "nohup /root/route-manager.sh {{ tn_id }} {{ site_available_components.iswireless_radio.core_network }} {{ hostvars['localhost']['bastion_ip'] }} {{ iswireless_radio_one_reservation_time }} > /tmp/route-manager.log 2>&1 &" 
-  async: 0
-  poll: 0
