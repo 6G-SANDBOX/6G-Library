@@ -1,0 +1,48 @@
+---
+- name: Fetch VM information from onegate 
+  become: true
+  ansible.builtin.command:
+    cmd: "onegate vm show --json"
+  changed_when: false
+  register: onegate
+
+- name: Parse dns token from onegate information
+  ansible.builtin.set_fact:
+    dns_token: "{{ onegate.stdout | from_json | json_query('VM.USER_TEMPLATE.ONEAPP_BASTION_DNS_TOKEN') }}"
+
+- name: Fetch current DNS API configuration
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:5380/api/settings/get?token={{ dns_token }}"
+    method: GET
+    body_format: json
+    status_code: [200]
+  register: dns_settings
+
+- name: Add new IP addresses to the DNS API endpoints
+  ansible.builtin.set_fact:
+    new_dns_endpoints: "{{ (old_dns_endpoints + [default_ip + ':53', tn_vxlan_ip + ':53']) | unique }}"
+  vars:
+    old_dns_endpoints: "{{ dns_settings.json.response.dnsServerLocalEndPoints }}"
+
+- name: Set new DNS API endpoints
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:5380/api/settings/set?token={{ dns_token }}"
+    method: POST
+    body_format: json
+    body:
+      dnsServerLocalEndPoints: "{{ new_dns_endpoints }}"
+    headers:
+      Content-Type: application/json
+    status_code: [200]
+
+- name: Set record for bastion in zone
+  ansible.builtin.uri:
+    url: >-
+      {{
+        'http://127.0.0.1:5380/api/zones/records/add?token=' ~ dns_token ~
+        '&domain=bastion.' ~ tn_id ~ '.' ~ site_domain ~
+        '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ tn_vxlan_ip | trim
+      }}
+    method: POST
+    body_format: json
+    status_code: [200]

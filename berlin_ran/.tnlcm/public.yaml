@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -59,7 +47,7 @@ input:
     required_when: true
   berlin_ran_one_linked_open5g:
     description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
-    type: open5gs or open5gs_vm or open5gcore_vm
+    type: open5gs_k8s or open5gs_vm or open5gcore_vm
     required_when: false
 
 

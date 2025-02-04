@@ -1,6 +1,5 @@
 # Changelog
 
-## [v3.6.3]
-
+## v3.6.3
 ### Added
-- Add first implementation ELCM component to 6G-Library.
+- Initial release of `elcm` component to the 6G-Library.

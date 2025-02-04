@@ -1,0 +1,19 @@
+---
+- name: Render helm values template
+  ansible.builtin.template:
+    src: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_values_template.yaml.j2"
+    dest: "/root/{{ hostvars['localhost']['entity_name'] }}-helm_values.yaml"
+
+- name: Deploy Open5Gs helm
+  kubernetes.core.helm:
+    kubeconfig: /etc/rancher/rke2/rke2.yaml
+    name: open5gs
+    chart_ref: oci://dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs
+    chart_version: 2.2.2
+    namespace: open5gs
+    create_namespace: yes
+    values_files:
+    - "/root/{{ hostvars['localhost']['entity_name'] }}-helm_values.yaml"
+
+- name: Wait for all pods to be Running
+  ansible.builtin.command: kubectl wait pod --all --for=condition=Ready -n open5gs --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=1200s

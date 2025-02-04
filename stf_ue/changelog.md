@@ -1,6 +1,5 @@
 # Changelog
 
-## [v0.3.0]
-
+## v0.3.0
 ### Added
-- New component
+- Initial release of `stf_ue` component to the 6G-Library.

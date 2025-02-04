@@ -1,0 +1,19 @@
+---
+- name: Append switches to .ssh/config.d/ file
+  community.general.ssh_config:
+    host: "{{ tn_id }}-{{ entity_name }}-switch-{{ item.key }}"
+    hostname: "{{ item.value[switch_first_vnet_id] }}"
+    proxyjump: "{{ tn_id }}-tn_bastion"
+    remote_user: "jenkins"
+    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+    state: present
+  loop: "{{ switch_ips | dict2items }}"
+
+- name: Append collector to .ssh/config.d/ file
+  community.general.ssh_config:
+    host: "{{ tn_id }}-{{ entity_name }}-collector"
+    hostname: "{{ collector_ips[collector_first_vnet_id] }}"
+    proxyjump: "{{ tn_id }}-tn_bastion"
+    remote_user: "jenkins"
+    ssh_config_file: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
+    state: present

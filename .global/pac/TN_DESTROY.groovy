@@ -58,6 +58,7 @@ pipeline {
                         deployment_site: "${params.DEPLOYMENT_SITE}",
                         tn_id: "${params.TN_ID}",
                         tnlcm_callback: "${params.TNLCM_CALLBACK}}",
+                        debug:           "${params.DEBUG}",
                     ],
                     playbook: "${WORKSPACE}/.global/cac/tn_destroy.yaml"
                 )

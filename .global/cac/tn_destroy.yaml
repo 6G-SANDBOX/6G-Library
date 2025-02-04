@@ -43,7 +43,7 @@
         path: "/var/lib/jenkins/.ssh/config.d/{{ tn_id }}"
         state: absent
 
-    - name: Get list of TN objects from S3
+    - name: Get list of TN objects from S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: list
@@ -54,7 +54,7 @@
         validate_certs: false
       register: s3_bucket_items
 
-    - name: Delete TN objects from S3
+    - name: Delete TN objects from S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: delobj
@@ -65,7 +65,7 @@
         validate_certs: false
       loop: "{{ s3_bucket_items.s3_keys }}"
 
-    - name: Delete TN directory in S3
+    - name: Delete TN directory in S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: delobj
@@ -76,17 +76,24 @@
         validate_certs: false
       register: delete_result
 
+    - name: "Debug OK json response"
+      ansible.builtin.debug:
+        msg: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/json_templates/ok_result.json.j2') }}"
+      when: debug
+
     - name: Generate OK json response
       ansible.builtin.template:
         src: "{{ workspace }}/.global/json_templates/ok_result.json.j2"
         dest: "{{ workspace }}/ok_result-tn_destroy.json"
         mode: "640"
+      when: debug
 
     - name: Send OK json response to TNLCM
       ansible.builtin.uri:
         url: "{{ tnlcm_callback }}"
         method: POST
         body_format: json
-        src: "{{ workspace }}/ok_result-tn_destroy.json"
+        body: "{{ lookup('ansible.builtin.template', '{{ workspace }}/.global/json_templates/ok_result.json.j2') }}"
+        # src: "{{ workspace }}/ok_result-tn_destroy.json"
       register: tnlcm_post
       ignore_errors: true

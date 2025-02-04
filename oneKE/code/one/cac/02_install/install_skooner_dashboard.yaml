@@ -19,7 +19,7 @@
           enabled: true
           className: nginx
           hosts:
-            - host: "skooner.{{ hostvars['localhost']['tn_id'] }}.{{ hostvars['localhost']['site_domain'] }}"
+            - host: "skooner.{{ hostvars['localhost']['domain_name'] }}"
               paths:
                 - path: /
                   pathType: Prefix

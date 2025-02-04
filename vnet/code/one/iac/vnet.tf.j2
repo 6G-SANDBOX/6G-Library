@@ -10,7 +10,7 @@ resource "opennebula_virtual_network" "{{ entity_name }}" {
 
   gateway         = "{{ one_vnet_gw }}"
   network_mask    = "{{ one_vnet_netmask }}"
-  dns             = "{{ one_vnet_dns }}"
+  dns             = "{{ one_vnet_dns | default('') }}"
 }
 
 resource "opennebula_virtual_network_address_range" "{{ entity_name }}" {
@@ -23,4 +23,9 @@ resource "opennebula_virtual_network_address_range" "{{ entity_name }}" {
 output "{{ entity_name }}-id" {
   description = "OpenNebula Network ID"
   value       = opennebula_virtual_network.{{ entity_name }}.id
+}
+
+output "{{ entity_name }}-net" {
+  description = "Subnet of the VNet in CIDR format"
+  value = cidrsubnet("${opennebula_virtual_network_address_range.{{ entity_name }}.ip4}/${opennebula_virtual_network.{{ entity_name }}.network_mask}",0,0)
 }

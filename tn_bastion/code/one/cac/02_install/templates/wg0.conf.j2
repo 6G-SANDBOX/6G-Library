@@ -1,0 +1,9 @@
+# Wireguard VPN configuration based on script https://github.com/Nyr/wireguard-install
+# Copyright (c) 2020 Nyr. Released under the MIT License.
+#
+# ENDPOINT {{ site_public_ip }}
+
+[Interface]
+Address = 10.7.0.1/24
+PrivateKey = {{ server_privatekey.stdout }}
+ListenPort = {{ site_ports_prefix | string + port_suffix }}

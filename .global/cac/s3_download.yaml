@@ -1,4 +1,4 @@
-- name: Get list of files from S3
+- name: Get list of files from S3 object storage
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"
     mode: list
@@ -10,7 +10,7 @@
     validate_certs: false
   register: s3_bucket_items
 
-- name: Download S3 files
+- name: Download previous terraform manifests from S3 object storage
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"
     mode: get
@@ -21,4 +21,17 @@
     dest: "{{ workspace }}/.terraform/{{ item | basename }}"
     validate_certs: false
   when: item.endswith('.tf')
-  with_items: "{{ s3_bucket_items.s3_keys }}"
+  loop: "{{ s3_bucket_items.s3_keys }}"
+
+- name: Download experimenter ssh_config file if exists
+  amazon.aws.s3_object:
+    endpoint_url: "{{ site_s3_server.endpoint }}"
+    mode: get
+    access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID')}}"
+    secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY')}}"
+    bucket: "{{ site_s3_server.bucket }}"
+    object: "{{ item }}"
+    dest: "{{ workspace }}/{{ item | basename }}"
+    validate_certs: false
+  when: item.endswith('-ssh_config')
+  loop: "{{ s3_bucket_items.s3_keys }}"

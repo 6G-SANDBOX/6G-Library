@@ -1,0 +1,44 @@
+# {{ tn_id }}-{{ entity_name}}
+The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
+
+<p align="center">
+  <a href="https://open5gs.org/open5gs/docs/">
+    <img src="https://open5gs.org/assets/img/open5gs-logo.png" width="500" title="UERANSIM">
+  </a>
+</p>
+
+[**Open5GS**](https://github.com/open5gs/open5gs) is a C-language Open Source implementation for 5G Core and EPC, i.e. the core network of LTE/NR network (Release-17)
+
+Deployed Open5GS includes the following 5G Core components:
+* NRF - NF Repository Function
+* SCP - Service Communication Proxy
+* AMF - Access and Mobility Management Function
+* SMF - Session Management Function
+* UPF - User Plane Function
+* AUSF - Authentication Server Function
+* UDM - Unified Data Management
+* UDR - Unified Data Repository
+* PCF - Policy and Charging Function
+* NSSF - Network Slice Selection Function
+* BSF - Binding Support Function
+
+If you need detailed information about Open5GS you can visit the official documentation: https://open5gs.org/open5gs/docs/guide/01-quickstart/
+
+Current versions:
+- Open5GS: `v2.7.0`
+- Helm Chart used: `v2.2.2`
+
+## Important information
+
+- **Kubernetes Cluster**: `{{ one_open5gs_k8s_target }}`
+- **PLMN ID (MCC)**: `{{ one_open5gs_k8s_mcc }}`
+- **PLMN ID (MNC)**: `{{ one_open5gs_k8s_mnc }}`
+- **TAC**: `{{ one_open5gs_k8s_tac }}`
+- **S-NSSAI (SST)**: `{{ one_open5gs_k8s_s_nssai_sst }}`
+- **S-NSSAI (SD)**: `{{ one_open5gs_k8s_s_nssai_sd }}`
+- **AMF IP**: `{{ one_open5gs_k8s_amf_ip }}`
+- **UPF IP**: `{{ one_open5gs_k8s_upf_ip }}`
+- **Open5GS Dashboard URL**: [https://{{ domain_name }}](https://{{ domain_name }})
+- **Web portal credentials**: 
+  - `admin`
+  - `1423`
