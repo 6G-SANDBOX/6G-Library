@@ -30,6 +30,7 @@ metadata:
     NOTE: Currently this component is only available in the site "fokus".
   hypervisors: [one]
   destroy_script: true
+  resource_manager: true
 
 ####################################
 ## Component input

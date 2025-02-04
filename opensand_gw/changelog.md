@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.3.1
+## v0.4.0
 ### Changed
 - Added input variable `one_opensand_gw_networks`.
 

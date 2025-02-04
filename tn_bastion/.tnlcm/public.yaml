@@ -16,9 +16,9 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  short_description: Legacy bridge VM to access the Trial Network
+  short_description: Main bridge VM to access the Trial Network. Deploying tn_init instead is the recommended approach.
   long_description: |
-    Legacy bootstrap VM of any Trial Network. `tn_init` is the new recommended component for bootstraping Trial Networks
+    Bootstrap VM of any Trial Network.
     It manages external access to the TN and hosts various networking services such as:
     - DHCP server (not yet)
     - NTP server (not yet)
@@ -26,6 +26,7 @@ metadata:
     - Port forwarding (not yet)
     - DNS server
     - VPN Server
+    Deploying tn_init instead is the recommended approach, as it serves as a wrapper of both tn_vxlan and tn_bastion.
   hypervisors: [one]
   appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/service_bastion
 

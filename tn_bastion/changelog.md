@@ -1,9 +1,11 @@
 # Changelog
 
 ## v0.4.0
-Fiesta por aquí # TODO
-### Changed
-- Variable `one_bastion_wireguard_allowedips` promoted as public and user-configurable.
+Massive update. Component is no longer deprecated, and tn_init will just use files from it when necessary.
+### Added
+- New public input variables `one_bastion_vpn_clients` and `one_bastion_vpn_allowedips`.
+### Removed
+- Public input variable `one_bastion_wireguard_allowedips` has been deleted.
 
 
 ## v0.3.0

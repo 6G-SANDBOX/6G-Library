@@ -32,6 +32,7 @@ metadata:
     NOTE: Currently this component is only available in the site "uma".
   hypervisors: [one]
   destroy_script: true
+  resource_manager: true
 
 
 ####################################

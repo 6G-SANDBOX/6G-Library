@@ -2,7 +2,7 @@
 
 ## v0.4.0
 ### Fixed
-- Component TSN: markdown report file `ok_result.md.j2`.
+- Markdown report file `ok_result.md.j2` corrected.
 
 ## v0.3.0
 ### Removed
