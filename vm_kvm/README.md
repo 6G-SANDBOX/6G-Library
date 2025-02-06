@@ -7,3 +7,5 @@ Through variable "one_vm_kvm_size", five different types of instances can be dep
 - **medium**: 8 GiB of memory, 4 vCPU and 25GiB of storage
 - **small**: 4 GiB of memory, 2 vCPU and 15GiB of storage
 - **very_small**: 2 GiB of memory, 1 vCPU and 10GiB of storage
+
+![vm_kvm](https://github.com/6G-SANDBOX/6G-Library/blob/assets/vm_kvm/vm_kvm.png)

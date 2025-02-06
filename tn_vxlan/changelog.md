@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.4.0
+Massive update. Component is no longer deprecated, and tn_init will just use files from it when necessary.
+### Added
+- New terraform output variable `_net`, allowing the following components to inferr the vnet subnet in CIDR form.
+### Changed
+- Variable `one_vxlan_netmask` now takes numerical form, instead of CIDR form.
+### Removed
+- Variables `one_vxlan_gw` and `one_vxlan_dns` have been deleted, as the new tn_bastion fills those roles now.
+
+
 ## v0.3.0
 ### Deprecated
 - Component is still deprecated, move to `tn_init` instead.

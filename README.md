@@ -33,10 +33,10 @@ In simple words, the 6G library is the catalog of building blocks that can be us
   - [Component Structure](#component-structure)
     - [Tools](#tools)
     - [Component Directory Structure](#component-directory-structure)
-      - [.tnlcm/](#tnlcm)
-      - [code/](#code)
-      - [result\_templates/](#result_templates)
-      - [variables/](#variables)
+      - [`.tnlcm/`](#tnlcm)
+      - [`code/`](#code)
+      - [`result_templates/`](#result_templates)
+      - [`variables/`](#variables)
   - [Links](#links)
 
 ## Why do we use a git repository?
@@ -65,7 +65,7 @@ For the sake of simplicity, two aspects are closed for every component: usable t
 
 These are the selected tools used to automate how to create and configure a component:
 
-<img width="800" alt="component_structure" src="https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/images/tools_logo.png">
+<img width="800" alt="tools_logo" src="https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/tools_logo.png">
 
 + **[Terraform](https://www.terraform.io/)**: To create virtual infrastructure on the private cloud providers. Components like virtual networks, virtual machines, containers, k8s clusters, etc...
 + **[Ansible](https://www.ansible.com/)**: To configure components, equipments, integrations. Fine fine-grained actions over the Trial Network components. Idempotent warranty.
@@ -96,38 +96,39 @@ Component_Name
 │       └── private.yaml
 ├── changelog.md
 ├── README.md
-└── sample_input_file.yaml
+├── sample_input_file.yaml
+└── sample_tnlcm_descriptor.yaml
 ```
 
-#### .tnlcm/
+#### `.tnlcm/`
 
-Information used by the TNLCM to integrate the component into Trial Network descriptors.
-+ **public.yaml**: File describing metadata, input and output variables for the component. Further explanations in the [.dummy_component](https://github.com/6G-SANDBOX/6G-Library/blob/main/.dummy_component/.tnlcm/public.yaml) example
+Information used by the TNLCM to integrate the component into Trial Network descriptor files.
++ **`public.yaml`**: File describing metadata, input and output variables for the component. Further explanations in the [.dummy_component](https://github.com/6G-SANDBOX/6G-Library/blob/main/.dummy_component/.tnlcm/public.yaml) example
 
 
-#### code/
+#### `code/`
 
-+ **component_playbook.yaml**: Ansible playbook that starts the deployment with the variables passed by the TNLCM. Task files imported to its workflow can be unique to the component or common to all of them.
++ **`component_playbook.yaml`**: Ansible playbook that starts the deployment with the variables passed by the TNLCM. Task files imported to its workflow can be unique to the component or common to all of them.
 
-+ **`site_hypervisor`/**: Directory with CaC and IaC files adapted to a specific cloud provider (`one/`, `vmware/`, etc.) or to any of them (`all/`).
++ **`site_hypervisor/`**: Directory with CaC and IaC files adapted to a specific cloud provider (`one/`, `vmware/`, etc.) or to any of them (`all/`).
 
-    + **cac/**: Files related to configuration automation. Ideally only Ansible files. Complex configurations can distinguish different phases:
-        + **pre/**: Preliminary tasks related to the configuration of the environment that deploys the component.
-        + **install/**: Tasks to be executed during the component configuration
-        + **post/**: Colorary tasks to be executed after the compoent is already configured.
-    + **iac/**: Files related to infrastructure definition. Ideally only jinja2 templates of Terraform manifests. 
+    + **`cac/`**: Files related to configuration automation. Ideally only Ansible files. Complex configurations can distinguish different phases:
+        + **`01_pre/`**: Preliminary tasks related to the configuration of the environment that deploys the component.
+        + **`02_install/`**: Tasks to be executed during the component configuration
+        + **`03_post/`**: Colorary tasks to be executed after the compoent is already configured.
+    + **`iac/`**: Files related to infrastructure definition. Ideally only jinja2 templates of Terraform manifests. 
 
-#### result_templates/
+#### `result_templates/`
 
-Two jinja2 templates of markdown files related to two possible scenarios:
-- **fail_result.md.j2**: Templated and sent to the TNLCM when the component deployment was failed. Includes the corresponding stderr.
-- **ok_result.md.j2**: Templated and sent to the TNLCM when the component deployment was successful. Includes detailed information for the experimenter about the component.
+Jinja2 templates of markdown files related to two possible scenarios:
+- **`fail_result.md.j2`**: Templated and sent to the TNLCM when the component deployment was failed. Includes the corresponding stderr.
+- **`ok_result.md.j2`**: Templated and sent to the TNLCM when the component deployment was successful. Includes detailed information for the experimenter about the component.
 
-#### variables/
+#### `variables/`
 
-Variable files sepparated by the cloud provider used by each site.
+Variable files separated by the cloud provider used by each site.
 
-+ **private.yaml**: Default variables and their value. Their value depends on the selected site, and some of them can be overwritten by the TNLCM input.
++ **`private.yaml`**: Default variables and their value. Their value depends on the selected site, and some of them can be overwritten by the TNLCM input.
 
 ## Links
 

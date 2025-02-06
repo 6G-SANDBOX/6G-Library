@@ -81,12 +81,3 @@ terraform_outputs:
   tn_dns_token: Token to authenticate to the tn_bastion DNS Server
   tn_routemanager_token: Bearer token to authenticate to the tn_bastion route-manager-api.
   tn_ssh_public_key: SSH public key to include in TN Virtual Machines for login with user tnuser
-
-
-# ####################################
-# ## Generated terraform outputs
-# # __entity_name__ refers to the name of the component inside the TN. Actual terraform output uses dashes which are a forbidden character for ansible variables
-# ####################################
-# terraform_outputs:
-#   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
-#   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Gemerated from Terraform Manifest"

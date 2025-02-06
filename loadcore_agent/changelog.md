@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v0.4.0
 ### Added
 - New private variable allowing to disable legacy user ixia
 

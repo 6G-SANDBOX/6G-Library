@@ -1,8 +1,11 @@
 # Changelog
 
-## unreleased
+## v0.4.0
+### Added
+- The web interfaces are now registered in the new tn_bastion DNS server.
 ### Removed
 - OneKE v1.27 is no longer allowed
+- Input variable one_oneKE_dns is no longer present.
 
 ## v0.3.0
 ### Added
