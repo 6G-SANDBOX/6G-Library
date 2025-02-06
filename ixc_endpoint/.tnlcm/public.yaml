@@ -20,8 +20,7 @@ metadata:
     - Abhishek Bakshi <abhishek.bakshi@keysight.com>
   short_description: Keysight IxChariot Endpoint
   long_description: |
-    Endpoint for IxChariot.
-    TODO: Ask keysight to fill readmes
+    IxChariot Performance Endpoints act as controlled traffic sources and receivers, simulating real-world applications like web browsing, video streaming, or file transfers to evaluate how a network handles different traffic types.
   hypervisors: [one]
   appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/ixc_endpoint
 
@@ -54,5 +53,5 @@ input:
 ## Generated terraform outputs
 ####################################
 output:
-  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  id: VM ID in OpenNebula
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
