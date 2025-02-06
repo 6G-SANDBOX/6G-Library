@@ -10,7 +10,7 @@
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
-    - name: Overwrite defaults with correct values
+    - name: Variable autocompletion
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/variable_autocompletion.yaml"
 
     - name: Terraform apply
@@ -37,17 +37,17 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_networks[0] + '-id'] | string }}"
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_networks[0] + '-id'] | string }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "ueransim"
-        ansible_host: "{{ ips[vnet_id] }}"
+        ansible_host: "{{ ips[access_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
-    - name: Create SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+    - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
 
 
 - name: "STAGE 3: Apply CaC to prepare the component"
@@ -67,6 +67,25 @@
       loop:
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
+
+    ## This is removed when the appliance is updated to handle this case correctly
+    - name: (TEMPORARY) fix UE config
+      vars:
+        ips: "{{ hostvars['localhost']['ips'] }}"
+        access_vnet_id: "{{ hostvars['localhost']['access_vnet_id'] }}"
+        access_vnet_ip: "{{ ips[access_vnet_id] }}"
+      when: hostvars['localhost'].get('one_ueransim_run_ue', 'NO') == 'YES' and hostvars['localhost'].get('one_ueransim_run_gnb', 'NO') == 'YES'
+      become: true
+      block:
+        - name: update gnbSearchList in UE config
+          ansible.builtin.shell:
+          args:
+            chdir: "/etc/ueransim"
+            cmd: "yq '.gnbSearchList = [\"{{ access_vnet_ip }}\"]' -i open5gs-ue.yaml"
+        - name: restart UE
+          service:
+            name: ueransim-ue
+            state: restarted
 
     - name: Create new user for experimenter access
       become: true
@@ -118,14 +137,14 @@
                 'tac': '{{ one_ueransim_gnb_tac }}',
                 'sst': '{{ one_ueransim_gnb_slices_sst }}',
                 'sd': '{{ one_ueransim_gnb_slices_sd }}',
-                'gnb_address': '{{ ips[vnet_id] }}'
+                'gnb_address': '{{ ips[access_vnet_id] }}'
               }
 
         - name: Append gnb_metadata to the output
           ansible.builtin.set_fact:
             output: "{{ output | combine({'gnb_metadata_dict': gnb_metadata_dict | b64encode}) }}"
 
-        - name: Publish gNB metadata as terraform outputs
+        - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
             custom_outputs:
@@ -155,7 +174,7 @@
           ansible.builtin.set_fact:
             output: "{{ output | combine({'ue_metadata_dict': ue_metadata_dict | b64encode}) }}"
 
-        - name: Publish UE metadata as terraform outputs
+        - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
             custom_outputs:
@@ -164,5 +183,5 @@
               - key: "{{ entity_name }}-run_ue"
                 value: "YES"
 
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

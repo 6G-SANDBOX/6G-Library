@@ -1,0 +1,29 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  vnet-internal:
+    type: "vnet"
+    name: "internal"
+    dependencies:
+      - "tn_init"
+    input: {}
+  oneKE-cluster:
+    type: "oneKE"
+    name: "cluster"
+    dependencies:
+      - "tn_init"
+      - "vnet-internal"
+    input:
+      one_oneKE_external_vnet: "tn_vxlan"
+      one_oneKE_internal_vnet: "vnet-internal"
+      one_oneKE_version: "129"
+      one_oneKE_multus: "YES"
+      one_oneKE_cni_plugin: "cilium"
+      one_oneKE_cilium_range: "10.21.12.200-10.21.12.229"
+      one_oneKE_metallb: "YES"
+      one_oneKE_metallb_range: "10.21.12.230-10.21.12.250"
+      one_oneKE_longhorn: "YES"
+      one_oneKE_traefik: "NO"
+      one_oneKE_nginx_passthough: true

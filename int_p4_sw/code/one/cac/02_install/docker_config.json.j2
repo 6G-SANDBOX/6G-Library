@@ -1,0 +1,7 @@
+{
+  "auths": {
+    "dockerhub.mobilesandbox.cloud:9443": {
+      "auth": "{{ hostvars['localhost']['site_available_components']['upf_p4_sw']['harbor_token'] | b64encode }}"
+    }
+  }
+}

@@ -35,7 +35,7 @@ resource "opennebula_service" "{{ entity_name }}" {
         "ONEAPP_VNF_HAPROXY_LB3_PORT": "80",
         "ONEAPP_VNF_DNS_ENABLED": "YES",
         "ONEAPP_VNF_DNS_INTERFACES": "eth1",
-        "ONEAPP_VNF_DNS_NAMESERVERS": "{{ one_oneKE_dns }}",
+        "ONEAPP_VNF_DNS_NAMESERVERS": opennebula_virtual_network_address_range.tn_vxlan.ip4,
         "ONEAPP_VNF_NAT4_ENABLED": "YES",
         "ONEAPP_VNF_NAT4_INTERFACES_OUT": "eth0",
         "ONEAPP_VNF_ROUTER4_ENABLED": "YES",
@@ -51,6 +51,6 @@ output "{{ entity_name }}-id" {
 }
 
 output "{{ entity_name }}-roles" {
-  description = "Array with riles information"
+  description = "Array with service roles information"
   value       = opennebula_service.{{ entity_name }}.roles
 }

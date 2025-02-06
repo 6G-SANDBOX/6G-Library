@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -27,17 +15,28 @@ metadata:
   maintainers:
     - Torsten Iversen <torsten.iversen@keysight.com>
     - The Dao <the.dao@keysight.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   short_description: Deploys a VM with KS8500 Runner
   long_description: |
     The KS8500 Runner allows accessing local on premises resources while running a test campaign being scheduled from the KS8500 backend
   hypervisors: [one]
+  appliance: https://marketplace.opennebula.io/appliance/d74a5f80-20bd-013d-0e49-7875a4a4f528
+
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the Alpine Linux 3.20 VM template to use in your OpenNebula environment
+  image_id: ID of the Alpine Linux 3.20 image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_ks8500runner_networks:
-    description: Ordered list of Virtual Network names the VM will be part of. In most cases first one should always be the tn_vxlan
+    description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
     required_when: false
@@ -79,14 +78,7 @@ input:
 ## Component output
 ####################################
 output:
-  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  id: VM ID in OpenNebula
-  registration_info: A string with information about the runner registration
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
+  __entity_name__registration_info: A string with information about the runner registration
 
-
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  template_id: ID of the Alpine Linux 3.20 VM template to use in your OpenNebula environment
-  image_id: ID of the Alpine Linux 3.20 image to use in your OpenNebula environment

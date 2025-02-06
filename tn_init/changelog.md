@@ -1,42 +1,19 @@
 # Changelog
 
-## [v0.3.0]
-### Removed
-- Deleted ansible task overwriting `entity_name` with the component type. `entity_name` is now only defined during the Jenkins Pipeline
-
-## [v0.2.0] - 2024-06-06
+## v0.4.0
 ### Added
-- New component to bootstrap the Trial Network instead of running first `tn_vxlan` and then `tn_bastion`.
-
-<!-- Change latest version value at every release -->
-[v0.3.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.3.0
-[v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
-
-
-
-<!-- FIELDS PER VERSION -->
-<!--
-### Added
-
-- New features
-
+- New public input variables `one_bastion_vpn_clients` and `one_bastion_vpn_allowedips`.
+- New terraform output variable `_net`, allowing the following components to inferr the vnet subnet in CIDR form.
 ### Changed
-
-- Changes in existing functionality
-
-### Deprecated
-
-- Soon-to-be removed features
-
+- Variable `one_vxlan_netmask` now takes numerical form, instead of CIDR form.
 ### Removed
+- Public input variable `one_bastion_wireguard_allowedips` has been deleted.
+- Variables `one_vxlan_gw` and `one_vxlan_dns` have been deleted, as the new tn_bastion fills those roles now.
 
-- Removed features
+## v0.3.0
+### Removed
+- Deleted ansible task overwriting `entity_name` with the component type. `entity_name` is now only defined during the Jenkins Pipeline.
 
-### Fixed
-
-- Bug fixes
-
-### Security
-
-- Vulnerability warnings
--->
+## v0.2.0
+### Added
+- Initial release of `tn_init` component to the 6G-Library. 

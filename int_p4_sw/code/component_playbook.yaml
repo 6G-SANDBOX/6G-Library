@@ -1,0 +1,158 @@
+---
+- name: "STAGE 1: Apply IAC to deploy the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Configure VM resources
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/vm_resources.yaml"
+
+    - name: Terraform apply
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
+
+- name: "STAGE 2: Prepare to access the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Validate Terraform outputs
+      ansible.builtin.assert:
+        that:
+          - "'tn_bastion-ips' in (terraform_outputs.stdout | from_json)"
+          - "'tn_ssh_public_key' in (terraform_outputs.stdout | from_json)"
+          - "(entity_name + '_switches-ips') in (terraform_outputs.stdout | from_json)"
+          - "(entity_name + '_switches-ids') in (terraform_outputs.stdout | from_json)"
+          - "(entity_name + '_collector-ips') in (terraform_outputs.stdout | from_json)"
+          - "(entity_name + '_collector-id') in (terraform_outputs.stdout | from_json)"
+        fail_msg: "Missing required Terraform outputs"
+        success_msg: "All required Terraform outputs are present"
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        switch_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_switches-ips'] }}"
+        switch_ids: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_switches-ids'] }}"
+        collector_ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-ips'] }}"
+        collector_id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '_collector-id'] }}"
+        switch_first_vnet_id: "{{ one_int_p4_sw_switches.int_p4_switch_0.networks[0] }}"  # Using the first network of the first switch. Should be tn_vxlan
+        collector_first_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_int_p4_sw_collector.networks[0] + '-id'] | string }}"
+
+    # Add switches VMs to Ansible Inventory
+    - name: Add switches VMs to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "int_p4_switch_{{ item.key }}"
+        ansible_host: "{{ item.value[switch_first_vnet_id] }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"
+      loop: "{{ switch_ips | dict2items }}"
+
+    # Add collector VM to Ansible Inventory
+    - name: Add collector to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "int_p4_collector"
+        ansible_host: "{{ collector_ips[collector_first_vnet_id] }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+    - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
+
+
+- name: "STAGE 3: Apply CAC to prepare the component"
+  hosts: "int_p4_switch_*:int_p4_collector"
+  gather_facts: false
+  tasks:
+    - name: Common setup tasks
+      block:
+        - name: Wait for system to become reachable
+          ansible.builtin.wait_for_connection:
+            connect_timeout: 5
+            timeout: 200
+
+        - name: Set site ssh key as authorized in jenkins user
+          ansible.posix.authorized_key:
+            user: jenkins
+            state: present
+            key: "{{ item }}"
+          loop:
+            - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
+          when: item != ''
+
+        - name: Create new user for experimenter access
+          become: true
+          ansible.builtin.user:
+            name: tnuser
+            shell: /bin/bash
+            groups: sudo
+            password: ''
+
+        - name: Set TN ssh key as authorized in new user
+          become: true
+          ansible.posix.authorized_key:
+            user: tnuser
+            state: present
+            key: "{{ item }}"
+          loop:
+            - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+
+    - name: Install specific components
+      block:
+        - name: INT Switch installation
+          ansible.builtin.include_tasks:
+            file: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/int_switch_install.yaml"
+          when: inventory_hostname is match("int_p4_switch_*")
+
+        - name: INT Collector installation
+          ansible.builtin.include_tasks:
+            file: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/int_collector_install.yaml"
+          when: inventory_hostname == 'int_p4_collector'
+
+
+- name: "STAGE 4: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    # TODO: Check and add more metadata if needed (variables related to input files, etc.)
+    - name: Define INT-P4 SW metadata dictionary
+      ansible.builtin.set_fact:
+        int_p4_sw_metadata_dict:
+          switch_ips: "{{ switch_ips }}"
+          switch_ids: "{{ switch_ids }}"
+          collector_ip: "{{ collector_ips[collector_first_vnet_id] }}"
+          collector_id: "{{ collector_id }}"
+          bastion_ip: "{{ bastion_ip }}"
+
+    - name: Escape JSON string for Terraform
+      ansible.builtin.set_fact:
+        int_p4_sw_metadata_json_escaped: "{{ int_p4_sw_metadata_dict | to_json | replace('\"', '\\\"') }}"
+
+    - name: Set custom terraform outputs for future components
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-metadata"
+            value: "{{ int_p4_sw_metadata_json_escaped }}"
+
+    - name: Publish execution results to TNLCM
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        output:
+          metadata_dict: "{{ int_p4_sw_metadata_json_escaped | b64encode }}"

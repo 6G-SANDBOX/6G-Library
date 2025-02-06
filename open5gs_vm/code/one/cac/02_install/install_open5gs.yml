@@ -1,0 +1,150 @@
+---
+- name: Render netplan aliases
+  ansible.builtin.template:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-netplan-aliases.yaml.j2"
+    dest: /etc/netplan/99-netplan-aliases.yaml
+    mode: '0600'
+    backup: true
+  register: netplan_changed
+
+- name: Reload netplan
+  ansible.builtin.command:
+    cmd: "netplan apply"
+  changed_when: false
+  when: netplan_changed.changed
+
+- name: Install MongoDB 6
+  block:
+    - name: Import MongoDB 6 public key
+      ansible.builtin.get_url:
+        url: https://pgp.mongodb.com/server-6.0.asc
+        dest: /etc/apt/keyrings/mongodb-server-6.0.asc
+
+    - name: Create MongoDB 6 repository list file
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/mongodb-server-6.0.asc] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse"
+        state: present
+
+    - name: Install mongodb-org package
+      ansible.builtin.apt:
+        name: "mongodb-org"
+        update_cache: yes
+        state: present
+
+- name: Import Open5GS PPA repository
+  ansible.builtin.apt_repository:
+    repo: 'ppa:open5gs/latest'
+    state: present
+
+- name: Install Open5GS 2.7.2~*
+  ansible.builtin.apt:
+    name: open5gs=2.7.2~*
+    state: present
+
+- name: Install bmon
+  ansible.builtin.apt:
+    name: "bmon"
+    state: present
+
+- name: Change Open5GS default configuration
+  block:
+    - name: Render NRF config
+      ansible.builtin.template:
+        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/nrf.yaml.j2"
+        dest: /etc/open5gs/nrf.yaml
+        backup: true
+      notify: Restart Open5GS
+
+    - name: Fill in GTP Addresses in UPF config
+      ansible.builtin.template:
+        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/upf.yaml.j2"
+        dest: /etc/open5gs/upf.yaml
+        backup: true
+      notify: Restart Open5GS
+
+    - name: Render AMF config
+      ansible.builtin.template:
+        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/amf.yaml.j2"
+        dest: /etc/open5gs/amf.yaml
+        backup: true
+      notify: Restart Open5GS
+
+    - name: Render SMF config
+      ansible.builtin.template:
+        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/smf.yaml.j2"
+        dest: /etc/open5gs/smf.yaml
+        backup: true
+      notify: Restart Open5GS
+
+    - name: Render NSSF config
+      ansible.builtin.template:
+        src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/open5gs/nssf.yaml.j2"
+        dest: /etc/open5gs/nssf.yaml
+        backup: true
+      notify: Restart Open5GS
+
+
+- name: Install Open5GS WebUI
+  when: false        # Previosly variable install_webui
+  ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/install_webui.yml"
+
+- name: Copy open5gs-dbctl
+  ansible.builtin.copy:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/files/open5gs-dbctl"
+    dest: /usr/local/bin/
+    mode: '0755'
+  become: true
+
+- name: Generate script add-test-ue.sh
+  template:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/add-test-ues.sh.j2"
+    dest: /etc/open5gs/add-test-ues.sh
+    backup: true
+    mode: '0755'
+  become: true
+  register: add_ue_script
+
+- name: Add UEs to UDM
+  ansible.builtin.command:
+    cmd: /etc/open5gs/add-test-ues.sh
+  when: add_ue_script.changed
+
+- name: Render UE subnet into 99-open5gs.network
+  template:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-open5gs.network.j2"
+    dest: /etc/systemd/network/99-open5gs.network
+    backup: true
+  register: networkd_changed
+
+- name: Reload networkctl
+  ansible.builtin.command:
+    cmd: "networkctl reload"
+  changed_when: false
+  when: networkd_changed.changed
+
+- name: Disable UFW
+  service:
+    name: ufw
+    state: stopped
+    enabled: false
+
+- name: Copy sysctl.d/10-o5gc.conf
+  ansible.builtin.copy:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/files/sysctl_10-5g_forward.conf"
+    dest: /etc/sysctl.d/10-5g_forwarding.conf
+  become: true
+
+- name: Reload sysctl
+  ansible.builtin.command:
+    cmd: "sysctl -w --system"
+  changed_when: false
+
+- name: Disable Open5GS 4G parts
+  ansible.builtin.systemd_service:
+    state: stopped
+    enabled: false
+    name: "{{ item }}"
+  loop:
+    - open5gs-mmed
+    - open5gs-sgwcd
+    - open5gs-sgwud

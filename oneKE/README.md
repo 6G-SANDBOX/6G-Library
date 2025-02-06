@@ -7,3 +7,5 @@ More info in the official documentation: https://github.com/OpenNebula/one-apps/
 Template needs to have a non-Default CPU architecture, just like the MinIO
 
 NOTE: Cluster customization will be progresivelly incorporated ad the OpenNebula Terraform provider gets more functionalities
+
+![oneKE](https://github.com/6G-SANDBOX/6G-Library/blob/assets/oneKE/oneKE.png)

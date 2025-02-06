@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -33,7 +21,7 @@ metadata:
     Python 3 + pip
     Python packages 'nac_api' and 'xrext' installed
   hypervisors: [one]
-  appliance: https://marketplace.mobilesandbox.cloud:9443//appliance/service_XRext/download/0
+  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/service_XRext
 
 ####################################
 ## Component input
@@ -52,7 +40,7 @@ metadata:
 #       confusing the experimenter.
 input:
   one_xrext_networks:
-    description: Ordered list of Virtual Network names the VM will be part of. In most cases first one should always be the tn_vxlan
+    description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
     required_when: false

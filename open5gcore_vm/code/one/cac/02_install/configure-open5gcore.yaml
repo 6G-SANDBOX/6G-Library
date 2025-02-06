@@ -1,0 +1,147 @@
+---
+- name: Setting up open5gcore configs
+  become: true
+  block:
+
+    - name: create directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: root
+        group: root
+        mode: 0755
+      loop:
+        - /etc/open5gcore
+        - /etc/open5gcore/sql
+        - /opt/phoenix/
+
+    - name: install license
+      ansible.builtin.copy:
+        #src: "files/6gSB.crt"
+        content: "{{ license_crt }}"
+        mode: 0600
+        dest: /opt/phoenix/license.crt
+
+    - name: Copy sysctl files
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      with_items:
+        - { src: 'sysctl_10-5g_forwarding.conf', dest: '/etc/sysctl.d/10-5g_forwarding.conf' }
+        - { src: 'sysctl_20-5g_xdp.conf',        dest: '/etc/sysctl.d/20-5g_xdp.conf' }
+
+    - name: reload sysctl
+      ansible.builtin.command:
+        cmd: "sysctl -w --system"
+      changed_when: false
+
+    - name: disable UFW
+      service:
+        name: ufw
+        state: stopped
+        enabled: false
+
+    - name: render configs
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        backup: true
+      register: config_changed
+      with_items:
+        - { src: 'open5gcore/systemd_env.j2', dest: '/etc/open5gcore/systemd_env' }
+        - { src: 'open5gcore/env.sh.j2', dest: '/etc/open5gcore/env.sh' }
+        - { src: 'open5gcore/smf.json.j2', dest: '/etc/open5gcore/smf.json' }
+        #- [ 'open5gcore/upf1_env.j2', '/etc/open5gcore/upf1_env' ]
+        - { src: 'open5gcore/sql/udm_db.sql.j2', dest: '/etc/open5gcore/sql/udm_db.sql' }
+        - { src: 'open5gcore/sql/zz_test_ue.sql.j2', dest: '/etc/open5gcore/sql/zz_test_ue.sql' }
+
+    - name: copy setup files
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: /etc/open5gcore/
+      with_fileglob:
+        - "open5gcore/*_env"
+        - "open5gcore/*.json"
+
+    - name: copy sql helpers
+      copy:
+        src: "{{ item }}"
+        dest: "/etc/open5gcore/sql/"
+        mode: +x
+      with_fileglob:
+        - "sql/*.sh"
+
+    - name: copy helper scripts
+      copy:
+        src: "{{ item }}"
+        dest: "/usr/local/bin/"
+        mode: +x
+      loop:
+        - "phoenix-journal-tmux.sh"
+        - "phoenix-env-export.sh"
+
+    - name: generate add-test-ue
+      template:
+        src: "add-test-ues.sh.j2"
+        dest: /etc/open5gcore/sql/add-test-ues.sh
+        backup: true
+        mode: +x
+      become: true
+      register: add_ue_script
+
+    - name: Apply databases
+      ansible.builtin.command:
+        cmd: "./apply-databases.sh"
+        chdir: "/etc/open5gcore/sql"
+      changed_when: config_changed.changed
+
+    - name: add UEs to UDM
+      ansible.builtin.command:
+        cmd: /etc/open5gcore/sql/add-test-ues.sh
+      when: add_ue_script.changed
+
+    - name: render ue subnet into networkd file
+      template:
+        src: "99-open5gcore.network.j2"
+        dest: /etc/systemd/network/99-open5gcore.network
+        backup: true
+      register: networkd_changed
+
+    - name: copy networkd netdev file
+      copy:
+        src: "99-open5gcore.netdev"
+        dest: /etc/systemd/network/99-open5gcore.netdev
+      register: networkd_changed
+
+    - name: reload networkctl
+      ansible.builtin.command:
+        cmd: "networkctl reload"
+      changed_when: false
+      when: networkd_changed.changed
+
+    - name: install services
+      copy:
+        src: "{{ item }}"
+        dest: /etc/systemd/system/
+      register: systemdfiles
+      loop:
+        - "phoenix@.service"
+        - "open5gcore.service"
+
+    - name: "systemd daemon-reload"
+      ansible.builtin.systemd:
+        daemon_reload: yes
+      when: systemdfiles.changed
+
+    - name: enable & start services
+      service:
+        name: "open5gcore"
+        state: started
+        enabled: true
+
+    - name: restart services
+      service:
+        name: "open5gcore"
+        state: restarted
+        enabled: true
+      when: systemdfiles.changed or config_changed.changed

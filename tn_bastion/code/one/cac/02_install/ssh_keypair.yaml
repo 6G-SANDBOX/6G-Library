@@ -1,0 +1,17 @@
+---
+- name: Generate an ed25519 ssh keypair
+  openssh_keypair:
+    comment: "tnuser@{{ tn_id }}"
+    force: false
+    path: "/home/jenkins/.ssh/tnuser-id_ed25519"
+    type: ed25519
+
+- name: Slurp public ssh key
+  ansible.builtin.slurp:
+    src: "/home/jenkins/.ssh/tnuser-id_ed25519.pub"
+  register: tn_ssh_public_key
+
+- name: Slurp private ssh key
+  ansible.builtin.slurp:
+    src: "/home/jenkins/.ssh/tnuser-id_ed25519"
+  register: tn_ssh_private_key

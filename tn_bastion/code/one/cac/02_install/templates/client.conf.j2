@@ -1,0 +1,14 @@
+# Wireguard VPN configuration based on script https://github.com/Nyr/wireguard-install
+# Copyright (c) 2020 Nyr. Released under the MIT License.
+#
+[Interface]
+Address = 10.7.0.{{ client + 2 }}/24
+DNS = {{ tn_vxlan_ip }}
+PrivateKey = {{ client_privatekey.stdout }}
+
+[Peer]
+PublicKey = {{ server_publickey.stdout }}
+PresharedKey = {{ client_psk.stdout }}
+AllowedIPs = {{ one_bastion_vpn_allowedips | d(tn_vxlan_net, true) }}
+Endpoint = {{ site_public_ip }}:{{ site_ports_prefix | string + port_suffix }}
+PersistentKeepalive = 25

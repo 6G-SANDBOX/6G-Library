@@ -1,0 +1,111 @@
+---
+- name: Install some required apt packages
+  become: true
+  apt:
+    name: 
+      - net-tools
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: present
+    update_cache: yes
+
+# TODO: Install mongosh?
+
+- name: Install docker engine
+  block:
+    - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/docker_install.yaml"
+  become: true
+
+- name: Configure GitHub Container Registry authentication
+  block:
+    - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/docker_configuration.yaml"
+  become: true
+
+- name: Copy docker-compose file
+  copy:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/docker-compose.yaml"
+    dest: "/home/jenkins/docker-compose.yaml"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+
+- name: Copy static config folder recursively
+  become: true
+  ansible.builtin.copy:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/config/static/"
+    dest: "/home/jenkins/config"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+    #directory_mode: '0755'
+
+- name: Apply templates to configuration files
+  template:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/config/templates/{{ item.src }}"
+    dest: "/home/jenkins/config/{{ item.dest }}"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+  loop:
+    - { src: 'controller-upf/config.yaml.j2', dest: 'controller-upf/config.yaml' }
+    - { src: 'open5gs/amf.yaml.j2', dest: 'open5gs/amf.yaml' }
+    - { src: 'open5gs/nssf.yaml.j2', dest: 'open5gs/nssf.yaml' }
+    - { src: 'open5gs/smf.yaml.j2', dest: 'open5gs/smf.yaml' }
+    - { src: 'stratum-upf/chassis_config.pb.txt.j2', dest: 'stratum-upf/chassis_config.pb.txt' }
+  
+#- name: Run docker-compose
+#  become: true
+#  become_user: jenkins
+#  tasks:
+#  - name: Run docker compose
+#    community.docker.docker_compose:
+#      project_src: /home/jenkins
+#      files:
+#        - docker-compose.yaml
+#      state: present
+
+- name: Execute docker-compose up
+  become: true
+  become_user: jenkins
+  command: docker compose -f /home/jenkins/docker-compose.yaml up -d
+  args:
+    chdir: /home/jenkins
+
+- name: Pause to wait for mongo to deployment
+  pause:
+    seconds: 5
+
+# TODO: At the moment, only one UE is registed
+- name: Apply template to UEs registration script
+  become: true
+  become_user: jenkins
+  template:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/config/templates/register_subscriber.sh.j2"
+    dest: "/home/jenkins/config/register_subscriber.sh"
+    owner: jenkins
+    group: jenkins
+    mode: '0777'
+
+- name: Run UE registration script
+  #become: true
+  #become_user: jenkins
+  command: /home/jenkins/config/register_subscriber.sh
+  register: ue_register_result
+  failed_when: ue_register_result.rc != 0 and "duplicate key error" not in ue_register_result.stdout and "duplicate key error" not in ue_register_result.stderr
+  
+
+# TODO: NAT not working
+#- name: Enable IPv4 forwarding
+#  become: yes
+#  sysctl:
+#    name: net.ipv4.ip_forward
+#    value: '1'
+#    state: present
+#    reload: yes
+
+#- name: Add NAT rule to do MASQUERADE
+#  become: yes
+#  command: iptables -t nat -A POSTROUTING -s {{ hostvars['localhost']['one_upf_p4_sw_ue_pool'] }} -o {{ hostvars['localhost']['one_upf_p4_sw_chassis_conf']['phy_n6'] }} -j MASQUERADE

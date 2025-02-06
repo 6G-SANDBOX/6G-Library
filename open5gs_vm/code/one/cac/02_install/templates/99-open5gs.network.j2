@@ -1,0 +1,19 @@
+[Match]
+Name=ogstun
+
+[Network]
+Address=10.45.0.1/32
+
+## DNN default
+[Route]
+Gateway=0.0.0.0
+Destination={{ one_open5gs_vm_ue_subnet }}
+
+## DNN internet
+#[Route]
+#Gateway=0.0.0.0
+#Destination=192.168.5.0/24
+
+[Link]
+MTUBytes=1400
+RequiredForOnline=false

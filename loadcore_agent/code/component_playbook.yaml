@@ -10,8 +10,36 @@
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
-    - name: Terraform apply
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+    # - name: Terraform apply
+    #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
+    ### EXCEPTIONALLY AND DUE TO A TERRAFORM PROVIDER LIMITATION, THIS COMPONENT NEEDS TO BE DEPLOYED WITH ANSIBLE INSTEAD OF TERRAFORM
+    ### BREAKING CONFIGURATION AS CODE IS DISCOURAGED
+    # https://docs.ansible.com/ansible/latest/collections/community/general/one_vm_module.html
+    - name: "(TEMPORARY) Deploy component with ansible instead of terraform"
+      community.general.one_vm:
+        api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
+        api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
+        api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
+        attributes:
+          name: "{{ tn_id }}-{{ entity_name }}"
+        template_id: "{{ site_available_components.loadcore_agent.template_id }}"
+        disk_size: "{{ one_loadcore_agent_disk }} MB"
+        cpu: "{{ one_loadcore_agent_cpu }}"
+        vcpu: "{{ one_loadcore_agent_cpu }}"
+        memory: "{{ one_loadcore_agent_memory }} MB"
+        updateconf:
+          CONTEXT:
+            NETWORK: "YES"
+            SET_HOSTNAME: "$NAME"
+            USERNAME: "jenkins"
+        networks: "{{ one_loadcore_agent_networks | map('regex_replace', '^(.+)$', '{\"NETWORK\": \"' + tn_id + '-\\1\"}') | map('from_json') | list }}"
+      register: created_vm
+
+    - name: "(TEMPORARY) Debug VM metadata"
+      ansible.builtin.debug:
+        var: created_vm
+      when: debug
 
 
 - name: "STAGE 2: Prepare to access the component"
@@ -32,29 +60,33 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
-        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
-        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_loadcore_agent_networks[0] + '-id'] | string}}"
-    
+        # ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
+        # id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+        # access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_loadcore_agent_networks[0] + '-id'] | string }}"
+
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}"
-        ansible_host: "{{ ips[ vnet_id ] }}"
+        hostname: "loadcore_agent"
+        # ansible_host: "{{ ips[access_vnet_id] }}"
+        ansible_host: "{{ created_vm.instances[0].networks[0].ip }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: jenkins
 
-    - name: Create SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+    - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "{{ hostvars['localhost']['entity_name'] }}"
+  hosts: "loadcore_agent"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
         connect_timeout: 5
         timeout: 200
+
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
@@ -71,7 +103,7 @@
         name: tnuser
         shell: /bin/bash
         groups: sudo
-
+        password: ''
     - name: Set TN ssh key as authorized in new user
       become: true
       ansible.posix.authorized_key:
@@ -81,37 +113,32 @@
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
-    - name: Copy file with owner and permissions
+    - name: Remove user ixia
+      ansible.builtin.user:
+        name: ixia
+        state: absent
+        remove: true
       become: true
-      ansible.builtin.copy:
-        src: /home/ixia/agent-setup.sh
-        dest: /home/tnuser/agent-setup.sh
-        owner: tnuser
-        group: tnuser
-        mode: '0644'
+      when: "not one_loadcore_agent_ixia"
 
     - name: Execute bash script to register the Agent with the Middleware
-      become: true
-      shell: "/home/tnuser/agent-setup.sh {{ loadcore_middleware_ip }} management_interface=ens3 test_interface=ens4 reboot_api_enabled=y update_hostname=n"
+      ansible.builtin.shell: |
+        set -o pipefail
+        printf "{{ site_available_components.loadcore_agent.loadcore_middleware_ip }}\neth0\ny\nn" | /opt/5gc-test-engine/agent-setup.sh
       args:
-        chdir: "/home/tnuser/"
-      register: result
+        executable: /bin/bash
+      become: true
+      changed_when: false
 
-    - name: Verify result
-      assert:
-        that:
-          - result.rc == 0
-        fail_msg: "There was a problem registering LoadCore Agent"
-        success_msg: "LoadCore Agent should be registered correctly"
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local
   tasks:
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          ips: "{{ ips | b64encode }}"
-          id: "{{ id | b64encode }}"
+      # vars:
+      #   output:
+      #     ips: "{{ ips | b64encode }}"
+      #     id: "{{ id | b64encode }}"

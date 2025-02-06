@@ -1,0 +1,95 @@
+{
+    "Phoenix": {
+        "Platform": {
+            "Debug": {
+                "level": 5
+            },
+            "ProcessingUnitsMgmt": 0,
+            "MemoryMgmt": {
+                "chunk_size": 4096,
+                "mem_global": {"size_value": 16, "size_metric": "MB"},
+                "mem_session": {"size_value": 32, "size_metric": "MB"},
+                "mem_transaction": {"size_value": 32, "size_metric": "MB"},
+                "mem_packet": {"size_value": 32, "size_metric": "MB"}
+            },
+            "Workerpool": {
+                "count": 2,
+                "queue_size": 8
+            }
+        },
+        "Module": [
+            {
+                "name": "Command",
+                "version": 1,
+                "binaryFile": "modules/command/command.so",
+                "config": {
+                    "GreetingText": "NRF_SERVER>",
+                    "DisablePrompt":"%COMMAND_DISABLED",
+                    "Acceptor": [
+                        { "type": "udp", "port": 10000, "bind": "%NRF_MGMT_IP" }
+                    ]
+                }
+            },
+            {
+                "name": "httpd_h2o",
+                "version": 1,
+                "binaryFile": "modules/httpd_h2o/httpd_h2o.so",
+                "config": {
+                    "listeners": [ { "host": "%NRF_CP_IP", "port": 8080 },{ "host": "0.0.0.0", "port": 13035 } ],
+                    "servers":[ { "server_name": "default" } ]
+                }
+            },
+            {
+                "name": "http_client",
+                "version": 1,
+                "binaryFile": "modules/http_client/http_client.so",
+                "config": {
+                    "bind_interface": "%NRF_CP_IP"
+                }
+            },
+            {
+                "name": "json_rpc",
+                "ignore": "%DISABLE_REMOTE_COMMAND",
+                "version": 1,
+                "binaryFile": "modules/json_rpc/json_rpc.so",
+                "config": { }
+            },
+            {
+                "name": "remote_commandModule",
+                "ignore": "%DISABLE_REMOTE_COMMAND",
+                "version": 1,
+                "binaryFile": "modules/remote_command/remote_command.so",
+                "config": {
+                    "name": "NRF"
+                }
+            },
+            {
+                "name": "nrf server",
+                "version": 1,
+                "binaryFile": "modules/nrf_server/nrf_server.so",
+                "config": {
+                    "sba": {
+                        "nrf_server": {
+                            "addr": "%NRF_CP_IP",
+                            "port": 8080
+                        }
+                    },
+                    "enable_hb_timeout": "%NRF_HB_ENABLE",
+                    "heart_beat_timer": 2
+                }
+            },
+            {
+                "name": "Monitoring",
+                "version": 1,
+                "binaryFile": "modules/monitoring/monitoring.so",
+                "config": {
+                    "Prometheus": {
+                        "listener": "%NRF_MGMT_IP",
+                        "port": 9888,
+                        "enabled": "%PROMETHEUS_ENABLED"
+                    }
+                }
+            }
+        ]
+    }
+}

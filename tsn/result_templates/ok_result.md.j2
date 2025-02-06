@@ -3,19 +3,19 @@
 The TSN (Time-Sensitive Networking) capability has been successfully addded to the Trial Network {{ tn_id }}
 TSN architecture is shown below, in which 2 TSN endpoints are interconnected through a TSN bridge.
 
-![TSN_TN](https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/images/TSN_TN.png)
+![TSN_TN](https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/tsn/TSN_TN.png)
 
 ### TSN configuration
 
 The TSN configuration can be performed via SSH (cli) using a terminal or dashboard (gui) using a browser. Details on how to configure the different TSN features can be found in the [TSN configuration guide](#annex-a-relyum-tsn-bridge-cli-configuration). For example, the following command is used to configure the Time Aware Shaper (IEEE 802.1Qbv):
 
 ```bash
-spt_config_reg -n 0 -w qbv_config_file.json
+spt_qbv_config -n 0 -w qbv_config_file.json
 ```
 
 In this case, the specific parameters are defined in [qbv_config_file.json](#annex-b-qvb_config_filejson) and are applied only on port 0 of the device (indicated by -n 0). The following image shows the TSN configuration defined in [qbv_config_file.json](#annex-b-qvb_config_filejson).
 
-![TAS_gui_example](https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/images/TAS_gui_example.jpg)
+![TAS_gui_example](https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/tsn/TAS_gui_example.jpg)
 
 The TSN configuration can also be checked using the command:
 
@@ -84,8 +84,7 @@ Information required to access the TSN components of the trial network.
 
 | Device | IP address | User | Password | Connection |
 | ------ | ------ | ------ | ------ | ------ |
-| TSN endpoint 1 PC | X.X.X.X | tsnep1 | tsnep1 | SSH or VNC |
-| TSN endpoint 2 PC | X.X.X.X | tsnep2 | tsnep2 | SSH or VNC |
+| TSN endpoint control | 10.11.32.55 | tsncontrol | tsn | SSH |
 | TSN endpoint 1 | 192.168.2.100 | relyum | relyum | SSH |
 | TSN endpoint 1 | 192.168.2.100 | admin | relyum | Dashboard |
 | TSN endpoint 2 | 192.168.2.200 | relyum | relyum | SSH |

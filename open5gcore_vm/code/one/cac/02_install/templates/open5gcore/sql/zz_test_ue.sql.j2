@@ -1,0 +1,7 @@
+use udm_db;
+
+{% for i in range(one_open5gcore_vm_ue_count|int) %}
+-- open5gs-dbctl add_ue_with_slice {{ mcc }}{{ mnc }}{{ ('%0'+(12-mnc|length)|string +'d') % (msin|int + i) }} {{ ue_key }} {{ ue_opc }} {{ one_open5gcore_vm_apn }} 1 {{ s_nssai_sd }}
+-- ./provision_user.sh -S {{ mcc }}{{ mnc }}{{ ('%0'+(12-mnc|length)|string +'d') % (msin|int + i) }} -k {{ ue_key }} -o {{ ue_opc }} -c 1 -u 0 -T {{ '1%010d' % (msin|int + i) }}
+INSERT INTO `supi` VALUES (0,"{{ mcc }}{{ mnc }}{{ ('%0'+(12-mnc|length)|string +'d') % (msin|int + i) }}",UNHEX("{{ ue_key }}"),0x8000,UNHEX("{{ ue_opc }}"),"000000000010",0,1,0);
+{% endfor %}

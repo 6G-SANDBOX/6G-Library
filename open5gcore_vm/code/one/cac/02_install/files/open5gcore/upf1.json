@@ -1,0 +1,126 @@
+{
+    "Phoenix": {
+        "Platform": {
+            "Debug": {
+                "level" : 5
+            },
+            "ProcessingUnitsMgmt": 0,
+            "MemoryMgmt": {
+                "chunk_size": 2048,
+                "mem_global": {"size_value": 32, "size_metric": "MB"},
+                "mem_session": {"size_value": 64, "size_metric": "MB"},
+                "mem_transaction": {"size_value": 64, "size_metric": "MB"},
+                "mem_packet": {"size_value": 64, "size_metric": "MB", "chunksize": 17000}
+            },
+            "Workerpool": {
+                "count": 2,
+                "queue_size": 20
+            }
+        },
+        "Module": [
+            {
+                "name":"Command",
+                "version": 1,
+                "binaryFile": "modules/command/command.so",
+                "config": {
+                    "GreetingText": "UPF1>",
+                    "DisablePrompt":"%COMMAND_DISABLED",
+                    "Acceptor": [
+                        {"type": "udp", "port": 10000, "bind": "%UPF1_MGMT_IP" }
+                    ]
+                }
+            },
+            {
+                "name":"pfcp",
+                "binaryFile": "modules/pfcp/pfcp.so",
+                "version": 1,
+                "config": {
+                    "mode": "UP",
+                    "data_plane_mode": "integrated",
+                    "ethernet_session_identifier": "ethnet",
+                    "LocalNodeID": {
+                        "IPv4": "%UPF1_N4_IP"
+                    },
+                    "Sessions": {
+                        "max_far_buffer_len": 128
+                    },
+                    "DataPlane": {
+                        "threads":2,
+                        "interfaces": [
+                            { "type":"n3_n9", "name":"%UPF1_N3_IF", "bind_ip": "%UPF1_N3_IP", "mode": "single_thread" },
+                            { "type":"n3_n9", "name":"%UPF1_N9_IF", "bind_ip": "%UPF1_N9_IP", "mode": "thread_pool" },
+                            { "type":"n6_l3", "name":"%UPF1_N6_TUN", "bind_ip": "%UPF1_N6_IP", "mode": "thread_pool" },
+                            { "ignore":1, "type":"n6_l2", "name":"n6_eth" }
+                        ],
+                        "xdp":{
+                            "ignore": "%DISABLE_XDP",
+                            "xdp_table_size": 256,
+                            "prog_path":"%XDP_GTP",
+                            "interfaces":[
+                                {"ignore":0, "type":"n3_n9_n6_l3", "name": "%UPF1_N3_IF"},
+                                {"ignore":0, "type":"n3_n9_n6_l3", "name": "%UPF1_N6_IF"},
+                                {"ignore":1, "type":"n3_n9", "name": "%UPF1_N3_IF"},
+                                {"ignore":1, "type":"n6_l3", "name":"%UPF1_N6_IF"}
+                            ]
+                        }
+
+                    },
+                    "Associations": {
+                        "msg_response_timeout": 3,
+                        "max_msg_retries": 2,
+                        "conn_attempt_interval": 0,
+                        "heartbeat_interval": 0,
+                        "max_heartbeat_retries": 2,
+                        "htable_size": 16,
+                        "Acceptor": [
+                            { "type": "udp", "port": 8805, "bind": "%UPF1_N4_IP" }
+                        ]
+                    },
+                    "hacks": {
+                        "comment": "qfi=0 disables the GTP PDU header; gtp_encap_is_uplink:true is for gnb side",
+                        "qfi": 9,
+                        "# gtp_encap_is_uplink": false,
+                        "# assoc_established_hook_script": "$cfgdir/upf1_connected.sh"
+                    }
+                }
+            },
+            {
+                "name": "httpd_h2o",
+                "version": 1,
+                "binaryFile": "modules/httpd_h2o/httpd_h2o.so",
+                "config": {
+                    "listeners": [ { "host": "%UPF1_MGMT_IP", "port": 8080 },{ "host": "0.0.0.0", "port": 13045 } ],
+                    "servers":[ { "server_name": "default" } ]
+                }
+            },
+            {
+                "name": "json_rpc",
+                "ignore": "%DISABLE_REMOTE_COMMAND",
+                "version": 1,
+                "binaryFile": "modules/json_rpc/json_rpc.so",
+                "config": { }
+            },
+            {
+                "name": "remote_commandModule",
+                "ignore": "%DISABLE_REMOTE_COMMAND",
+                "version": 1,
+                "binaryFile": "modules/remote_command/remote_command.so",
+                "config": {
+                    "name": "UPF1"
+                }
+            },
+            {
+                "name":"Monitoring",
+                "version":1,
+                "binaryFile":"modules/monitoring/monitoring.so",
+                "config":{
+                    "Prometheus":{
+                        "listener":"%UPF1_MGMT_IP",
+                        "port":9888,
+                        "enabled":"%PROMETHEUS_ENABLED"
+                    }
+                }
+            }
+        ]
+    }
+}

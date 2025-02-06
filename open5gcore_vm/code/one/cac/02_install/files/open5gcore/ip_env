@@ -1,0 +1,40 @@
+export AMF_CP_IP=127.0.11.20
+export AMF_MGMT_IP=127.0.254.20
+export AMF_N2_IP=127.0.12.20
+export AUSF_CP_IP=127.0.11.25
+export AUSF_MGMT_IP=127.0.254.25
+
+export NRF_CP_IP=127.0.11.35
+export NRF_MGMT_IP=127.0.254.35
+export PROMETHEUS_MGMT_IP=127.0.254.130
+export SMF_CP_IP=127.0.11.40
+export SMF_DB_IP=127.0.253.40
+export SMF_MGMT_IP=127.0.254.40
+export SMF_N4_IP=127.0.14.40
+export SQL_DB_IP=127.0.253.5
+export SQL_MGMT_IP=127.0.254.5
+export UDM_CP_IP=127.0.11.30
+export UDM_DB_IP=127.0.253.30
+export UDM_MGMT_IP=127.0.254.30
+export UPF1_MGMT_IP=127.0.254.45
+export UPF1_N3_IP=127.0.13.45
+export UPF1_N4_IP=127.0.14.45
+export UPF1_N6_IP=127.0.15.45
+export UPF1_N6_ETH_IP=0.0.0.0
+export UPF1_N9_IP=127.0.16.45
+export PCF_CP_IP=127.0.11.85
+export PCF_MGMT_IP=127.0.254.85
+export SQL_DB_IP=127.0.0.1
+export UPF1_N3_IP=127.0.13.45
+export UPF1_N3_IF=lo
+export UPF1_N6_IP=127.0.15.45
+export UPF1_N6_TUN=n6tun
+export UPF1_N9_IP=127.0.16.45
+export UPF1_N9_IF=lo
+export UPF1_N6_ETH_IP="0.0.0.0"
+
+export cfgdir=/etc/open5gcore
+
+export COMMAND_DISABLED="false"
+export DISABLE_REMOTE_COMMAND=0
+

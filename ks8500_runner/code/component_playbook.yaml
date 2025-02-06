@@ -10,14 +10,10 @@
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
-    #- name: Available components
-    #  debug:
-    #    msg: "{{ site_available_components }}"
-    
     - name: Terraform apply
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
-# Post-terraform preliminary tasks. Still no component configuration.
+
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
   gather_facts: false
@@ -38,17 +34,17 @@
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ks8500runner_networks[0] + '-id'] | string}}"
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ks8500runner_networks[0] + '-id'] | string }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "ks8500runner"
-        ansible_host: "{{ ips[vnet_id] }}"
+        ansible_host: "{{ ips[access_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
-    - name: Create SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+    - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
 
 - name: "STAGE 3: Apply CAC to prepare the component"
   vars:
@@ -57,6 +53,7 @@
       - SessionLogs
       - Settings
       - Storage
+      - OpentapImages
     ks8500runner_path: /opt/KS8500Runner
   hosts: "ks8500runner"
   gather_facts: false
@@ -83,7 +80,7 @@
     # Curl returns error if we cannot connect, should cause ansible script to terminate
     - name: Verify connectivity
       ansible.builtin.shell:  curl https://test-automation.pw.keysight.com/index.html
-    
+
     #- name: Get os info
     #  command: cat /etc/os-release
     #  register: os_info
@@ -113,17 +110,17 @@
 
     - name: Deploy runner configuration
       ansible.builtin.copy:
-        src:  "{{ playbook_dir }}/all/runner/"
+        src: "{{ playbook_dir }}/all/runner/"
         dest: "{{ ks8500runner_path }}"
       become: true
-       
+
     - name: Build runner image
       community.docker.docker_image_build:
         name: ks8500_runner:latest
         path: "{{ ks8500runner_path }}"
         dockerfile: Dockerfile
       become: true
-  
+
     - name: Create mount list
       ansible.builtin.set_fact:
         mount_list: '{{ (mount_list|default([])) + [{"target": "/opt/tap/" + item, "source": "{{ ks8500runner_path }}/" + item, "type": "bind" }] }}'
@@ -144,7 +141,7 @@
     #- name: Storage debug out
     #  ansible.builtin.debug:
     #    var: storage_debug.stdout_lines
-    
+
     - name: Check if the registration file exists
       ansible.builtin.stat:
         path: "{{ ks8500runner_path }}/Config/runner.lic"
@@ -185,18 +182,12 @@
   gather_facts: false
   connection: local
   tasks:
-    # Common task to create custom terraform outputs with information of interest for future deployments.
     - name: Merge all component component outputs into one "output" variable
-
       ansible.builtin.set_fact:
         output:
           ips: "{{ ips | b64encode }}"
           id: "{{ id | b64encode }}"
           registration_info: "{{ hostvars['ks8500runner']['ks8500runner_registration_info'] | b64encode }}"
 
-    #- name: Output Debug
-    #  debug:
-    #    msg: "{{ output }}"
-    
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

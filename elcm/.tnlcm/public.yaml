@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -31,7 +19,7 @@ metadata:
     Ubuntu 22.04 LTS virtual machine with the ELCM installed.
     It also contains OpenTAP, InfluxDB and Grafana services installed.
   hypervisors: [one]
-  appliance: https://marketplace.mobilesandbox.cloud:9443//appliance/service_ELCM/download/0
+  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM
 
 ####################################
 ## Component input

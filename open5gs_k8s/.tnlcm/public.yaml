@@ -1,0 +1,133 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  short_description: Deploys a 5G Core inside a Kubernetes cluster 
+  long_description: |
+    The **open5gs_k8s** 6G-Library component deploys a 5G SA Core inside a Kubernetes cluster using the [Helm Chart from Gradiant](https://artifacthub.io/packages/helm/open5gs/open5gs).
+    More info in the official documentation: https://open5gs.org/open5gs/docs/
+  hypervisors: [one]
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  # None
+
+
+####################################
+## Input variables
+####################################
+input:
+  one_open5gs_k8s_target:
+    description: Name of the oneKE cluster used to deploy the Helm Chart
+    type: "oneKE"
+    required_when: true
+
+  one_open5gs_k8s_mcc:
+    description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "001"
+    required_when: false
+
+  one_open5gs_k8s_mnc:
+    description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "01"
+    required_when: false
+
+  one_open5gs_k8s_msin:
+    description: Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "0000000001"
+    required_when: false
+
+  one_open5gs_k8s_key:
+    description: Permanent Subscription Key
+    type: str
+    default_value: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+    required_when: false
+
+  one_open5gs_k8s_opc:
+    description: Operator Code
+    type: str
+    default_value: "E8ED289DEBA952E4283B54E88E6183CA"
+    required_when: false
+
+  one_open5gs_k8s_apn:
+    description: Access Point Name (APN) of the initial PDU session to be stablished
+    type: str
+    default_value: "internet"
+    required_when: false
+
+  one_open5gs_k8s_tac:
+    description: Tracking Area Code in the PLMN
+    type: int
+    default_value: 200
+    required_when: false
+
+  one_open5gs_k8s_s_nssai_sst:
+    description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    type: int
+    default_value: 1
+    required_when: false
+
+  one_open5gs_k8s_s_nssai_sd:
+    description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
+    type: str
+    default_value: "000001"
+    required_when: false
+
+  one_open5gs_k8s_amf_ip:
+    description: Address to expose the Core Access and Mobility Management Function (AMF). Requires to be part of the oneKE's one_oneKE_metallb_range
+    type: str
+    default_value: "10.21.12.200"
+    required_when: false
+
+  one_open5gs_k8s_upf_ip:
+    description: Address to expose the Core User Plane Function (UPF). Requires to be part of the oneKE's one_oneKE_metallb_range
+    type: str
+    default_value: "10.21.12.201"
+    required_when: false
+
+  one_open5gs_k8s_ue_count:
+    description: Number of UEs to be provisioned starting from MSIN
+    type: int
+    default_value: 20
+    required_when: false
+
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__metadata_dict:
+    oneKE: input.one_open5gs_k8s_target
+    proxy: vnf_0 IP from input.one_open5gs_k8s_target
+    mcc: input.one_open5gs_k8s_mcc
+    mnc: input.one_open5gs_k8s_mnc
+    msin: input.one_open5gs_k8s_msin
+    key: input.one_open5gs_k8s_key
+    opc: input.one_open5gs_k8s_opc
+    apn: input.one_open5gs_k8s_apn
+    tac: input.one_open5gs_k8s_tac
+    s_nssai_sd: input.one_open5gs_k8s_s_nssai_sst
+    s_nssai_sst: input.one_open5gs_k8s_s_nssai_sd
+    amf_ip: input.one_open5gs_k8s_amf_ip
+    upf_ip: input.one_open5gs_k8s_upf_ip
+    ue_count: input.one_open5gs_k8s_ue_count

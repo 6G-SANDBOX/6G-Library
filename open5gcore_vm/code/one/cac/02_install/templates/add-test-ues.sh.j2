@@ -1,0 +1,14 @@
+#!/bin/sh
+
+
+#INSERT INTO `supi` VALUES (0,"999810000049721",UNHEX("0F2524879C579D2BDDA7892EAD470FEF"),0x8000,UNHEX("47389D05F72E0768BA9078696C5054E0"),"000000000010",0,1,0);
+#./provision_user.sh -S 999810000049721 -k 0F2524879C579D2BDDA7892EAD470FEF -o 47389D05F72E0768BA9078696C5054E0 -c 1 -u 0 -T 49721
+#open5gs-dbctl add_ue_with_apn 999810000049721 0F2524879C579D2BDDA7892EAD470FEF 47389D05F72E0768BA9078696C5054E0 internet
+
+open5gs-dbctl reset
+
+{% for i in range(one_open5gcore_vm_ue_count|int) %}
+#open5gs-dbctl add_ue_with_slice {{ mcc }}{{ mnc }}{{ '%010d' % (msin|int + i) }} {{ ue_key }} {{ ue_opc }} {{ one_open5gcore_vm_apn }} 1 {{ s_nssai_sd }}
+/etc/open5gcore/sql/provision_user.sh -S {{ mcc }}{{ mnc }}{{ ('%0'+(12-mnc|length)|string +'d') % (msin|int + i) }} -k {{ ue_key }} -o {{ ue_opc }} -c 1 -u 0 -T {{ '1%010d' % (msin|int + i) }};
+{% endfor %}
+

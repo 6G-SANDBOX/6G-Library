@@ -1,0 +1,24 @@
+description: "Config for INT-P4 Source Switch"
+chassis {
+  platform: PLT_P4_SOFT_SWITCH
+  name: "bmv2-simple_switch"
+}
+nodes {
+  id: 1
+  slot: 1
+  index: 1
+}
+{% for interface in switch_config.interfaces %}
+singleton_ports {
+  id: {{ interface.id }}
+  name: "{{ interface.name }}"
+  slot: 1
+  port: {{ interface.id }}
+  channel: 1
+  speed_bps: 100000000000
+  config_params {
+    admin_state: ADMIN_STATE_ENABLED
+  }
+  node: 1
+}
+{% endfor %}

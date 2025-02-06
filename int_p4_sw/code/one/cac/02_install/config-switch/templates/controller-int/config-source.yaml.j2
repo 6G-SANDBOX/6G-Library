@@ -1,0 +1,37 @@
+# ---- INT-P4 Controller Switch Configuration Parameters ----
+session:
+  id: 1
+
+p4runtime:
+  device_id: 1
+  grpc_addr: '127.0.0.1:9559'
+  election_id:
+    high: 0
+    low: 1
+  file_paths:
+    proto: '/build/int.proto.txt'
+    json: '/build/int.json'
+
+clone_session:
+  egress_port: 3
+  instance: 1
+
+tables:
+  forward:
+{% for rule in switch_config.int_config.forward_rules %}
+    - dst_addr: '{{ rule.dst_addr }}&&&0xFFFFFFFFFFFF'
+      port: '{{ rule.port }}'
+      priority: {{ rule.priority }}
+{% endfor %}
+  int_source:
+    activate_source:
+      ingress_port: '{{ switch_config.int_config.ingress_port }}'
+    int_watchlist_source:
+      ingress_port: '{{ switch_config.int_config.ingress_port }}'
+      hop_metadata_len: '{{ switch_config.int_config.hop_metadata_len }}'
+      max_hop: '{{ switch_config.int_config.max_hop }}'
+      ins_mask: '{{ switch_config.int_config.ins_mask }}'
+  int_transit:
+    match_all: '1&&&1'
+    switch_id: '{{ switch_config.switch_id }}'
+    priority: 1

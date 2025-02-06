@@ -1,0 +1,6 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+# one_ixc_endpoint_networks: 
+#   - tn_vxlan
+
+one_ixc_endpoint_rs: "10.11.31.98"

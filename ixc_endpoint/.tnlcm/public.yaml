@@ -1,0 +1,57 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Filip Ivanovich <filip.ivanovic@keysight.com>
+    - Abhishek Bakshi <abhishek.bakshi@keysight.com>
+  short_description: Keysight IxChariot Endpoint
+  long_description: |
+    IxChariot Performance Endpoints act as controlled traffic sources and receivers, simulating real-world applications like web browsing, video streaming, or file transfers to evaluate how a network handles different traffic types.
+  hypervisors: [one]
+  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/ixc_endpoint
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the ixc_endpoint appliance template to use in your OpenNebula environment
+  image_id: ID of the ixc_endpoint appliance image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
+####################################
+input:
+  one_ixc_endpoint_networks:
+    description: Ordered list of Virtual Network names the VM will be part of. In most cases first one should always be the tn_vxlan
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
+    required_when: false
+
+  one_ixc_endpoint_rs:
+    description: Registration Server IP Address to register the endpoint.
+    type: "str"
+    required_when: true
+
+
+####################################
+## Generated terraform outputs
+####################################
+output:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"

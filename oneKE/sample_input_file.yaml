@@ -8,8 +8,7 @@ one_oneKE_internal_vnet: "vnet-custom_name"
 #one_oneKE_cni_plugin: "canal"
 #one_oneKE_cilium_range: ""
 #one_oneKE_metallb: "YES"
-#one_oneKE_metallb_range: "10.21.12.200-10.21.12.240"
+#one_oneKE_metallb_range: "10.21.12.220-10.21.12.250"
 #one_oneKE_longhorn: "YES"
 #one_oneKE_traefik: "NO"
-#one_oneKE_dns: "1.1.1.1 8.8.8.8"
-#one_oneKE_nginx_passthough: false
+#one_oneKE_nginx_passthough: true
