@@ -1,0 +1,204 @@
+---
+# Main playbook to deploy UPF-P4 HW Intel Tofino 2 component (with Open5Gs Control Plane component)
+
+- name: "STAGE 1: Apply IAC to deploy Open5GS Control Plane component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Configure VM resources
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/vm_resources.yaml"
+
+    - name: Terraform apply
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
+
+- name: "STAGE 2: Prepare to access the Open5GS Control Plane component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Verify terraform outputs
+      ansible.builtin.assert:
+        that:
+          - terraform_outputs.stdout is defined
+          - terraform_outputs.stdout | from_json is mapping
+        fail_msg: "Invalid terraform outputs"
+
+    - name: Validate terraform output variables
+      ansible.builtin.assert:
+        that:
+          - (terraform_outputs.stdout | from_json)['tn_bastion-ips'] is defined
+          - (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] is defined
+          - (terraform_outputs.stdout | from_json)[entity_name + '-ips'] is defined
+          - (terraform_outputs.stdout | from_json)[entity_name + '-id'] is defined
+        fail_msg: "Missing required terraform outputs"
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
+        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_upf_p4_hw_networks[0] + '-id'] | string }}"
+
+    - name: Add new VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "upf_p4_hw"
+        ansible_host: "{{ ips[access_vnet_id] }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+    # While not used by the Jenkins, we included the configuration of a .ssh/config per TN in the Jenkins VM for debugging purposes.
+    # If the configuration created doesn't fit your component, feel free to create another task file in your components cac/01_pre directory
+    - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
+
+    # In order to facilitate SSH connections to the experimenter, an aditional ssh config file for them can also be created.
+    # If your component is not ment to be accessed by the experimenter (its not a VM or its a restricted one) do not configure ssh config for it
+    - name: Add new VM to an SSH config file ment to be usable by the experimenter
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
+
+
+- name: "STAGE 3.1: Apply CAC to prepare the Open5GS Control Plane component"
+  hosts: "upf_p4_hw"
+  gather_facts: false
+  tasks:
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        timeout: 200
+
+    - name: Set site ssh key as authorized in jenkins user
+      ansible.posix.authorized_key:
+        user: jenkins
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
+      when: item != ''
+
+    - name: Create new user for experimenter access
+      become: true
+      ansible.builtin.user:
+        name: tnuser
+        shell: /bin/bash
+        groups: sudo
+        password: ''
+
+    - name: Set TN ssh key as authorized in new user
+      become: true
+      ansible.posix.authorized_key:
+        user: tnuser
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+
+    - name: Open5GS Core Control install
+      ansible.builtin.include_tasks:
+        file: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/open5gs_install.yaml"
+
+
+- name: "STAGE 3.2: Apply CAC to prepare the UPF HW Intel Tofino 2 external component"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  # TODO: In this stage, I am going to configure all necessary steps to start the external UPF Intel Tofino 2 (send API endpoint request, etc)
+    # Sends an API POST request to trigger the external hardware component.
+    - name: "Trigger external UPF HW component start via API"
+      ansible.builtin.uri:
+        url: "http://your-hw-component-endpoint/start"  # Replace with the actual API endpoint URL.
+        method: POST
+        headers:
+          Content-Type: "application/json"
+        body: '{"parameter": "value"}'  # Adjust the JSON payload as required by the API.
+        body_format: json
+        status_code: 200  # Expected HTTP status code for a successful call.
+        validate_certs: no  # Change to 'no' if using self-signed certificates.
+      register: api_result
+
+    # Outputs the API response for debugging purposes.
+    - name: "Debug API result"
+      ansible.builtin.debug:
+        var: api_result
+     
+    # Optional: Retry mechanism if the API call initially fails.
+    # This task will retry the API call up to 5 times with a delay of 10 seconds between attempts.
+    - name: "Retry API call if not successful"
+      ansible.builtin.uri:
+        url: "http://your-hw-component-endpoint/start"  # Replace with the actual API endpoint URL.
+        method: POST
+        headers:
+          Content-Type: "application/json"
+        body: '{"parameter": "value"}'
+        body_format: json
+        status_code: 200
+        validate_certs: yes
+      register: api_retry_result
+      retries: 5
+      delay: 10
+      until: api_retry_result.status == 200
+
+# TODO
+- name: "STAGE 4: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    # You can publish files to the MINIO S3 Storage. By convention, please use misc-{{ entity_name }} as prefix
+    # misc- files should be intended to be shared with the experimenter. They are PUBLIC.
+    - name: Upload file to S3 object storage
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/misc-{{ entity_name }}-something.yaml"
+        content_base64: "{{ encoded_variable }}"
+        encrypt: false
+        validate_certs: false
+
+    # Common task to create custom terraform outputs with information of interest for future component deployments.
+    # Variables here may or may NOT be intended to be seen by the experimenters. They remain PRIVATE
+    - name: Set custom terraform outputs for future components
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-node_ids"
+            value: "{{ node_ids }}"
+          - key: "{{ entity_name }}-node_ips"
+            value: "{{ node_ips }}"
+
+    # Necessary in most if not all components. Publishes the deployment information in the following order:
+    # 1. Post the new terraform manifests to MINIO S3 Storage
+    # 2. Generate markdown OK file with information about the component
+    # 3. Post the markdown OK file to the MINIO S3 Storage
+    # 4. Send a JSON OK notification to the TNLCM. JSON message also includes the markdown content.
+    # Dictionary output should include the same variables as the markdown file, but in an indexable way for the TNLCM
+    # Both the markdown and the variables sent to the TNLCM are intended to be shared with the experimenter. They are PUBLIC
+    - name: Publish execution results to TNLCM and S3 object storage
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        output:
+          id: "{{ id | b64encode }}"
+          node_ids: "{{ node_ids | b64encode }}"
+          node_ips: "{{ node_ips | b64encode }}"
+          kubeconfig: "{{ kubeconfig }}"  # if it's already encoded
+          skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"
