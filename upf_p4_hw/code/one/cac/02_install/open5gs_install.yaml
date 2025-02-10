@@ -40,7 +40,17 @@
     mode: '0644'
     #directory_mode: '0755'
 
-#TODO: Apply templates to configuration files
+- name: Apply templates to configuration files
+  template:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/config/templates/{{ item.src }}"
+    dest: "/home/jenkins/config/{{ item.dest }}"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+  loop:
+    - { src: 'open5gs/amf.yaml.j2', dest: 'open5gs/amf.yaml' }
+    - { src: 'open5gs/nssf.yaml.j2', dest: 'open5gs/nssf.yaml' }
+    - { src: 'open5gs/smf.yaml.j2', dest: 'open5gs/smf.yaml' }
 
 #TODO: Run docker compose 
 
