@@ -63,6 +63,23 @@
   pause:
     seconds: 5
 
-#TODO: Register some UEs
+# TODO: At the moment, only one UE is registed
+- name: Apply template to UEs registration script
+  become: true
+  become_user: jenkins
+  template:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/config/templates/register_subscriber.sh.j2"
+    dest: "/home/jenkins/config/register_subscriber.sh"
+    owner: jenkins
+    group: jenkins
+    mode: '0777'
+
+- name: Run UE registration script
+  #become: true
+  #become_user: jenkins
+  command: /home/jenkins/config/register_subscriber.sh
+  register: ue_register_result
+  failed_when: ue_register_result.rc != 0 and "duplicate key error" not in ue_register_result.stdout and "duplicate key error" not in ue_register_result.stderr
+  
 
 #TODO: Run some tests?
