@@ -81,5 +81,4 @@
   register: ue_register_result
   failed_when: ue_register_result.rc != 0 and "duplicate key error" not in ue_register_result.stdout and "duplicate key error" not in ue_register_result.stderr
   
-
 #TODO: Run some tests?

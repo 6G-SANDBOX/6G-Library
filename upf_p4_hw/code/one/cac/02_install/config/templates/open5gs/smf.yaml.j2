@@ -385,7 +385,7 @@ smf:
       #addr: 10.0.4.1
       #option:
       #  so_bindtodevice: veth41
-      - addr: {{ hostvars['localhost']['one_upf_p4_hw_smf_pfcp_addr'] }}
+      - addr: {{ hostvars['localhost']['one_upf_p4_hw_open5gs_smf_pfcp_addr'] }}
 #      - addr: ::1
     gtpc:
       - addr: 127.0.0.4
@@ -507,7 +507,7 @@ nrf:
 #
 upf:
     pfcp:
-      - addr: {{ hostvars['localhost']['one_upf_p4_hw_upf_pfcp_addr'] }}
+      - addr: {{ hostvars['localhost']['one_upf_p4_hw_open5gs_upf_pfcp_addr'] }}
         #dnn: internet
 
 
