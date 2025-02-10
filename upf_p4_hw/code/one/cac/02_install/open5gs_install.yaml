@@ -1,0 +1,36 @@
+---
+- name: Install some required apt packages
+  become: true
+  apt:
+    name: 
+      - net-tools
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: present
+    update_cache: yes
+
+
+- name: Install docker engine
+  block:
+    - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/docker_install.yaml"
+  become: true
+
+- name: Configure GitHub Container Registry authentication
+  block:
+    - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/docker_configuration.yaml"
+  become: true
+
+#TODO: Copy docker-compose file
+
+
+#TODO: Copy open5gs configuration files
+
+
+#TODO: Run docker compose 
+
+#TODO: Register some UEs
+
+#TODO: Run some tests?
