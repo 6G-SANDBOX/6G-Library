@@ -1,0 +1,145 @@
+services:
+# ---- Services for Open5GS Core Control Plane ----
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_DATABASE: open5gs
+    network_mode: host
+    privileged: true
+
+  amf:
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs-morse:2.5.6
+    command:
+    - open5gs-amfd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  ausf:
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs-morse:2.5.6
+    command:
+    - open5gs-ausfd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  bsf:
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs-morse:2.5.6
+    command:
+    - open5gs-bsfd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  nrf:
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs-morse:2.5.6
+    command: open5gs-nrfd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  nssf:
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs-morse:2.5.6
+    command: open5gs-nssfd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  pcf:
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs-morse:2.5.6
+    command:
+    - open5gs-pcfd
+    environment:
+      DB_URI: mongodb://localhost/open5gs
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  #scp:
+  #  image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs-morse:2.5.6
+  #  command: open5gs-scpd
+  #  environment:
+  #    DB_URI: mongodb://mongo/open5gs
+  #  volumes:
+  #    - ./config/open5gs:/opt/open5gs/etc/open5gs
+  #  network_mode: host
+  #  restart: on-failure
+
+  smf:
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs-morse:2.5.6
+    command: open5gs-smfd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+      #- ./config/freeDiameter:/opt/open5gs/etc/freeDiameter
+    network_mode: host
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+    restart: on-failure
+    
+  udm:
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs-morse:2.5.6
+    command:
+    - open5gs-udmd
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+  udr:
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs-morse:2.5.6
+    command:
+    - open5gs-udrd
+    environment:
+      DB_URI: mongodb://localhost/open5gs
+    volumes:
+      - ./config/open5gs:/opt/open5gs/etc/open5gs
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+
+#  upf:
+#    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs-morse:2.5.6
+#    command:
+#      - open5gs-upfd
+#    cap_add:
+#      - all
+#    volumes:
+#      - ./config/open5gs:/opt/open5gs/etc/open5gs
+#    privileged: true
+#    network_mode: host
+#    restart: on-failure
+   # environment:
+   # ENABLE_NAT: "false"
+#    ports:
+#      - 2152:2152
+
+  webui:
+    image: gradiant/open5gs-webui:2.5.6
+    environment:
+      DB_URI: mongodb://localhost/open5gs
+      NODE_ENV: dev
+    network_mode: host
+    privileged: true
+    restart: on-failure
+
+# Define the volumes for the UPF deployment
+#volumes:
+#  stratum-config:
+#  controller-upf-config:
+  
+# Define the networks for the UPF deployment

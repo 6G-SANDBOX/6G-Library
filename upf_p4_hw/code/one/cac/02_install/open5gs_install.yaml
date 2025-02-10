@@ -12,7 +12,6 @@
     state: present
     update_cache: yes
 
-
 - name: Install docker engine
   block:
     - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/docker_install.yaml"
@@ -23,11 +22,25 @@
     - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/docker_configuration.yaml"
   become: true
 
-#TODO: Copy docker-compose file
+- name: Copy docker-compose file
+  copy:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/docker-compose.yaml"
+    dest: "/home/jenkins/docker-compose.yaml"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
 
+- name: Copy static config folder recursively
+  become: true
+  ansible.builtin.copy:
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/config/static/"
+    dest: "/home/jenkins/config"
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+    #directory_mode: '0755'
 
-#TODO: Copy open5gs configuration files
-
+#TODO: Apply templates to configuration files
 
 #TODO: Run docker compose 
 
