@@ -52,7 +52,16 @@
     - { src: 'open5gs/nssf.yaml.j2', dest: 'open5gs/nssf.yaml' }
     - { src: 'open5gs/smf.yaml.j2', dest: 'open5gs/smf.yaml' }
 
-#TODO: Run docker compose 
+- name: Execute docker-compose up
+  become: true
+  become_user: jenkins
+  command: docker compose -f /home/jenkins/docker-compose.yaml up -d
+  args:
+    chdir: /home/jenkins
+
+- name: Pause to wait for mongo to deployment
+  pause:
+    seconds: 5
 
 #TODO: Register some UEs
 
