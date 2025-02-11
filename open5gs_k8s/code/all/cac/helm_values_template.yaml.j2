@@ -10,8 +10,10 @@ populate:
     tag: 0.10.3
     pullPolicy: IfNotPresent
   initCommands:
-    - >
-      {% for i in range(one_open5gs_k8s_ue_count|int) %}open5gs-dbctl add_ue_with_slice {{ one_open5gs_k8s_mcc | string }}{{ one_open5gs_k8s_mnc | string }}{{ ('%0'+(12-one_open5gs_k8s_mnc|length)|string +'d') % (one_open5gs_k8s_msin|int + i) }} {{ one_open5gs_k8s_key | string }} {{ one_open5gs_k8s_opc | string }} {{ one_open5gs_k8s_apn | string }} {{ one_open5gs_k8s_s_nssai_sst | int }} {{ one_open5gs_k8s_s_nssai_sd | string }}; {% endfor %}
+{% for i in range(one_open5gs_k8s_ue_count|int) %}
+  - open5gs-dbctl add_ue_with_slice {{ one_open5gs_k8s_mcc | string }}{{ one_open5gs_k8s_mnc | string }}{{ ('%0'+(12-one_open5gs_k8s_mnc|length)|string +'d') % (one_open5gs_k8s_msin|int + i) }} {{ one_open5gs_k8s_key | string }} {{ one_open5gs_k8s_opc | string }} {{ one_open5gs_k8s_apn | string }} {{ one_open5gs_k8s_s_nssai_sst | int }} {{ one_open5gs_k8s_s_nssai_sd | string }}
+{% endfor %}
+      
 
 # Common
 mongodb:
@@ -48,6 +50,7 @@ smf:
     subnetList:
       - subnet: "10.45.0.0/16"
         gateway: "10.45.0.1"
+
 # 5G
 amf:
   enabled: true
@@ -74,6 +77,7 @@ udr:
   mongodb:
     enabled: false
 
+# Chart-specific values
 amf:
   config:
     guamiList:
@@ -114,8 +118,9 @@ upf:
       gtpu:
         advertise: "{{ one_open5gs_k8s_upf_ip | string }}"
     subnetList:
-      - subnet: "10.45.0.0/16"
-        gateway: "10.45.0.1"
+      {# - subnet: "10.45.0.0/16"
+        gateway: "10.45.0.1" #}
+      - addr: "10.45.0.1/16"  # New default
         dev: ogstun
         createDev: true
         enableNAT: true

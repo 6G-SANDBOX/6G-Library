@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+### Added
+- Component also supports OneKE 1.31 now
+
 ## v0.4.0
 ### Added
 - The web interfaces are now registered in the new tn_bastion DNS server.

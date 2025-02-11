@@ -145,5 +145,5 @@ Variable files separated by the cloud provider used by each site.
 [issues-shield]: https://img.shields.io/github/issues/6G-SANDBOX/6G-Library.svg?style=for-the-badge
 [issues-url]: https://github.com/6G-SANDBOX/6G-Library/issues
 
-[6glibrary-badge]: https://img.shields.io/badge/6G--Library-v0.3.0-blue
-[6glibrary-url]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.3.0
+[6glibrary-badge]: https://img.shields.io/github/v/release/6G-SANDBOX/6G-Library?label=6G-Library&color=blue
+[6glibrary-url]: https://github.com/6G-SANDBOX/6G-Library/releases/latest

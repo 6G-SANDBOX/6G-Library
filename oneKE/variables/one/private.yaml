@@ -10,7 +10,7 @@
 
 one_oneKE_external_vnet: "tn_vxlan"
 
-one_oneKE_version: "129"           # Currently only Kubernetes v1.29 is available
+one_oneKE_version: "131"
 one_oneKE_multus: "YES"            # OneKE default is "NO"
 one_oneKE_cni_plugin: "canal"      # OneKE default is "cilium"
 one_oneKE_cilium_range: ""         # Required if the cni_plugin is cilium
