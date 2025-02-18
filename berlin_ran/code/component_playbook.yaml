@@ -48,8 +48,7 @@
         endpoint: "{{ bastion_ip }}"
         token: "{{ tn_routemanager_token }}"
       loop:
-        - { to: "{{ site_available_components.berlin_ran.cp_ip }}", via: "{{ site_routemanager.api_endpoint }}" }
-        - { to: "{{ site_available_components.berlin_ran.up_ip }}", via: "{{ site_routemanager.api_endpoint }}" }
+        - { to: "{{ site_available_components.berlin_ran.subnet }}", via: "{{ site_routemanager.api_endpoint }}" }
 
     - name: If required, submit routes in tn_bastion for proxy access to the 5G Core
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
