@@ -1,0 +1,6 @@
+---
+- name: Restart open5gcore
+  ansible.builtin.service:
+    name: "open5gcore"
+    state: restarted
+    enabled: true

@@ -88,6 +88,14 @@
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
 
+    - name: Enable routing path in Bastion
+      # ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_bastion.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ bastion_ip }}"
+      loop:
+        - { destination: "{{ one_open5gcore_vm_ue_subnet }}", gateway: "{{ ips[access_vnet_id] }}" }
+        #- "{{ one_open5gcore_vm_ue_subnet }} via {{ o5gcore_tn_vxlan_ip }}"
 
 - name: "STAGE 3: Apply CAC to prepare the component (open5gcore_vm)"
   hosts: "open5gcore_vm"
@@ -98,14 +106,15 @@
         connect_timeout: 5
         timeout: 200
 
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
         user: jenkins
         state: present
-        key: "{{ item }}"
-      loop:
-        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
-      when: item != ''
+        key: "{{ site_admin_ssh_public_key }}"
+      when: site_admin_ssh_public_key is defined and site_admin_ssh_public_key != ''
 
     #- name: Create new user for experimenter access
     #  become: true
@@ -123,23 +132,15 @@
     #  loop:
     #    - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
-    - name: Load enviromental variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
-
     - name: Configure open5gcore
       vars:
         vm_ips: "{{ hostvars['localhost']['ips'] | dict2items(key_name='id', value_name='ip') }}"
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/setup-open5gcore.yaml"
 
-- name: "STAGE 3: Apply CaC to deploy the component - STEP 2 (bastion)"
-  hosts: "bastion"
-  gather_facts: false
-  tasks:
-    - name: Load enviromental variables from different sources inside the component
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+  handlers:
+    - name: Restart open5Gcore
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/restart-open5gcore.yml"
 
-    - name: Enable routing path in Bastion
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_bastion.yaml"
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
