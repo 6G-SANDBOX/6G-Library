@@ -103,8 +103,7 @@
         endpoint: "{{ bastion_ip }}"
         token: "{{ tn_routemanager_token }}"
       loop:
-        - { destination: "{{ one_open5gcore_vm_ue_subnet }}", gateway: "{{ ips[access_vnet_id] }}" }
-        #- "{{ one_open5gcore_vm_ue_subnet }} via {{ o5gcore_tn_vxlan_ip }}"
+        - { to: "{{ one_open5gcore_vm_ue_subnet }}", via: "{{ ips[access_vnet_id] }}" }
 
 - name: "STAGE 3: Apply CAC to prepare the component (open5gcore_vm)"
   hosts: "open5gcore_vm"
