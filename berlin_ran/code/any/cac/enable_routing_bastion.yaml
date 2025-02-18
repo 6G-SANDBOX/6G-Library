@@ -16,10 +16,10 @@
         msg:
           - "oneKE"
           - "{{ site_available_components.berlin_ran.core_network }} via {{ oneKE_vnf0_ip }}"
-          - "{{ site_available_components.berlin_ran.subnet }} via {{ site_available_components.berlin_ran.route_manager_ip1 }}"
+          - "{{ site_available_components.berlin_ran.subnet }} via {{ site_available_components.berlin_ran.route_manager_return_ip }}"
           - "5g-core VM"
           - "ip r a {{ site_available_components.berlin_ran.core_network }} via {{ o5gcore_ip }}"
-          - "ip r a {{ site_available_components.berlin_ran.subnet }} via {{ site_available_components.berlin_ran.route_manager_ip1 }}"
+          - "ip r a {{ site_available_components.berlin_ran.subnet }} via {{ site_available_components.berlin_ran.route_manager_return_ip }}"
       when: debug
 
     - name: add routes for oneKE
@@ -27,7 +27,7 @@
       ansible.builtin.shell: "ip route add {{ item }} || ip r c {{ item }}"
       with_items:
         - "{{ site_available_components.berlin_ran.core_network }} via {{ oneKE_vnf0_ip }}"
-        - "{{ site_available_components.berlin_ran.subnet }} via {{ site_available_components.berlin_ran.route_manager_ip1 }}"
+        - "{{ site_available_components.berlin_ran.subnet }} via {{ site_available_components.berlin_ran.route_manager_return_ip }}"
       when: oneKE_vnf0_ip|length > 0
 
     - name: add route for 5g-core VM
@@ -35,6 +35,6 @@
       ansible.builtin.shell: "ip route add {{ item }} || ip r c {{ item }}"
       with_items:
         - "{{ site_available_components.berlin_ran.core_network }} via {{ o5gcore_ip }}"
-        - "{{ site_available_components.berlin_ran.subnet }} via {{ site_available_components.berlin_ran.route_manager_ip1 }}"
+        - "{{ site_available_components.berlin_ran.subnet }} via {{ site_available_components.berlin_ran.route_manager_return_ip }}"
       when: o5gcore_ip | length > 0
       ## TODO: check if core_network range is already reachable (via different network...)
