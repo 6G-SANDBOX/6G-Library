@@ -24,10 +24,20 @@ metadata:
     With the variable "one_loadcore_middleware_ip", you need to specify the IP address where the LoadCore Middleware is listening.
     After booting, the agent register itself with the LoadCore Middleware server.
   hypervisors: [one]
-  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent_contextualized
+  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent
+
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  loadcore_middleware_ip: IP address of the loadcore middleware in your site
+  template_id: ID of the LoadCore Agent Test Tool VM template to use in your OpenNebula environment
+  image_id: ID of the LoaLoadCore Agent Test TooldCore VM image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_loadcore_agent_networks:
@@ -36,17 +46,10 @@ input:
     default_value: ["tn_vxlan"]
     required_when: false
 
-####################################
-## Component output
-####################################
-output:
-  # ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  # id: VM ID in OpenNebula
 
 ####################################
-## Site-specific variables
+## Generated terraform outputs
 ####################################
-site_variables:
-  loadcore_middleware_ip: IP address of the loadcore middleware in your site
-  template_id: ID of the LoadCore VM template to use in your OpenNebula environment
-  image_id: ID of the LoadCore image to use in your OpenNebula environment
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"

@@ -59,7 +59,7 @@
       loop:
         - { to: "{{ open5gs_metadata['amf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
         - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
-      when: proxy is defined and proxy != ''
+      when: open5gs_metadata['proxy'] is defined and open5gs_metadata['proxy'] != ''
 
 
 - name: "STAGE 2: Prepare access to tn_bastion to allow access to the STF webUI"

@@ -25,8 +25,17 @@ metadata:
   hypervisors: [one]
   appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/service_UERANSIM
 
+
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the UERANSIM VM template to use in your OpenNebula environment
+  image_id: ID of the UERANSIM VM image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_ueransim_networks:
@@ -34,7 +43,6 @@ input:
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
     required_when: false
-
   one_ueransim_run_gnb: 
     description: |
       Enable ueransim-gnb.service at start. If "YES", makes variable "one_ueransim_ue_linked_gnb" mandatory
@@ -42,7 +50,6 @@ input:
     type: str
     choices: ["YES", "NO"]
     required_when: true
-
   one_ueransim_run_ue:
     description: |
       Enable ueransim-ue.service at start. If "YES", makes variable "one_ueransim_gnb_linked_open5gs" mandatory
@@ -50,19 +57,16 @@ input:
     type: str
     choices: ["YES", "NO"]
     required_when: true
-
   one_ueransim_gnb_linked_open5gs:
     description: Name of a previously deployed open5gs instance. Defines the 5G SA core the gNB will try to connect
     type: open5gs_k8s or open5gs_vm or upf_p4_sw or open5gcore_vm
     required_when: "one_ueransim_run_gnb == 'YES'"
-
   one_ueransim_ue_linked_gnb:
     description: |
       Name of a previously deployed ueransim instance serving as gNB (with one_ueransim_run_gnb == 'YES')
       Defines the gNB/RAN the User Equipment will try to onnect
     type: ueransim
     required_when: "one_ueransim_run_ue == 'YES' and one_ueransim_run_gnb == 'NO'"
-
   one_ueransim_gnb_proxy:
     description: |
       Proxy address to send the traffic to reach the "one_ueransim_gnb_amf_address".
@@ -70,7 +74,6 @@ input:
     type: str
     default_value: null
     required_when: false
-
   one_ueransim_gnb_mcc:
     description: |
       In gNB simulation, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
@@ -78,7 +81,6 @@ input:
     type: str
     default_value: "001"
     required_when: false
-
   one_ueransim_gnb_mnc:
     description: |
       In gNB simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
@@ -86,13 +88,11 @@ input:
     type: str
     default_value: "01"
     required_when: false
-
   one_ueransim_gnb_tac:
     description: In gNB simulation, Tracking Area Code of the PLMN. Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
     type: int
     default_value: 200
     required_when: false
-
   one_ueransim_gnb_amf_address:
     description: |
       In gNB simulation, IPv4 address of the Access Management Function (AMF).
@@ -101,7 +101,6 @@ input:
     type: str
     default_value: "10.21.12.200"
     required_when: false
-
   one_ueransim_gnb_slices_sst:
     description: |
       In gNB simulation, Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI).
@@ -109,7 +108,6 @@ input:
     type: int
     default_value: 1
     required_when: false
-
   one_ueransim_gnb_slices_sd:
     description: |
       In gNB simulation, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
@@ -117,7 +115,6 @@ input:
     type: str
     default_value: "000001"
     required_when: false
-
   one_ueransim_ue_supi:
     description: |
       In UE simulation, IMSI number of the UE. IMSI = [MCC|MNC|MSISDN] (In total 15 digits).
@@ -125,7 +122,6 @@ input:
     type: str
     default_value: 'imsi-001010000000001'
     required_when: false
-
   one_ueransim_ue_mcc:
     description: |
       In UE simulation, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
@@ -133,7 +129,6 @@ input:
     type: str
     default_value: "001"
     required_when: false
-
   one_ueransim_ue_mnc:
     description: |
       In UE simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
@@ -141,61 +136,51 @@ input:
     type: str
     default_value: "01"
     required_when: false
-
   one_ueransim_ue_key:
     description: In UE simulation, Permanent subscription key. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
     type: str
     default_value: "465B5CE8B199B49FAA5F0A2EE238A6BC"
     required_when: false
-
   one_ueransim_ue_op:
     description: In UE simulation, Operator code (OP or OPC) of the UE. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
     type: str
     default_value: "E8ED289DEBA952E4283B54E88E6183CA"
     required_when: false
-
   one_ueransim_ue_gnbSearchList:
     description: In UE simulation, IP address for Radio Link Simulation. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
     type: str
     default_value: null
     required_when: false
-
   one_ueransim_ue_session_apn:
     description: In UE simulation, Access Point Name (APN) of the initial PDU session to be established. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
     type: str
     default_value: "internet"
     required_when: false
-
   one_ueransim_ue_session_sst:
     description: In UE simulation, Slice/Service Type (SST) of the initial PDU session to be established. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
     type: int
     default_value: 1
     required_when: false
-
   one_ueransim_ue_session_sd:
     description: In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance. Minimum length of 6.
     type: str
     default_value: "000001"
     required_when: false
-
   one_ueransim_ue_configured_nssai_sst:
     description: In UE simulation, Slice/Service Type (SST) of the configured NSSAI by HPLMN. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
     type: int
     default_value: 1
     required_when: false
-
   one_ueransim_ue_configured_nssai_sd:
     description: In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance. Minimum length of 6.
     type: str
     default_value: "000001"
     required_when: false
-
   one_ueransim_ue_default_nssai_sst:
     description: In UE simulation, Slice/Service Type (SST) of the default NSSAI. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
     type: int
     default_value: 1
     required_when: false
-
   one_ueransim_ue_default_nssai_sd:
     description: In UE simulation, Slice Differentiator (SD) of the default NSSAI. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance. Minimum length of 6.
     type: str
@@ -204,20 +189,33 @@ input:
 
 
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  id: VM ID in OpenNebula
-  run_gnb: UERANSIM instance deployed with one_ueransim_run_gnb == 'YES'
-  gnb_metadata_dict: #Dictionary with multiple parameters used in the gNB service bootstrap #TODO
-  run_ue: UERANSIM instance deployed with one_ueransim_run_ue == 'YES'
-  ue_metadata_dict: #Dictionary with multiple parameters used in the UE service bootstrap #TODO
-
-
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  template_id: ID of the UERANSIM VM template to use in your OpenNebula environment
-  image_id: ID of the UERANSIM image to use in your OpenNebula environment
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
+  __entity_name__run_gnb: input.one_ueransim_run_gnb
+  __entity_name__gnb_metadata:
+    proxy: input.one_ueransim_gnb_proxy
+    amf_address: input.one_ueransim_gnb_amf_address
+    mcc: input.one_ueransim_gnb_mcc
+    mnc: input.one_ueransim_gnb_mnc
+    msin: terraform_outputs_open5gs_dict.msin
+    key: terraform_outputs_open5gs_dict.key
+    opc: terraform_outputs_open5gs_dict.opc
+    apn: terraform_outputs_open5gs_dict.apn
+    tac: input.one_ueransim_gnb_tac
+    sst: input.one_ueransim_gnb_slices_sst
+    sd: input.one_ueransim_gnb_slices_sd
+    gnb_address: ips[access_vnet_id]
+  __entity_name__run_ue: input.one_ueransim_run_ue
+  __entity_name__ue_metadata:
+    supi: input.one_ueransim_ue_supi
+    mcc: input.one_ueransim_ue_mcc
+    mnc: input.one_ueransim_ue_mnc
+    key: input.one_ueransim_ue_key
+    opc: input.one_ueransim_ue_op
+    gnbSearchList: input.one_ueransim_ue_gnbSearchList
+    apn: input.one_ueransim_ue_session_apn
+    sst: input.one_ueransim_ue_session_sst
+    sd: input.one_ueransim_ue_session_sd

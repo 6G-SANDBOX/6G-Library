@@ -109,16 +109,6 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: Merge all component component outputs into one "output" variable
-      ansible.builtin.set_fact:
-        output:
-          ips: "{{ ips | b64encode }}"
-          id: "{{ id | b64encode }}"
-          run_gnb: "{{ one_ueransim_run_gnb | b64encode }}"
-          gnb_metadata_dict: "{{ {} | to_json | b64encode }}"
-          run_ue: "{{ one_ueransim_run_ue | b64encode }}"
-          ue_metadata_dict: "{{ {} | to_json | b64encode }}"
-
     - name: Tasks for UERANSIM as gNB
       when: one_ueransim_run_gnb == 'YES'
       block:
@@ -140,18 +130,14 @@
                 'gnb_address': '{{ ips[access_vnet_id] }}'
               }
 
-        - name: Append gnb_metadata to the output
-          ansible.builtin.set_fact:
-            output: "{{ output | combine({'gnb_metadata_dict': gnb_metadata_dict | b64encode}) }}"
-
         - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
             custom_outputs:
-              - key: "{{ entity_name }}-gnb_metadata"
-                value: "{{ gnb_metadata_dict }}"
               - key: "{{ entity_name }}-run_gnb"
                 value: "YES"
+              - key: "{{ entity_name }}-gnb_metadata"
+                value: "{{ gnb_metadata_dict }}"
 
     - name: Tasks for UERANSIM as UE
       when: one_ueransim_run_ue == 'YES'
@@ -170,18 +156,15 @@
                 'sst': '{{ one_ueransim_ue_session_sst }}',
                 'sd': '{{ one_ueransim_ue_session_sd }}'
               }
-        - name: Append ue_metadata to the output
-          ansible.builtin.set_fact:
-            output: "{{ output | combine({'ue_metadata_dict': ue_metadata_dict | b64encode}) }}"
 
         - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
             custom_outputs:
-              - key: "{{ entity_name }}-ue_metadata"
-                value: "{{ ue_metadata_dict }}"
               - key: "{{ entity_name }}-run_ue"
                 value: "YES"
+              - key: "{{ entity_name }}-ue_metadata"
+                value: "{{ ue_metadata_dict }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

@@ -9,8 +9,10 @@ resource "opennebula_virtual_machine" "{{ entity_name }}_{{ switch_index }}" {
 
   context = {
     NETWORK = "YES"
+    NETCFG_TYPE: "interfaces"
     SET_HOSTNAME = "$NAME"
     USERNAME = "jenkins"
+    SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
   }
 
 {% for network in switch_config.networks %}

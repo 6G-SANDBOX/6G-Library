@@ -116,7 +116,7 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__metadata_dict:
+  __entity_name__metadata:
     oneKE: input.one_open5gs_k8s_target
     proxy: vnf_0 IP from input.one_open5gs_k8s_target
     mcc: input.one_open5gs_k8s_mcc

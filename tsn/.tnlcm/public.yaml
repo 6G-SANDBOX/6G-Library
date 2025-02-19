@@ -24,21 +24,21 @@ metadata:
 
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  # None
+
+
+####################################
+## Input variables
 ####################################
 input:
   # None
 
 
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  # None
-
-
-####################################
-## Site-specific variables
-####################################
-site_variables:
+terraform_outputs:
   # None

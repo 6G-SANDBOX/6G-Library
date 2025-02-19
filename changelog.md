@@ -1,5 +1,14 @@
 # Changelog
 
+## [unreleased]
+### Added
+- Component `oneKE` upgraded to version `unreleased`, now supporting OneKE 1.31.
+### Changed
+- public.yaml files normalized between components
+### Fixed
+- The open5gs proxy in components `nokia_radio` and `iswireless_radio` is now properly set. Components upgraded to version `unreleased`.
+
+
 ## [v0.4.0]
 ### Added
 - New component `berlin_ran` at version `v0.5.0`.

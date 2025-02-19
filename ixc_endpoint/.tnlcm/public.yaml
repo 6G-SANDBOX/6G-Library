@@ -29,8 +29,8 @@ metadata:
 ## Site-specific variables
 ####################################
 site_variables:
-  template_id: ID of the ixc_endpoint appliance template to use in your OpenNebula environment
-  image_id: ID of the ixc_endpoint appliance image to use in your OpenNebula environment
+  template_id: ID of the IxChariot endpoint VM template to use in your OpenNebula environment
+  image_id: ID of the IxChariot endpoint VM image to use in your OpenNebula environment
 
 
 ####################################
@@ -52,6 +52,6 @@ input:
 ####################################
 ## Generated terraform outputs
 ####################################
-output:
+terraform_outputs:
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"

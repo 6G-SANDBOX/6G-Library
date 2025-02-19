@@ -21,8 +21,17 @@ metadata:
   hypervisors: [one]
   appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM
 
+
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the ELCM VM template to use in your OpenNebula environment
+  image_id: ID of the ELCM VM image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_elcm_influxdb_user:
@@ -46,16 +55,10 @@ input:
     default_value: "admin"
     required_when: false
 
-####################################
-## Component output
-####################################
-output:
-  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  id: VM ID in OpenNebula
 
 ####################################
-## Site-specific variables
+## Generated terraform outputs
 ####################################
-site_variables:
-  template_id: ID of the ELCM VM template to use in your OpenNebula environment
-  image_id: ID of the ELCM image to use in your OpenNebula environment
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"

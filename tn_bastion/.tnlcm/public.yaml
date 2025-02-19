@@ -36,7 +36,7 @@ metadata:
 ####################################
 site_variables:
   template_id: ID of the BASTION VM template to use in your OpenNebula environment
-  image_id: ID of the BASTION image to use in your OpenNebula environment
+  image_id: ID of the BASTION VM image to use in your OpenNebula environment
 
 
 ####################################

@@ -32,9 +32,9 @@ metadata:
 ####################################
 site_variables:
   129:
-    template_id: ID of the OneKE v1.29 template to use in your OpenNebula environment
+    template_id: ID of the OneKE v1.29 service template to use in your OpenNebula environment
   131:
-    template_id: ID of the OneKE v1.31 template to use in your OpenNebula environment
+    template_id: ID of the OneKE v1.31 service template to use in your OpenNebula environment
 
 
 ####################################
@@ -148,7 +148,7 @@ terraform_outputs:
   __entity_name__roles: "Array with service roles information. Generated from Terraform Manifest"
   __entity_name__node_ids: "Dictionary of VM IDs in OpenNebula: key='VM name', value='the VM ID'"
   __entity_name__node_ips: "Dictionary of VM addresses: key='VM name', value='the VM main address'"
-  __entity_name__metadata_dict:
+  __entity_name__metadata:
     external_vnet: input.one_oneKE_external_vnet
     internal_vnet: input.one_oneKE_internal_vnet
     version: input.one_oneKE_version

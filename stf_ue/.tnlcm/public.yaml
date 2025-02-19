@@ -57,5 +57,5 @@ input:
 ####################################
 ## Generated terraform outputs
 ####################################
-output:
+terraform_outputs:
   # None

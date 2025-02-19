@@ -28,7 +28,7 @@ metadata:
 ####################################
 site_variables:
   template_id: ID of the Alpine Linux 3.20 VM template to use in your OpenNebula environment
-  image_id: ID of the Alpine Linux 3.20 image to use in your OpenNebula environment
+  image_id: ID of the Alpine Linux 3.20 VM image to use in your OpenNebula environment
 
 
 ####################################
@@ -77,8 +77,7 @@ input:
 ####################################
 ## Component output
 ####################################
-output:
+terraform_outputs:
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
   __entity_name__registration_info: A string with information about the runner registration
-

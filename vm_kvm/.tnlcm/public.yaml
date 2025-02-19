@@ -34,7 +34,7 @@ metadata:
 ####################################
 site_variables:
   template_id: ID of the Ubuntu 22.04 LTS VM template to use in your OpenNebula environment
-  image_id: ID of the Ubuntu 22.04 LTS image to use in your OpenNebula environment
+  image_id: ID of the Ubuntu 22.04 LTS VM image to use in your OpenNebula environment
 
 
 ####################################
