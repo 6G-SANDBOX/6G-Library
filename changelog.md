@@ -1,4 +1,7 @@
 # Changelog
+## unreleased
+### Fixed
+ - Component `open5gs_vm` remove hardcoded ip (10.45.0.1) from the `ogstun` interface (#99)
 
 ## [v0.4.0]
 ### Added
