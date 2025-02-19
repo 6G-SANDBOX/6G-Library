@@ -118,9 +118,7 @@ upf:
       gtpu:
         advertise: "{{ one_open5gs_k8s_upf_ip | string }}"
     subnetList:
-      {# - subnet: "10.45.0.0/16"
-        gateway: "10.45.0.1" #}
-      - addr: "10.45.0.1/16"  # New default
+      - addr: "10.45.0.1/16"
         dev: ogstun
         createDev: true
         enableNAT: true
