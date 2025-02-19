@@ -8,6 +8,7 @@
 - New input variables for `int_p4_sw` and `upf_p4_sw`. Components upgraded to version `unreleased`.
 ### Fixed
 - The open5gs proxy in components `nokia_radio` and `iswireless_radio` is now properly set. Components upgraded to version `unreleased`.
+- Storage nodes of `oneKE` can now be resized from the deployment itself.
 
 
 ## [v0.4.0]

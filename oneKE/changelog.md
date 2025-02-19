@@ -2,7 +2,9 @@
 
 ## unreleased
 ### Added
-- Component also supports OneKE 1.31 now
+- Component also supports OneKE 1.31 now.
+### Fixed
+- Jenkins is now able to resize the Longhorn disk in the storage nodes.
 
 ## v0.4.0
 ### Added
