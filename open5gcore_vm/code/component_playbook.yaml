@@ -149,7 +149,7 @@
 
   handlers:
     - name: Restart open5gcore
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/restart-open5gcore.yml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/restart-open5gcore.yaml"
 
 
 - name: "STAGE 4: Publish execution results"
