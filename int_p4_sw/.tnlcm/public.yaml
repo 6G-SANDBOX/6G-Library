@@ -29,8 +29,11 @@ metadata:
 ## Site-specific variables
 ####################################
 site_variables:
-  template_id: ID of the INT-P4 Collector VM template to use in your OpenNebula environment
-  image_id: ID of the INT-P4 Collector VM image to use in your OpenNebula environment
+  collector_template_id: ID of the INT-P4 Collector VM template to use in your OpenNebula environment
+  collector_image_id: ID of the INT-P4 Collector VM image to use in your OpenNebula environment
+  switch_template_id: ID of the Ubuntu 22.04 LTS VM template to use in your OpenNebula environment
+  switch_image_id: ID of the Ubuntu 22.04 LTS VM image to use in your OpenNebula environment
+  harbor_token: Token to authenticate against the [Harbor registry](https://dockerhub.mobilesandbox.cloud:9443)
 
 
 ####################################

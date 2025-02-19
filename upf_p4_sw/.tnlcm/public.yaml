@@ -29,6 +29,7 @@ metadata:
 site_variables:
   template_id: ID of the Ubuntu 22.04 LTS VM template to use in your OpenNebula environment
   image_id: ID of the Ubuntu 22.04 LTS VM image to use in your OpenNebula environment
+  harbor_token: Token to authenticate against the [Harbor registry](https://dockerhub.mobilesandbox.cloud:9443)
 
 
 ####################################

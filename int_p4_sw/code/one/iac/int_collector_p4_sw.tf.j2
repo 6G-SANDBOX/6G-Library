@@ -1,6 +1,6 @@
 resource "opennebula_virtual_machine" "{{ entity_name }}_collector" {
   name        = "{{ tn_id }}-{{ entity_name }}-collector"
-  template_id = {{ site_available_components.int_p4_sw.template_id }}
+  template_id = {{ site_available_components.int_p4_sw.collector_template_id }}
   cpu         = {{ one_int_p4_sw_cpu }}
   vcpu        = {{ one_int_p4_sw_cpu }}
   memory      = {{ one_int_p4_sw_memory }}
@@ -15,8 +15,8 @@ resource "opennebula_virtual_machine" "{{ entity_name }}_collector" {
 
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
   disk {
-    image_id = {{ site_available_components.dummy_component.image_id }}
-    size     = {{ one_dummy_componentdisk }}
+    image_id = {{ site_available_components.int_p4_sw.collector_image_id }}
+    size     = {{ one_int_p4_sw_disk }}
     target   = "vda"
     driver   = "qcow2"
   } #}

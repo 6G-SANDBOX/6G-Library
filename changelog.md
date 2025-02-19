@@ -4,7 +4,8 @@
 ### Added
 - Component `oneKE` upgraded to version `unreleased`, now supporting OneKE 1.31.
 ### Changed
-- public.yaml files normalized between components
+- *.tnlcm/public.yaml* files normalized between components
+- New input variables for `int_p4_sw` and `upf_p4_sw`. Components upgraded to version `unreleased`.
 ### Fixed
 - The open5gs proxy in components `nokia_radio` and `iswireless_radio` is now properly set. Components upgraded to version `unreleased`.
 

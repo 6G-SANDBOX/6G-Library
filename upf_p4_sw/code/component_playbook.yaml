@@ -103,10 +103,6 @@
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
-    - name: Set harbor token from site available components
-      ansible.builtin.set_fact:
-        harbor_token: "{{ hostvars['localhost']['site_available_components']['upf_p4_sw']['harbor_token'] }}"
-
     - name: UPF P4 SW install
       ansible.builtin.include_tasks:
         file: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/upf_p4_install.yaml"
