@@ -28,7 +28,8 @@
     playbookdir: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/"
     license_crt: "{{ site_available_components.open5gcore_vm.license_crt }}"
     testbed_sim_sql: "{{ site_available_components.open5gcore_vm.testbed_sim_sql }}"
-    s_nssai_sd: "{{ s_nssai_sd | default('000001') }}"
+    s_nssai_sd: "{{ one_open5gcore_vm_s_nssai_sd  }}"
+    s_nssai_sst: "{{ one_open5gcore_vm_s_nssai_sst }}"
   block:
     - name: render netplan aliases
       template:
