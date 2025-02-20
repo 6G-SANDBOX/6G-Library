@@ -96,7 +96,7 @@
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-open5gs"
-            value: "{{ one_berlin_ran_open5gs }}"
+            value: "{{ one_berlin_ran_linked_open5g }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
