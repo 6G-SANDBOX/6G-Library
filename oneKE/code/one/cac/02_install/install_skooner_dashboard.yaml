@@ -1,7 +1,7 @@
 ---
 - name: Copy Skooner chart to remote host
   ansible.builtin.copy:
-    src: "{{ workspace }}/{{ component_type }}/code/all/helm_charts/skooner"
+    src: "{{ workspace }}/{{ component_type }}/code/any/helm_charts/skooner"
     dest: /tmp/
     remote_src: no
 

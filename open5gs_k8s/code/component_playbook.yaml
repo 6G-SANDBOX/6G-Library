@@ -47,7 +47,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
     - name: Helm install
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_install.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_install.yaml"
 
 - name: "STAGE 3: Publish execution results"
   hosts: localhost

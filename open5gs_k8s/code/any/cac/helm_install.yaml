@@ -1,7 +1,7 @@
 ---
 - name: Render helm values template
   ansible.builtin.template:
-    src: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_values_template.yaml.j2"
+    src: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_values_template.yaml.j2"
     dest: "/root/{{ hostvars['localhost']['entity_name'] }}-helm_values.yaml"
 
 - name: Deploy Open5Gs helm
