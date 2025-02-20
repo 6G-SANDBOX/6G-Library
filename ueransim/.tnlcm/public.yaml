@@ -18,7 +18,7 @@ metadata:
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   short_description: Deploys a VM with UERANSIM services 
   long_description: |
-    The UERANSIM instance can be used as a 5G User Equipment, a gNB, as both or as None.
+    The UERANSIM instance can be used as a 5G User Equipment, as a gNB, or as both in the same time.
     Depending on the chosen behaviour (with input values "one_ueransim_run_gnb" and "one_ueransim_run_ue" respectivelly), the following dependencies are aplied:
     - If one_ueransim_run_gnb == "YES", a previously deployed open5gs component needs to be selected at "one_ueransim_gnb_linked_open5gs"
     - If one_ueransim_run_gnb == "NO" and one_ueransim_run_ue == "YES", a previously deployed ueransim with run_gnb == "YES" needs to be selected at "one_ueransim_ue_linked_gnb"
@@ -43,149 +43,183 @@ input:
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
     required_when: false
+
+  # gNB-related variables
   one_ueransim_run_gnb: 
     description: |
-      Enable ueransim-gnb.service at start. If "YES", makes variable "one_ueransim_ue_linked_gnb" mandatory
-      Accepted values are "YES" or "NO" (quotes included).
-    type: str
-    choices: ["YES", "NO"]
-    required_when: true
-  one_ueransim_run_ue:
-    description: |
-      Enable ueransim-ue.service at start. If "YES", makes variable "one_ueransim_gnb_linked_open5gs" mandatory
-      Accepted values are "YES" or "NO" (quotes included).
+      Enable ueransim-gnb.service at boot. Accepted values are "YES" or "NO" (quotes included).
+      If "YES", setting variable `one_ueransim_gnb_linked_open5gs` is mandatory
     type: str
     choices: ["YES", "NO"]
     required_when: true
   one_ueransim_gnb_linked_open5gs:
-    description: Name of a previously deployed open5gs instance. Defines the 5G SA core the gNB will try to connect
-    type: open5gs_k8s or open5gs_vm or upf_p4_sw or open5gcore_vm
+    description: |
+      Name of a previously deployed 'open5gs' component (either `open5gs_k8s` or `open5gs_vm`).
+      Defines the 5G SA core the gNB will try to connect to, and will autocomplete other variables acordingly.
+    type: "open5gs_k8s or open5gs_vm or upf_p4_sw or open5gcore_vm"
     required_when: "one_ueransim_run_gnb == 'YES'"
-  one_ueransim_ue_linked_gnb:
+  one_ueransim_gnb_amf_address:
     description: |
-      Name of a previously deployed ueransim instance serving as gNB (with one_ueransim_run_gnb == 'YES')
-      Defines the gNB/RAN the User Equipment will try to onnect
-    type: ueransim
-    required_when: "one_ueransim_run_ue == 'YES' and one_ueransim_run_gnb == 'NO'"
-  one_ueransim_gnb_proxy:
+      In gNB simulation, IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
+      AMF port is currently hardcoded to always be 38412.
+      Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
+    type: str
+    default_value: "10.21.12.200"
+    required_when: false
+  # TODO: delete it as the tn_bastion can directly handle the routing.
+  one_ueransim_gnb_amf_proxy:
     description: |
-      Proxy address to send the traffic to reach the "one_ueransim_gnb_amf_address".
-      Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
+      In gNB simulation, IPv4 address where traffic to the `one_ueransim_gnb_amf_address` should be routed to.
+      Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
     type: str
     default_value: null
+    required_when: false
+  one_ueransim_gnb_tac:
+    description: In gNB simulation, Tracking Area Code (TAC) of the PLMN. Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
+    type: int
+    default_value: 200
     required_when: false
   one_ueransim_gnb_mcc:
     description: |
       In gNB simulation, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
-      Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance
+      Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
     type: str
     default_value: "001"
     required_when: false
   one_ueransim_gnb_mnc:
     description: |
       In gNB simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
-      Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
+      Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
     type: str
     default_value: "01"
-    required_when: false
-  one_ueransim_gnb_tac:
-    description: In gNB simulation, Tracking Area Code of the PLMN. Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
-    type: int
-    default_value: 200
-    required_when: false
-  one_ueransim_gnb_amf_address:
-    description: |
-      In gNB simulation, IPv4 address of the Access Management Function (AMF).
-      If "one_ueransim_gnb_proxy" is defined, this address is expected to be behind it, so the necessary routing rules will be automatically defined.
-      AMF port is currently hardcoded to always be 38412. Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
-    type: str
-    default_value: "10.21.12.200"
     required_when: false
   one_ueransim_gnb_slices_sst:
     description: |
       In gNB simulation, Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI).
-      Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
+      Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
     type: int
     default_value: 1
     required_when: false
   one_ueransim_gnb_slices_sd:
     description: |
       In gNB simulation, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
-      Autocompleted by default with one_ueransim_gnb_linked_open5gs metadata inheritance.
+      Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
     type: str
     default_value: "000001"
     required_when: false
-  one_ueransim_ue_supi:
+
+  # UE-related variables
+  one_ueransim_run_ue: 
     description: |
-      In UE simulation, IMSI number of the UE. IMSI = [MCC|MNC|MSISDN] (In total 15 digits).
-      Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
+      Enable ueransim-ue.service at boot. Accepted values are "YES" or "NO" (quotes included).
+      If "YES", setting variable `one_ueransim_gnb_linked_open5gs`is mandatory
     type: str
-    default_value: 'imsi-001010000000001'
+    choices: ["YES", "NO"]
+    required_when: true
+  one_ueransim_ue_linked_gnb:
+    description: |
+      Name of a previously deployed `ueransim` component serving as gNB (with `one_ueransim_run_gnb == 'YES'`)
+      Defines the gNB/RAN the User Equipment will try to connect to, and will autocomplete other variables acordingly.
+    type: "ueransim"
+    required_when: "one_ueransim_run_ue == 'YES' and one_ueransim_run_gnb == 'NO'"
+  one_ueransim_ue_gnbSearchList:
+    description: |
+      In UE simulation, list of IPv4 addresses of gNBs for Radio Link Simulation.
+      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+      with values from `one_ueransim_ue_linked_gnb` if defined.
+    type: "list[str]"
+    default_value: null
     required_when: false
   one_ueransim_ue_mcc:
     description: |
       In UE simulation, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
-      Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
+      Values `one_ueransim_ue_mcc` + `one_ueransim_ue_mnc` + `one_ueransim_ue_msin` must add to exactly 15 digits to form a valid IMSI.
+      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+      with values from `one_ueransim_ue_linked_gnb` if defined.
     type: str
     default_value: "001"
     required_when: false
   one_ueransim_ue_mnc:
     description: |
-      In UE simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 digits inside quotes.
-      Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
+      In UE simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
+      Values `one_ueransim_ue_mcc` + `one_ueransim_ue_mnc` + `one_ueransim_ue_msin` must add to exactly 15 digits to form a valid IMSI.
+      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+      with values from `one_ueransim_ue_linked_gnb` if defined.
     type: str
     default_value: "01"
     required_when: false
+  one_ueransim_ue_msin:
+    description: |
+      In UE simulation, Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes.
+      Values `one_ueransim_ue_mcc` + `one_ueransim_ue_mnc` + `one_ueransim_ue_msin` must add to exactly 15 digits to form a valid IMSI.
+      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+      with values from `one_ueransim_ue_linked_gnb` if defined.
+    type: str
+    default_value: "0000000001"
+    required_when: false
   one_ueransim_ue_key:
-    description: In UE simulation, Permanent subscription key. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
+    description: In UE simulation, Permanent subscription key of the UE. Autocompleted by default with values from `one_ueransim_ue_linked_gnb` if defined.
     type: str
     default_value: "465B5CE8B199B49FAA5F0A2EE238A6BC"
     required_when: false
-  one_ueransim_ue_op:
-    description: In UE simulation, Operator code (OP or OPC) of the UE. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
+  one_ueransim_ue_opc:
+    description: In UE simulation, Operator code (OP or OPC) of the UE. Autocompleted by default with values from `one_ueransim_ue_linked_gnb` if defined.
     type: str
     default_value: "E8ED289DEBA952E4283B54E88E6183CA"
     required_when: false
-  one_ueransim_ue_gnbSearchList:
-    description: In UE simulation, IP address for Radio Link Simulation. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
-    type: str
-    default_value: null
-    required_when: false
   one_ueransim_ue_session_apn:
-    description: In UE simulation, Access Point Name (APN) of the initial PDU session to be established. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
+    description: In UE simulation, Access Point Name (APN) of the initial PDU session to be established. Autocompleted by default with values from `one_ueransim_ue_linked_gnb` if defined.
     type: str
     default_value: "internet"
     required_when: false
   one_ueransim_ue_session_sst:
-    description: In UE simulation, Slice/Service Type (SST) of the initial PDU session to be established. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
+    description: |
+      In UE simulation, Slice/Service Type (SST) of the initial PDU session to be established.
+      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+      with values from `one_ueransim_ue_linked_gnb` if defined.
     type: int
     default_value: 1
     required_when: false
   one_ueransim_ue_session_sd:
-    description: In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance. Minimum length of 6.
+    description: |
+      In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established. Minimum length of 6.
+      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+      with values from `one_ueransim_ue_linked_gnb` if defined.
     type: str
     default_value: "000001"
     required_when: false
-  one_ueransim_ue_configured_nssai_sst:
-    description: In UE simulation, Slice/Service Type (SST) of the configured NSSAI by HPLMN. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
-    type: int
-    default_value: 1
-    required_when: false
-  one_ueransim_ue_configured_nssai_sd:
-    description: In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance. Minimum length of 6.
-    type: str
-    default_value: "000001"
-    required_when: false
-  one_ueransim_ue_default_nssai_sst:
-    description: In UE simulation, Slice/Service Type (SST) of the default NSSAI. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance.
-    type: int
-    default_value: 1
-    required_when: false
-  one_ueransim_ue_default_nssai_sd:
-    description: In UE simulation, Slice Differentiator (SD) of the default NSSAI. Autocompleted by default with one_ueransim_ue_linked_gnb metadata inheritance. Minimum length of 6.
-    type: str
-    default_value: "000001"
-    required_when: false
+  # one_ueransim_ue_configured_nssai_sst:
+  #   description: |
+  #     In UE simulation, Slice/Service Type (SST) of the configured NSSAI by HPLMN.
+  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+  #     with values from `one_ueransim_ue_linked_gnb` if defined.
+  #   type: int
+  #   default_value: 1
+  #   required_when: false
+  # one_ueransim_ue_configured_nssai_sd:
+  #   description: |
+  #     In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN. Minimum length of 6.
+  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+  #     with values from `one_ueransim_ue_linked_gnb` if defined.
+  #   type: str
+  #   default_value: "000001"
+  #   required_when: false
+  # one_ueransim_ue_default_nssai_sst:
+  #   description: |
+  #     In UE simulation, Slice/Service Type (SST) of the default NSSAI.
+  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+  #     with values from `one_ueransim_ue_linked_gnb` if defined.
+  #   type: int
+  #   default_value: 1
+  #   required_when: false
+  # one_ueransim_ue_default_nssai_sd:
+  #   description: |
+  #     In UE simulation, Slice Differentiator (SD) of the default NSSAI. Minimum length of 6.
+  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+  #     with values from `one_ueransim_ue_linked_gnb` if defined.
+  #   type: str
+  #   default_value: "000001"
+  #   required_when: false
 
 
 ####################################
@@ -196,26 +230,27 @@ terraform_outputs:
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
   __entity_name__run_gnb: input.one_ueransim_run_gnb
   __entity_name__gnb_metadata:
-    proxy: input.one_ueransim_gnb_proxy
+    linked_open5gs: input.one_ueransim_gnb_linked_open5gs
     amf_address: input.one_ueransim_gnb_amf_address
+    amf_proxy: input.one_ueransim_gnb_amf_proxy
+    tac: input.one_ueransim_gnb_tac
     mcc: input.one_ueransim_gnb_mcc
     mnc: input.one_ueransim_gnb_mnc
-    msin: terraform_outputs_open5gs_dict.msin
-    key: terraform_outputs_open5gs_dict.key
-    opc: terraform_outputs_open5gs_dict.opc
-    apn: terraform_outputs_open5gs_dict.apn
-    tac: input.one_ueransim_gnb_tac
+    msin: "Inferred from 'linked_open5gs', or generated by padding mcc and mnc in order to form a valid IMSI"
+    key: "Inferred from 'linked_open5gs', or set to None"
+    opc: "Inferred from 'linked_open5gs', or set to None"
+    apn: "Inferred from 'linked_open5gs', or set to None"
     sst: input.one_ueransim_gnb_slices_sst
     sd: input.one_ueransim_gnb_slices_sd
-    gnb_address: ips[access_vnet_id]
   __entity_name__run_ue: input.one_ueransim_run_ue
   __entity_name__ue_metadata:
-    supi: input.one_ueransim_ue_supi
+    linked_gnb: input.one_ueransim_ue_linked_gnb
+    gnbSearchList: input.one_ueransim_ue_gnbSearchList
     mcc: input.one_ueransim_ue_mcc
     mnc: input.one_ueransim_ue_mnc
+    msin: input.one_ueransim_ue_msin
     key: input.one_ueransim_ue_key
-    opc: input.one_ueransim_ue_op
-    gnbSearchList: input.one_ueransim_ue_gnbSearchList
+    opc: input.one_ueransim_ue_opc
     apn: input.one_ueransim_ue_session_apn
     sst: input.one_ueransim_ue_session_sst
-    sd: input.one_ueransim_ue_session_sd
+    sd:  input.one_ueransim_ue_session_sd

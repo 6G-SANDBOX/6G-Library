@@ -95,7 +95,7 @@ input:
       The range has to be inside the "one_oneKE_internal_vnet" subnet, but preferably outside it's address range.
       Syntax is a CIDR subnet. E.g. `"10.11.12.0/24"`
     type: str
-    default_value: ""
+    default_value: null
     required_when: false
 
   one_oneKE_metallb: 

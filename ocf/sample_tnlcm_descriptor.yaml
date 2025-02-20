@@ -24,7 +24,7 @@ trial_network:
       one_oneKE_version: "131"
       one_oneKE_multus: "YES"
       one_oneKE_cni_plugin: "canal"
-      one_oneKE_cilium_range: ""
+      # one_oneKE_cilium_range: null
       one_oneKE_longhorn: "YES"
       one_oneKE_metallb: "YES"
       one_oneKE_metallb_range: "10.10.10.200-10.10.10.240"

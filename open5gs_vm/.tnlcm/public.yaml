@@ -139,8 +139,8 @@ terraform_outputs:
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
   __entity_name__metadata:
-    oneKE: ""
-    proxy: ""
+    oneKE: None
+    proxy: None
     mcc: input.one_open5gs_vm_mcc
     mnc: input.one_open5gs_vm_mnc
     msin: input.one_open5gs_vm_msin

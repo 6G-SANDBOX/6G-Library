@@ -29,7 +29,7 @@ Component configuration logs can be foud at `/var/log/post-ueransim.log`
 {% if one_ueransim_run_gnb is defined and one_ueransim_run_gnb == 'YES' %}
 ### gNB Runtime
 Values used to launch the ueransim_gnb.service:
-- **proxy**: `{{ one_ueransim_gnb_proxy }}`
+- **proxy**: `{{ one_ueransim_gnb_amf_proxy }}`
 - **amf_address**: `{{ one_ueransim_gnb_amf_address}}`
 - **mcc**: `{{ one_ueransim_gnb_mcc}}`
 - **mnc**: `{{ one_ueransim_gnb_mnc}}`
@@ -41,17 +41,19 @@ Values used to launch the ueransim_gnb.service:
 {% if one_ueransim_run_ue is defined and one_ueransim_run_ue == 'YES' %}
 ### UE Runtime
 Values used to launch the ueransim_ue.service:
-- **supi**: `{{ one_ueransim_ue_supi }}`
 - **mcc**: `{{ one_ueransim_ue_mcc}}`
 - **mnc**: `{{ one_ueransim_ue_mnc}}`
 - **key**: `{{ one_ueransim_ue_key}}`
-- **op**: `{{ one_ueransim_ue_op }}`
+- **op**: `{{ one_ueransim_ue_opc }}`
 - **gnbSearchList**: `{{ one_ueransim_ue_gnbSearchList }}`
 - **session_apn**: `{{ one_ueransim_ue_session_apn }}`
 - **session_sst**: `{{ one_ueransim_ue_session_sst }}`
 - **session_sd**: `{{ one_ueransim_ue_session_sd }}`
-- **configured_nssai_sst**: `{{ one_ueransim_ue_configured_nssai_sst }}`
+{# - **configured_nssai_sst**: `{{ one_ueransim_ue_configured_nssai_sst }}`
 - **configured_nssai_sd**: `{{ one_ueransim_ue_configured_nssai_sd }}`
 - **default_nssai_sst**: `{{ one_ueransim_ue_default_nssai_sst }}`
-- **default_nssai_sd**: `{{ one_ueransim_ue_default_nssai_sd }}`
+- **default_nssai_sd**: `{{ one_ueransim_ue_default_nssai_sd }}` 
+
+TODO: Also show the resulting IMSI from mcc,mnc and msin
+#}
 {% endif %}

@@ -8,7 +8,7 @@ one_oneKE_internal_vnet: "vnet-custom_name"
 #one_oneKE_cni_plugin: "cilium"
 #one_oneKE_cilium_range: "10.21.12.192/26"
 #one_oneKE_metallb: "NO"
-#one_oneKE_metallb_range: ""
+#one_oneKE_metallb_range: null
 #one_oneKE_longhorn: "YES"
 #one_oneKE_traefik: "NO"
 #one_oneKE_nginx_passthough: true

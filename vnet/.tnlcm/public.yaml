@@ -50,7 +50,7 @@ input:
   one_vnet_dns:
     description: Space-separated list of DNS servers configured in VMs with vnet as their main Network Interface
     type: str
-    default_value: ""
+    default_value: null
     required_when: false
   one_vnet_first_ip:
     description: First IP address of the Virtual Network range

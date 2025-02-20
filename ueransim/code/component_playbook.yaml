@@ -14,6 +14,8 @@
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/variable_autocompletion.yaml"
 
     - name: Terraform apply
+      vars:   # TODO: Deprecated variable. Used until new appliance is generated
+        one_ueransim_ue_supi: "imsi-{{ one_ueransim_ue_mcc }}{{ one_ueransim_ue_mnc }}{{ one_ueransim_ue_msin }}"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
 
@@ -35,9 +37,17 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_networks[0] + '-id'] | string }}"
+        domain_name: >-
+          {{
+            ((component_type | regex_replace('_', '') | lower) ~ '-' ~
+            (custom_name | regex_replace('_', '') | lower) ~ '.' ~
+            (tn_id | lower) ~ '.' ~
+            (site_domain | lower)) | trim
+          }}
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
@@ -49,6 +59,9 @@
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
 
+    - name: Add new VM to an SSH config file ment to be usable by the experimenter
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
+
 
 - name: "STAGE 3: Apply CaC to prepare the component"
   hosts: "ueransim"
@@ -59,6 +72,12 @@
         connect_timeout: 5
         timeout: 200
 
+    - name: Wait again until one-appliance contextualization scripts have finished
+      become: true
+      ansible.builtin.wait_for:
+        path: /etc/one-appliance/status
+        search_regex: bootstrap_success
+
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
         user: jenkins
@@ -67,25 +86,6 @@
       loop:
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
-
-    ## This is removed when the appliance is updated to handle this case correctly
-    - name: (TEMPORARY) fix UE config
-      vars:
-        ips: "{{ hostvars['localhost']['ips'] }}"
-        access_vnet_id: "{{ hostvars['localhost']['access_vnet_id'] }}"
-        access_vnet_ip: "{{ ips[access_vnet_id] }}"
-      when: hostvars['localhost'].get('one_ueransim_run_ue', 'NO') == 'YES' and hostvars['localhost'].get('one_ueransim_run_gnb', 'NO') == 'YES'
-      become: true
-      block:
-        - name: update gnbSearchList in UE config
-          ansible.builtin.shell:
-          args:
-            chdir: "/etc/ueransim"
-            cmd: "yq '.gnbSearchList = [\"{{ access_vnet_ip }}\"]' -i open5gs-ue.yaml"
-        - name: restart UE
-          service:
-            name: ueransim-ue
-            state: restarted
 
     - name: Create new user for experimenter access
       become: true
@@ -104,11 +104,43 @@
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
 
+    ## TODO: remove task when the appliance is updated to handle this case correctly
+    - name: (TEMPORARY) fix UE config
+      vars:
+        ips: "{{ hostvars['localhost']['ips'] }}"
+        access_vnet_id: "{{ hostvars['localhost']['access_vnet_id'] }}"
+        access_vnet_ip: "{{ ips[access_vnet_id] }}"
+      when: hostvars['localhost'].get('one_ueransim_run_ue', 'NO') == 'YES' and hostvars['localhost'].get('one_ueransim_run_gnb', 'NO') == 'YES'
+      become: true
+      block:
+        - name: Update gnbSearchList in UE config
+          ansible.builtin.shell:
+          args:
+            chdir: "/etc/ueransim"
+            cmd: "yq '.gnbSearchList = [\"{{ access_vnet_ip }}\"]' -i open5gs-ue.yaml"
+        - name: Restart UE
+          service:
+            name: ueransim-ue
+            state: restarted
+
+
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local
   tasks:
+    - name: Set DNS record for the component
+      ansible.builtin.uri:
+        url: >-
+          {{
+            'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
+            '&domain=' ~ domain_name ~
+            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ ips[access_vnet_id] | trim
+          }}
+        method: POST
+        body_format: json
+        status_code: [200]
+
     - name: Tasks for UERANSIM as gNB
       when: one_ueransim_run_gnb == 'YES'
       block:
@@ -116,20 +148,19 @@
           ansible.builtin.set_fact:
             gnb_metadata_dict: >-
               {
-                'proxy': '{{ one_ueransim_gnb_proxy }}',
+                'linked_open5gs': '{{ one_ueransim_gnb_linked_open5gs }}',
                 'amf_address': '{{ one_ueransim_gnb_amf_address }}',
-                'mcc': '{{ one_ueransim_gnb_mcc }}',
-                'mnc': '{{ one_ueransim_gnb_mnc }}',
-                'msin': '{{ terraform_outputs_open5gs_dict.msin }}',
-                'key': '{{ terraform_outputs_open5gs_dict.key }}',
-                'opc': '{{ terraform_outputs_open5gs_dict.opc }}',
-                'apn': '{{ terraform_outputs_open5gs_dict.apn }}',
-                'tac': '{{ one_ueransim_gnb_tac }}',
-                'sst': '{{ one_ueransim_gnb_slices_sst }}',
-                'sd': '{{ one_ueransim_gnb_slices_sd }}',
-                'gnb_address': '{{ ips[access_vnet_id] }}'
+                'amf_proxy':   '{{ one_ueransim_gnb_amf_proxy }}',
+                'tac':  '{{ one_ueransim_gnb_tac }}',
+                'mcc':  '{{ one_ueransim_gnb_mcc }}',
+                'mnc':  '{{ one_ueransim_gnb_mnc }}',
+                'msin': '{{ one_ueransim_gnb_msin }}',
+                'key':  '{{ one_ueransim_gnb_key }}',
+                'opc':  '{{ one_ueransim_gnb_opc }}',
+                'apn':  '{{ one_ueransim_gnb_apn }}',
+                'sst':  '{{ one_ueransim_gnb_slices_sst }}',
+                'sd':   '{{ one_ueransim_gnb_slices_sd }}'
               }
-
         - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
@@ -146,17 +177,17 @@
           ansible.builtin.set_fact:
             ue_metadata_dict: >-
               {
-                'supi': '{{ one_ueransim_ue_supi }}',
-                'mcc': '{{ one_ueransim_ue_mcc }}',
-                'mnc': '{{ one_ueransim_ue_mnc }}',
-                'key': '{{ one_ueransim_ue_key }}',
-                'opc': '{{ one_ueransim_ue_op }}',
+                linked_gnb:      '{{ one_ueransim_ue_linked_gnb }}'
                 'gnbSearchList': '{{ one_ueransim_ue_gnbSearchList }}',
-                'apn': '{{ one_ueransim_ue_session_apn }}',
-                'sst': '{{ one_ueransim_ue_session_sst }}',
-                'sd': '{{ one_ueransim_ue_session_sd }}'
+                'mcc':  '{{ one_ueransim_ue_mcc }}',
+                'mnc':  '{{ one_ueransim_ue_mnc }}',
+                'msin': '{{ one_ueransim_ue_msin }}',
+                'key':  '{{ one_ueransim_ue_key }}',
+                'opc':  '{{ one_ueransim_ue_opc }}',
+                'apn':  '{{ one_ueransim_ue_session_apn }}',
+                'sst':  '{{ one_ueransim_ue_session_sst }}',
+                'sd':   '{{ one_ueransim_ue_session_sd }}'
               }
-
         - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
