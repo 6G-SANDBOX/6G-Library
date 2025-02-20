@@ -107,6 +107,8 @@
         stop_time: "2030-12-31T23:59:42Z"
       loop:
         - { to: "{{ one_open5gcore_vm_ue_subnet }}", via: "{{ ips[access_vnet_id] }}" }
+        #- { to: "{{ one_open5gcore_vm_amf_ip }}/32", via: "{{ ips[access_vnet_id] }}" }
+        #- { to: "{{ one_open5gcore_vm_upf_ip }}/32", via: "{{ ips[access_vnet_id] }}" }
 
 - name: "STAGE 3: Apply CAC to prepare the component (open5gcore_vm)"
   hosts: "open5gcore_vm"
@@ -152,6 +154,18 @@
     - name: Restart open5gcore
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/restart-open5gcore.yaml"
 
+- name: "STAGE 3b: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Write firewall exception for the route-manager-api of your site
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        exceptions: # ip daddr {{ exception }} accept
+          - "{{ one_open5gcore_vm_ue_subnet }}"
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
@@ -163,7 +177,7 @@
         open5gcore_metadata_dict: >-
           {
             'oneKE': '',
-            'proxy': '',
+            'proxy': '{{ ips[access_vnet_id] }}',
             'mcc': '{{ one_open5gcore_vm_mcc }}',
             'mnc': '{{ one_open5gcore_vm_mnc }}',
             'msin': '{{ one_open5gcore_vm_msin }}',

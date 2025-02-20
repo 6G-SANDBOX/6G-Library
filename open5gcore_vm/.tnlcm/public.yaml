@@ -158,6 +158,9 @@ output:
     upf_ip: input.one_open5gcore_vm_upf_ip
     ue_count: input.one_open5gcore_vm_ue_count
 
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
 
 ####################################
 ## Site-specific variables
