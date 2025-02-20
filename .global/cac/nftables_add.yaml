@@ -7,6 +7,25 @@
     owner: root
     group: root
     mode: '0644'
+  when: (exceptions is defined) and (exceptions|length > 0)
+
+- name: Write firewall NAT exception into a new file
+  become: true
+  ansible.builtin.template:
+    src: "{{ workspace }}/.global/templates/nat_exception.nft.j2"
+    dest: "/etc/nftables/nat_exceptions/{{ entity_name }}.nft"
+    owner: root
+    group: root
+    mode: '0644'
+  when: (nat_exceptions is defined) and (nat_exceptions|length > 0)
+
+- name: copy nftables.conf (Temporary until appliance update)
+  copy:
+    src: "{{ workspace }}/.global/templates/nftables.conf"
+    dest: "/etc/nftables.conf"
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: Check nftables syntax
   become: true
