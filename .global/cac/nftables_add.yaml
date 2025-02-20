@@ -1,12 +1,18 @@
 ---
-- name: debug variables
+- name: debug nat_exceptions
   debug:
     var:
-      - exceptions
       - nat_exceptions
   when: true
 
+- name: debug exceptions
+  debug:
+    var:
+      - exceptions
+  when: true
+
 - name: create directories
+  become: true
   file:
     path: "{{ item }}"
     state: directory
