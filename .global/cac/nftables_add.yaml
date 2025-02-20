@@ -1,4 +1,23 @@
 ---
+- name: debug variables
+  debug:
+    var:
+      - exceptions
+      - nat_exceptions
+  when: true
+
+- name: create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  loop:
+    - /etc/nftables
+    - /etc/nftables/fw_exceptions
+    - /etc/nftables/nat_exceptions
+
 - name: Write firewall exception into a new file
   become: true
   ansible.builtin.template:
@@ -7,7 +26,7 @@
     owner: root
     group: root
     mode: '0644'
-  when: (exceptions is defined) and (exceptions|length > 0)
+  when: exceptions is defined
 
 - name: Write firewall NAT exception into a new file
   become: true
@@ -17,7 +36,7 @@
     owner: root
     group: root
     mode: '0644'
-  when: (nat_exceptions is defined) and (nat_exceptions|length > 0)
+  when: nat_exceptions is defined
 
 - name: copy nftables.conf (Temporary until appliance update)
   become: true
