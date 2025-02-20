@@ -20,6 +20,7 @@
   when: (nat_exceptions is defined) and (nat_exceptions|length > 0)
 
 - name: copy nftables.conf (Temporary until appliance update)
+  become: true
   copy:
     src: "{{ workspace }}/.global/templates/nftables.conf"
     dest: "/etc/nftables.conf"
