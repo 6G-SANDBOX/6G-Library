@@ -35,7 +35,7 @@
     - one_ueransim_run_ue == 'YES'
     - one_ueransim_run_gnb == 'NO'
   block:
-    - name: Convert ueransim-gnb terraform output to a dictionary
+    - name: Create variables for gNB from terraform outputs
       set_fact:
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_networks[0] + '-id'] | string }}"
         gnb_ips: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-ips'] }}"
@@ -62,14 +62,14 @@
     - name: "Overwrite UE defaults with values from {{ one_ueransim_gnb_linked_open5gs }}"
       ansible.builtin.set_fact:
         one_ueransim_ue_gnbSearchList: "localhost"
-        one_ueransim_ue_mcc:  "{{ one_ueransim_gnb_mcc | default(gnb_metadata_dict.mcc, true) }}"
-        one_ueransim_ue_mnc:  "{{ one_ueransim_gnb_mnc | default(gnb_metadata_dict.mnc, true) }}"
-        one_ueransim_ue_msin: "{{ gnb_metadata_dict.msin }}"
-        one_ueransim_ue_key:  "{{ gnb_metadata_dict.key }}"
-        one_ueransim_ue_opc:  "{{ gnb_metadata_dict.opc }}"
-        one_ueransim_ue_session_apn: "{{ gnb_metadata_dict.apn}}"
-        one_ueransim_ue_session_sst: "{{ one_ueransim_gnb_slices_sst | default(gnb_metadata_dict.sst, true) }}"
-        one_ueransim_ue_session_sd:  "{{ one_ueransim_gnb_slices_sd | default(gnb_metadata_dict.sd, true) }}"
+        one_ueransim_ue_mcc:  "{{ one_ueransim_gnb_mcc | default(open5gs_metadata_dict.mcc, true) }}"
+        one_ueransim_ue_mnc:  "{{ one_ueransim_gnb_mnc | default(open5gs_metadata_dict.mnc, true) }}"
+        one_ueransim_ue_msin: "{{ open5gs_metadata_dict.msin }}"
+        one_ueransim_ue_key:  "{{ open5gs_metadata_dict.key }}"
+        one_ueransim_ue_opc:  "{{ open5gs_metadata_dict.opc }}"
+        one_ueransim_ue_session_apn: "{{ open5gs_metadata_dict.apn}}"
+        one_ueransim_ue_session_sst: "{{ one_ueransim_gnb_slices_sst | default(open5gs_metadata_dict.sst, true) }}"
+        one_ueransim_ue_session_sd:  "{{ one_ueransim_gnb_slices_sd | default(open5gs_metadata_dict.sd, true) }}"
 
   
 - name: Overwrite autocompleted values again with explicit values from the input file
