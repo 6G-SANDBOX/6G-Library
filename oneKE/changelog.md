@@ -2,7 +2,7 @@
 
 ## unreleased
 ### Added
-- Component also supports OneKE 1.31 now.
+- Component support for OneKE 1.31 and 1.31 Airgapped. New custom templates for 6G-Sandbox available in the official marketplace. 
 ### Fixed
 - Jenkins is now able to resize the Longhorn disk in the storage nodes.
 
