@@ -36,26 +36,26 @@ Service `ueransim_gnb.service` is currently **running** and **enabled** with the
 - **MCC**:  `{{ one_ueransim_gnb_mcc }}`
 - **MNC**:  `{{ one_ueransim_gnb_mnc }}`
 - **Slice SST**: `{{ one_ueransim_gnb_slices_sst }}`
-- **Slice SD**: `{{ one_ueransim_gnb_slices_sd }}`
+- **Slice SD**:  `{{ one_ueransim_gnb_slices_sd }}`
 {% else %}
 Service `ueransim_gnb.service` is currently **not running** and **disabled**.
 {% endif %}
 
 
 ### UE Runtime
-{% if one_ueransim_run_gnb is defined and one_ueransim_run_gnb == 'YES' %}
+{% if one_ueransim_run_ue is defined and one_ueransim_run_ue == 'YES' %}
 Service `ueransim_ue.service` is currently **running** and **enabled** with the following configuration:
-- **Linked gNB**: `{{ one_ueransim_ue_linked_gnb }}`
+- **Linked gNB**:    `{{ one_ueransim_ue_linked_gnb }}`
 - **gnbSearchList**: `{{ one_ueransim_ue_gnbSearchList }}`
-- **MCC**: `{{ one_ueransim_ue_mcc }}`
-- **MNC**: `{{ one_ueransim_ue_mnc }}`
+- **MCC**:  `{{ one_ueransim_ue_mcc }}`
+- **MNC**:  `{{ one_ueransim_ue_mnc }}`
 - **MSIN**: `{{ one_ueransim_ue_msin }}`
 - **Resulting SUPI**:  `imsi-{{ one_ueransim_ue_mcc }}{{ one_ueransim_ue_mnc }}{{ one_ueransim_ue_msin }}`
 - **Permanent Subscription Key**: `{{ one_ueransim_ue_key }}`
 - **Operator Code**: `{{ one_ueransim_ue_opc }}`
 - **Session APN**: `{{ one_ueransim_ue_session_apn }}`
 - **Session SST**: `{{ one_ueransim_ue_session_sst }}`
-- **Session SD**: `{{ one_ueransim_ue_session_sd }}`
+- **Session SD**:  `{{ one_ueransim_ue_session_sd }}`
 {# - **configured_nssai_sst**: `{{ one_ueransim_ue_configured_nssai_sst }}`
 - **configured_nssai_sd**: `{{ one_ueransim_ue_configured_nssai_sd }}`
 - **default_nssai_sst**: `{{ one_ueransim_ue_default_nssai_sst }}`

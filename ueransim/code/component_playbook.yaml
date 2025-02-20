@@ -177,7 +177,7 @@
           ansible.builtin.set_fact:
             ue_metadata_dict: >-
               {
-                linked_gnb:      '{{ one_ueransim_ue_linked_gnb }}'
+                'linked_gnb:'    '{{ one_ueransim_ue_linked_gnb }}',
                 'gnbSearchList': '{{ one_ueransim_ue_gnbSearchList }}',
                 'mcc':  '{{ one_ueransim_ue_mcc }}',
                 'mnc':  '{{ one_ueransim_ue_mnc }}',

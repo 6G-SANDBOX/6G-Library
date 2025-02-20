@@ -15,7 +15,7 @@
       set_fact:
         open5gs_metadata_dict: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'] }}"
 
-    - name: "Overwrite gNB defaults with values from {{ one_ueransim_gnb_linked_open5gs }}"
+    - name: Overwrite gNB-related variables
       ansible.builtin.set_fact:
         one_ueransim_gnb_amf_address: "{{ open5gs_metadata_dict.amf_ip }}"
         one_ueransim_gnb_amf_proxy: "{{ open5gs_metadata_dict.proxy }}"
@@ -41,7 +41,7 @@
         gnb_ips: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-ips'] }}"
         gnb_metadata_dict: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_metadata'] }}"
 
-    - name: "Overwrite UE defaults with {{ one_ueransim_ue_linked_gnb }} values"
+    - name: Overwrite UE-related variables when gNB is in another component
       ansible.builtin.set_fact:
         one_ueransim_ue_gnbSearchList: ["{{ gnb_ips[access_vnet_id] }}"]
         one_ueransim_ue_mcc:  "{{ gnb_metadata_dict.mcc }}"
@@ -54,23 +54,21 @@
         one_ueransim_ue_session_sd:  "{{ gnb_metadata_dict.sd }}"
 
 
-- name: Tasks for UERANSIM as UE with internal gNB
+- name: Overwrite UE-related variables when gNB is in the same component
   when:
     - one_ueransim_run_ue == 'YES'
     - one_ueransim_run_gnb == 'YES'
-  block:
-    - name: "Overwrite UE defaults with values from {{ one_ueransim_gnb_linked_open5gs }}"
-      ansible.builtin.set_fact:
-        one_ueransim_ue_linked_gnb: "{{ entity_name }}"
-        one_ueransim_ue_gnbSearchList: "localhost"
-        one_ueransim_ue_mcc:  "{{ one_ueransim_gnb_mcc | default(open5gs_metadata_dict.mcc, true) }}"
-        one_ueransim_ue_mnc:  "{{ one_ueransim_gnb_mnc | default(open5gs_metadata_dict.mnc, true) }}"
-        one_ueransim_ue_msin: "{{ open5gs_metadata_dict.msin }}"
-        one_ueransim_ue_key:  "{{ open5gs_metadata_dict.key }}"
-        one_ueransim_ue_opc:  "{{ open5gs_metadata_dict.opc }}"
-        one_ueransim_ue_session_apn: "{{ open5gs_metadata_dict.apn}}"
-        one_ueransim_ue_session_sst: "{{ one_ueransim_gnb_slices_sst | default(open5gs_metadata_dict.sst, true) }}"
-        one_ueransim_ue_session_sd:  "{{ one_ueransim_gnb_slices_sd | default(open5gs_metadata_dict.sd, true) }}"
+  ansible.builtin.set_fact:
+    one_ueransim_ue_linked_gnb: "{{ entity_name }}"
+    one_ueransim_ue_gnbSearchList: "localhost"
+    one_ueransim_ue_mcc:  "{{ one_ueransim_gnb_mcc | default(open5gs_metadata_dict.mcc, true) }}"
+    one_ueransim_ue_mnc:  "{{ one_ueransim_gnb_mnc | default(open5gs_metadata_dict.mnc, true) }}"
+    one_ueransim_ue_msin: "{{ open5gs_metadata_dict.msin }}"
+    one_ueransim_ue_key:  "{{ open5gs_metadata_dict.key }}"
+    one_ueransim_ue_opc:  "{{ open5gs_metadata_dict.opc }}"
+    one_ueransim_ue_session_apn: "{{ open5gs_metadata_dict.apn}}"
+    one_ueransim_ue_session_sst: "{{ one_ueransim_gnb_slices_sst | default(open5gs_metadata_dict.sst, true) }}"
+    one_ueransim_ue_session_sd:  "{{ one_ueransim_gnb_slices_sd | default(open5gs_metadata_dict.sd, true) }}"
 
   
 - name: Overwrite autocompleted values again with explicit values from the input file
