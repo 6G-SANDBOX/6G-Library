@@ -61,6 +61,7 @@
   block:
     - name: "Overwrite UE defaults with values from {{ one_ueransim_gnb_linked_open5gs }}"
       ansible.builtin.set_fact:
+        one_ueransim_ue_linked_gnb: "{{ entity_name }}"
         one_ueransim_ue_gnbSearchList: "localhost"
         one_ueransim_ue_mcc:  "{{ one_ueransim_gnb_mcc | default(open5gs_metadata_dict.mcc, true) }}"
         one_ueransim_ue_mnc:  "{{ one_ueransim_gnb_mnc | default(open5gs_metadata_dict.mnc, true) }}"
