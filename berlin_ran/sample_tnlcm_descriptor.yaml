@@ -32,7 +32,7 @@ trial_network:
       one_open5gcore_vm_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
       one_open5gcore_vm_opc: "E8ED289DEBA952E4283B54E88E6183CA"
       one_open5gcore_vm_apn: "internet"
-      one_open5gcore_vm_tac: 200
+      one_open5gcore_vm_tac: 122
       one_open5gcore_vm_s_nssai_sst: 1
       one_open5gcore_vm_s_nssai_sd: "000001"
       one_open5gcore_vm_amf_ip: "10.10.11.200"
