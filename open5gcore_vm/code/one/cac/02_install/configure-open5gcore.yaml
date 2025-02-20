@@ -93,8 +93,7 @@
     - name: install testbed-sim-info
       ansible.builtin.copy:
         content: "{{ testbed_sim_sql }}"
-        mode: 0600
-        dest: "/etc/open5gcore/sql/99_testbed-sim.sql"
+        dest: "/etc/open5gcore/sql/zz_testbed-sim.sql"
       when: (testbed_sim_sql is defined) and (testbed_sim_sql|length > 0)
       register: config_changed
 

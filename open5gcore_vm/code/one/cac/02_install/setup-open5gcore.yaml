@@ -27,7 +27,7 @@
     dnn_mtu: 1406 #when GUEST_MTU == 1450
     playbookdir: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/"
     license_crt: "{{ site_available_components.open5gcore_vm.license_crt }}"
-    testbed_sim_sql: "{{ site_available_components.open5gcore_vm.testbed_sim_sql }}"
+    testbed_sim_sql: "{{ site_available_components.open5gcore_vm.testbed_sim_sql | default('') }}"
     s_nssai_sd: "{{ one_open5gcore_vm_s_nssai_sd  }}"
     s_nssai_sst: "{{ one_open5gcore_vm_s_nssai_sst }}"
   block:
