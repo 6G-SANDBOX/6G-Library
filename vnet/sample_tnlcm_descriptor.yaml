@@ -9,7 +9,7 @@ trial_network:
     dependencies:
       - "tn_init"
     input:
-      one_vnet_gw: "10.30.30.5"
+      one_vnet_gw: "10.20.30.5"
       one_vnet_dns: "1.1.1.1 1.0.0.1"
       one_vnet_netmask: 24
       one_vnet_first_ip: "10.20.30.30"

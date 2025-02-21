@@ -40,7 +40,7 @@ input:
   one_vnet_gw:
     description: Default gateway of the Virtual Network subnet
     type: str
-    default_value: "10.21.12.1"
+    default_value: null
     required_when: false
   one_vnet_netmask:
     description: Network mask of the Virtual Network subnet

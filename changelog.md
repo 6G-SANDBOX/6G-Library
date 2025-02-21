@@ -9,6 +9,7 @@
 - New input variables for `int_p4_sw` and `upf_p4_sw`. Components upgraded to version `unreleased`.
 - Changes in many variables of `ueransim`. For more details check the component's changelog. Component upgraded to version `unreleased`.
 - Migrate `elcm` component from version `v3.6.3` to `3.7.1`.
+- Variable `one_vnet_gw` in component `vnet` has now no default variable. Component upgraded to version `unreleased`.
 ### Fixed
 - The open5gs proxy in components `nokia_radio` and `iswireless_radio` is now properly set. Components upgraded to version `unreleased`.
 - Storage nodes of `oneKE` can now be resized from the deployment itself.
