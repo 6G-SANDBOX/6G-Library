@@ -55,9 +55,9 @@ input:
     required_when: true
 
   one_oneKE_version:
-    description: Version of the OneKE Appliance. 129A and 131A not yet implemented, but could be added in the future. Default value is "129"
+    description: Version of the OneKE Appliance. Default value is "129"
     type: str
-    default_value: "131"
+    default_value: "129"
     choices: ["129","131","131a"]
     required_when: false
 

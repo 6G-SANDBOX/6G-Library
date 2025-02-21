@@ -117,7 +117,7 @@
           ansible.builtin.shell:
           args:
             chdir: "/etc/ueransim"
-            cmd: "yq '.gnbSearchList = [\"{{ access_vnet_ip }}\"]' -i open5gs-ue.yaml"
+            cmd: "yq '.gnbSearchList = [\"{{ one_ueransim_ue_gnbSearchList }}\"]' -i open5gs-ue.yaml"
         - name: Restart UE
           service:
             name: ueransim-ue

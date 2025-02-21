@@ -10,7 +10,7 @@
 
 one_oneKE_external_vnet: "tn_vxlan"
 
-one_oneKE_version: "131"
+one_oneKE_version: "129"
 one_oneKE_multus: "YES"            # OneKE default is "NO"
 one_oneKE_cni_plugin: "canal"      # OneKE default is "cilium"
 one_oneKE_cilium_range: null       # Required if the cni_plugin is cilium
