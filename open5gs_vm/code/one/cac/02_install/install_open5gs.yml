@@ -119,12 +119,12 @@
     - name: Add UEs to UDM
       ansible.builtin.command:
         cmd: /etc/open5gs/add-test-ues.sh
-      when: testbed_simfile.changed
+      when: add_ue_script.changed
 
     - name: Add testbed-sim to UDM
       ansible.builtin.command:
-        cmd: /etc/open5gs/add-test-ues.sh
-      when: add_ue_script.changed
+        cmd: /etc/open5gs/zz_testbed-sim.sh
+      when: testbed_simfile.changed
 
     - name: Render UE subnet into 99-open5gs.network
       template:
