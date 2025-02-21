@@ -16,5 +16,6 @@ one_elcm_networks:
 
 one_elcm_influxdb_user: "admin"
 one_elcm_influxdb_password: "admin"
-one_elcm_influxdb_database: "elcmdb"
+one_elcm_influxdb_org: "elcmorg"
+one_elcm_influxdb_bucket: "elcmbucket"
 one_elcm_grafana_password: "admin"

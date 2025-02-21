@@ -14,7 +14,7 @@
 metadata:
   maintainers:
     - Carlos Andreo López <c.andreo@uma.es>
-  short_description: Deploys a virtual machine with the ELCM backend and frontend.
+  short_description: Deploy a virtual machine with the ELCM backend and frontend.
   long_description: |
     Ubuntu 22.04 LTS virtual machine with the ELCM installed.
     It also contains OpenTAP, InfluxDB and Grafana services installed.
@@ -44,10 +44,15 @@ input:
     type: str
     default_value: "admin"
     required_when: false
-  one_elcm_influxdb_database:
-    description: Database name
+  one_elcm_influxdb_org:
+    description: Organization name
     type: str
-    default_value: "elcmdb"
+    default_value: "elcmorg"
+    required_when: false
+  one_elcm_influxdb_bucket:
+    description: Bucket name
+    type: str
+    default_value: "elcmbucket"
     required_when: false
   one_elcm_grafana_password:
     description: Password used to login into the Grafana
