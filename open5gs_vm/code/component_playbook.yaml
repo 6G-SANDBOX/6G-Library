@@ -133,6 +133,7 @@
     #   when: debug
 
     - name: Install Open5GS and MongoDB
+      become: true
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/install_open5gs.yml"
 
   handlers:
