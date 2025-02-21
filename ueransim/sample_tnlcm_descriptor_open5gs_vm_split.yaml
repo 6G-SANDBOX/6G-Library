@@ -42,14 +42,13 @@ trial_network:
     type: "ueransim"
     name: "gnb"
     dependencies:
-      - "tn_init"
-      - "open5gs_k8s-core"
+      - "open5gs_vm-core"
     input:
       one_ueransim_networks:
         - "tn_vxlan"
       one_ueransim_run_gnb: "YES"
       one_ueransim_run_ue: "NO"
-      one_ueransim_gnb_linked_open5gs: "open5gs_k8s-core"
+      one_ueransim_gnb_linked_open5gs: "open5gs_vm-core"
       one_ueransim_gnb_amf_ip: "10.10.10.200"
       # one_ueransim_gnb_amf_proxy: null
       one_ueransim_gnb_tac: 200
@@ -61,8 +60,6 @@ trial_network:
     type: "ueransim"
     name: "ue"
     dependencies:
-      - "tn_init"
-      - "open5gs_k8s-core"
       - "ueransim-gnb"
     input:
       one_ueransim_networks: 
