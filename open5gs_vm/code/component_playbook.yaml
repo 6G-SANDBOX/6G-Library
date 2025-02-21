@@ -137,7 +137,7 @@
 
   handlers:
     - name: Restart Open5GS
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/restart_open5gs.yml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/restart_open5gs.yaml"
 
 - name: "STAGE 3b: Access tn_bastion to set firewall exceptions"
   hosts: bastion
