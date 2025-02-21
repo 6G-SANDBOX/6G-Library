@@ -82,12 +82,14 @@
     - name: Write firewall exception for the route-manager-api of your site
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
-        exceptions: # ip daddr {{ exception }} accept
+        exceptions:
+          # ip daddr {{ exception }} accept
           - "{{ site_routemanager.api_endpoint }}"
           - "{{ site_available_components.berlin_ran.subnet }}"
           - "{{ open5gs_metadata['amf_ip'] }}"
           - "{{ open5gs_metadata['upf_ip'] }}"
-        nat_exceptions: # ip saddr {{ item }} return
+        nat_exceptions:
+          # ip saddr {{ item }} return
           - "{{ open5gs_metadata['amf_ip'] }}"
           - "{{ open5gs_metadata['upf_ip'] }}"
           - "{{ site_available_components.berlin_ran.subnet }}"
