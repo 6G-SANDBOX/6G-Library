@@ -82,10 +82,10 @@
     - name: debug exceptions
       debug:
         var:
-          - "{{ site_routemanager.api_endpoint }}"
-          - "{{ site_available_components.berlin_ran.subnet }}"
-          - "{{ open5gs_metadata['amf_ip'] }}"
-          - "{{ open5gs_metadata['upf_ip'] }}"
+          - site_routemanager.api_endpoint
+          - site_available_components.berlin_ran.subnet
+          - hostvars['localhost']['open5gs_metadata']['amf_ip']
+          - hostvars['localhost']['open5gs_metadata']['upf_ip']
 
     - name: Write firewall exception for the route-manager-api of your site
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
