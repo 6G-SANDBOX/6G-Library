@@ -109,17 +109,17 @@
 
     - name: install testbed-sim-info
       ansible.builtin.copy:
-        content: "{{ testbed_sim }}"
+        content: "{{ site_available_components.open5gs_vm.testbed_sim }}"
         dest: "/etc/open5gs/zz_testbed-sim.sh"
         mode: '0755'
       become: true
-      when: (testbed_sim is defined) and (testbed_sim|length > 0)
-      register: testbed_sim
+      when: (site_available_components.open5gs_vm.testbed_sim is defined) and (site_available_components.open5gs_vm.testbed_sim|length > 0)
+      register: testbed_simfile
 
     - name: Add UEs to UDM
       ansible.builtin.command:
         cmd: /etc/open5gs/add-test-ues.sh
-      when: testbed_sim.changed
+      when: testbed_simfile.changed
 
     - name: Add testbed-sim to UDM
       ansible.builtin.command:
