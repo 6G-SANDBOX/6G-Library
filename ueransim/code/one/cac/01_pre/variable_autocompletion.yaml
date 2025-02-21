@@ -49,7 +49,7 @@
         one_ueransim_ue_msin: "{{ gnb_metadata_dict.msin }}"
         one_ueransim_ue_key:  "{{ gnb_metadata_dict.key }}"
         one_ueransim_ue_opc:  "{{ gnb_metadata_dict.opc }}"
-        one_ueransim_ue_session_apn: "{{ gnb_metadata_dict.apn}}"
+        one_ueransim_ue_session_apn: "{{ gnb_metadata_dict.apn }}"
         one_ueransim_ue_session_sst: "{{ gnb_metadata_dict.sst }}"
         one_ueransim_ue_session_sd:  "{{ gnb_metadata_dict.sd }}"
 
@@ -66,7 +66,7 @@
     one_ueransim_ue_msin: "{{ open5gs_metadata_dict.msin }}"
     one_ueransim_ue_key:  "{{ open5gs_metadata_dict.key }}"
     one_ueransim_ue_opc:  "{{ open5gs_metadata_dict.opc }}"
-    one_ueransim_ue_session_apn: "{{ open5gs_metadata_dict.apn}}"
+    one_ueransim_ue_session_apn: "{{ open5gs_metadata_dict.apn }}"
     one_ueransim_ue_session_sst: "{{ one_ueransim_gnb_slices_sst | default(open5gs_metadata_dict.sst, true) }}"
     one_ueransim_ue_session_sd:  "{{ one_ueransim_gnb_slices_sd | default(open5gs_metadata_dict.sd, true) }}"
 

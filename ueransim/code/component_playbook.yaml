@@ -183,9 +183,9 @@
               msin: "{{ one_ueransim_ue_msin }}"
               key: "{{ one_ueransim_ue_key }}"
               opc: "{{ one_ueransim_ue_opc }}"
-              apn: "{{ one_ueransim_ue_apn }}"
-              sst: "{{ one_ueransim_ue_sst }}"
-              sd: "{{ one_ueransim_ue_sd }}"
+              apn: "{{ one_ueransim_ue_session_apn }}"
+              sst: "{{ one_ueransim_ue_session_sst }}"
+              sd: "{{ one_ueransim_ue_session_sd }}"
         - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
