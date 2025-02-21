@@ -1,15 +1,11 @@
 ---
-- name: debug nat_exceptions
-  debug:
-    var:
-      - nat_exceptions
-  when: true
+- debug:
+    var: nat_exceptions
+  when: nat_exceptions is defined
 
-- name: debug exceptions
-  debug:
-    var:
-      - exceptions
-  when: true
+- debug:
+    var: exceptions
+  when: exceptions is defined
 
 - name: create directories
   become: true

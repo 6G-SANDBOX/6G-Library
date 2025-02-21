@@ -1,5 +1,5 @@
 #!/usr/sbin/nft -f
 
 {% for nat_exception in nat_exceptions %}
-ip saddr {{ exception }} return
+ip saddr {{ nat_exception }} return
 {% endfor %}

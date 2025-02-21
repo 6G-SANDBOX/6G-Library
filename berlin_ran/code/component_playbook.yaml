@@ -79,9 +79,11 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: debug exceptions
+    - name: debug vars
       debug:
-        var:
+        var: to_debug
+      vars:
+        to_debug:
           - site_routemanager.api_endpoint
           - site_available_components.berlin_ran.subnet
           - hostvars['localhost']['open5gs_metadata']['amf_ip']
