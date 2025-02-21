@@ -8,13 +8,12 @@
       Authorization: "Bearer {{ token }}"
       Content-Type: application/json
     body_format: json
-    body: >
-      {
-        "to": "{{ item.to }}",
-        "via": "{{ item.via }}",
-        "create_at": "{{ start_time | default('', true) }}",
-        "delete_at": "{{ stop_time | default('', true) }}"
-      }
+    body: "{{ {
+        'to': item.to,
+        'via': item.via,
+        'create_at': start_time if start_time is defined else omit,
+        'delete_at': stop_time if stop_time is defined else omit
+      } | to_json }}"
     return_content: yes
     status_code: [200,201]
   register: api_response
