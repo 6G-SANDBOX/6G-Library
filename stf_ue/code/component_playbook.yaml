@@ -132,7 +132,7 @@
     - name: Write firewall exception for the STF web UI
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
-        exceptions:
+        fw_exceptions:
           - "{{ site_available_components.stf_ue.origin }}"
 
 

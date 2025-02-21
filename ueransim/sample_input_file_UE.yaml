@@ -12,7 +12,7 @@ one_ueransim_run_ue: "YES"
 #one_ueransim_gnb_linked_open5gs: open5gs_k8s-sample_name
 one_ueransim_ue_linked_gnb: ueransim-sample_name
 
-#one_ueransim_gnb_amf_address: "10.21.12.200"
+#one_ueransim_gnb_amf_ip: "10.21.12.200"
 #one_ueransim_gnb_amf_proxy: null
 #one_ueransim_gnb_tac: 200
 #one_ueransim_gnb_mcc: "001"

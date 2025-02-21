@@ -10,7 +10,7 @@
 
 one_ueransim_cpu: 2
 one_ueransim_memory: 2048
-one_ueransim_disk: 3072
+one_ueransim_disk: 10240
 one_ueransim_networks: 
   - tn_vxlan
 
@@ -20,7 +20,7 @@ one_ueransim_run_ue: "NO"
 
 
 
-one_ueransim_gnb_amf_address: "10.21.12.200"
+one_ueransim_gnb_amf_ip: "10.21.12.200"
 one_ueransim_gnb_amf_proxy: null
 one_ueransim_gnb_tac: 200
 one_ueransim_gnb_mcc: "001"

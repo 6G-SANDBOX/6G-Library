@@ -81,7 +81,7 @@
     - name: Write firewall exception for the route-manager-api of your site
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
-        exceptions:
+        fw_exceptions:
           - "{{ site_iswireless_routemanager.api_endpoint }}"
 
 

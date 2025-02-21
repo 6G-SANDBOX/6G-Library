@@ -17,7 +17,7 @@
 
     - name: Overwrite gNB-related variables
       ansible.builtin.set_fact:
-        one_ueransim_gnb_amf_address: "{{ open5gs_metadata_dict.amf_ip }}"
+        one_ueransim_gnb_amf_ip: "{{ open5gs_metadata_dict.amf_ip }}"
         one_ueransim_gnb_amf_proxy: "{{ open5gs_metadata_dict.proxy }}"
         one_ueransim_gnb_tac:  "{{ open5gs_metadata_dict.tac }}"
         one_ueransim_gnb_mcc:  "{{ open5gs_metadata_dict.mcc }}"

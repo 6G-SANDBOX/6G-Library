@@ -149,7 +149,7 @@
             gnb_metadata_dict: >-
               {
                 'linked_open5gs': '{{ one_ueransim_gnb_linked_open5gs }}',
-                'amf_address': '{{ one_ueransim_gnb_amf_address }}',
+                'amf_address': '{{ one_ueransim_gnb_amf_ip }}',
                 'amf_proxy':   '{{ one_ueransim_gnb_amf_proxy }}',
                 'tac':  '{{ one_ueransim_gnb_tac }}',
                 'mcc':  '{{ one_ueransim_gnb_mcc }}',

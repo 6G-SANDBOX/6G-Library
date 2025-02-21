@@ -109,7 +109,7 @@
     - name: Write firewall exception for the IxChariot Registration Server
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
-        exceptions:
+        fw_exceptions:
           - "{{ one_ixc_endpoint_rs }}"
 
 

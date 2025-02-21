@@ -14,7 +14,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     USERNAME = "jenkins"
     SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
     RUN_GNB = "{{ one_ueransim_run_gnb }}"
-    GNB_AMF_ADDRESS = "{{ one_ueransim_gnb_amf_address }}"
+    GNB_AMF_ADDRESS = "{{ one_ueransim_gnb_amf_ip }}"
     ONEKE_VNF =       "{{ one_ueransim_gnb_amf_proxy }}"
     GNB_TAC = "{{ one_ueransim_gnb_tac }}"
     GNB_MCC = "{{ one_ueransim_gnb_mcc }}"

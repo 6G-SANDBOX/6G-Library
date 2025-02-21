@@ -20,7 +20,7 @@ Component configuration logs can be foud at `/var/log/post-ueransim.log`
 - **OpenNebula VM ID**: `{{ id }}`
 - **VM memory**: `{{ one_ueransim_memory}} MiB`
 - **VM VCPUs**: `{{ one_ueransim_cpu }}`
-- **VM available storage**: `5 GiB`
+- **VM available storage**: `10 GiB`
 - **VM network interfaces**:
   ```json
   {{ ips }}
@@ -30,7 +30,7 @@ Component configuration logs can be foud at `/var/log/post-ueransim.log`
 {% if one_ueransim_run_gnb is defined and one_ueransim_run_gnb == 'YES' %}
 Service `ueransim_gnb.service` is currently **running** and **enabled** with the following configuration:
 - **Linked Open5GS**: `{{ one_ueransim_gnb_linked_open5gs }}`
-- **AMF IPv4 address**: `{{ one_ueransim_gnb_amf_address }}`
+- **AMF IPv4 address**: `{{ one_ueransim_gnb_amf_ip }}`
 - **AMF proxy**: `{{ one_ueransim_gnb_amf_proxy }}`
 - **TAC**:  `{{ one_ueransim_gnb_mcc }}`
 - **MCC**:  `{{ one_ueransim_gnb_mcc }}`

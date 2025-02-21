@@ -58,7 +58,7 @@ input:
       Defines the 5G SA core the gNB will try to connect to, and will autocomplete other variables acordingly.
     type: "open5gs_k8s or open5gs_vm or upf_p4_sw or open5gcore_vm"
     required_when: "one_ueransim_run_gnb == 'YES'"
-  one_ueransim_gnb_amf_address:
+  one_ueransim_gnb_amf_ip:
     description: |
       In gNB simulation, IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
       AMF port is currently hardcoded to always be 38412.
@@ -69,7 +69,7 @@ input:
   # TODO: delete it as the tn_bastion can directly handle the routing.
   one_ueransim_gnb_amf_proxy:
     description: |
-      In gNB simulation, IPv4 address where traffic to the `one_ueransim_gnb_amf_address` should be routed to.
+      In gNB simulation, IPv4 address where traffic to the `one_ueransim_gnb_amf_ip` should be routed to.
       Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
     type: str
     default_value: null
@@ -231,7 +231,7 @@ terraform_outputs:
   __entity_name__run_gnb: input.one_ueransim_run_gnb
   __entity_name__gnb_metadata:
     linked_open5gs: input.one_ueransim_gnb_linked_open5gs
-    amf_address: input.one_ueransim_gnb_amf_address
+    amf_address: input.one_ueransim_gnb_amf_ip
     amf_proxy: input.one_ueransim_gnb_amf_proxy
     tac: input.one_ueransim_gnb_tac
     mcc: input.one_ueransim_gnb_mcc
