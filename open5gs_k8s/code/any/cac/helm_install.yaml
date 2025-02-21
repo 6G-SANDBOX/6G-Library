@@ -8,7 +8,7 @@
   kubernetes.core.helm:
     kubeconfig: /etc/rancher/rke2/rke2.yaml
     name: open5gs
-    chart_ref: oci://dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs
+    chart_ref: oci://registry-1.docker.io/gradiantcharts/open5gs
     chart_version: 2.2.6
     namespace: open5gs
     create_namespace: yes
