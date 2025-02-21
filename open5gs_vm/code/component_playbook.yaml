@@ -70,6 +70,12 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
+    - name: Add the bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
 
@@ -82,8 +88,10 @@
       vars:
         endpoint: "{{ bastion_ip }}"
         token: "{{ tn_routemanager_token }}"
+        start_time: "{{ lookup('pipe', 'date -u +\"%Y-%m-%dT%H:%M:%SZ\"') }}"
+        stop_time: "2030-12-31T23:59:42Z"
       loop:
-        - { destination: "{{ one_open5gs_vm_ue_subnet }}", gateway: "{{ ips[access_vnet_id] }}" }
+        - { to: "{{ one_open5gs_vm_ue_subnet }}", via: "{{ ips[access_vnet_id] }}" }
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
@@ -131,6 +139,18 @@
     - name: Restart Open5GS
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/restart_open5gs.yml"
 
+- name: "STAGE 3b: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Write firewall exception for the ue-subnet
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        exceptions: # ip daddr {{ exception }} accept
+          - "{{ one_open5gs_vm_ue_subnet }}"
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
@@ -142,7 +162,7 @@
         open5gs_metadata_dict: >-
           {
             'oneKE': '',
-            'proxy': '',
+            'proxy': '{{ ips[access_vnet_id] }}',
             'mcc': '{{ one_open5gs_vm_mcc }}',
             'mnc': '{{ one_open5gs_vm_mnc }}',
             'msin': '{{ one_open5gs_vm_msin }}',
