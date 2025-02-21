@@ -148,7 +148,7 @@
           ansible.builtin.set_fact:
             gnb_metadata_dict: >-
               {
-                'linked_open5gs': '{{ one_ueransim_gnb_linked_open5gs }}',
+                'linked_open5gs': one_ueransim_gnb_linked_open5gs,
                 'amf_address': '{{ one_ueransim_gnb_amf_ip }}',
                 'amf_proxy':   '{{ one_ueransim_gnb_amf_proxy }}',
                 'tac':  '{{ one_ueransim_gnb_tac }}',
@@ -175,19 +175,17 @@
       block:
         - name: Define ue_metadata dictionary
           ansible.builtin.set_fact:
-            ue_metadata_dict: >-
-              {
-                'linked_gnb':    '{{ one_ueransim_ue_linked_gnb }}',
-                'gnbSearchList': '{{ one_ueransim_ue_gnbSearchList }}',
-                'mcc':  '{{ one_ueransim_ue_mcc }}',
-                'mnc':  '{{ one_ueransim_ue_mnc }}',
-                'msin': '{{ one_ueransim_ue_msin }}',
-                'key':  '{{ one_ueransim_ue_key }}',
-                'opc':  '{{ one_ueransim_ue_opc }}',
-                'apn':  '{{ one_ueransim_ue_session_apn }}',
-                'sst':  '{{ one_ueransim_ue_session_sst }}',
-                'sd':   '{{ one_ueransim_ue_session_sd }}'
-              }
+            ue_metadata_dict:
+              linked_gnb: "{{ one_ueransim_ue_linked_gnb }}"
+              gnbSearchList: "{{ one_ueransim_ue_gnbSearchList }}"
+              mcc: "{{ one_ueransim_ue_mcc }}"
+              mnc: "{{ one_ueransim_ue_mnc }}"
+              msin: "{{ one_ueransim_ue_msin }}"
+              key: "{{ one_ueransim_ue_key }}"
+              opc: "{{ one_ueransim_ue_opc }}"
+              apn: "{{ one_ueransim_ue_apn }}"
+              sst: "{{ one_ueransim_ue_sst }}"
+              sd: "{{ one_ueransim_ue_sd }}"
         - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
@@ -195,7 +193,7 @@
               - key: "{{ entity_name }}-run_ue"
                 value: "YES"
               - key: "{{ entity_name }}-ue_metadata"
-                value: "{{ ue_metadata_dict }}"
+                value: "{{ ue_metadata_dict | to_json }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

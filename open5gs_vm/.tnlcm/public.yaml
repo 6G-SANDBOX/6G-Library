@@ -14,6 +14,7 @@
 metadata:
   maintainers:
     - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   short_description: Deploys a Open5GS as a standalone Virtual Machine
   long_description: |
     Deploys a Open5GS over a general-purpose Virtual Machine based on Ubuntu 22.04 lTS.
