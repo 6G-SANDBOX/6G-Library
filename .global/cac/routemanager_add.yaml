@@ -12,8 +12,8 @@
       {
         "to": "{{ item.to }}",
         "via": "{{ item.via }}",
-        "create_at": "{{ start_time }}",
-        "delete_at": "{{ stop_time }}"
+        "create_at": "{{ start_time | default('', true) }}",
+        "delete_at": "{{ stop_time | default('', true) }}"
       }
     return_content: yes
     status_code: [200,201]
