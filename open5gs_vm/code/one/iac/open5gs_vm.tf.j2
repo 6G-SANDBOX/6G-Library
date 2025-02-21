@@ -60,9 +60,7 @@ resource "opennebula_virtual_network_address_range" "upf_ip_1" {
 
   hold_ips = ["{{ one_open5gs_vm_upf_ip }}"]
 }
-{% endif %}
-
-{% if one_open5gs_vm_internal_vnet | length >= 2 %}
+{% else %}
 resource "opennebula_virtual_network_address_range" "upf_ip_2" {
   count              = 1
   virtual_network_id = opennebula_virtual_network.{{ one_open5gs_vm_internal_vnet[1] }}.id

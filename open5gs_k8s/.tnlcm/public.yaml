@@ -46,7 +46,7 @@ input:
     default_value: "10.21.12.200"
     required_when: false
   one_open5gs_k8s_upf_ip:
-    description: Address to expose the Core User Plane Function (UPF). Requires to be part of the oneKE's one_oneKE_metallb_range
+    description: IPv4 Address of the Core User Plane Function (UPF) in the 5G core network. Requires to be part of the oneKE's one_oneKE_metallb_range
     type: str
     default_value: "10.21.12.201"
     required_when: false
@@ -99,7 +99,7 @@ input:
     default_value: "internet"
     required_when: false
   one_open5gs_k8s_s_nssai_sst:
-    description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI).
     type: int
     default_value: 1
     required_when: false

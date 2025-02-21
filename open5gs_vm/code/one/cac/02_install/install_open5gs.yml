@@ -28,7 +28,7 @@
     - name: Install mongodb-org package
       ansible.builtin.apt:
         name: "mongodb-org"
-        update_cache: yes
+        update_cache: true
         state: present
 
 - name: Import Open5GS PPA repository

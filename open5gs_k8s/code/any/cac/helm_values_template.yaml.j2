@@ -6,52 +6,54 @@ populate:
 
 # 4G
 hss:
-  enabled: false  # Default true
+  enabled: false  # Default true
 mme:
-  enabled: false  # Default true
+  enabled: false  # Default true
 pcrf:
-  enabled: false  # Default true
+  enabled: false  # Default true
 sgwc:
-  enabled: false  # Default true
+  enabled: false  # Default true
 sgwu:
-  enabled: false  # Default true
+  enabled: false  # Default true
 
 # 5G
 amf:
   config:
     guamiList:
-      - plmn_id:
+      - amf_id:
+          region: 2
+          set: 1
+        plmn_id:
           mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default "999"
           mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default "70"
-    networkName: "open5gs"       # Default "Gradiant"
     plmnList:
       - plmn_id:
           mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default "999"
           mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default "70"
         s_nssai:
-          - sst: {{ one_open5gs_k8s_s_nssai_sst | int }}     # Default 1
+          - sst: {{ one_open5gs_k8s_s_nssai_sst | int }}  # Default 1
             sd: "{{ one_open5gs_k8s_s_nssai_sd | string }}"  # Default "0x111111"
     taiList:
       - plmn_id:
           mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default "999"
           mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default "70"
-        tac: [ {{ one_open5gs_k8s_tac | int }} ]     # Default [1, 2, 3]
+        tac: [ {{ one_open5gs_k8s_tac | int }} ]  # Default [1, 2, 3]
   services:
     ngap:
-      type: LoadBalancer                                       # Default "ClusterIP"
+      type: "LoadBalancer"  # Default "ClusterIP"
       loadBalancerIP: "{{ one_open5gs_k8s_amf_ip | string }}"  # Default ""
 
 nrf:
   config:
     servingList:
       - plmn_id:
-          mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default 999
+          mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default 999
           mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default 70
 
 nssf:
   config:
     nsiList:
-    - sst: {{ one_open5gs_k8s_s_nssai_sst | int }}     # Default 1
+    - sst: {{ one_open5gs_k8s_s_nssai_sst | int }}  # Default 1
       sd: "{{ one_open5gs_k8s_s_nssai_sd | string }}"  # Default "0x111111"
 
 smf:
@@ -66,11 +68,11 @@ upf:
         advertise: "{{ one_open5gs_k8s_upf_ip | string }}"  # Default ""
   services:
     gtpu:
-      type: LoadBalancer                                       # Default "ClusterIP"
+      type: "LoadBalancer"  # Default "ClusterIP"
       loadBalancerIP: "{{ one_open5gs_k8s_upf_ip | string }}"  # Default ""
 
 
 webui:
   ingress:
-    ingressClassName: nginx                                 # Default ""
+    ingressClassName: "nginx"  # Default ""
     hostname: "{{ hostvars['localhost']['domain_name'] }}"  # Default ""
