@@ -1,78 +1,141 @@
+{% raw %}
+dbURI: "mongodb://{{ .Release.Name }}-mongodb/open5gs"
+{% endraw %}
+
+populate:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: gradiant/open5gs-dbctl
+    tag: 0.10.3
+    pullPolicy: IfNotPresent
+  initCommands:
+{% for i in range(one_open5gs_k8s_ue_count|int) %}
+  - open5gs-dbctl add_ue_with_slice {{ one_open5gs_k8s_mcc | string }}{{ one_open5gs_k8s_mnc | string }}{{ ('%0'+(12-one_open5gs_k8s_mnc|length)|string +'d') % (one_open5gs_k8s_msin|int + i) }} {{ one_open5gs_k8s_key | string }} {{ one_open5gs_k8s_opc | string }} {{ one_open5gs_k8s_apn | string }} {{ one_open5gs_k8s_s_nssai_sst | int }} {{ one_open5gs_k8s_s_nssai_sd | string }}
+{% endfor %}
+
+# Common
+mongodb:
+  enabled: true
+  auth:
+    enabled: false
+smf:
+  enabled: true
+upf:
+  enabled: true
+webui:
+  enabled: true
+
 # 4G
 hss:
-  enabled: false  # Default true
+  enabled: false
+  mongodb:
+    enabled: false
 mme:
-  enabled: false  # Default true
+  enabled: false
 pcrf:
-  enabled: false  # Default true
+  enabled: false
+  mongodb:
+    enabled: false
+sgwc:
+  enabled: false
+sgwu:
+  enabled: false
+
 smf:
   config:
     pcrf:
-      enabled: false  # Default true
-sgwc:
-  enabled: false  # Default true
-sgwu:
-  enabled: false  # Default true
-
+      enabled: false
+    subnetList:
+      - subnet: "10.45.0.0/16"
+        gateway: "10.45.0.1"
 # 5G
+amf:
+  enabled: true
+ausf:
+  enabled: true
+bsf:
+  enabled: true
+nrf:
+  enabled: true
+nssf:
+  enabled: true
+pcf:
+  enabled: true
+  mongodb:
+    enabled: false
+scp:
+  enabled: true
+  mongodb:
+    enabled: false
+udm:
+  enabled: true
+udr:
+  enabled: true
+  mongodb:
+    enabled: false
+
+
 amf:
   config:
     guamiList:
-      - amf_id:
+      - plmn_id:
+          mcc: "{{ one_open5gs_k8s_mcc | string }}"
+          mnc: "{{ one_open5gs_k8s_mnc | string }}"
+        amf_id:
           region: 2
           set: 1
-        plmn_id:
-          mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default "999"
-          mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default "70"
-    plmnList:
-      - plmn_id:
-          mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default "999"
-          mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default "70"
-        s_nssai:
-          - sst: {{ one_open5gs_k8s_s_nssai_sst | int }}  # Default 1
-            sd: "{{ one_open5gs_k8s_s_nssai_sd | string }}"  # Default "0x111111"
     taiList:
       - plmn_id:
-          mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default "999"
-          mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default "70"
-        tac: [ {{ one_open5gs_k8s_tac | int }} ]  # Default [1, 2, 3]
+          mcc: "{{ one_open5gs_k8s_mcc | string }}"
+          mnc: "{{ one_open5gs_k8s_mnc | string }}"
+        tac: [ {{ one_open5gs_k8s_tac | int }} ]
+    plmnList:
+      - plmn_id:
+          mcc: "{{ one_open5gs_k8s_mcc | string }}"
+          mnc: "{{ one_open5gs_k8s_mnc | string }}"
+        s_nssai:
+          - sst: {{ one_open5gs_k8s_s_nssai_sst | int }}
+            sd: "{{ one_open5gs_k8s_s_nssai_sd | string }}"
+    networkName: "open5gs"
   services:
     ngap:
-      type: "LoadBalancer"  # Default "ClusterIP"
-      loadBalancerIP: "{{ one_open5gs_k8s_amf_ip | string }}"  # Default ""
+      type: LoadBalancer
+      loadBalancerIP: "{{ one_open5gs_k8s_amf_ip | string }}"
 
 nrf:
   config:
     servingList:
       - plmn_id:
-          mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default 999
-          mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default 70
-
-nssf:
-  config:
-    nsiList:
-    - sst: {{ one_open5gs_k8s_s_nssai_sst | int }}  # Default 1
-      sd: "{{ one_open5gs_k8s_s_nssai_sd | string }}"  # Default "0x111111"
+          mcc: "{{ one_open5gs_k8s_mcc | string }}"
+          mnc: "{{ one_open5gs_k8s_mnc | string }}"
 
 upf:
   config:
     upf:
       gtpu:
-        advertise: "{{ one_open5gs_k8s_upf_ip | string }}"  # Default ""
+        advertise: "{{ one_open5gs_k8s_upf_ip | string }}"
+    subnetList:
+      - subnet: "10.45.0.0/16"
+        gateway: "10.45.0.1"
+        dev: ogstun
+        createDev: true
+        enableNAT: true
   services:
     gtpu:
-      type: "LoadBalancer"  # Default "ClusterIP"
-      loadBalancerIP: "{{ one_open5gs_k8s_upf_ip | string }}"  # Default ""
+      type: LoadBalancer
+      loadBalancerIP: "{{ one_open5gs_k8s_upf_ip | string }}"
 
+
+nssf:
+  config:
+    nsiList:
+    - uri: ""
+      sst: {{ one_open5gs_k8s_s_nssai_sst | int }}
+      sd: "{{ one_open5gs_k8s_s_nssai_sd | string }}"
 
 webui:
   ingress:
-    ingressClassName: "nginx"  # Default ""
-    hostname: "{{ hostvars['localhost']['domain_name'] }}"  # Default ""
-
-
-populate:
-  initCommands:
-{% for i in range(one_open5gs_k8s_ue_count|int) %}
-  - open5gs-dbctl add_ue_with_slice {{ one_open5gs_k8s_mcc | string }}{{ one_open5gs_k8s_mnc | string }}{{ ('%0'+(12-one_open5gs_k8s_mnc|length)|string +'d') % (one_open5gs_k8s_msin|int + i) }} {{ one_open5gs_k8s_key | string }} {{ one_open5gs_k8s_opc | string }} {{ one_open5gs_k8s_apn | string }} {{ one_open5gs_k8s_s_nssai_sst | int }} {{ one_open5gs_k8s_s_nssai_sd | string }}
-{% endfor %}
+    enabled: true
+    ingressClassName: nginx
+    hostname: "{{ hostvars['localhost']['domain_name'] }}"
