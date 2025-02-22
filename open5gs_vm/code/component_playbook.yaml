@@ -82,7 +82,11 @@
         endpoint: "{{ bastion_ip }}"
         token: "{{ tn_routemanager_token }}"
       loop:
+        - { to: "{{ one_open5gs_vm_amf_ip }}", via: "{{ ips[access_vnet_id] }}" }
+        - { to: "{{ one_open5gs_vm_upf_ip }}", via: "{{ ips[access_vnet_id] }}" }
         - { to: "{{ one_open5gs_vm_ue_subnet }}", via: "{{ ips[access_vnet_id] }}" }
+
+    # TODO: add also nft rules
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"

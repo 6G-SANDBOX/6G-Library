@@ -15,7 +15,7 @@ resource "opennebula_service" "{{ entity_name }}" {
         "ONEAPP_RKE2_SUPERVISOR_EP": "ep0.eth0.vr:9345",
         "ONEAPP_K8S_CONTROL_PLANE_EP": "ep0.eth0.vr:6443",
         "ONEAPP_K8S_EXTRA_SANS": "localhost,127.0.0.1,ep0.eth0.vr,$${vnf.TEMPLATE.CONTEXT.ETH0_IP}",
-        "ONEAPP_RKE2_CLOUD_CONTROLLER_ENABLED": "NO",
+        "ONEAPP_RKE2_CLOUD_CONTROLLER_ENABLED": "YES",
         "ONEAPP_K8S_HTTP_PROXY": "",
         "ONEAPP_K8S_HTTPS_PROXY": "",
         "ONEAPP_K8S_NO_PROXY": "",
