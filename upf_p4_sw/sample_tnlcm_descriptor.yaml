@@ -79,7 +79,7 @@ trial_network:
       one_ueransim_ue_mnc: "01"
       one_ueransim_ue_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
       one_ueransim_ue_opc: "E8ED289DEBA952E4283B54E88E6183CA"
-      # one_ueransim_ue_gnbSearchList: null
+      # one_ueransim_ue_gnbsearchlist: null
       one_ueransim_ue_session_apn: "internet"
       one_ueransim_ue_session_sst: 1
       one_ueransim_ue_session_sd: "000001"

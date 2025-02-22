@@ -23,7 +23,7 @@ trial_network:
     input:
       one_oneKE_external_vnet: "tn_vxlan"
       one_oneKE_internal_vnet: "vnet-internal"
-      one_oneKE_version: "131"
+      one_oneKE_version: "129"
       one_oneKE_multus: "YES"
       one_oneKE_cni_plugin: "canal"
       # one_oneKE_cilium_range: null
@@ -69,7 +69,7 @@ trial_network:
       one_ueransim_gnb_slices_sst: 1
       one_ueransim_gnb_slices_sd: "000009"
       one_ueransim_run_ue: "YES"
-      # one_ueransim_ue_gnbSearchList: null
+      # one_ueransim_ue_gnbsearchlist: null
       one_ueransim_ue_mcc: "001"
       one_ueransim_ue_mnc: "01"
       one_ueransim_ue_msin: "0000000001"

@@ -43,7 +43,7 @@
 
     - name: Overwrite UE-related variables when gNB is in another component
       ansible.builtin.set_fact:
-        one_ueransim_ue_gnbSearchList: "{{ gnb_ips[access_vnet_id] }}"
+        one_ueransim_ue_gnbsearchlist: "{{ gnb_ips[access_vnet_id] }}"
         one_ueransim_ue_mcc:  "{{ gnb_metadata_dict.mcc }}"
         one_ueransim_ue_mnc:  "{{ gnb_metadata_dict.mnc }}"
         one_ueransim_ue_msin: "{{ gnb_metadata_dict.msin }}"
@@ -60,7 +60,7 @@
     - one_ueransim_run_gnb == 'YES'
   ansible.builtin.set_fact:
     one_ueransim_ue_linked_gnb: "{{ entity_name }}"
-    one_ueransim_ue_gnbSearchList: 'localhost'
+    one_ueransim_ue_gnbsearchlist: 'localhost'
     one_ueransim_ue_mcc:  "{{ one_ueransim_gnb_mcc | default(open5gs_metadata_dict.mcc, true) }}"
     one_ueransim_ue_mnc:  "{{ one_ueransim_gnb_mnc | default(open5gs_metadata_dict.mnc, true) }}"
     one_ueransim_ue_msin: "{{ open5gs_metadata_dict.msin }}"
