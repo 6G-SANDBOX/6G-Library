@@ -1,9 +1,3 @@
-populate:
-  initCommands:
-{% for i in range(one_open5gs_k8s_ue_count|int) %}
-  - open5gs-dbctl add_ue_with_slice {{ one_open5gs_k8s_mcc | string }}{{ one_open5gs_k8s_mnc | string }}{{ ('%0'+(12-one_open5gs_k8s_mnc|length)|string +'d') % (one_open5gs_k8s_msin|int + i) }} {{ one_open5gs_k8s_key | string }} {{ one_open5gs_k8s_opc | string }} {{ one_open5gs_k8s_apn | string }} {{ one_open5gs_k8s_s_nssai_sst | int }} {{ one_open5gs_k8s_s_nssai_sd | string }}
-{% endfor %}
-
 # 4G
 hss:
   enabled: false  # Default true
@@ -11,6 +5,10 @@ mme:
   enabled: false  # Default true
 pcrf:
   enabled: false  # Default true
+smf:
+  config:
+    pcrf:
+      enabled: false  # Default true
 sgwc:
   enabled: false  # Default true
 sgwu:
@@ -56,11 +54,6 @@ nssf:
     - sst: {{ one_open5gs_k8s_s_nssai_sst | int }}  # Default 1
       sd: "{{ one_open5gs_k8s_s_nssai_sd | string }}"  # Default "0x111111"
 
-smf:
-  config:
-    pcrf:
-      enabled: false  # Default true
-
 upf:
   config:
     upf:
@@ -76,3 +69,10 @@ webui:
   ingress:
     ingressClassName: "nginx"  # Default ""
     hostname: "{{ hostvars['localhost']['domain_name'] }}"  # Default ""
+
+
+populate:
+  initCommands:
+{% for i in range(one_open5gs_k8s_ue_count|int) %}
+  - open5gs-dbctl add_ue_with_slice {{ one_open5gs_k8s_mcc | string }}{{ one_open5gs_k8s_mnc | string }}{{ ('%0'+(12-one_open5gs_k8s_mnc|length)|string +'d') % (one_open5gs_k8s_msin|int + i) }} {{ one_open5gs_k8s_key | string }} {{ one_open5gs_k8s_opc | string }} {{ one_open5gs_k8s_apn | string }} {{ one_open5gs_k8s_s_nssai_sst | int }} {{ one_open5gs_k8s_s_nssai_sd | string }}
+{% endfor %}
