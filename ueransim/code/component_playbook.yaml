@@ -107,19 +107,25 @@
     ## TODO: remove task when the appliance is updated to handle this case correctly
     - name: (TEMPORARY) fix UE config
       vars:
-        gnbsearchlist: "{{ hostvars['localhost']['one_ueransim_ue_gnbsearchlist'] }}"
+        gnbsearchlist: "{{ hostvars.localhost.one_ueransim_ue_gnbsearchlist }}"
+        session_sst: "{{ hostvars.localhost.one_ueransim_ue_session_sst }}"
       # when: hostvars['localhost'].get('one_ueransim_run_ue', 'NO') == 'YES'
       become: true
       block:
         - name: Fix the gnbsearchlist
           ansible.builtin.set_fact:
             fixed_gnbsearchlist: "{{ ansible_host if gnbsearchlist == 'localhost' else gnbsearchlist }}"
-        - name: Update gnbsearchlist in UE config
+        - name: Update gnbsearchlist and SST in UE config
           ansible.builtin.shell:
-          args:
-            chdir: "/etc/ueransim"
-            cmd: "yq '.gnbSearchList = [\"{{ gnbsearchlist }}\"]' -i open5gs-ue.yaml"
+            args:
+              chdir: "/etc/ueransim"
+              cmd: >
+                yq '.gnbSearchList = [ "{{ gnbsearchlist }}" ] |
+                    .sessions[0].slice.sst = {{ session_sst }} |
+                    .configured-nssai[0].sst = {{ session_sst }} |
+                    .default-nssai[0].sst = {{ session_sst }}' -i open5gs-ue.yaml
           changed_when: true
+
         - name: Restart UE
           ansible.builtin.service:
             name: ueransim-ue.service
