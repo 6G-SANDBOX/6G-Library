@@ -112,10 +112,6 @@
       when: hostvars['localhost'].get('one_ueransim_run_ue', 'NO') == 'YES'
       become: true
       block:
-        - name: Debug hostvars
-          debug:
-            var: hostvars.ueransim
-
         - name: Fix the gnbsearchlist
           ansible.builtin.set_fact:
             fixed_gnbsearchlist: "{{ ansible_host if 'localhost' in gnbsearchlist else gnbsearchlist }}"
@@ -123,16 +119,18 @@
           ansible.builtin.shell:
             chdir: "/etc/ueransim"
             cmd: >
-              yq '.gnbSearchList = [ "{{ gnbsearchlist }}" ] |
+              yq '.gnbSearchList = ["{{ gnbsearchlist }}"] |
                   .sessions[0].slice.sst = {{ session_sst }} |
                   .configured-nssai[0].sst = {{ session_sst }} |
                   .default-nssai[0].sst = {{ session_sst }}' -i open5gs-ue.yaml
           changed_when: true
-
         - name: Restart UE
           ansible.builtin.service:
             name: ueransim-ue.service
             state: restarted
+        - name: Debug hostvars
+          debug:
+            var: hostvars.ueransim
 
 
 - name: "STAGE 4: Publish execution results"
@@ -159,9 +157,9 @@
           ansible.builtin.set_fact:
             gnb_metadata_dict: >-
               {
-                'linked_open5gs': '{{ one_ueransim_gnb_linked_open5gs | default(None, true) }}',
+                'linked_open5gs': '{{ one_ueransim_gnb_linked_open5gs | default('None', true) }}',
                 'amf_address': '{{ one_ueransim_gnb_amf_ip }}',
-                'amf_proxy':   '{{ one_ueransim_gnb_amf_proxy }}',
+                'amf_proxy':   '{{ one_ueransim_gnb_amf_proxy | default('None', true) }}',
                 'tac':  '{{ one_ueransim_gnb_tac }}',
                 'mcc':  '{{ one_ueransim_gnb_mcc }}',
                 'mnc':  '{{ one_ueransim_gnb_mnc }}',
@@ -188,7 +186,7 @@
           ansible.builtin.set_fact:
             ue_metadata_dict: >-
               {
-                'linked_gnb':    '{{ one_ueransim_ue_linked_gnb | default(None, true) }}',
+                'linked_gnb':    '{{ one_ueransim_ue_linked_gnb | default('None', true) }}',
                 'gnbsearchlist': '{{ one_ueransim_ue_gnbsearchlist | join(',') }}',
                 'mcc':  '{{ one_ueransim_ue_mcc }}',
                 'mnc':  '{{ one_ueransim_ue_mnc }}',
