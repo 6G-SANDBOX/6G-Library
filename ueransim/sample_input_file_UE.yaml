@@ -20,7 +20,7 @@ one_ueransim_ue_linked_gnb: ueransim-sample_name
 #one_ueransim_gnb_slices_sst: 1
 #one_ueransim_gnb_slices_sd: "000001"
 
-#one_ueransim_ue_gnbsearchlist: null
+#one_ueransim_ue_gnbsearchlist: "localhost"
 #one_ueransim_ue_mcc: "001"
 #one_ueransim_ue_mnc: "01"
 #one_ueransim_ue_msin: "0000000001"

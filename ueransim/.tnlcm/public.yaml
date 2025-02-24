@@ -125,10 +125,11 @@ input:
   one_ueransim_ue_gnbsearchlist:
     description: |
       In UE simulation, comma-separated list of IPv4 addresses where the UE will search for gNBs for Radio Link Simulation.
+      The special value 'localhost' will be replaced with the IP of the first asigned vnet to the VM (usually tn_vxlan).
       Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
       with values from `one_ueransim_ue_linked_gnb` if defined.
     type: "str"
-    default_value: null
+    default_value: "localhost"
     required_when: false
   one_ueransim_ue_mcc:
     description: |
