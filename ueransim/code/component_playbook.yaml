@@ -117,13 +117,12 @@
             fixed_gnbsearchlist: "{{ ansible_host if gnbsearchlist == 'localhost' else gnbsearchlist }}"
         - name: Update gnbsearchlist and SST in UE config
           ansible.builtin.shell:
-            args:
-              chdir: "/etc/ueransim"
-              cmd: >
-                yq '.gnbSearchList = [ "{{ gnbsearchlist }}" ] |
-                    .sessions[0].slice.sst = {{ session_sst }} |
-                    .configured-nssai[0].sst = {{ session_sst }} |
-                    .default-nssai[0].sst = {{ session_sst }}' -i open5gs-ue.yaml
+            chdir: "/etc/ueransim"
+            cmd: >
+              yq '.gnbSearchList = [ "{{ gnbsearchlist }}" ] |
+                  .sessions[0].slice.sst = {{ session_sst }} |
+                  .configured-nssai[0].sst = {{ session_sst }} |
+                  .default-nssai[0].sst = {{ session_sst }}' -i open5gs-ue.yaml
           changed_when: true
 
         - name: Restart UE
