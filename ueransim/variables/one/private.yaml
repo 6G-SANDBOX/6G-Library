@@ -17,8 +17,8 @@ one_ueransim_networks:
 one_ueransim_run_gnb: "NO"
 one_ueransim_run_ue: "NO"
 
-
-
+# one_ueransim_gnb_linked_open5gs: null
+# one_ueransim_ue_linked_gnb: null
 
 one_ueransim_gnb_amf_ip: "10.21.12.200"
 one_ueransim_gnb_amf_proxy: null

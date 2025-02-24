@@ -56,6 +56,7 @@ input:
       Name of a previously deployed 'open5gs' component (either `open5gs_k8s` or `open5gs_vm`).
       When variable `one_ueransim_run_gnb` is set to "YES", it defines the 5G SA core the gNB will try to connect to, and will autocomplete other variables acordingly.
     type: "open5gs_k8s or open5gs_vm or upf_p4_sw or open5gcore_vm"
+    default_value: null
     required_when: false
   one_ueransim_gnb_amf_ip:
     description: |
@@ -119,6 +120,7 @@ input:
       Name of a previously deployed `ueransim` component serving as gNB (with `one_ueransim_run_gnb == 'YES'`)
       When variable `one_ueransim_run_ue` is set to "YES", it defines the gNB/RAN the User Equipment will try to connect to, and will autocomplete other variables acordingly.
     type: "ueransim"
+    default_value: null
     required_when: false
   one_ueransim_ue_gnbsearchlist:
     description: |
