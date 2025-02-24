@@ -48,16 +48,15 @@ input:
   one_ueransim_run_gnb: 
     description: |
       Enable ueransim-gnb.service at boot. Accepted values are "YES" or "NO" (quotes included).
-      If "YES", setting variable `one_ueransim_gnb_linked_open5gs` is mandatory
     type: str
     choices: ["YES", "NO"]
     required_when: true
   one_ueransim_gnb_linked_open5gs:
     description: |
       Name of a previously deployed 'open5gs' component (either `open5gs_k8s` or `open5gs_vm`).
-      Defines the 5G SA core the gNB will try to connect to, and will autocomplete other variables acordingly.
+      When variable `one_ueransim_run_gnb` is set to "YES", it defines the 5G SA core the gNB will try to connect to, and will autocomplete other variables acordingly.
     type: "open5gs_k8s or open5gs_vm or upf_p4_sw or open5gcore_vm"
-    required_when: "one_ueransim_run_gnb == 'YES'"
+    required_when: false
   one_ueransim_gnb_amf_ip:
     description: |
       In gNB simulation, IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
@@ -112,16 +111,15 @@ input:
   one_ueransim_run_ue: 
     description: |
       Enable ueransim-ue.service at boot. Accepted values are "YES" or "NO" (quotes included).
-      If "YES", setting variable `one_ueransim_gnb_linked_open5gs`is mandatory
     type: str
     choices: ["YES", "NO"]
     required_when: true
   one_ueransim_ue_linked_gnb:
     description: |
       Name of a previously deployed `ueransim` component serving as gNB (with `one_ueransim_run_gnb == 'YES'`)
-      Defines the gNB/RAN the User Equipment will try to connect to, and will autocomplete other variables acordingly.
+      When variable `one_ueransim_run_ue` is set to "YES", it defines the gNB/RAN the User Equipment will try to connect to, and will autocomplete other variables acordingly.
     type: "ueransim"
-    required_when: "one_ueransim_run_ue == 'YES' and one_ueransim_run_gnb == 'NO'"
+    required_when: false
   one_ueransim_ue_gnbsearchlist:
     description: |
       In UE simulation, comma-separated list of IPv4 addresses where the UE will search for gNBs for Radio Link Simulation.

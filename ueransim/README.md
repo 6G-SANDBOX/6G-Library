@@ -9,8 +9,9 @@ The behaviour of the services depends on the config files at `/etc/ueransim/open
 For advanced configurations, you manually edit those files and restart the services. Examples can be found in [this repository](https://github.com/s5uishida/open5gs_5gc_ueransim_sample_config).
 
 Depending on the chosen behaviour (with input variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` respectivelly), the following dependencies are aplied:
-- If `one_ueransim_run_gnb == 'YES'`, a previously deployed open5gs component needs to be selected in the `one_ueransim_gnb_linked_open5gs` input variable
-- If `one_ueransim_run_gnb == 'NO' and one_ueransim_run_ue == 'YES'`, a previously deployed ueransim with `run_gnb == 'YES'` needs to be selected in the `one_ueransim_ue_linked_gnb` input variable
+- If `one_ueransim_run_gnb == 'YES'`, a previously deployed `open5gs` component can be referenced in the `one_ueransim_gnb_linked_open5gs` input variable to autocomplete gNB-related variables.
+- If `one_ueransim_run_gnb == 'NO' and one_ueransim_run_ue == 'YES'`, a previously deployed `ueransim` component with `run_gnb == 'YES'` can be referenced in the `one_ueransim_ue_linked_gnb` input variable to autocomplete UE-related variables.
+- If `one_ueransim_run_gnb == 'NO' and one_ueransim_run_ue == 'YES'`, the UE-related variables will be automatically autocompleted by default with the gnB-related variables.
 
 
 
