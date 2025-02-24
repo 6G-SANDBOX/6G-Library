@@ -84,7 +84,7 @@
         state: present
         key: "{{ item }}"
       loop:
-        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
+        - "{{ hostvars.localhost.get('site_admin_ssh_public_key', '') }}"
       when: item != ''
 
     - name: Create new user for experimenter access
@@ -101,7 +101,7 @@
         state: present
         key: "{{ item }}"
       loop:
-        - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+        - "{{ hostvars.localhost.tn_ssh_public_key }}"
 
 
     ## TODO: remove task when the appliance is updated to handle this case correctly
@@ -113,7 +113,7 @@
       block:
         - name: Fix the gnbsearchlist
           ansible.builtin.set_fact:
-            fixed_gnbsearchlist: "{{ gnbsearchlist if gnbsearchlist != 'localhost' else ansible_default_ipv4.address }}"
+            fixed_gnbsearchlist: "{{ ansible_host if gnbsearchlist == 'localhost' else gnbsearchlist }}"
         - name: Update gnbsearchlist in UE config
           ansible.builtin.shell:
           args:
