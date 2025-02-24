@@ -112,6 +112,10 @@
       when: hostvars['localhost'].get('one_ueransim_run_ue', 'NO') == 'YES'
       become: true
       block:
+        - name: Debug hostvars
+          debug:
+            var: hostvars.localhost
+
         - name: Fix the gnbsearchlist
           ansible.builtin.set_fact:
             fixed_gnbsearchlist: "{{ ansible_host if gnbsearchlist == 'localhost' else gnbsearchlist }}"
