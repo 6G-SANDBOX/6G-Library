@@ -109,7 +109,7 @@
       vars:
         gnbsearchlist: "{{ hostvars.localhost.one_ueransim_ue_gnbsearchlist }}"
         session_sst: "{{ hostvars.localhost.one_ueransim_ue_session_sst }}"
-      # when: hostvars['localhost'].get('one_ueransim_run_ue', 'NO') == 'YES'
+      when: hostvars['localhost'].get('one_ueransim_run_ue', 'NO') == 'YES'
       become: true
       block:
         - name: Fix the gnbsearchlist
