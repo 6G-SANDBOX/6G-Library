@@ -29,9 +29,9 @@ Component configuration logs can be foud at `/var/log/post-ueransim.log`
 ### gNB Runtime
 {% if one_ueransim_run_gnb is defined and one_ueransim_run_gnb == 'YES' %}
 Service `ueransim_gnb.service` is currently **running** and **enabled** with the following configuration:
-- **Linked Open5GS**: `{{ one_ueransim_gnb_linked_open5gs }}`
+- **Linked Open5GS**: `{{ one_ueransim_gnb_linked_open5gs | default('None', true) }}`
 - **AMF IPv4 address**: `{{ one_ueransim_gnb_amf_ip }}`
-- **AMF proxy**: `{{ one_ueransim_gnb_amf_proxy }}`
+- **AMF proxy**: `{{ one_ueransim_gnb_amf_proxy | default('None', true) }}`
 - **TAC**:  `{{ one_ueransim_gnb_mcc }}`
 - **MCC**:  `{{ one_ueransim_gnb_mcc }}`
 - **MNC**:  `{{ one_ueransim_gnb_mnc }}`
@@ -45,7 +45,7 @@ Service `ueransim_gnb.service` is currently **not running** and **disabled**.
 ### UE Runtime
 {% if one_ueransim_run_ue is defined and one_ueransim_run_ue == 'YES' %}
 Service `ueransim_ue.service` is currently **running** and **enabled** with the following configuration:
-- **Linked gNB**:    `{{ one_ueransim_ue_linked_gnb }}`
+- **Linked gNB**:    `{{ one_ueransim_ue_linked_gnb | default('None', true) }}`
 - **gNB Search List**: `{{ one_ueransim_ue_gnbsearchlist }}`
 - **MCC**:  `{{ one_ueransim_ue_mcc }}`
 - **MNC**:  `{{ one_ueransim_ue_mnc }}`

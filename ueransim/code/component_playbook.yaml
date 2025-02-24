@@ -119,7 +119,7 @@
           ansible.builtin.shell:
             chdir: "/etc/ueransim"
             cmd: >
-              yq '.gnbSearchList = ["{{ gnbsearchlist }}"] |
+              yq '.gnbSearchList = ["{{ fixed_gnbsearchlist }}"] |
                   .sessions[0].slice.sst = {{ session_sst }} |
                   .configured-nssai[0].sst = {{ session_sst }} |
                   .default-nssai[0].sst = {{ session_sst }}' -i open5gs-ue.yaml
@@ -128,9 +128,6 @@
           ansible.builtin.service:
             name: ueransim-ue.service
             state: restarted
-        - name: Debug hostvars
-          debug:
-            var: hostvars.ueransim
 
 
 - name: "STAGE 4: Publish execution results"
