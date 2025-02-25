@@ -30,15 +30,18 @@ trial_network:
       - "oneKE-cluster"
     input:
       one_open5gs_k8s_target: "oneKE-cluster"
-      one_open5gs_k8s_mcc: "214"
-      one_open5gs_k8s_mnc: "702"
-      one_open5gs_k8s_apn: "internet"
-      one_open5gs_k8s_tac: 1
-      one_open5gs_k8s_s_nssai_sst: 1
-      one_open5gs_k8s_s_nssai_sd: "000009"
       one_open5gs_k8s_amf_ip: "10.10.10.200"
       one_open5gs_k8s_upf_ip: "10.10.10.201"
       one_open5gs_k8s_k8s_ue_count: 1
+      one_open5gs_k8s_tac: 1
+      one_open5gs_k8s_mcc: "214"
+      one_open5gs_k8s_mnc: "702"
+      # one_open5gs_vm_msin: "0000000001"
+      # one_open5gs_vm_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+      # one_open5gs_vm_opc: "E8ED289DEBA952E4283B54E88E6183CA"
+      one_open5gs_k8s_apn: "internet"
+      one_open5gs_k8s_s_nssai_sst: 1
+      one_open5gs_k8s_s_nssai_sd: "000009"
   loadcore_agent-dn:
     type: "loadcore_agent"
     name: "dn"
