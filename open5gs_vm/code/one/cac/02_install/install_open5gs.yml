@@ -55,9 +55,8 @@
             dest: /etc/apt/keyrings/open5gs-nightly.asc
             mode: 0600
           when: false
-        - name:
+        - name: create key file
           ansible.builtin.copy:
-          become: true
             dest: /etc/apt/keyrings/open5gs-nightly.asc
             mode: '0755'
             content: |
