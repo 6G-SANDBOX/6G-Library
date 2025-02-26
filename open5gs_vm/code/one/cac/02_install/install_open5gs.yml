@@ -34,15 +34,35 @@
             update_cache: yes
             state: present
 
-    - name: Import Open5GS PPA repository
-      ansible.builtin.apt_repository:
-        repo: 'ppa:open5gs/latest'
-        state: present
+    - name: Open5GS stable version
+      block:
+        - name: Import Open5GS PPA repository
+          ansible.builtin.apt_repository:
+            repo: 'ppa:open5gs/latest'
+            state: present
 
-    - name: Install Open5GS 2.7.2~*
-      ansible.builtin.apt:
-        name: open5gs=2.7.2~*
-        state: present
+        - name: Install Open5GS 2.7.2~*
+          ansible.builtin.apt:
+            name: open5gs=2.7.2~*
+            state: present
+      when: false
+
+      - name: Open5GS nightly version
+        block:
+          - name: import nightly key
+            ansible.builtin.get_url:
+              url: https://downloads.osmocom.org/packages/osmocom:/nightly/xUbuntu_20.04/Release.key
+              dest: /etc/apt/keyrings/open5gs-nightly.asc
+
+          - name: add open5gs nightly repository file
+            ansible.builtin.apt_repository:
+              repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/open5gs-nightly.asc] https://downloads.osmocom.org/packages/osmocom:/nightly/xUbuntu_20.04/ ./"
+              state: present
+
+          - name: Install Open5GS nightly
+            ansible.builtin.apt:
+              name: open5gs
+              state: present
 
     - name: Install bmon
       ansible.builtin.apt:
