@@ -45,24 +45,26 @@
           ansible.builtin.apt:
             name: open5gs=2.7.2~*
             state: present
-      when: false
+      when: not one_open5gs_vm_use_nightly
 
       - name: Open5GS nightly version
         block:
           - name: import nightly key
             ansible.builtin.get_url:
-              url: https://downloads.osmocom.org/packages/osmocom:/nightly/xUbuntu_20.04/Release.key
+              url: https://obs.osmocom.org/projects/osmocom:nightly/public_key
               dest: /etc/apt/keyrings/open5gs-nightly.asc
+              mode: 0600
 
           - name: add open5gs nightly repository file
             ansible.builtin.apt_repository:
-              repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/open5gs-nightly.asc] https://downloads.osmocom.org/packages/osmocom:/nightly/xUbuntu_20.04/ ./"
+              repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/open5gs-nightly.asc] https://downloads.osmocom.org/packages/osmocom:/nightly/xUbuntu_22.04/ ./"
               state: present
 
           - name: Install Open5GS nightly
             ansible.builtin.apt:
               name: open5gs
-              state: present
+              state: latest
+        when: one_open5gs_vm_use_nightly is defined and one_open5gs_vm_use_nightly
 
     - name: Install bmon
       ansible.builtin.apt:
