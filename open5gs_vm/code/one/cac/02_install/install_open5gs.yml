@@ -54,6 +54,39 @@
             url: https://obs.osmocom.org/projects/osmocom:nightly/public_key
             dest: /etc/apt/keyrings/open5gs-nightly.asc
             mode: 0600
+          when: false
+        - name:
+          ansible.builtin.copy:
+          become: true
+            dest: /etc/apt/keyrings/open5gs-nightly.asc
+            mode: '0755'
+            content: |
+              -----BEGIN PGP PUBLIC KEY BLOCK-----
+              Version: GnuPG v1.4.5 (GNU/Linux)
+
+              mQENBGKzE1QBCADFcM3ZzggvgxNRNNqDGWf5xIDAiK5qzFLdGes7L6F9VCHdaPy0
+              RAOB5bFb/Q1tSDFNEBLtaauXKz+4iGL6qMVjZcyjzpB5w4jKN+kkrFRhjDNUv/SH
+              BX6d+P7v5WBGSNArNgA8D1BGzckp5a99EZ0okMJFEqIcN40PD6OGugpq5XnVV5Nk
+              e93fLa2Cu8vhFBcVn6CuHeEhsmuMf6NLbQRNfNNCEEUYaZn7beMYtpZ7t1djsKx5
+              1xGm50OzI22FLu8lELQ9d7qMVGRG3WHYawX9BDteRybiyqxfwUHm1haWazRJtlGt
+              UWyzvwAb80BK1J2Nu5fbAa3w5CoEPAbUuCyrABEBAAG0JW9zbW9jb20gT0JTIFBy
+              b2plY3QgPG9zbW9jb21Ab3Ntb2NvbT6JAVQEEwEIAD4WIQRrKp83ktFetw1Oao+G
+              pzC2U3JZcwUCZrNL8wIbAwUJCB7onwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAK
+              CRCGpzC2U3JZc11RB/9oogcqTF30pPEwjjGvXF+WMiRFHl8aVvQIk9m+2KUcjlVk
+              0q8+/guOg7KcVejPxyn2AQbTByWWgpH1o3BoDKWnvypURAV2uGOtCo6mUQop5yK0
+              d50j9hwIXSwJWoD2r5OY+Gbs4dBzMGkKbnCED1n8324b8EN6m96eoL570Uq9vy4G
+              gIp+QCpePu8AMdoCLR2w3J+TA4gLdDeH2cr7TgmwlDCp8e6R8FVmRt3SvunPmFz3
+              FHDicv2f9ZoHXVLQ20DgWUyI1xOPlzBNJowgK9YnLPdIidE9i+EbvC1YA+6O/WMa
+              kSUEyJLZS5mv2+T6ptgnCIgxrIoTu63O4Rsf5zV+iQEzBBMBCAAdFiEExoiYhHND
+              S7aVYlnqa51NyAUyjdsFAmKzE1UACgkQa51NyAUyjdvuZgf+OXmr//i7u7Gg7eWB
+              7e0qUsyCId9lXS8J437x3K6ciJfD7/6RSy8TFW5Nglm/uSkbyq582I8t+SoOirMD
+              E6cg9U/5+h5s46bAf+Kd2XS/6tLGeNLM18i4el8CP06NpFzDrsKu76uYFpyRiiHD
+              otBdtgxeLJ83LugGfZslF+/5cigJkAJMhAdVvGO8h85R6fba8ZSOKtMKkaQRfi76
+              nhyOrJPlLuS+DLEnHwdkOFgtKnxHdjM97K+Tx0gisb6uwaWroXfSLnhP8RTLLZZy
+              Z+noU1Hw3c+mn4c/NYbcC/uwHYHKRzuf9gHnQ3dGgv0Z5sbeLRVo92hjGj7Ftlyd
+              4hmKBg==
+              =5Cwc
+              -----END PGP PUBLIC KEY BLOCK-----
         - name: add open5gs nightly repository file
           ansible.builtin.apt_repository:
             repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/open5gs-nightly.asc] https://downloads.osmocom.org/packages/osmocom:/nightly/xUbuntu_22.04/ ./"
