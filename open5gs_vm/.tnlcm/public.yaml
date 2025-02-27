@@ -142,6 +142,7 @@ input:
     type: bool
     default_value: false
     choices: [true, false]
+    required_when: false
 
 ####################################
 ## Component output
