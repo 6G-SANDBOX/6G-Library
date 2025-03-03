@@ -42,10 +42,12 @@
         tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         domain_name: >-
           {{
-            ((component_type | regex_replace('_', '') | lower) ~ '-' ~
-            (custom_name | regex_replace('_', '') | lower) ~ '.' ~
-            (tn_id | lower) ~ '.' ~
-            (site_domain | lower)) | trim
+            (
+              (component_type  | regex_replace('_', '') | lower) ~ '-' ~
+              (custom_name     | regex_replace('_', '') | lower) ~ '.' ~
+              (tn_id           | regex_replace('_', '') | lower) ~ '.' ~
+              site_domain
+            ) | trim
           }}
         n2_vnet_id: >-
           {{
