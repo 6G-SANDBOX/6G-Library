@@ -35,10 +35,18 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_elcm_networks[0] + '-id'] | string }}"
-
+        domain_name: >-
+          {{
+            ((component_type | regex_replace('_', '') | lower) ~ '-' ~
+            (custom_name | regex_replace('_', '') | lower) ~ '.' ~
+            (tn_id | lower) ~ '.' ~
+            (site_domain | lower)) | trim
+          }}
+        
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "elcm"
@@ -90,5 +98,16 @@
   gather_facts: false
   connection: local
   tasks:
+    - name: Set DNS record for the component
+      ansible.builtin.uri:
+        url: >-
+          {{
+            'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
+            '&domain=' ~ domain_name ~
+            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ ips[access_vnet_id] | trim
+          }}
+        method: POST
+        body_format: json
+        status_code: [200]
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
