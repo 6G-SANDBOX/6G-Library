@@ -11,6 +11,7 @@
 - Component `elcm` upgraded from version `v3.6.3` to `3.7.1`.
 - Variable `one_vnet_gw` in component `vnet` has now no default variable. Component upgraded to version `unreleased`.
 ### Fixed
+- TN_IDs can now correctly set DNS records when they have _ and mixed mayor/minorcase characters.
 - The open5gs proxy in components `nokia_radio` and `iswireless_radio` is now properly set. Components upgraded to version `unreleased`.
 - Storage nodes of `oneKE` can now be resized from the deployment itself.
 

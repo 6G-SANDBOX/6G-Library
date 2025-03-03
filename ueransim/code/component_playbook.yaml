@@ -121,7 +121,7 @@
           ansible.builtin.shell:
             chdir: "/etc/ueransim"
             cmd: >
-              yq '.gnbSearchList = ["{{ fixed_gnbsearchlist }}"] |
+              set -o pipefail yq '.gnbSearchList = ["{{ fixed_gnbsearchlist }}"] |
                   .sessions[0].slice.sst = {{ session_sst }} |
                   .configured-nssai[0].sst = {{ session_sst }} |
                   .default-nssai[0].sst = {{ session_sst }}' -i open5gs-ue.yaml
