@@ -55,7 +55,7 @@ input:
     required_when: true
 
   one_oneKE_version:
-    description: Version of the OneKE Appliance. Default value is "129"
+    description: Version of the OneKE Appliance to deploy. Default value is "129"
     type: str
     default_value: "129"
     choices: ["129","131","131a"]
