@@ -55,7 +55,7 @@ input:
     required_when: true
 
   one_oneKE_version:
-    description: "Version of the OneKE Appliance to deploy. Default value is '129'. WARNING: Due to an HAProxy error, Load Balancing only works in 129."
+    description: "Version of the OneKE Appliance to deploy. Default value is '129'. WARNING: Due to a MetalLB change, Load Balancing for the `open5gs_k8s` component only works in 129."
     type: str
     default_value: "129"
     choices: ["129","131","131a"]
@@ -149,6 +149,8 @@ terraform_outputs:
     multus: input.one_oneKE_multus
     cni_plugin: input.one_oneKE_cni_plugin
     cilium_range: input.one_oneKE_cilium_range
+    metallb: input.one_oneKE_metallb
     metallb_range: input.one_oneKE_metallb_range
     longhorn: input.one_oneKE_longhorn
+    traefik: input.one_oneKE_traefik
     nginx_passthrough: input.one_oneKE_nginx_passthrough

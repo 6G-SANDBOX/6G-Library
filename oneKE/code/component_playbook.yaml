@@ -186,12 +186,14 @@
           {
             'external_vnet': '{{ one_oneKE_external_vnet }}',
             'internal_vnet': '{{ one_oneKE_internal_vnet }}',
-            'version': '{{ one_oneKE_version }}',
+            'version': '{{ one_oneKE_version | string }}',
             'multus': '{{ one_oneKE_multus }}',
             'cni_plugin': '{{ one_oneKE_cni_plugin }}',
-            'cilium_range': '{{ one_oneKE_cilium_range }}',
-            'metallb_range': '{{ one_oneKE_metallb_range | default('None') }}'
+            'cilium_range': '{{ one_oneKE_cilium_range | default('None') }}',
+            'metallb': '{{ one_oneKE_metallb }}',
+            'metallb_range': '{{ one_oneKE_metallb_range | default('None') }}',
             'longhorn': '{{ one_oneKE_longhorn }}',
+            'traefik': '{{ one_oneKE_traefik }}',
             'nginx_passthough': '{{ one_oneKE_nginx_passthough }}'
           }
 
