@@ -156,9 +156,9 @@
           ansible.builtin.set_fact:
             gnb_metadata_dict: >-
               {
-                'linked_open5gs': '{{ one_ueransim_gnb_linked_open5gs | default('None', true) }}',
+                'linked_open5gs': '{{ one_ueransim_gnb_linked_open5gs | default('None') }}',
                 'amf_address': '{{ one_ueransim_gnb_amf_ip }}',
-                'amf_proxy':   '{{ one_ueransim_gnb_amf_proxy | default('None', true) }}',
+                'amf_proxy':   '{{ one_ueransim_gnb_amf_proxy | default('None') }}',
                 'tac':  '{{ one_ueransim_gnb_tac }}',
                 'mcc':  '{{ one_ueransim_gnb_mcc }}',
                 'mnc':  '{{ one_ueransim_gnb_mnc }}',
@@ -174,7 +174,7 @@
           vars:
             custom_outputs:
               - key: "{{ entity_name }}-run_gnb"
-                value: "YES"
+                value: true
               - key: "{{ entity_name }}-gnb_metadata"
                 value: "{{ gnb_metadata_dict }}"
 
@@ -185,7 +185,7 @@
           ansible.builtin.set_fact:
             ue_metadata_dict: >-
               {
-                'linked_gnb':    '{{ one_ueransim_ue_linked_gnb | default('None', true) }}',
+                'linked_gnb':    '{{ one_ueransim_ue_linked_gnb | default('None') }}',
                 'gnbsearchlist': '{{ one_ueransim_ue_gnbsearchlist | join(',') }}',
                 'mcc':  '{{ one_ueransim_ue_mcc }}',
                 'mnc':  '{{ one_ueransim_ue_mnc }}',
@@ -201,7 +201,7 @@
           vars:
             custom_outputs:
               - key: "{{ entity_name }}-run_ue"
-                value: "YES"
+                value: true
               - key: "{{ entity_name }}-ue_metadata"
                 value: "{{ ue_metadata_dict }}"
 

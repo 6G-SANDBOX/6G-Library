@@ -8,7 +8,10 @@ trial_network:
     name: "internal"
     dependencies:
       - "tn_init"
-    input: {}
+    input:
+      # one_vnet_first_ip: "10.21.12.1"   # Default value
+      # one_vnet_netmask: 24              # Default value
+      # one_vnet_address_size: 100        # Default value
   oneKE-cluster:
     type: "oneKE"
     name: "cluster"
@@ -19,11 +22,10 @@ trial_network:
       one_oneKE_external_vnet: "tn_vxlan"
       one_oneKE_internal_vnet: "vnet-internal"
       one_oneKE_version: "129"
-      one_oneKE_multus: "YES"
-      one_oneKE_cni_plugin: "canal"
-      # one_oneKE_cilium_range: null
-      one_oneKE_metallb: "YES"
+      # one_oneKE_multus: true             # Default value
+      # one_oneKE_cni_plugin: "canal"      # Default value
+      # one_oneKE_metallb: true            # Default value
       one_oneKE_metallb_range: "10.21.12.200-10.21.12.240"
-      one_oneKE_longhorn: "YES"
-      one_oneKE_traefik: "NO"
-      one_oneKE_nginx_passthough: true
+      # one_oneKE_longhorn: true           # Default value
+      # one_oneKE_traefik: false           # Default value
+      # one_oneKE_nginx_passthough: false  # Default value

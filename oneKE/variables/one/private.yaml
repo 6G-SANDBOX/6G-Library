@@ -11,11 +11,11 @@
 one_oneKE_external_vnet: "tn_vxlan"
 
 one_oneKE_version: "129"
-one_oneKE_multus: "YES"            # OneKE default is "NO"
+one_oneKE_multus: true             # Disabled by default in OneKE
 one_oneKE_cni_plugin: "canal"      # OneKE default is "cilium"
-one_oneKE_cilium_range: null       # Required if the cni_plugin is cilium
-one_oneKE_metallb: "YES"           # OneKE default is "NO"
-one_oneKE_metallb_range: "10.21.12.200-10.21.12.240"    # Required if the metallb is enabled
-one_oneKE_longhorn: "YES"          # OneKE default is "NO"
-one_oneKE_traefik: "NO"
+one_oneKE_cilium_range: null       # Only used when cni_plugin is cilium
+one_oneKE_metallb: true            # Disabled by default in OneKE
+one_oneKE_metallb_range: null      # Only used when metallb is enabled
+one_oneKE_longhorn: true           # Disabled by default in OneKE
+one_oneKE_traefik: false
 one_oneKE_nginx_passthough: false  # TLS/SSL passthrough disabled by default by the ingress-nginx controller

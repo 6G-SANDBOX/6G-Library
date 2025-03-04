@@ -63,12 +63,10 @@ input:
 
   one_oneKE_multus:
     description: |
-      Multus is a CNI (Container Network Interface) that enables attaching multiple network interfaces to pods.
-      The Multus CNI is compatible with the primary CNI chosen, not a substitute for it
-      Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
-    type: str
-    default_value: "YES"
-    choices: ["YES", "NO"]
+      Enable Multus, a CNI (Container Network Interface) that enables attaching multiple network interfaces to pods.
+      Multus CNI is compatible with the primary CNI chosen, not a substitute for it
+    type: bool
+    default_value: true
     required_when: false
 
   one_oneKE_cni_plugin:
@@ -100,38 +98,32 @@ input:
 
   one_oneKE_metallb: 
     description: |
-      Load-balancer implementation for bare-metal Kubernetes clusters, using standard routing protocols.
-      Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
-    type: str
-    default_value: "YES"
-    choices: ["YES", "NO"]
+      Enable MetalLB, a Load-Balancer implementation for bare-metal Kubernetes clusters, using standard routing protocols. Default value is true.
+    type: bool
+    default_value: true
     required_when: false 
 
   one_oneKE_metallb_range:
     description: |
-      Range of IPs available to MetalLB to allocate Kubernetes services (svc) when variable `one_oneKE_metallb`` is set to `YES`.
+      Range of IPs available to MetalLB to allocate Kubernetes services (svc) when variable `one_oneKE_metallb` is true (default).
       The range has to be inside the "one_oneKE_internal_vnet" subnet, but preferably outside it's address range.
       Syntax is <min_IPv4>-<max_IPv4>. E.g. `"10.21.12.200-10.21.12.240"`.
     type: str
-    default_value: "10.21.12.200-10.21.12.240"
+    default_value: null
     required_when: false
 
   one_oneKE_longhorn:
     description: |
-      Longhorn provides highly available persistent storage for Kubernetes
-      Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
-    type: str
-    default_value: "YES"
-    choices: ["YES", "NO"]
+      Enable Longhorn, a Storage Class providing highly available persistent storage for Kubernetes.
+    type: bool
+    default_value: true
     required_when: false 
 
   one_oneKE_traefik:
     description: |
-      Ingress controller that manages access to cluster services.
-      Accepted values are "YES" or "NO" (quotes included). Default value is "NO"
-    type: str
-    default_value: "NO"
-    choices: ["YES", "NO"]
+      Enable Traefik, an Ingress controller that manages the access to cluster services.
+    type: bool
+    default_value: false
     required_when: false 
 
   one_oneKE_nginx_passthough:

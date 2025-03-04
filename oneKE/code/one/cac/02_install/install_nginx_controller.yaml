@@ -12,7 +12,7 @@
     chart_ref: ingress-nginx
     namespace: ingress-nginx
     state: present
-    create_namespace: yes
+    create_namespace: true
     values:
       rbac:
         create: true

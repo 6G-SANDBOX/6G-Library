@@ -26,12 +26,12 @@ OneKE Service has four different Roles:
 - **OneKE public VNET**: `{{ one_oneKE_external_vnet }}`
 - **OneKE private VNET**: `{{ one_oneKE_internal_vnet }}`
 - **CNI**: `{{ one_oneKE_cni_plugin }}`
-{% if one_oneKE_cilium_range is defined and one_oneKE_cilium_range %}
-- **cilium IP pool**: `{{ one_oneKE_cilium_range }}`
+{% if one_oneKE_cni_plugin == 'cilium' %}
+- **cilium IP pool**: `{{ one_oneKE_cilium_range | default('None') }}`
 {% endif %}
 - **multus enabled**: `{{ one_oneKE_multus }}`
 - **metallb enabled**: `{{ one_oneKE_metallb }}`
-- **metallb IP pool**: `{{ one_oneKE_metallb_range }}`
+- **metallb IP pool**: `{{ one_oneKE_metallb_range | default('None') }}`
 - **traefik enabled**: `{{ one_oneKE_traefik }}`
 - **SSL/TLS passthrough enabled in the nginx-ingress**: `{{ one_oneKE_nginx_passthough }}`
 - **Skooner Dashboard URL**: [https://skooner.{{ domain_name }}](https://skooner.{{ domain_name }})

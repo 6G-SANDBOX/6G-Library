@@ -11,7 +11,7 @@
     name: skooner
     chart_ref: /tmp/skooner
     namespace: skooner
-    create_namespace: yes
+    create_namespace: true
     state: present
     values:
       skooner:

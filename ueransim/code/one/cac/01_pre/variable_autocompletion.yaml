@@ -52,6 +52,7 @@
     - not one_ueransim_run_gnb
     - one_ueransim_run_ue
     - one_ueransim_ue_linked_gnb is defined and one_ueransim_ue_linked_gnb != ''
+    # TODO: Additional check to see if output variable one_ueransim_ue_linked_gnb + '-run_gnb' is set to true
   block:
     - name: Create variables for gNB from terraform outputs
       set_fact:

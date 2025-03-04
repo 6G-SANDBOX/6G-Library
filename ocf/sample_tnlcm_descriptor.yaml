@@ -22,13 +22,12 @@ trial_network:
     input:
       one_oneKE_internal_vnet: "vnet-internal"
       one_oneKE_version: "129"
-      one_oneKE_multus: "YES"
-      one_oneKE_cni_plugin: "canal"
-      # one_oneKE_cilium_range: null
-      one_oneKE_longhorn: "YES"
-      one_oneKE_metallb: "YES"
+      # one_oneKE_multus: true         # Default value
+      # one_oneKE_cni_plugin: "canal"  # Default value
+      # one_oneKE_metallb: true        # Default value
       one_oneKE_metallb_range: "10.10.10.200-10.10.10.240"
-      one_oneKE_traefik: "NO"
+      # one_oneKE_longhorn: true       # Default value
+      # one_oneKE_traefik: false       # Default value
       one_oneKE_nginx_passthough: true
   ocf-openCapif:
     type: "ocf"
