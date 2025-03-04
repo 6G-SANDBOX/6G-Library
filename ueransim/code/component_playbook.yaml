@@ -111,7 +111,7 @@
       vars:
         gnbsearchlist: "{{ hostvars.localhost.one_ueransim_ue_gnbsearchlist }}"
         session_sst: "{{ hostvars.localhost.one_ueransim_ue_session_sst }}"
-      when: hostvars['localhost'].get('one_ueransim_run_ue', 'NO') == 'YES'
+      when: hostvars['localhost'].get('one_ueransim_run_ue', false)
       become: true
       block:
         - name: Fix the gnbsearchlist
@@ -150,7 +150,7 @@
         status_code: [200]
 
     - name: Tasks for UERANSIM as gNB
-      when: one_ueransim_run_gnb == 'YES'
+      when: one_ueransim_run_gnb
       block:
         - name: Define gnb_metadata dictionary
           ansible.builtin.set_fact:
@@ -179,7 +179,7 @@
                 value: "{{ gnb_metadata_dict }}"
 
     - name: Tasks for UERANSIM as UE
-      when: one_ueransim_run_ue == 'YES'
+      when: one_ueransim_run_ue
       block:
         - name: Define ue_metadata dictionary
           ansible.builtin.set_fact:

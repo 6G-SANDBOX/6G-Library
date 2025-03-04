@@ -27,7 +27,7 @@ Component configuration logs can be foud at `/var/log/post-ueransim.log`
   ```
 
 ### gNB Runtime
-{% if one_ueransim_run_gnb is defined and one_ueransim_run_gnb == 'YES' %}
+{% if one_ueransim_run_gnb %}
 Service `ueransim_gnb.service` is currently **running** and **enabled** with the following configuration:
 - **Linked Open5GS**: `{{ one_ueransim_gnb_linked_open5gs | default('None', true) }}`
 - **AMF IPv4 address**: `{{ one_ueransim_gnb_amf_ip }}`
@@ -43,7 +43,7 @@ Service `ueransim_gnb.service` is currently **not running** and **disabled**.
 
 
 ### UE Runtime
-{% if one_ueransim_run_ue is defined and one_ueransim_run_ue == 'YES' %}
+{% if one_ueransim_run_ue %}
 Service `ueransim_ue.service` is currently **running** and **enabled** with the following configuration:
 - **Linked gNB**:    `{{ one_ueransim_ue_linked_gnb | default('None', true) }}`
 - **gNB Search List**: `{{ one_ueransim_ue_gnbsearchlist }}`

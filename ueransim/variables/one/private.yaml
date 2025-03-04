@@ -14,8 +14,8 @@ one_ueransim_disk: 10240
 one_ueransim_networks: 
   - tn_vxlan
 
-one_ueransim_run_gnb: "NO"
-one_ueransim_run_ue: "NO"
+one_ueransim_run_gnb: false
+one_ueransim_run_ue: false
 
 # one_ueransim_gnb_linked_open5gs: null
 # one_ueransim_ue_linked_gnb: null

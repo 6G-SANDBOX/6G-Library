@@ -6,8 +6,8 @@
 #one_ueransim_networks: 
 #  - tn_vxlan
 
-one_ueransim_run_gnb: "YES"
-one_ueransim_run_ue: "YES"
+one_ueransim_run_gnb: true
+one_ueransim_run_ue: true
 
 one_ueransim_gnb_linked_open5gs: open5gs_k8s-sample_name
 #one_ueransim_ue_linked_gnb: ueransim-sample_name

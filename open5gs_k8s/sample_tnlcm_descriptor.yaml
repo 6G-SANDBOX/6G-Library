@@ -20,7 +20,7 @@ trial_network:
       one_oneKE_internal_vnet: "vnet-internal"
       one_oneKE_cni_plugin: "canal"   # Optional variable. Already the default
       one_oneKE_metallb: "YES"        # Optional variable. Already the default
-      one_oneKE_metallb_range: "10.10.10.200-10.10.10.240"
+      one_oneKE_metallb_range: "10.21.12.200-10.21.12.240"
   open5gs_k8s-core:
     type: "open5gs_k8s"
     name: "core"

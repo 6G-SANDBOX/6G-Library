@@ -10,7 +10,7 @@
       - gnupg
       - lsb-release
     state: present
-    update_cache: yes
+    update_cache: true
 
 # TODO: Install mongosh?
 
@@ -99,13 +99,13 @@
 
 # TODO: NAT not working
 #- name: Enable IPv4 forwarding
-#  become: yes
+#  become: true
 #  sysctl:
 #    name: net.ipv4.ip_forward
 #    value: '1'
 #    state: present
-#    reload: yes
+#    reload: true
 
 #- name: Add NAT rule to do MASQUERADE
-#  become: yes
+#  become: true
 #  command: iptables -t nat -A POSTROUTING -s {{ hostvars['localhost']['one_upf_p4_sw_ue_pool'] }} -o {{ hostvars['localhost']['one_upf_p4_sw_chassis_conf']['phy_n6'] }} -j MASQUERADE

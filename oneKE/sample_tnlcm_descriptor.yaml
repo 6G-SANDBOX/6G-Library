@@ -23,7 +23,7 @@ trial_network:
       one_oneKE_cni_plugin: "canal"
       # one_oneKE_cilium_range: null
       one_oneKE_metallb: "YES"
-      one_oneKE_metallb_range: "10.21.12.230-10.21.12.250"
+      one_oneKE_metallb_range: "10.21.12.200-10.21.12.240"
       one_oneKE_longhorn: "YES"
       one_oneKE_traefik: "NO"
       one_oneKE_nginx_passthough: true

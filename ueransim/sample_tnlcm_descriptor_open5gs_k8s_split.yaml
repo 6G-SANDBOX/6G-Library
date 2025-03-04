@@ -59,8 +59,8 @@ trial_network:
     input:
       one_ueransim_networks:
         - "tn_vxlan"
-      one_ueransim_run_gnb: "YES"
-      one_ueransim_run_ue: "NO"
+      one_ueransim_run_gnb: true
+      one_ueransim_run_ue: false
       one_ueransim_gnb_linked_open5gs: "open5gs_k8s-core"
       one_ueransim_gnb_amf_ip: "10.10.10.200"
       # one_ueransim_gnb_amf_proxy: null
@@ -79,8 +79,8 @@ trial_network:
     input:
       one_ueransim_networks: 
         - "tn_vxlan"
-      one_ueransim_run_gnb: "NO"
-      one_ueransim_run_ue: "YES"
+      one_ueransim_run_gnb: false
+      one_ueransim_run_ue: true
       one_ueransim_ue_linked_gnb: "ueransim-gnb"
       # one_ueransim_ue_gnbsearchlist: "localhost"
       one_ueransim_ue_mcc: "001"

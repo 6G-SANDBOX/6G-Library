@@ -18,10 +18,19 @@ metadata:
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   short_description: Deploys a VM with UERANSIM services 
   long_description: |
-    The UERANSIM instance can be used as a 5G User Equipment, as a gNB, or as both in the same time.
-    Depending on the chosen behaviour (with input values "one_ueransim_run_gnb" and "one_ueransim_run_ue" respectivelly), the following dependencies are aplied:
-    - If one_ueransim_run_gnb == "YES", a previously deployed open5gs component needs to be selected at "one_ueransim_gnb_linked_open5gs"
-    - If one_ueransim_run_gnb == "NO" and one_ueransim_run_ue == "YES", a previously deployed ueransim with run_gnb == "YES" needs to be selected at "one_ueransim_ue_linked_gnb"
+    The UERANSIM instance can be used as a 5G User Equipment (UE), a gNB, as both or as None, according
+    to input variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` or a combination of them.
+    
+    Depending on the chosen behaviour (with input variables `one_ueransim_run_gnb` and 
+    `one_ueransim_run_ue` respectivelly), the following dependencies are aplied:
+    - If `one_ueransim_run_gnb == true`, a previously deployed `open5gs` component can be
+    referenced in the `one_ueransim_gnb_linked_open5gs` input variable to autocomplete gNB-related
+    variables.
+    - If `one_ueransim_run_gnb == false and one_ueransim_run_ue == true`, a previously deploye
+     `ueransim` component with `one_ueransim_run_gnb == true` can be referenced in the
+     `one_ueransim_ue_linked_gnb` input variable to autocomplete UE-related variables.
+    - If `one_ueransim_run_gnb == true` and `one_ueransim_run_ue == true`, the UE-related variables
+    will be automatically autocompleted by default with the gnB-related variables.
   hypervisors: [one]
   appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/service_UERANSIM
 
@@ -47,14 +56,14 @@ input:
   # gNB-related variables
   one_ueransim_run_gnb: 
     description: |
-      Enable ueransim-gnb.service at boot. Accepted values are "YES" or "NO" (quotes included).
-    type: str
-    choices: ["YES", "NO"]
-    required_when: true
+      Start and enable systemd service `ueransim-gnb.service` at boot.
+    type: bool
+    default_value: false
+    required_when: false
   one_ueransim_gnb_linked_open5gs:
     description: |
       Name of a previously deployed 'open5gs' component (either `open5gs_k8s` or `open5gs_vm`).
-      When variable `one_ueransim_run_gnb` is set to "YES", it defines the 5G SA core the gNB will try to connect to, and will autocomplete other variables acordingly.
+      When variable `one_ueransim_run_gnb` is true, it defines the 5G SA core the gNB will try to connect to, and will autocomplete other variables acordingly.
     type: "open5gs_k8s or open5gs_vm or upf_p4_sw or open5gcore_vm"
     default_value: null
     required_when: false
@@ -111,14 +120,14 @@ input:
   # UE-related variables
   one_ueransim_run_ue: 
     description: |
-      Enable ueransim-ue.service at boot. Accepted values are "YES" or "NO" (quotes included).
-    type: str
-    choices: ["YES", "NO"]
-    required_when: true
+      Start and enable systemd service `ueransim-ue.service` at boot.
+    type: bool
+    default_value: false
+    required_when: false
   one_ueransim_ue_linked_gnb:
     description: |
-      Name of a previously deployed `ueransim` component serving as gNB (with `one_ueransim_run_gnb == 'YES'`)
-      When variable `one_ueransim_run_ue` is set to "YES", it defines the gNB/RAN the User Equipment will try to connect to, and will autocomplete other variables acordingly.
+      Name of a previously deployed `ueransim` component serving as gNB (with `one_ueransim_run_gnb == true`)
+      When variable `one_ueransim_run_ue` is true, it defines the gNB/RAN the User Equipment will try to connect to, and will autocomplete other variables acordingly.
     type: "ueransim"
     default_value: null
     required_when: false
@@ -126,7 +135,7 @@ input:
     description: |
       In UE simulation, comma-separated list of IPv4 addresses where the UE will search for gNBs for Radio Link Simulation.
       The special value 'localhost' will be replaced with the IP of the first asigned vnet to the VM (usually tn_vxlan).
-      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
       with values from `one_ueransim_ue_linked_gnb` if defined.
     type: "str"
     default_value: "localhost"
@@ -135,7 +144,7 @@ input:
     description: |
       In UE simulation, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
       Values `one_ueransim_ue_mcc` + `one_ueransim_ue_mnc` + `one_ueransim_ue_msin` must add to exactly 15 digits to form a valid IMSI.
-      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
       with values from `one_ueransim_ue_linked_gnb` if defined.
     type: str
     default_value: "001"
@@ -144,7 +153,7 @@ input:
     description: |
       In UE simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
       Values `one_ueransim_ue_mcc` + `one_ueransim_ue_mnc` + `one_ueransim_ue_msin` must add to exactly 15 digits to form a valid IMSI.
-      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
       with values from `one_ueransim_ue_linked_gnb` if defined.
     type: str
     default_value: "01"
@@ -153,7 +162,7 @@ input:
     description: |
       In UE simulation, Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes.
       Values `one_ueransim_ue_mcc` + `one_ueransim_ue_mnc` + `one_ueransim_ue_msin` must add to exactly 15 digits to form a valid IMSI.
-      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
       with values from `one_ueransim_ue_linked_gnb` if defined.
     type: str
     default_value: "0000000001"
@@ -176,7 +185,7 @@ input:
   one_ueransim_ue_session_sst:
     description: |
       In UE simulation, Slice/Service Type (SST) of the initial PDU session to be established.
-      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
       with values from `one_ueransim_ue_linked_gnb` if defined.
     type: int
     default_value: 1
@@ -184,7 +193,7 @@ input:
   one_ueransim_ue_session_sd:
     description: |
       In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established. Minimum length of 6.
-      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
       with values from `one_ueransim_ue_linked_gnb` if defined.
     type: str
     default_value: "000001"
@@ -192,7 +201,7 @@ input:
   # one_ueransim_ue_configured_nssai_sst:
   #   description: |
   #     In UE simulation, Slice/Service Type (SST) of the configured NSSAI by HPLMN.
-  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
   #     with values from `one_ueransim_ue_linked_gnb` if defined.
   #   type: int
   #   default_value: 1
@@ -200,7 +209,7 @@ input:
   # one_ueransim_ue_configured_nssai_sd:
   #   description: |
   #     In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN. Minimum length of 6.
-  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
   #     with values from `one_ueransim_ue_linked_gnb` if defined.
   #   type: str
   #   default_value: "000001"
@@ -208,7 +217,7 @@ input:
   # one_ueransim_ue_default_nssai_sst:
   #   description: |
   #     In UE simulation, Slice/Service Type (SST) of the default NSSAI.
-  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
   #     with values from `one_ueransim_ue_linked_gnb` if defined.
   #   type: int
   #   default_value: 1
@@ -216,7 +225,7 @@ input:
   # one_ueransim_ue_default_nssai_sd:
   #   description: |
   #     In UE simulation, Slice Differentiator (SD) of the default NSSAI. Minimum length of 6.
-  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == 'YES'`, or else 
+  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
   #     with values from `one_ueransim_ue_linked_gnb` if defined.
   #   type: str
   #   default_value: "000001"

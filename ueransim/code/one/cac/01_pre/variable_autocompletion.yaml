@@ -10,7 +10,7 @@
 
 - name: Tasks for UERANSIM as gNB
   when:
-    - one_ueransim_run_gnb == 'YES'
+    - one_ueransim_run_gnb
     - one_ueransim_gnb_linked_open5gs is defined and one_ueransim_gnb_linked_open5gs != ''
   block:
     - name: Convert open5gs terraform output to a dictionary
@@ -31,9 +31,9 @@
         one_ueransim_gnb_slices_sst: "{{ open5gs_metadata_dict.s_nssai_sst }}"
         one_ueransim_gnb_slices_sd:  "{{ open5gs_metadata_dict.s_nssai_sd }}"
 
-    - name: Overwrite UE-related variables when gNB is in the same component
+    - name: Overwrite UE-related variables when the UE is in the same component as the gNB
       when:
-        - one_ueransim_run_ue == 'YES'
+        - one_ueransim_run_ue
       ansible.builtin.set_fact:
         one_ueransim_ue_linked_gnb: "{{ entity_name }}"
         one_ueransim_ue_gnbsearchlist: 'localhost'
@@ -49,8 +49,8 @@
 
 - name: Tasks for UERANSIM as UE with external gNB
   when:
-    - one_ueransim_run_ue == 'YES'
-    - one_ueransim_run_gnb == 'NO'
+    - not one_ueransim_run_gnb
+    - one_ueransim_run_ue
     - one_ueransim_ue_linked_gnb is defined and one_ueransim_ue_linked_gnb != ''
   block:
     - name: Create variables for gNB from terraform outputs

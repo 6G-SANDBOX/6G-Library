@@ -53,7 +53,7 @@
               (item.0.name + '_' + item.0.nodes.index(item.1) | string): item.1 | string
             })
           }}
-      loop: "{{ cluster_roles | subelements('nodes', skip_missing=True) }}"
+      loop: "{{ cluster_roles | subelements('nodes', skip_missing=true) }}"
 
     - name: Fetch cluster node IPs
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/node_ip.yaml"

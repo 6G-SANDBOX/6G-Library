@@ -46,7 +46,7 @@ trial_network:
     input:
       one_ueransim_networks:
         - "tn_vxlan"
-      one_ueransim_run_gnb: "YES"
+      one_ueransim_run_gnb: true
       one_ueransim_gnb_linked_open5gs: "open5gs_vm-core"
       one_ueransim_gnb_amf_ip: "10.10.10.200"
       # one_ueransim_gnb_amf_proxy: null
@@ -55,7 +55,7 @@ trial_network:
       one_ueransim_gnb_mnc: "01"
       one_ueransim_gnb_slices_sst: 1
       one_ueransim_gnb_slices_sd: "000009"
-      one_ueransim_run_ue: "YES"
+      one_ueransim_run_ue: true
       # one_ueransim_ue_gnbsearchlist: "localhost"
       one_ueransim_ue_mcc: "001"
       one_ueransim_ue_mnc: "01"

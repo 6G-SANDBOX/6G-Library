@@ -16,7 +16,7 @@
       | combine( {'create_at': start_time} if start_time is defined else {} )
       | combine( {'delete_at': stop_time} if stop_time is defined else {} )
       | to_json }}"
-    return_content: yes
+    return_content: true
     status_code: [200,201]
   register: api_response
 

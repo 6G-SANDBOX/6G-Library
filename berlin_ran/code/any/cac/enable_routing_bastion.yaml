@@ -23,7 +23,7 @@
       when: debug
 
     - name: add routes for oneKE
-      become: yes
+      become: true
       ansible.builtin.shell: "ip route add {{ item }} || ip r c {{ item }}"
       with_items:
         - "{{ site_available_components.berlin_ran.core_network }} via {{ oneKE_vnf0_ip }}"
@@ -31,7 +31,7 @@
       when: oneKE_vnf0_ip|length > 0
 
     - name: add route for 5g-core VM
-      become: yes
+      become: true
       ansible.builtin.shell: "ip route add {{ item }} || ip r c {{ item }}"
       with_items:
         - "{{ site_available_components.berlin_ran.core_network }} via {{ o5gcore_ip }}"
