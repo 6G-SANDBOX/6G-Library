@@ -10,6 +10,18 @@
     state: present
     create_namespace: true
 
+- name: Wait for MetalLB to be ready
+  kubernetes.core.k8s_info:
+    kubeconfig: /etc/rancher/rke2/rke2.yaml
+    kind: Deployment
+    namespace: metallb-system
+    name: metallb-controller
+    wait: true
+    wait_condition:
+      type: Ready
+    wait_sleep: 5      # default
+    wait_timeout: 120  # default
+
 - name: Create IPAddressPool resource for MetalLB 
   environment:
     K8S_AUTH_KUBECONFIG: /etc/rancher/rke2/rke2.yaml
