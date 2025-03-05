@@ -6,13 +6,13 @@
   [![Issues][issues-shield]][issues-url]
 
 <a href="https://6g-sandbox.eu/">
-    <img src="https://6g-sandbox.eu/wp-content/uploads/2023/01/6g-sandbox-logo-2-300x138.jpg" alt="6G-Sandbox logo" title="6G-Sandbox" align="right" height="60" />
+  <img src="https://6g-sandbox.eu/wp-content/uploads/2023/01/6g-sandbox-logo-2-300x138.jpg" alt="6G-Sandbox logo" title="6G-Sandbox" align="right" height="60" />
 </a>
 
 # 6G-SANDBOX SNS Library
   [![6G SANDBOX LIBRARY][6glibrary-badge]][6glibrary-url]
 
-  [Report error](https://github.com/6G-SANDBOX/6G-Library/issues/new?assignees=&labels=&projects=&template=bug_report.md) · [Feature request](https://github.com/6G-SANDBOX/6G-Library/issues/new?assignees=&labels=&projects=&template=feature_request.md)
+  [Documentation](https://6g-sandbox.github.io/docs/category/6g-library) • [Report Error](https://github.com/6G-SANDBOX/6G-Library/issues/new?assignees=&labels=&projects=&template=bug_report.md) • [Feature Request](https://github.com/6G-SANDBOX/6G-Library/issues/new?assignees=&labels=&projects=&template=feature_request.md)
 </div>
 
 [6G-SANDBOX](https://6g-sandbox.eu/) is a HE funded research project (HORIZON-JU-SNS-2022-STREAM-C-01-01). The 6G-SANDBOX project brings a complete and modular facility for the European experimentation ecosystem (in line and under the directions set by SNS JU), which is expected to support for the next decade technology and research validation processes needed in the pathway towards 6G.
@@ -145,5 +145,5 @@ Variable files separated by the cloud provider used by each site.
 [issues-shield]: https://img.shields.io/github/issues/6G-SANDBOX/6G-Library.svg?style=for-the-badge
 [issues-url]: https://github.com/6G-SANDBOX/6G-Library/issues
 
-[6glibrary-badge]: https://img.shields.io/badge/6G--Library-v0.3.0-blue
-[6glibrary-url]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.3.0
+[6glibrary-badge]: https://img.shields.io/github/v/release/6G-SANDBOX/6G-Library?label=6G-Library&color=blue
+[6glibrary-url]: https://github.com/6G-SANDBOX/6G-Library/releases/latest

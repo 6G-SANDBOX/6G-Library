@@ -23,15 +23,14 @@ trial_network:
     input:
       one_oneKE_external_vnet: "tn_vxlan"
       one_oneKE_internal_vnet: "vnet-internal"
-      one_oneKE_version: "129"
-      one_oneKE_multus: "YES"
-      one_oneKE_cni_plugin: "canal"
-      one_oneKE_cilium_range: ""
-      one_oneKE_longhorn: "YES"
-      one_oneKE_metallb: "YES"
+      one_oneKE_version: "131"
+      # one_oneKE_multus: true             # Default value
+      # one_oneKE_cni_plugin: "canal"      # Default value
+      # one_oneKE_metallb: true            # Default value
       one_oneKE_metallb_range: "10.10.10.200-10.10.10.240"
-      one_oneKE_traefik: "NO"
-      one_oneKE_dns: "1.1.1.1 8.8.8.8"
+      # one_oneKE_longhorn: true           # Default value
+      # one_oneKE_traefik: false           # Default value
+      # one_oneKE_nginx_passthough: false  # Default value
   open5gs_k8s-core:
     type: "open5gs_k8s"
     name: "core"
@@ -39,15 +38,18 @@ trial_network:
       - "oneKE-cluster"
     input:
       one_open5gs_k8s_target: "oneKE-cluster"
-      one_open5gs_k8s_mcc: "214"
-      one_open5gs_k8s_mnc: "702"
-      one_open5gs_k8s_apn: "internet"
-      one_open5gs_k8s_tac: 1
-      one_open5gs_k8s_s_nssai_sst: 1
-      one_open5gs_k8s_s_nssai_sd: "000009"
       one_open5gs_k8s_amf_ip: "10.10.10.200"
       one_open5gs_k8s_upf_ip: "10.10.10.201"
-      one_open5gs_k8s_k8s_ue_count: 1
+      one_open5gs_k8s_k8s_ue_count: 3
+      one_open5gs_k8s_tac: 200
+      one_open5gs_k8s_mcc: "001"
+      one_open5gs_k8s_mnc: "01"
+      one_open5gs_k8s_msin: "0000000001"
+      one_open5gs_k8s_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+      one_open5gs_k8s_opc: "E8ED289DEBA952E4283B54E88E6183CA"
+      one_open5gs_k8s_apn: "internet"
+      one_open5gs_k8s_s_nssai_sst: 1
+      one_open5gs_k8s_s_nssai_sd: "000009"
   ueransim-gnb:
     type: "ueransim"
     name: "gnb"
@@ -57,16 +59,16 @@ trial_network:
     input:
       one_ueransim_networks:
         - "tn_vxlan"
-      one_ueransim_run_gnb: "YES"
-      one_ueransim_run_ue: "NO"
+      one_ueransim_run_gnb: true
+      one_ueransim_run_ue: false
       one_ueransim_gnb_linked_open5gs: "open5gs_k8s-core"
-      one_ueransim_gnb_proxy: ""
+      one_ueransim_gnb_amf_ip: "10.10.10.200"
+      # one_ueransim_gnb_amf_proxy: null
+      one_ueransim_gnb_tac: 200
       one_ueransim_gnb_mcc: "001"
       one_ueransim_gnb_mnc: "01"
-      one_ueransim_gnb_tac: 200
-      one_ueransim_gnb_amf_address: "10.10.10.200"
       one_ueransim_gnb_slices_sst: 1
-      one_ueransim_gnb_slices_sd: "000001"
+      one_ueransim_gnb_slices_sd: "000009"
   ueransim-ue:
     type: "ueransim"
     name: "ue"
@@ -77,19 +79,19 @@ trial_network:
     input:
       one_ueransim_networks: 
         - "tn_vxlan"
-      one_ueransim_run_gnb: "NO"
-      one_ueransim_run_ue: "YES"
+      one_ueransim_run_gnb: false
+      one_ueransim_run_ue: true
       one_ueransim_ue_linked_gnb: "ueransim-gnb"
-      one_ueransim_ue_supi: "imsi-001010000000001"
+      # one_ueransim_ue_gnbsearchlist: "localhost"
       one_ueransim_ue_mcc: "001"
       one_ueransim_ue_mnc: "01"
+      one_ueransim_ue_msin: "0000000001"
       one_ueransim_ue_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
-      one_ueransim_ue_op: "E8ED289DEBA952E4283B54E88E6183CA"
-      one_ueransim_ue_gnbSearchList: ""
+      one_ueransim_ue_opc: "E8ED289DEBA952E4283B54E88E6183CA"
       one_ueransim_ue_session_apn: "internet"
       one_ueransim_ue_session_sst: 1
-      one_ueransim_ue_session_sd: "000001"
-      one_ueransim_ue_configured_nssai_sst: 1
-      one_ueransim_ue_configured_nssai_sd: "000001"
-      one_ueransim_ue_default_nssai_sst: 1
-      one_ueransim_ue_default_nssai_sd: "000001"
+      one_ueransim_ue_session_sd: "000009"
+      # one_ueransim_ue_configured_nssai_sst: 1
+      # one_ueransim_ue_configured_nssai_sd: "000001"
+      # one_ueransim_ue_default_nssai_sst: 1
+      # one_ueransim_ue_default_nssai_sd: "000001"

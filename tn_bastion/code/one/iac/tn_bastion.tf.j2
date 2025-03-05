@@ -16,7 +16,7 @@ resource "opennebula_virtual_machine" "tn_bastion" {
     TOKEN: "YES"
     ONEAPP_BASTION_DNS_PASSWORD:       ""
     ONEAPP_BASTION_DNS_FORWARDERS:     "{{ site_dns | default('8.8.8.8,1.1.1.1') }}"
-    ONEAPP_BASTION_DNS_DOMAIN:         "{{ tn_id }}.{{ site_domain }}"
+    ONEAPP_BASTION_DNS_DOMAIN:         "{{ tn_id | regex_replace('_', '') | lower }}.{{ site_domain }}"
     ONEAPP_BASTION_ROUTEMANAGER_APITOKEN: ""
   }
 

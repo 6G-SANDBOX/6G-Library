@@ -62,7 +62,7 @@ Access to the Trial Network can be performed using one of the following Wireguar
 
 #### Technitium DNS Server
 
-You can access the Technitium DNS web Portal from [http://bastion.{{ tn_id }}.{{ site_domain }}:5380](http://bastion.{{ tn_id }}.{{ site_domain }}:5380)
+You can access the Technitium DNS web Portal from [http://bastion.{{ tn_id | regex_replace('_', '') | lower }}.{{ site_domain }}:5380](http://bastion.{{ tn_id | regex_replace('_', '') | lower }}.{{ site_domain }}:5380)
 Credentials to login are:
 - user: `admin`
 - password: `{{ tn_bastion_dns_password }}`

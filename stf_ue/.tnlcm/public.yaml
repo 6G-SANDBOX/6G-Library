@@ -21,7 +21,7 @@ metadata:
     This mobile device has the right SIM to be connected to the physical gNB of the `nokia_radio` component.
     The access time for the device is set to 1h by default, but can be modified
     **NOTE**: Currently this component is only available in the site "uma".
-  hypervisors: [one]
+  hypervisors: ["one"]
   destroy_script: true
 
 
@@ -57,5 +57,5 @@ input:
 ####################################
 ## Generated terraform outputs
 ####################################
-output:
+terraform_outputs:
   # None

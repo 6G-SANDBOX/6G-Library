@@ -27,12 +27,12 @@ one_vxlan_address_size: 254
 ### tn_bastion variables ###
 ############################
 
-one_bastion_cpu: 2
-one_bastion_memory: 1024
+one_bastion_cpu: 4
+one_bastion_memory: 3072
 one_bastion_disk: 5120
 
 one_bastion_vpn_clients: 1
-one_bastion_vpn_allowedips: ""
+one_bastion_vpn_allowedips: null
 
 one_bastion_networks: 
   - tn_vxlan

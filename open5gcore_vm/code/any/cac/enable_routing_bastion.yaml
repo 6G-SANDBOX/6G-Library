@@ -4,7 +4,7 @@
   ansible.builtin.shell: "ip route add {{ item }} || ip route change {{ item }}"
   with_items:
     - "{{ one_open5gcore_vm_ue_subnet }} via {{ o5gcore_tn_vxlan_ip }}"
-  become: yes
+  become: true
 
 #- name: add Routes via networkctl
 #  vars:

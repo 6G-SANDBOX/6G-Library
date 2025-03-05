@@ -9,11 +9,14 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 
   context = {
     NETWORK = "YES"
+    NETCFG_TYPE: "interfaces"
     SET_HOSTNAME = "$NAME"
     USERNAME = "jenkins"
+    SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
     ONEAPP_ELCM_INFLUXDB_USER = "{{ one_elcm_influxdb_user }}"
     ONEAPP_ELCM_INFLUXDB_PASSWORD = "{{ one_elcm_influxdb_password }}"
-    ONEAPP_ELCM_INFLUXDB_DATABASE = "{{ one_elcm_influxdb_database }}"
+    ONEAPP_ELCM_INFLUXDB_ORG = "{{ one_elcm_influxdb_org }}"
+    ONEAPP_ELCM_INFLUXDB_BUCKET = "{{ one_elcm_influxdb_bucket }}"
     ONEAPP_ELCM_GRAFANA_PASSWORD = "{{ one_elcm_grafana_password }}"
   }
 

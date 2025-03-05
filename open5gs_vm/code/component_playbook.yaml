@@ -33,18 +33,21 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
-        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
-        tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_external_vnet + '-id'] }}"
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
+        tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_vm_external_vnet + '-id'] | string }}"
+        tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         domain_name: >-
           {{
-            ((component_type | regex_replace('_', '') | lower) ~ '-' ~
-            (custom_name | regex_replace('_', '') | lower) ~ '.' ~
-            (tn_id | lower) ~ '.' ~
-            (site_domain | lower)) | trim
+            (
+              (component_type  | regex_replace('_', '') | lower) ~ '-' ~
+              (custom_name     | regex_replace('_', '') | lower) ~ '.' ~
+              (tn_id           | regex_replace('_', '') | lower) ~ '.' ~
+              site_domain
+            ) | trim
           }}
         n2_vnet_id: >-
           {{
@@ -75,13 +78,17 @@
     - name: Add new VM to an SSH config file ment to be usable by the experimenter
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
-    - name: Enable routing path in Bastion           # TODO:Add start_time
-      # ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_bastion.yaml"
+    - name: Submit routes in tn_bastion from the VM to the internal 5G core network.
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
       vars:
         endpoint: "{{ bastion_ip }}"
+        token: "{{ tn_routemanager_token }}"
       loop:
-        - { destination: "{{ one_open5gs_vm_ue_subnet }}", gateway: "{{ ips[access_vnet_id] }}" }
+        - { to: "{{ one_open5gs_vm_amf_ip }}", via: "{{ ips[access_vnet_id] }}" }
+        - { to: "{{ one_open5gs_vm_upf_ip }}", via: "{{ ips[access_vnet_id] }}" }
+        - { to: "{{ one_open5gs_vm_ue_subnet }}", via: "{{ ips[access_vnet_id] }}" }
+
+    # TODO: add also nft rules
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
@@ -117,11 +124,6 @@
         state: present
         key: "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
-    # - name: Display all variables/facts known for a host
-    #   ansible.builtin.debug:
-    #     var: hostvars[inventory_hostname]
-    #   when: debug
-
     - name: Install Open5GS and MongoDB
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/install_open5gs.yml"
 
@@ -135,33 +137,6 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: Define open5gs metadata dictionary
-      ansible.builtin.set_fact:
-        open5gs_metadata_dict: >-
-          {
-            'oneKE': '',
-            'proxy': '',
-            'mcc': '{{ one_open5gs_vm_mcc }}',
-            'mnc': '{{ one_open5gs_vm_mnc }}',
-            'msin': '{{ one_open5gs_vm_msin }}',
-            'key': '{{ one_open5gs_vm_key }}',
-            'opc': '{{ one_open5gs_vm_opc }}',
-            'apn': '{{ one_open5gs_vm_apn }}',
-            'tac': '{{ one_open5gs_vm_tac }}',
-            's_nssai_sst': '{{ one_open5gs_vm_s_nssai_sst }}',
-            's_nssai_sd': '{{ one_open5gs_vm_s_nssai_sd }}',
-            'amf_ip': '{{ one_open5gs_vm_amf_ip }}',
-            'upf_ip': '{{ one_open5gs_vm_upf_ip }}',
-            'ue_count': '{{ one_open5gs_vm_ue_count }}'
-          }
-
-    - name: Set custom terraform outputs for future components
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
-      vars:
-        custom_outputs:
-          - key: "{{ entity_name }}-metadata"
-            value: "{{ open5gs_metadata_dict }}"
-
     - name: Set DNS record for the component
       ansible.builtin.uri:
         url: >-
@@ -174,10 +149,32 @@
         body_format: json
         status_code: [200]
 
+    - name: Define open5gs metadata dictionary
+      ansible.builtin.set_fact:
+        open5gs_metadata_dict: >-
+          {
+            'oneKE': None,
+            'proxy': None,
+            'amf_ip': '{{ one_open5gs_vm_amf_ip }}',
+            'upf_ip': '{{ one_open5gs_vm_upf_ip }}',
+            'ue_count': '{{ one_open5gs_vm_ue_count }}',
+            'tac': '{{ one_open5gs_vm_tac }}',
+            'mcc': '{{ one_open5gs_vm_mcc }}',
+            'mnc': '{{ one_open5gs_vm_mnc }}',
+            'msin': '{{ one_open5gs_vm_msin }}',
+            'key': '{{ one_open5gs_vm_key }}',
+            'opc': '{{ one_open5gs_vm_opc }}',
+            'apn': '{{ one_open5gs_vm_apn }}',
+            's_nssai_sst': '{{ one_open5gs_vm_s_nssai_sst }}',
+            's_nssai_sd': '{{ one_open5gs_vm_s_nssai_sd }}'
+          }
+
+    - name: Set custom terraform outputs for future components
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-metadata"
+            value: "{{ open5gs_metadata_dict }}"
+
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          ips: "{{ ips | b64encode }}"
-          id: "{{ id | b64encode }}"
-          metadata_dict: "{{ open5gs_metadata_dict | b64encode }}"

@@ -58,7 +58,7 @@
         connect_timeout: 5
         timeout: 200
 
-    - name: Wait again until bastion contextualization has finished
+    - name: Wait again until one-appliance contextualization scripts have finished
       become: true
       ansible.builtin.wait_for:
         path: /etc/one-appliance/status
