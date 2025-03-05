@@ -26,7 +26,7 @@ resource "opennebula_service" "{{ entity_name }}" {
         "ONEAPP_K8S_CILIUM_BGP_ENABLED": "{% if one_oneKE_cni_plugin == 'cilium' %}YES{% else %}NO{% endif %}",
         "ONEAPP_K8S_CILIUM_RANGE": "{% if one_oneKE_cni_plugin == 'cilium' %}{{ one_oneKE_cilium_range | default('') }}{% else %}{% endif %}",
         "ONEAPP_K8S_METALLB_ENABLED": "{% if one_oneKE_metallb %}YES{% else %}NO{% endif %}",
-        "ONEAPP_K8S_METALLB_CLASS": "",
+        "ONEAPP_K8S_METALLB_CLASS": " ",
         "ONEAPP_K8S_METALLB_RANGE": "{{ one_oneKE_metallb_range | default('') }}",
         "ONEAPP_K8S_METALLB_CONFIG": "",
         "ONEAPP_K8S_LONGHORN_ENABLED": "{% if one_oneKE_longhorn %}YES{% else %}NO{% endif %}",
