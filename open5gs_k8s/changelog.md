@@ -3,6 +3,7 @@
 ## unreleased
 ### Changed
 - Open5GS upgraded from `v2.7.0` to `v2.7.2`. Chart version upgraded from `v2.2.2` to `v2.2.6`.
+- Simplified chart values.yaml manifest.
   
 
 ## v0.4.0
