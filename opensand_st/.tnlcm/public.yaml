@@ -22,8 +22,8 @@ metadata:
     and create an emulated Satellite Terminal entity that can be interconnected with various other components, 
     depending on the Trial Network’s topology (mandatory interconnection with an emulated Gateway entity 
     and an emulated Satellite Terminal entity). Documentation can be found at https://github.com/CNES/opensand.
-  hypervisors: [one]
-  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/opensand
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/opensand"]
 
 
 ####################################

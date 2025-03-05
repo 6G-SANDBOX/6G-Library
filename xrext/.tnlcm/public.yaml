@@ -24,8 +24,8 @@ metadata:
     NOTE: XRext image ONE PARAMS may be included as input variables, but at the moment the 
           image is only intended to be used in [uma] site, so the PARAMS are not included to avoid 
           confusing the experimenter.
-  hypervisors: [one]
-  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/service_XRext
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_XRext"]
 
 
 ####################################

@@ -28,7 +28,7 @@ metadata:
     - `amf_ip`: "10.10.11.200"
     - `upf_ip`: "10.10.11.201"
     NOTE: Currently this component is only available in the site "fokus".
-  hypervisors: [one]
+  hypervisors: ["one"]
   destroy_script: true
   resource_manager: true
 

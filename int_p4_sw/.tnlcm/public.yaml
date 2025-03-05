@@ -21,8 +21,8 @@ metadata:
     The component supports various configurations for source, transit, and sink switches, allowing for flexible 
     network setups. It is compatible with the 'one' hypervisor and can be customized to meet specific deployment 
     requirements.  
-  hypervisors: [one]
-  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/service_Collector_INT
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_Collector_INT"]
 
 
 ####################################

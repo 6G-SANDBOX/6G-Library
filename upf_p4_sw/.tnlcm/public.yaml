@@ -19,8 +19,8 @@ metadata:
     Ubuntu 22.04 LTS virtual machine with the UPF-P4 BMV2 software module installed.
     It also contains the different Open5GS services that act as the control plane for the 5G core.
     Containerized applications with Docker.
-  hypervisors: [one]
-  appliance: https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05"]
 
 
 ####################################

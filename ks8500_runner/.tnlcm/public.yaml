@@ -19,8 +19,8 @@ metadata:
   short_description: Deploys a VM with KS8500 Runner
   long_description: |
     The KS8500 Runner allows accessing local on premises resources while running a test campaign being scheduled from the KS8500 backend
-  hypervisors: [one]
-  appliance: https://marketplace.opennebula.io/appliance/d74a5f80-20bd-013d-0e49-7875a4a4f528
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.opennebula.io/appliance/d74a5f80-20bd-013d-0e49-7875a4a4f528"]
 
 
 ####################################

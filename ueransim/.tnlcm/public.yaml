@@ -31,8 +31,8 @@ metadata:
      `one_ueransim_ue_linked_gnb` input variable to autocomplete UE-related variables.
     - If `one_ueransim_run_gnb == true` and `one_ueransim_run_ue == true`, the UE-related variables
     will be automatically autocompleted by default with the gnB-related variables.
-  hypervisors: [one]
-  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/service_UERANSIM
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_UERANSIM"]
 
 
 ####################################

@@ -14,7 +14,7 @@ one_oneKE_version: "129"
 one_oneKE_multus: true             # Disabled by default in OneKE
 one_oneKE_cni_plugin: "canal"      # OneKE default is "cilium"
 one_oneKE_cilium_range: null       # Only used when cni_plugin is cilium
-one_oneKE_metallb: true            # Disabled by default in OneKE
+one_oneKE_metallb: true            # Disabled by default in OneKE. Variable ONEAPP_K8S_METALLB_CLASS was also changed from default "metallb" to "".
 one_oneKE_metallb_range: null      # Only used when metallb is enabled
 one_oneKE_longhorn: true           # Disabled by default in OneKE
 one_oneKE_traefik: false

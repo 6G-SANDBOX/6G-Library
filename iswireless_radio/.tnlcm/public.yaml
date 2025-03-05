@@ -26,11 +26,11 @@ metadata:
     - `apn`: "internet"
     - `tac`: 1
     - `s_nssai_sst`: 1
-    - `s_nssai_sd`:
+    - `s_nssai_sd`: "000009"
     - `amf_ip`: "10.10.12.200"
     - `upf_ip`: "10.10.12.201"
     NOTE: Currently this component is only available in the site "uma".
-  hypervisors: [one]
+  hypervisors: ["one"]
   destroy_script: true
   resource_manager: true
 

@@ -23,8 +23,11 @@ metadata:
     More info in the official documentation: https://github.com/OpenNebula/one-apps/wiki/oneke_intro
 
     NOTE: Cluster customization will be progresivelly incorporated ad the OpenNebula Terraform provider gets more functionalities
-  hypervisors: [one]
-  appliance: https://marketplace.opennebula.io/appliance/591dd3f1-220f-46a5-83f4-31031c753b8a
+  hypervisors: ["one"]
+  appliances:
+    - "https://marketplace.opennebula.io/appliance/591dd3f1-220f-46a5-83f4-31031c753b8a"
+    - "https://marketplace.mobilesandbox.cloud:9443/appliance/OneKE_1.31_service"
+    - "https://marketplace.mobilesandbox.cloud:9443/appliance/OneKE_1.31a_service"
 
 
 ####################################

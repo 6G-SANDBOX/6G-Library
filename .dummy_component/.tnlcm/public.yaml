@@ -25,13 +25,13 @@ metadata:
     This sample component needs a previous "X" component to be previously deployed, and referrenced in input: "sampleVariable"
     This sample component uses a custom appliance previously installed in your site (Instructions on how to install the component should be in the README.md file)
   # Unordered list of compatible virtualization platforms for the component. Currently only OpenNebula (one) is available
-  hypervisors: [one]
+  hypervisors: ["one"]
   # (OPTIONAL, currently unused) true in special components that include an additional playbook with the required steps to undeploy it. You probably don't need it
   #destroy_script: false    
   # (OPTIONAL, currently unused) true in certain components that require the TNLCM to perform an accounting on how many instances of this component are deployed in a site, and for how long. Quantity and duration are instructed inside the sites repository
   #resource_manager: false
-  # Optional. Marketplace link to the appliance VM template/image used by this component. Appliance should be already downloaded and documented in "site_variables" to be able to use this component.
-  #appliance: <link>        
+  # Optional. Marketplace links to one or more appliances used by this component (Service, VM template or VM image). The appliance should be already downloaded and documented in "site_variables" to be able to use this component.
+  #appliances: ["<link1>","<link2>"]        
 
 
 ############################################################################################################
