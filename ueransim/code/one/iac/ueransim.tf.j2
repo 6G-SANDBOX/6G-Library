@@ -11,6 +11,8 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
     USERNAME = "jenkins"
+    NETCFG_TYPE: "interfaces"
+    SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
     RUN_GNB = "{{ one_ueransim_run_gnb }}"
     RUN_UE = "{{ one_ueransim_run_ue }}"
 
