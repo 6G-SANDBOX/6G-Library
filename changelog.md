@@ -6,6 +6,7 @@
 - Common task file `nftables_add.yaml` now also supports adding NAT exceptions.
 ### Changed
 - *.tnlcm/public.yaml* files normalized between components
+- Component `open5gs_k8s` upgrades its software from `v2.7.0` to `v2.7.2`. Component upgraded to version `unreleased`.
 - New input variables for `int_p4_sw` and `upf_p4_sw`. Components upgraded to version `unreleased`.
 - Changes in many variables of `ueransim`. For more details check the component's changelog. Component upgraded to version `unreleased`.
 - Component `elcm` upgraded from version `v3.6.3` to `3.7.1`.
