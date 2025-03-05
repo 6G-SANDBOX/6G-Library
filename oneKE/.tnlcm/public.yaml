@@ -58,9 +58,9 @@ input:
     required_when: true
 
   one_oneKE_version:
-    description: "Version of the OneKE Appliance to deploy. Default value is '129'. WARNING: Due to a MetalLB change, Load Balancing for the `open5gs_k8s` component only works in 129."
+    description: "Version of the OneKE Appliance to deploy. Default value is '131'."
     type: str
-    default_value: "129"
+    default_value: "131"
     choices: ["129","131","131a"]
     required_when: false
 
