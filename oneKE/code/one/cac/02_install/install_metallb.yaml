@@ -38,7 +38,7 @@
         name: default
         namespace: metallb-system
       spec:
-        addresses: "{{ hostvars['localhost']['one_oneKE_metallb_range'] | default([], true) | list }}"
+        addresses: "{{ hostvars['localhost']['one_oneKE_metallb_range'] | default([], true) | split(',') }}"
 
 - name: Create L2Advertisement resource for MetalLB 
   environment:
