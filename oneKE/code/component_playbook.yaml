@@ -139,9 +139,18 @@
     - name: Apply extra Helm charts
       when: inventory_hostname == 'master_0'
       block:
+        - name: Install ansible for k8s dependencies
+          ansible.builtin.include_tasks: >-
+            {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_ansible_k8s.yaml
+
         - name: Apply ingress-nginx helm chart
           ansible.builtin.include_tasks: >-
             {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_nginx_controller.yaml
+
+        - name: Apply MetalLB helm chart
+          when: "hostvars['localhost']['one_oneKE_metallb']"
+          ansible.builtin.include_tasks: >-
+            {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_metallb.yaml
 
         - name: Apply Skooner helm chart
           ansible.builtin.include_tasks: >-

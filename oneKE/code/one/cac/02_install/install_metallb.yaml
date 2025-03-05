@@ -1,0 +1,39 @@
+---
+- name: Install MetalLB
+  kubernetes.core.helm:
+    kubeconfig: /etc/rancher/rke2/rke2.yaml
+    name: metallb
+    chart_repo_url: https://metallb.github.io/metallb
+    chart_ref: metallb/metallb
+    chart_version: v0.14.9
+    namespace: metallb-system
+    state: present
+    create_namespace: true
+
+- name: Create IPAddressPool resource for MetalLB 
+  environment:
+    K8S_AUTH_KUBECONFIG: /etc/rancher/rke2/rke2.yaml
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: metallb.io/v1beta1
+      kind: IPAddressPool
+      metadata:
+        name: default
+        namespace: metallb-system
+      spec:
+        addresses: "{{ hostvars['localhost']['one_oneKE_metallb_range'] | default([], true) | list }}"
+
+- name: Create L2Advertisement resource for MetalLB 
+  environment:
+    K8S_AUTH_KUBECONFIG: /etc/rancher/rke2/rke2.yaml
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: metallb.io/v1beta1
+      kind: L2Advertisement
+      metadata:
+        name: default
+        namespace: metallb-system
+      spec:
+        ipAddressPools: [default]
