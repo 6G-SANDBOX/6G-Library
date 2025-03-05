@@ -64,6 +64,7 @@
     - name: Add new VM to an SSH config file ment to be usable by the experimenter
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
+    # TODO: if gNB, add route to bastion
 
 - name: "STAGE 3: Apply CaC to prepare the component"
   hosts: "ueransim"
@@ -158,7 +159,7 @@
             gnb_metadata_dict: >-
               {
                 'linked_open5gs': '{{ one_ueransim_gnb_linked_open5gs | default('None') }}',
-                'amf_address': '{{ one_ueransim_gnb_amf_ip }}',
+                'amf_ip': '{{ one_ueransim_gnb_amf_ip }}',
                 'amf_proxy':   '{{ one_ueransim_gnb_amf_proxy | default('None') }}',
                 'tac':  '{{ one_ueransim_gnb_tac }}',
                 'mcc':  '{{ one_ueransim_gnb_mcc }}',

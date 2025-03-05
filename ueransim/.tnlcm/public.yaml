@@ -18,7 +18,7 @@ metadata:
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   short_description: Deploys a VM with UERANSIM services 
   long_description: |
-    The UERANSIM instance can be used as a 5G User Equipment (UE), a gNB, as both or as None, according
+    The UERANSIM component can be used as a 5G User Equipment (UE), a gNB, as both or as None, according
     to input variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` or a combination of them.
     
     Depending on the chosen behaviour (with input variables `one_ueransim_run_gnb` and 
@@ -241,7 +241,7 @@ terraform_outputs:
   __entity_name__run_gnb: input.one_ueransim_run_gnb
   __entity_name__gnb_metadata:
     linked_open5gs: input.one_ueransim_gnb_linked_open5gs
-    amf_address: input.one_ueransim_gnb_amf_ip
+    amf_ip: input.one_ueransim_gnb_amf_ip
     amf_proxy: input.one_ueransim_gnb_amf_proxy
     tac: input.one_ueransim_gnb_tac
     mcc: input.one_ueransim_gnb_mcc
