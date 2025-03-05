@@ -17,3 +17,12 @@
 
 - name: Wait for all pods to be Running
   ansible.builtin.command: kubectl wait pod --all --for=condition=Ready -n open5gs --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=1200s
+
+- name: Wait till all pods are Running
+  kubernetes.core.k8s_info:
+    kind: Pod
+    wait: yes
+    name: pod-not-yet-created
+    namespace: "{{ hostvars['localhost']['entity_name'] | regex_replace('_', '') | lower }}"
+    wait_sleep: 5      # default
+    wait_timeout: 120  # default
