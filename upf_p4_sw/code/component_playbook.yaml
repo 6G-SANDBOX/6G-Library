@@ -119,9 +119,13 @@
       ansible.builtin.set_fact:
         harbor_token: "{{ hostvars['localhost']['site_available_components']['upf_p4_sw']['harbor_token'] }}"
 
+    ### Calling load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
+    ### But it makes the code much MUCH cleaner with almost no extra latency
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
     - name: UPF P4 SW install
-      ansible.builtin.include_tasks:
-        file: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/upf_p4_install.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/upf_p4_install.yaml"
 
 
 - name: "STAGE 4: Publish execution results"
