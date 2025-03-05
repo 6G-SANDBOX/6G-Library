@@ -10,17 +10,21 @@
     state: present
     create_namespace: true
 
-- name: Wait for MetalLB to be ready
-  kubernetes.core.k8s_info:
-    kubeconfig: /etc/rancher/rke2/rke2.yaml
-    kind: Deployment
-    namespace: metallb-system
-    name: metallb-controller
-    wait: true
-    wait_condition:
-      type: Ready
-    wait_sleep: 5      # default
-    wait_timeout: 120  # default
+- name: Wait until all pods are Running
+  ansible.builtin.command: kubectl wait pod --all --for=condition=Ready -n metallb-system --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=120s
+
+# ### Ideal ansible method, but not working.
+# - name: Wait for MetalLB to be ready
+#   kubernetes.core.k8s_info:
+#     kubeconfig: /etc/rancher/rke2/rke2.yaml
+#     kind: Deployment
+#     namespace: metallb-system
+#     name: metallb-controller
+#     wait: true
+#     wait_condition:
+#       type: Ready
+#     wait_sleep: 5      # default
+#     wait_timeout: 120  # default
 
 - name: Create IPAddressPool resource for MetalLB 
   environment:

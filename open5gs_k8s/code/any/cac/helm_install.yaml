@@ -16,7 +16,7 @@
     - "/root/{{ helm_release_name }}-values.yaml"
 
 - name: Wait until all pods are Running
-  ansible.builtin.command: kubectl wait pod --all --for=condition=Ready -n {{ helm_release_name }} --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=240s
+  ansible.builtin.command: "kubectl wait pod --all --for=condition=Ready -n {{ helm_release_name }} --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=240s"
 
 # ### Ideal ansible method, but not working. I guess it expects a list with the deployment names.
 # - name: Wait till all Pods are Running
