@@ -23,7 +23,7 @@ trial_network:
     input:
       one_oneKE_external_vnet: "tn_vxlan"
       one_oneKE_internal_vnet: "vnet-internal"
-      one_oneKE_version: "129"
+      one_oneKE_version: "131"
       # one_oneKE_multus: true             # Default value
       # one_oneKE_cni_plugin: "canal"      # Default value
       # one_oneKE_metallb: true            # Default value

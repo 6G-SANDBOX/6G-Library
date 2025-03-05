@@ -7,10 +7,10 @@
 - name: Deploy Open5Gs helm
   kubernetes.core.helm:
     kubeconfig: /etc/rancher/rke2/rke2.yaml
-    name: open5gs
-    chart_ref: oci://dockerhub.mobilesandbox.cloud:9443/6gsandbox/open5gs
-    chart_version: 2.2.2
-    namespace: open5gs
+    name: "{{ hostvars['localhost']['entity_name'] | regex_replace('_', '') | lower }}"
+    chart_ref: oci://registry-1.docker.io/gradiantcharts/open5gs
+    chart_version: 2.2.6
+    namespace: "{{ hostvars['localhost']['entity_name'] | regex_replace('_', '') | lower }}"
     create_namespace: true
     values_files:
     - "/root/{{ hostvars['localhost']['entity_name'] }}-helm_values.yaml"
