@@ -36,8 +36,8 @@ The component uses specific versions for its core services:
    - Used for specific Ubuntu + Stratum-BMv2 combinations
 
 2. **Control Plane (UPF Controller)**
-   - Version format: `v{major}.{minor}.{patch}`
-   - Example: `v2.0.0`
+   - Version format: `{major}.{minor}.{patch}`
+   - Example: `2.0.0`
    - Follows semantic versioning for controller updates (It also includes the P4 data plane)
   
 3. **Open5GS Control Plane**

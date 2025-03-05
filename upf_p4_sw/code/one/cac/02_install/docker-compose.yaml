@@ -12,7 +12,7 @@ services:
   # Service to run the P4 UPF BMv2 controller
   upf-cp-bmv2:
     container_name: p4-upf-controller-bmv2
-    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/upf-p4-controller-bmv2:v2.0.0
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/upf-p4-controller-bmv2:2.0.0
     volumes:
       - "./config/controller-upf:/controller-upf-config"
     network_mode: host
