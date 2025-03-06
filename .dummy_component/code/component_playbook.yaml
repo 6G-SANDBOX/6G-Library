@@ -186,10 +186,3 @@
     # Both the markdown and the variables sent to the TNLCM are intended to be shared with the experimenter. They are PUBLIC
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          id: "{{ id | b64encode }}"
-          node_ids: "{{ node_ids | b64encode }}"
-          node_ips: "{{ node_ips | b64encode }}"
-          kubeconfig: "{{ kubeconfig }}"  # if it's already encoded
-          skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"

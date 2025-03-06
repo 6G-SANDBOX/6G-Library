@@ -1,0 +1,55 @@
+---
+- name: Install MetalLB
+  kubernetes.core.helm:
+    kubeconfig: /etc/rancher/rke2/rke2.yaml
+    name: metallb
+    chart_repo_url: https://metallb.github.io/metallb
+    chart_ref: metallb
+    chart_version: v0.14.9
+    namespace: metallb-system
+    state: present
+    create_namespace: true
+
+- name: Wait until all pods are Running
+  ansible.builtin.command: kubectl wait pod --all --for=condition=Ready -n metallb-system --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=120s
+
+# ### Ideal ansible method, but not working.
+# - name: Wait for MetalLB to be ready
+#   kubernetes.core.k8s_info:
+#     kubeconfig: /etc/rancher/rke2/rke2.yaml
+#     kind: Deployment
+#     namespace: metallb-system
+#     name: metallb-controller
+#     wait: true
+#     wait_condition:
+#       type: Ready
+#     wait_sleep: 5      # default
+#     wait_timeout: 120  # default
+
+- name: Create IPAddressPool resource for MetalLB 
+  environment:
+    K8S_AUTH_KUBECONFIG: /etc/rancher/rke2/rke2.yaml
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: metallb.io/v1beta1
+      kind: IPAddressPool
+      metadata:
+        name: default
+        namespace: metallb-system
+      spec:
+        addresses: "{{ hostvars['localhost']['one_oneKE_metallb_range'] | default([], true) | split(',') }}"
+
+- name: Create L2Advertisement resource for MetalLB 
+  environment:
+    K8S_AUTH_KUBECONFIG: /etc/rancher/rke2/rke2.yaml
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: metallb.io/v1beta1
+      kind: L2Advertisement
+      metadata:
+        name: default
+        namespace: metallb-system
+      spec:
+        ipAddressPools: [default]

@@ -28,7 +28,7 @@ metadata:
     - DNS server
     - VPN Server
     Internally this component works as a wrapper of both components within the same ansible playook.
-  hypervisors: [one]
+  hypervisors: ["one"]
 
 
 ####################################

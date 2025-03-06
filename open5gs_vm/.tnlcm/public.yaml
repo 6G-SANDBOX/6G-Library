@@ -14,6 +14,7 @@
 metadata:
   maintainers:
     - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   short_description: Deploys a Open5GS as a standalone Virtual Machine
   long_description: |
     Deploys a Open5GS over a general-purpose Virtual Machine based on Ubuntu 22.04 lTS.
@@ -24,24 +25,35 @@ metadata:
     - **medium**: 8 GiB of memory, 4 vCPU and 25GiB of storage
     - **small**: 4 GiB of memory, 2 vCPU and 15GiB of storage
     - **very_small**: 2 GiB of memory, 1 vCPU and 10GiB of storage
-  hypervisors: [one]
+  hypervisors: ["one"]
+
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the Open5GS VM template to use in your OpenNebula environment
+  image_id: ID of the Open5GS VM image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
 ####################################
 input:
-  one_open5gs_vm_networks:
-    description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
-    type: "list[tn_vxlan or vnet]"
-    default_value: ["tn_vxlan"]
+  one_open5gs_vm_external_vnet: 
+    description: Virtual Network name asigned to the VM for management purposes.
+    type: "tn_vxlan or vnet"
+    default_value: "tn_vxlan"
     required_when: false
-
   one_open5gs_vm_internal_vnet:
-    description: List of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
+    description: |
+      Optional list of 1 or 2 vnets used for interfaces N2 (AMF) and N3 (UPF) respectivelly.
+      If undefined, the vnet from `one_open5gs_vm_external_vnet` will be used for everything
+      If only one vnet is provided, it will be used for both N2 and N3 interfaces.
+      If more than 2 vnet are provided, the later ones will be ignored.
     type: "list[tn_vxlan or vnet]"
-    default_value: ["tn_vxlan"]
+    default_value: null
     required_when: false
-
   one_open5gs_vm_size:
     description: |
       Select one type of instance according to your hardware requirements
@@ -58,111 +70,103 @@ input:
       - "small"
       - "very_small"
     required_when: true
-
   one_open5gs_vm_ue_subnet:
-    description: Subnet to be used by the UEs
+    description: Subnet to be used by the UEs. It is unrelated to any vxlan or vnet components in your Trial Network.
     type: str
     default_value: "10.45.0.0/16"
     required_when: false
-
-  one_open5gs_vm_mcc:
-    description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
+  one_open5gs_vm_amf_ip:
+    description: |
+      IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network. 
+      It needs to be inside the "one_oneKE_internal_vnet" subnet, but preferably outside it's address range to avoid possible reservation conflicts.
     type: str
-    default_value: "001"
+    default_value: "10.21.12.200"
     required_when: false
-
-  one_open5gs_vm_mnc:
-    description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
+  one_open5gs_vm_upf_ip:
+    description: |
+      IPv4 Address of the Core User Plane Function (UPF) in the 5G core network.
+      It needs to be inside the "one_oneKE_internal_vnet" subnet, but preferably outside it's address range to avoid possible reservation conflicts.
     type: str
-    default_value: "01"
+    default_value: "10.21.12.201"
     required_when: false
-
-  one_open5gs_vm_msin:
-    description: Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes. mcc + mnc + msin must add to exactly 15
-    type: str
-    default_value: "0000000001"
+  one_open5gs_vm_ue_count:
+    description: |
+      Total number of UEs to be provisioned. UE IMSIs will be generated sequentially starting to count from
+      `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin`.
+    type: int
+    default_value: 20
     required_when: false
-
-  one_open5gs_vm_key:
-    description: Permanent Subscription Key
-    type: str
-    default_value: "465B5CE8B199B49FAA5F0A2EE238A6BC"
-    required_when: false
-
-  one_open5gs_vm_opc:
-    description: Operator Code
-    type: str
-    default_value: "E8ED289DEBA952E4283B54E88E6183CA"
-    required_when: false
-
-  one_open5gs_vm_apn:
-    description: Access Point Name (APN) of the initial PDU session to be stablished
-    type: str
-    default_value: "internet"
-    required_when: false
-
-  one_open5gs_vm_tac:                 # TODO: Remove if unused
-    description: Tracking Area Code in the PLMN
+  one_open5gs_vm_tac:
+    description: Tracking Area Code (TAC) of the the PLMN.
     type: int
     default_value: 200
     required_when: false
-
-  one_open5gs_vm_s_nssai_sst:         # TODO: Remove if unused
-    description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+  one_open5gs_vm_mcc:
+    description: |
+      Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
+      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid IMSI.
+    type: str
+    default_value: "001"
+    required_when: false
+  one_open5gs_vm_mnc:
+    description: |
+      Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
+      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid IMSI.
+    type: str
+    default_value: "01"
+    required_when: false
+  one_open5gs_vm_msin:
+    description: |
+      Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes.
+      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid IMSI.
+    type: str
+    default_value: "0000000001"
+    required_when: false
+  one_open5gs_vm_key:
+    description: Permanent Subscription Key of each UE.
+    type: str
+    default_value: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+    required_when: false
+  one_open5gs_vm_opc:
+    description: Operator Code (OP or OPC) of each UE.
+    type: str
+    default_value: "E8ED289DEBA952E4283B54E88E6183CA"
+    required_when: false
+  one_open5gs_vm_apn:
+    description: Access Point Name (APN) of the initial PDU session to be stablished.
+    type: str
+    default_value: "internet"
+    required_when: false
+  one_open5gs_vm_s_nssai_sst:
+    description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI).
     type: int
     default_value: 1
     required_when: false
-
-  one_open5gs_vm_s_nssai_sd:          # TODO: Remove if unused
+  one_open5gs_vm_s_nssai_sd:
     description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
     type: str
     default_value: "000001"
     required_when: false
 
-  one_open5gs_vm_amf_ip:
-    description: Address to expose the Core Access and Mobility Management Function (AMF). Requires to be part of the oneKE's one_oneKE_metallb_range
-    type: str
-    default_value: "10.21.12.200"
-    required_when: false
-
-  one_open5gs_vm_upf_ip:
-    description: Address to expose the Core User Plane Function (UPF). Requires to be part of the oneKE's one_oneKE_metallb_range
-    type: str
-    default_value: "10.21.12.201"
-    required_when: false
-
-  one_open5gs_vm_ue_count:
-    description: Number of UEs to be provisioned staring from MSIN
-    type: int
-    default_value: 20
-    required_when: false
 
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  id: VM ID in OpenNebula
-  metadata_dict: #Dictionary with multiple parameters used in the core bootstrap
-    oneKE: empty
-    proxy: empty
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
+  __entity_name__metadata:
+    oneKE: None
+    proxy: None
+    amf_ip: input.one_open5gs_vm_amf_ip
+    upf_ip: input.one_open5gs_vm_upf_ip
+    ue_count: input.one_open5gs_vm_ue_count
+    tac: input.one_open5gs_vm_tac
     mcc: input.one_open5gs_vm_mcc
     mnc: input.one_open5gs_vm_mnc
     msin: input.one_open5gs_vm_msin
     key: input.one_open5gs_vm_key
     opc: input.one_open5gs_vm_opc
     apn: input.one_open5gs_vm_apn
-    tac: input.one_open5gs_vm_tac
     s_nssai_sd: input.one_open5gs_vm_s_nssai_sst
     s_nssai_sst: input.one_open5gs_vm_s_nssai_sd
-    amf_ip: input.one_open5gs_vm_amf_ip
-    upf_ip: input.one_open5gs_vm_upf_ip
-    ue_count: input.one_open5gs_vm_ue_count
-
-
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  template_id: ID of the VM template to use in your OpenNebula environment
-  image_id: ID of the Ubuntu 22.04 LTS image to use in your OpenNebula environment

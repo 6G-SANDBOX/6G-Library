@@ -18,9 +18,9 @@ trial_network:
     input:
       one_oneKE_external_vnet: "tn_vxlan"
       one_oneKE_internal_vnet: "vnet-internal"
-      one_oneKE_cni_plugin: "canal"   # Optional variable. Already the default
-      one_oneKE_metallb: "YES"        # Optional variable. Already the default
-      one_oneKE_metallb_range: "10.10.10.200-10.10.10.240"
+      # one_oneKE_cni_plugin: "canal"  # Default value
+      # one_oneKE_metallb: true        # Default value
+      one_oneKE_metallb_range: "10.21.12.200-10.21.12.240"
   open5gs_k8s-core:
     type: "open5gs_k8s"
     name: "core"
@@ -28,15 +28,15 @@ trial_network:
       - "oneKE-cluster"
     input:
       one_open5gs_k8s_target: "oneKE-cluster"
+      one_open5gs_k8s_amf_ip: "10.21.12.200"
+      one_open5gs_k8s_upf_ip: "10.21.12.201"
+      one_open5gs_k8s_ue_count: 20
+      one_open5gs_k8s_tac: 200
       one_open5gs_k8s_mcc: "001"
       one_open5gs_k8s_mnc: "01"
       one_open5gs_k8s_msin: "0000000001"
       one_open5gs_k8s_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
       one_open5gs_k8s_opc: "E8ED289DEBA952E4283B54E88E6183CA"
       one_open5gs_k8s_apn: "internet"
-      one_open5gs_k8s_tac: 200
       one_open5gs_k8s_s_nssai_sst: 1
       one_open5gs_k8s_s_nssai_sd: "000001"
-      one_open5gs_k8s_amf_ip: "10.21.12.200"
-      one_open5gs_k8s_upf_ip: "10.21.12.201"
-      one_open5gs_k8s_ue_count: 20

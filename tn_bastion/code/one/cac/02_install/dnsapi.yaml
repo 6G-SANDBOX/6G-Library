@@ -40,7 +40,7 @@
     url: >-
       {{
         'http://127.0.0.1:5380/api/zones/records/add?token=' ~ dns_token ~
-        '&domain=bastion.' ~ tn_id ~ '.' ~ site_domain ~
+        '&domain=bastion.' ~ (tn_id | regex_replace('_', '') | lower) ~ '.' ~ site_domain ~
         '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ tn_vxlan_ip | trim
       }}
     method: POST

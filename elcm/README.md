@@ -1,9 +1,9 @@
 # ELCM
 
-More info in the official documentation: 
+More information in the official documentation: 
 
-- Backend: https://github.com/6G-SANDBOX/ELCM
+- Backend: https://gitlab.com/morse-uma/elcm
 
-- Frontend: https://github.com/6G-SANDBOX/portal
+- Frontend: https://gitlab.com/morse-uma/elcm-portal
 
 ![elcm](https://github.com/6G-SANDBOX/6G-Library/blob/assets/elcm/elcm.png)

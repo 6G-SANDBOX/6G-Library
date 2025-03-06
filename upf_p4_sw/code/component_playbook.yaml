@@ -115,10 +115,6 @@
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
-    - name: Set harbor token from site available components
-      ansible.builtin.set_fact:
-        harbor_token: "{{ hostvars['localhost']['site_available_components']['upf_p4_sw']['harbor_token'] }}"
-
     ### Calling load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
     ### But it makes the code much MUCH cleaner with almost no extra latency
     - name: Load enviromental variables from different sources inside the component
@@ -154,6 +150,8 @@
             'upf_ip': '{{ one_upf_p4_sw_controller_upf_ipv4_n3 }}',
             'upf_ipv4_n6': '{{ one_upf_p4_sw_controller_upf_ipv4_n6 }}'
           }
+        # enb_ipv4_n3: "{{ one_upf_p4_sw_controller.enb_ipv4_n3 | b64encode }}"
+        # dn_ipv4_n6: "{{ one_upf_p4_sw_controller.dn_ipv4_n6 | b64encode }}"
 
     - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
@@ -164,10 +162,3 @@
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          metadata_dict: "{{ upf_p4_sw_metadata_dict | b64encode }}"
-          id: "{{ id | b64encode }}"
-          ips: "{{ ips | b64encode }}"
-          # enb_ipv4_n3: "{{ one_upf_p4_sw_controller.enb_ipv4_n3 | b64encode }}"
-          # dn_ipv4_n6: "{{ one_upf_p4_sw_controller.dn_ipv4_n6 | b64encode }}"

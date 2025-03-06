@@ -19,10 +19,18 @@ metadata:
     This component will deploy OpenCAPIF from ETSI.
     Helm Chart deploying OpenCAPIF inside kubernetes cluster
     More info in the official documentation: https://ocf.etsi.org/documentation/latest/
-  hypervisors: [one]
+  hypervisors: ["one"]
+
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  # None
+
+
+####################################
+## Input variables
 ####################################
 input:
   ocf_one_oneKE:
@@ -129,10 +137,10 @@ input:
 
 
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  metadata_dict:   # Dictionary with multiple parameters used in the core bootstrap
+terraform_outputs:
+  __entity_name__metadata:
     oneKE: input.ocf_one_oneKE
     repo: input.ocf_any_repo
     branch: input.ocf_any_branch
@@ -156,9 +164,3 @@ output:
     capif_register_hostname: private.ocf_any_capif_register_hostname
     user: input.ocf_any_user
     password: input.ocf_any_password
-
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  # None

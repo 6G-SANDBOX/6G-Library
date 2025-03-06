@@ -47,7 +47,7 @@ one_upf_p4_sw_open5gs_control_opc: "E8ED289DEBA952E4283B54E88E6183CA"  # 32 hex 
 one_upf_p4_sw_open5gs_control_apn: "internet"     # Access Point Name
 
 # Network Slicing Parameters
-one_upf_p4_sw_open5gs_control_s_nssai_sst: "1"    # Range: 1-255
+one_upf_p4_sw_open5gs_control_s_nssai_sst: 1      # Range: 1-255
 one_upf_p4_sw_open5gs_control_s_nssai_sd: "1"     # Range: 0-999999
 
 #-------------------------------------------------------

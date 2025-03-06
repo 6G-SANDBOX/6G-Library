@@ -1,0 +1,80 @@
+---
+# 4G
+hss:
+  enabled: false  # Default true
+mme:
+  enabled: false  # Default true
+pcrf:
+  enabled: false  # Default true
+smf:
+  config:
+    pcrf:
+      enabled: false  # Default true
+sgwc:
+  enabled: false  # Default true
+sgwu:
+  enabled: false  # Default true
+
+
+# 5G
+amf:
+  config:
+    guamiList:
+      - amf_id:
+          region: 2
+          set: 1
+        plmn_id:
+          mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default "999"
+          mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default "70"
+    plmnList:
+      - plmn_id:
+          mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default "999"
+          mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default "70"
+        s_nssai:
+          - sst: {{ one_open5gs_k8s_s_nssai_sst | int }}  # Default 1
+            sd: "{{ one_open5gs_k8s_s_nssai_sd | string }}"  # Default "0x111111"
+    taiList:
+      - plmn_id:
+          mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default "999"
+          mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default "70"
+        tac: [ {{ one_open5gs_k8s_tac | int }} ]  # Default [1, 2, 3]
+  services:
+    ngap:
+      type: "LoadBalancer"  # Default "ClusterIP"
+      loadBalancerIP: "{{ one_open5gs_k8s_amf_ip | string }}"  # Default ""
+
+nrf:
+  config:
+    servingList:
+      - plmn_id:
+          mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default 999
+          mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default 70
+
+nssf:
+  config:
+    nsiList:
+    - sst: {{ one_open5gs_k8s_s_nssai_sst | int }}  # Default 1
+      sd: "{{ one_open5gs_k8s_s_nssai_sd | string }}"  # Default "0x111111"
+
+upf:
+  config:
+    upf:
+      gtpu:
+        advertise: "{{ one_open5gs_k8s_upf_ip | string }}"  # Default ""
+  services:
+    gtpu:
+      type: "LoadBalancer"  # Default "ClusterIP"
+      loadBalancerIP: "{{ one_open5gs_k8s_upf_ip | string }}"  # Default ""
+
+
+# Common
+webui:
+  ingress:
+    ingressClassName: "nginx"  # Default ""
+    hostname: "{{ hostvars['localhost']['domain_name'] }}"  # Default ""
+
+populate:
+  initCommands:
+{% for i in range(one_open5gs_k8s_ue_count|int) %}
+  - open5gs-dbctl add_ue_with_slice {{ one_open5gs_k8s_mcc | string }}{{ one_open5gs_k8s_mnc | string }}{{ ('%0'+(12-one_open5gs_k8s_mnc|length)|string +'d') % (one_open5gs_k8s_msin|int + i) }} {{ one_open5gs_k8s_key | string }} {{ one_open5gs_k8s_opc | string }} {{ one_open5gs_k8s_apn | string }} {{ one_open5gs_k8s_s_nssai_sst | int }} {{ one_open5gs_k8s_s_nssai_sd | string }}
+{% endfor %}

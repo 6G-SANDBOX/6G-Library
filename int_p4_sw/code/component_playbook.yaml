@@ -153,6 +153,3 @@
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          metadata_dict: "{{ int_p4_sw_metadata_json_escaped | b64encode }}"
