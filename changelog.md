@@ -7,6 +7,7 @@
 ### Added
 - Component `oneKE` upgraded to version `unreleased`, now supporting OneKE 1.31 and OneKE 1.31 Airgapped. New custom templates for 6G-Sandbox available in the official marketplace.
 - Common task file `nftables_add.yaml` now also supports adding NAT exceptions.
+- New optional variable `endpoints` in result template `ok_result.md.j2` with all the endpoints and credentials of a component.
 ### Changed
 - *.tnlcm/public.yaml* files normalized between components
 - Component `open5gs_k8s` upgrades its software from `v2.7.0` to `v2.7.2`. Component upgraded to version `unreleased`.
