@@ -99,6 +99,20 @@
   hosts: localhost
   gather_facts: false
   connection: local
+  vars:
+    endpoints:
+      backend:
+        url: "http://{{ domain_name }}:5001"
+      frontend:
+        url: "http://{{ domain_name }}:5000"
+      grafana:
+        url: "http://{{ domain_name }}:3000"
+        username: "admin"
+        password: "{{ one_elcm_grafana_password }}"
+      influxdb:
+        url: "http://{{ domain_name }}:8086"
+        username: "{{ one_elcm_influxdb_username }}"
+        password: "{{ one_elcm_influxdb_password }}"
   tasks:
     - name: Set DNS record for the component
       ansible.builtin.uri:

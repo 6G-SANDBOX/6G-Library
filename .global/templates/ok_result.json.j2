@@ -3,5 +3,6 @@
     "component_type": "{{ component_type | default(None, true) | b64encode }}",
     "custom_name": "{{ custom_name | default(None, true) | b64encode }}",
     "success": "true",
-    "markdown": "{{ ok2markdown | default() }}"
+    "markdown": "{{ ok2markdown | default() }}",
+    "endpoints": "{{ endpoints | default({}) | b64encode }}"
 }
