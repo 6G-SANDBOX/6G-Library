@@ -13,7 +13,7 @@ one_bastion_memory: 3072
 one_bastion_disk: 5120
 
 one_bastion_vpn_clients: 1
-one_bastion_vpn_allowedips: null
+# one_bastion_vpn_allowedips: null
 
 one_bastion_networks: 
   - tn_vxlan

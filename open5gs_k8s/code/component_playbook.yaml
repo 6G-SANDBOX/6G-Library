@@ -23,6 +23,7 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
+        tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
         node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_k8s_target + '-node_ips'] }}"
         domain_name: >-
           {{
@@ -53,38 +54,11 @@
         helm_release_name: "{{ hostvars['localhost']['entity_name'] | regex_replace('_', '') | lower }}"
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_install.yaml"
 
-- name: "STAGE 3: Publish execution results"
+
+- name: "STAGE 3: Manipulate tn_bastion in order to enable communication to the component"
   hosts: localhost
   gather_facts: false
-  connection: local
   tasks:
-    - name: Define open5gs metadata dictionary
-      ansible.builtin.set_fact:
-        open5gs_metadata_dict: >-
-          {
-            'oneKE': '{{ one_open5gs_k8s_target }}',
-            'proxy': '{{ node_ips.vnf_0 }}',
-            'mcc': '{{ one_open5gs_k8s_mcc }}',
-            'mnc': '{{ one_open5gs_k8s_mnc }}',
-            'msin': '{{ one_open5gs_k8s_msin }}',
-            'key': '{{ one_open5gs_k8s_key }}',
-            'opc': '{{ one_open5gs_k8s_opc }}',
-            'apn': '{{ one_open5gs_k8s_apn }}',
-            'tac': '{{ one_open5gs_k8s_tac }}',
-            's_nssai_sst': '{{ one_open5gs_k8s_s_nssai_sst }}',
-            's_nssai_sd': '{{ one_open5gs_k8s_s_nssai_sd }}',
-            'amf_ip': '{{ one_open5gs_k8s_amf_ip }}',
-            'upf_ip': '{{ one_open5gs_k8s_upf_ip }}',
-            'ue_count': '{{ one_open5gs_k8s_ue_count }}'
-          }
-
-    - name: Set custom terraform outputs for future components
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
-      vars:
-        custom_outputs:
-          - key: "{{ entity_name }}-metadata"
-            value: "{{ open5gs_metadata_dict }}"
-
     - name: Set DNS record for the component
       ansible.builtin.uri:
         url: >-
@@ -96,6 +70,68 @@
         method: POST
         body_format: json
         status_code: [200]
+
+    - name: Enable routes to the 5G Core AMF and UPF
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ bastion_ip }}"
+        token: "{{ tn_routemanager_token }}"
+      loop:
+        - { to: "{{ one_open5gs_k8s_amf_ip }}", via: "{{ node_ips.vnf_0 }}" }
+        - { to: "{{ one_open5gs_k8s_upf_ip }}", via: "{{ node_ips.vnf_0 }}" }
+
+    - name: Add tn_bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+
+- name: "STAGE 4: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Write firewall exception for the route-manager-api of your site
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        fw_exceptions:
+          - "{{ one_open5gs_k8s_amf_ip }}"
+          - "{{ one_open5gs_k8s_upf_ip }}"
+
+
+- name: "STAGE 5: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Define open5gs metadata dictionary
+      ansible.builtin.set_fact:
+        open5gs_metadata_dict: >-
+          {
+            'oneKE': '{{ one_open5gs_k8s_target }}',
+            'amf_ip': '{{ one_open5gs_k8s_amf_ip }}',
+            'upf_ip': '{{ one_open5gs_k8s_upf_ip }}',
+            'ue_count': '{{ one_open5gs_k8s_ue_count }}',
+            'tac': '{{ one_open5gs_k8s_tac }}',
+            'mcc': '{{ one_open5gs_k8s_mcc }}',
+            'mnc': '{{ one_open5gs_k8s_mnc }}',
+            'msin': '{{ one_open5gs_k8s_msin }}',
+            'key': '{{ one_open5gs_k8s_key }}',
+            'opc': '{{ one_open5gs_k8s_opc }}',
+            'apn': '{{ one_open5gs_k8s_apn }}',
+            's_nssai_sst': '{{ one_open5gs_k8s_s_nssai_sst }}',
+            's_nssai_sd': '{{ one_open5gs_k8s_s_nssai_sd }}'
+          }
+
+    - name: Set custom terraform outputs for future components
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-metadata"
+            value: "{{ open5gs_metadata_dict }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

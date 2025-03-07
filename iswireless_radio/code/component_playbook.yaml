@@ -51,15 +51,6 @@
         - { to: "{{ site_available_components.iswireless_radio.cp_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
         - { to: "{{ site_available_components.iswireless_radio.up_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
 
-    - name: If required, submit routes in tn_bastion for proxy access to the 5G Core
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-      vars:
-        endpoint: "{{ bastion_ip }}"
-        token: "{{ tn_routemanager_token }}"
-      loop:
-        - { to: "{{ open5gs_metadata['amf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
-        - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
-      when: open5gs_metadata['proxy'] is defined and open5gs_metadata['proxy'] != ''
 
 - name: "STAGE 2: Prepare access to tn_bastion to allow access"
   hosts: localhost

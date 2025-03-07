@@ -14,20 +14,19 @@ one_ueransim_disk: 10240
 one_ueransim_networks: 
   - tn_vxlan
 
-one_ueransim_run_gnb: false
-one_ueransim_run_ue: false
+one_ueransim_mode: "both"
 
+# one_ueransim_run_gnb: true if mode in ['gnb', 'both']
 # one_ueransim_gnb_linked_open5gs: null
-# one_ueransim_ue_linked_gnb: null
-
 one_ueransim_gnb_amf_ip: "10.21.12.200"
-one_ueransim_gnb_amf_proxy: null
 one_ueransim_gnb_tac: 200
 one_ueransim_gnb_mcc: "001"
 one_ueransim_gnb_mnc: "01"
 one_ueransim_gnb_slices_sst: 1
 one_ueransim_gnb_slices_sd: "000001"
 
+# one_ueransim_run_ue: true if mode in ['ue', 'both']
+# one_ueransim_ue_linked_gnb: null
 one_ueransim_ue_gnbsearchlist: "localhost"
 one_ueransim_ue_mcc: "001"
 one_ueransim_ue_mnc: "01"

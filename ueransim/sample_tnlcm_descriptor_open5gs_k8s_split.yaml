@@ -41,14 +41,14 @@ trial_network:
       one_open5gs_k8s_amf_ip: "10.10.10.200"
       one_open5gs_k8s_upf_ip: "10.10.10.201"
       one_open5gs_k8s_k8s_ue_count: 3
-      one_open5gs_k8s_tac: 200
-      one_open5gs_k8s_mcc: "001"
-      one_open5gs_k8s_mnc: "01"
-      one_open5gs_k8s_msin: "0000000001"
-      one_open5gs_k8s_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
-      one_open5gs_k8s_opc: "E8ED289DEBA952E4283B54E88E6183CA"
-      one_open5gs_k8s_apn: "internet"
-      one_open5gs_k8s_s_nssai_sst: 1
+      # one_open5gs_k8s_tac: 200            # Default value
+      # one_open5gs_k8s_mcc: "001"          # Default value
+      # one_open5gs_k8s_mnc: "01"           # Default value
+      # one_open5gs_k8s_msin: "0000000001"  # Default value
+      # one_open5gs_k8s_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"  # Default value
+      # one_open5gs_k8s_opc: "E8ED289DEBA952E4283B54E88E6183CA"  # Default value
+      # one_open5gs_k8s_apn: "internet"     # Default value
+      # one_open5gs_k8s_s_nssai_sst: 1      # Default value
       one_open5gs_k8s_s_nssai_sd: "000009"
   ueransim-gnb:
     type: "ueransim"
@@ -59,11 +59,11 @@ trial_network:
     input:
       one_ueransim_networks:
         - "tn_vxlan"
+      one_ueransim_mode: "gnb"
       one_ueransim_run_gnb: true
       one_ueransim_run_ue: false
       one_ueransim_gnb_linked_open5gs: "open5gs_k8s-core"
       one_ueransim_gnb_amf_ip: "10.10.10.200"
-      # one_ueransim_gnb_amf_proxy: null
       one_ueransim_gnb_tac: 200
       one_ueransim_gnb_mcc: "001"
       one_ueransim_gnb_mnc: "01"
@@ -79,6 +79,7 @@ trial_network:
     input:
       one_ueransim_networks: 
         - "tn_vxlan"
+      one_ueransim_mode: "ue"
       one_ueransim_run_gnb: false
       one_ueransim_run_ue: true
       one_ueransim_ue_linked_gnb: "ueransim-gnb"

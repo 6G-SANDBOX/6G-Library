@@ -118,7 +118,6 @@ input:
 terraform_outputs:
   __entity_name__metadata:
     oneKE: input.one_open5gs_k8s_target
-    proxy: vnf_0 IP from input.one_open5gs_k8s_target
     amf_ip: input.one_open5gs_k8s_amf_ip
     upf_ip: input.one_open5gs_k8s_upf_ip
     ue_count: input.one_open5gs_k8s_ue_count

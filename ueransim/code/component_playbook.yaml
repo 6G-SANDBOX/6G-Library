@@ -14,8 +14,6 @@
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/variable_autocompletion.yaml"
 
     - name: Terraform apply
-      vars:   # TODO: Deprecated variable. Used until new appliance is generated
-        one_ueransim_ue_supi: "imsi-{{ one_ueransim_ue_mcc }}{{ one_ueransim_ue_mnc }}{{ one_ueransim_ue_msin }}"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
 
@@ -64,7 +62,6 @@
     - name: Add new VM to an SSH config file ment to be usable by the experimenter
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
-    # TODO: if gNB, add route to bastion
 
 - name: "STAGE 3: Apply CaC to prepare the component"
   hosts: "ueransim"
@@ -107,33 +104,6 @@
         - "{{ hostvars.localhost.tn_ssh_public_key }}"
 
 
-    ## TODO: remove task when the appliance is updated to handle this case correctly
-    - name: (TEMPORARY) fix UE config
-      vars:
-        gnbsearchlist: "{{ hostvars.localhost.one_ueransim_ue_gnbsearchlist }}"
-        session_sst: "{{ hostvars.localhost.one_ueransim_ue_session_sst }}"
-      when: hostvars['localhost'].get('one_ueransim_run_ue', false)
-      become: true
-      block:
-        - name: Fix the gnbsearchlist
-          ansible.builtin.set_fact:
-            fixed_gnbsearchlist: "{{ ansible_host if 'localhost' in gnbsearchlist else gnbsearchlist }}"
-        - name: Update gnbsearchlist and SST in UE config
-          ansible.builtin.shell:
-            chdir: "/etc/ueransim"
-            cmd: >
-              set -o pipefail yq '.gnbSearchList = ["{{ fixed_gnbsearchlist }}"] |
-                  .sessions[0].slice.sst = {{ session_sst }} |
-                  .configured-nssai[0].sst = {{ session_sst }} |
-                  .default-nssai[0].sst = {{ session_sst }}' -i open5gs-ue.yaml
-            executable: /bin/bash
-          changed_when: true
-        - name: Restart UE
-          ansible.builtin.service:
-            name: ueransim-ue.service
-            state: restarted
-
-
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
@@ -151,16 +121,23 @@
         body_format: json
         status_code: [200]
 
+    - name: Set custom terraform outputs for future components
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-mode"
+            value: "{{ one_ueransim_mode }}"
+
     - name: Tasks for UERANSIM as gNB
-      when: one_ueransim_run_gnb
+      when: one_ueransim_mode in ['gnb', 'both']
       block:
         - name: Define gnb_metadata dictionary
           ansible.builtin.set_fact:
             gnb_metadata_dict: >-
               {
+                'run_gnb':        '{{ one_ueransim_run_gnb }}',
                 'linked_open5gs': '{{ one_ueransim_gnb_linked_open5gs | default('None') }}',
                 'amf_ip': '{{ one_ueransim_gnb_amf_ip }}',
-                'amf_proxy':   '{{ one_ueransim_gnb_amf_proxy | default('None') }}',
                 'tac':  '{{ one_ueransim_gnb_tac }}',
                 'mcc':  '{{ one_ueransim_gnb_mcc }}',
                 'mnc':  '{{ one_ueransim_gnb_mnc }}',
@@ -175,18 +152,17 @@
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
             custom_outputs:
-              - key: "{{ entity_name }}-run_gnb"
-                value: true
               - key: "{{ entity_name }}-gnb_metadata"
                 value: "{{ gnb_metadata_dict }}"
 
     - name: Tasks for UERANSIM as UE
-      when: one_ueransim_run_ue
+      when: one_ueransim_mode in ['ue', 'both']
       block:
         - name: Define ue_metadata dictionary
           ansible.builtin.set_fact:
             ue_metadata_dict: >-
               {
+                'run_ue':        '{{ one_ueransim_run_ue }}',
                 'linked_gnb':    '{{ one_ueransim_ue_linked_gnb | default('None') }}',
                 'gnbsearchlist': '{{ one_ueransim_ue_gnbsearchlist | join(',') }}',
                 'mcc':  '{{ one_ueransim_ue_mcc }}',
@@ -202,8 +178,6 @@
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
           vars:
             custom_outputs:
-              - key: "{{ entity_name }}-run_ue"
-                value: true
               - key: "{{ entity_name }}-ue_metadata"
                 value: "{{ ue_metadata_dict }}"
 
