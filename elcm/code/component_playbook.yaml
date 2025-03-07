@@ -124,7 +124,7 @@
             password: "{{ one_elcm_grafana_password }}"
           influxdb:
             url: "http://{{ domain_name }}:8086"
-            username: "{{ one_elcm_influxdb_username }}"
+            username: "{{ one_elcm_influxdb_user }}"
             password: "{{ one_elcm_influxdb_password }}"
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
