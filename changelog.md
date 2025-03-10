@@ -1,5 +1,12 @@
 # Changelog
 
+## unreleased
+### Added 
+ - NAT exception for nftables in `tn_bastion`
+### Changed
+ - updated `berlin_ran` to be used with updated bastion 
+ - updated `open5gcore_vm` to be used with the platform `v0.4.0`
+ - fixed `open5gs_vm` to include correct routing-manager token
 ## [v0.4.0]
 ### Added
 - New component `berlin_ran` at version `v0.5.0`.
