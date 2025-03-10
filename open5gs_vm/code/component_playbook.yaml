@@ -137,6 +137,9 @@
       vars:
         ips: "{{ hostvars['localhost']['ips'] }}"
         access_vnet_id: "{{ hostvars['localhost']['access_vnet_id'] }}"
+        n2_vnet_id: "{{ hostvars['localhost']['n2_vnet_id'] }}"
+        n3_vnet_id: "{{ hostvars['localhost']['n3_vnet_id'] }}"
+        n6_vnet_id: "{{ hostvars['localhost']['n6_vnet_id'] }}"
 
   handlers:
     - name: Restart Open5GS
