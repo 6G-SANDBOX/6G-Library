@@ -17,6 +17,8 @@ trial_network:
       one_vnet_first_ip: "10.10.10.1"
       one_vnet_netmask: 24
       one_vnet_address_size: 253
+      one_vnet_gw: null # there is no gateway in this network
+      one_vnet_dns: null # there is no DNS in this network
   # vnet-n3:
   #   type: "vnet"
   #   name: "n3"
