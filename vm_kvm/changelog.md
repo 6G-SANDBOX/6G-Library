@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.4.0
+### Added
+- Component now registers a DNS record in `tn_bastion`'s DNS server
+
+
 ## v0.2.0
 ### Added
 - Initial release of `vm_kvm` component to the 6G-Library.

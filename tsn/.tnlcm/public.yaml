@@ -20,25 +20,25 @@ metadata:
     Component that enables the capability of using TSN endpoints in the Trial Network
 
     NOTE: Currently tsn is only available in the site "uma"
-  hypervisors: [one]
-
-
-####################################
-## Component input
-####################################
-input:
-  # None
-
-
-####################################
-## Component output
-####################################
-output:
-  # None
+  hypervisors: ["one"]
 
 
 ####################################
 ## Site-specific variables
 ####################################
 site_variables:
+  # None
+
+
+####################################
+## Input variables
+####################################
+input:
+  # None
+
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
   # None

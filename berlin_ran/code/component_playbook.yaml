@@ -98,6 +98,3 @@
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          metadata_dict: "{{ berlin_ran_metadata_dict | b64encode }}"

@@ -1,0 +1,176 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  vnet-1:
+    type: "vnet"
+    name: "1"
+    dependencies:
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.11.1.1"
+      one_vnet_netmask: 24
+      one_vnet_address_size: 4
+      one_vnet_gw: "192.168.199.1"
+  vnet-2:
+    type: "vnet"
+    name: "2"
+    dependencies:
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.11.2.1"
+      one_vnet_netmask: 24
+      one_vnet_address_size: 4
+      one_vnet_gw: "192.168.199.1"
+  vnet-3:
+    type: "vnet"
+    name: "3"
+    dependencies:
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.11.3.1"
+      one_vnet_netmask: 24
+      one_vnet_address_size: 4
+      one_vnet_gw: "192.168.199.1"
+  vnet-4:
+    type: "vnet"
+    name: "4"
+    dependencies:
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.11.4.1"
+      one_vnet_netmask: 24
+      one_vnet_address_size: 4
+      one_vnet_gw: "192.168.199.1"
+  vnet-collector:
+    type: "vnet"
+    name: "collector"
+    dependencies:
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.11.5.1"
+      one_vnet_netmask: 24
+      one_vnet_address_size: 4
+      one_vnet_gw: "192.168.199.1"
+  vm_kvm-generator:
+    type: "vm_kvm"
+    name: "generator"
+    dependencies:
+      - "tn_init"
+      - "vnet-1"
+    input:
+      one_vm_kvm_size: "small"
+      one_vm_kvm_networks:
+        - "tn_vxlan"
+        - "vnet-1"
+  int_p4_sw-int:
+    type: "int_p4_sw"
+    name: "int"
+    dependencies:
+      - "tn_init"
+      - "vnet-1"
+      - "vnet-2"
+      - "vnet-3"
+      - "vnet-4"
+      - "vnet-collector"
+    input:
+      one_int_p4_sw_switches:
+        int_p4_switch_0:
+            type: "source"
+            networks:
+              - tn_vxlan
+              - vnet-1
+              - vnet-2
+            config:
+              switch_id: 1
+              interfaces:
+                - name: "eth1"
+                  id: 1
+                - name: "eth2" 
+                  id: 2
+              int_config:
+                forward_rules:
+                  - dst_addr: "02:00:0a:0b:01:01"
+                    port: 1
+                    priority: 1
+                  - dst_addr: "02:00:0a:0b:04:02"
+                    port: 2
+                    priority: 1
+                ingress_port: 1
+                egress_port: 2
+                hop_metadata_len: 5
+                max_hop: 4
+                ins_mask: "0xEC00"
+        int_p4_switch_1:
+            type: "transit"
+            networks:
+              - tn_vxlan
+              - vnet-2
+              - vnet-3
+            config:
+              switch_id: 2
+              interfaces:
+                - name: "eth1"
+                  id: 1
+                - name: "eth2" 
+                  id: 2
+              int_config:
+                forward_rules:
+                  - dst_addr: "02:00:0a:0b:01:01"
+                    port: 1
+                    priority: 1
+                  - dst_addr: "02:00:0a:0b:04:02"
+                    port: 2
+                    priority: 1
+        int_p4_switch_2:
+            type: "sink"
+            networks:
+              - tn_vxlan
+              - vnet-3
+              - vnet-4
+              - vnet-collector
+            config:
+              switch_id: 3
+              interfaces:
+                - name: "eth1"
+                  id: 1
+                - name: "eth2"
+                  id: 2
+                - name: "eth3"  # Extra interface for collector
+                  id: 3
+              int_config:
+                forward_rules:
+                  - dst_addr: "02:00:0a:0b:01:01"
+                    port: 1
+                    priority: 1
+                  - dst_addr: "02:00:0a:0b:04:02"
+                    port: 2
+                    priority: 1
+                egress_spec: 2
+                sink_reporting_port: 3
+                collector_ip: "10.11.5.2"
+                collector_port: 12345
+                dp_mac: "02:00:0a:0b:05:01"
+                dp_ip: "10.11.5.1"
+                collector_mac: "02:00:0a:0b:05:02"
+                rep_md_bits: 0
+      one_int_p4_sw_collector:
+        networks:
+          - tn_vxlan
+          - vnet-collector
+        config:
+          collector_interface: eth1
+          collector_port: 12345
+  vm_kvm-external:
+    type: "vm_kvm"
+    name: "external"
+    dependencies:
+      - "tn_init"
+      - "int_p4_sw-int"
+      - "vnet-4"
+    input:
+      one_vm_kvm_size: "small"
+      one_vm_kvm_networks:
+        - tn_vxlan
+        - vnet-4

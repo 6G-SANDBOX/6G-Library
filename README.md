@@ -6,13 +6,13 @@
   [![Issues][issues-shield]][issues-url]
 
 <a href="https://6g-sandbox.eu/">
-    <img src="https://6g-sandbox.eu/wp-content/uploads/2023/01/6g-sandbox-logo-2-300x138.jpg" alt="6G-Sandbox logo" title="6G-Sandbox" align="right" height="60" />
+  <img src="https://6g-sandbox.eu/wp-content/uploads/2023/01/6g-sandbox-logo-2-300x138.jpg" alt="6G-Sandbox logo" title="6G-Sandbox" align="right" height="60" />
 </a>
 
 # 6G-SANDBOX SNS Library
   [![6G SANDBOX LIBRARY][6glibrary-badge]][6glibrary-url]
 
-  [Report error](https://github.com/6G-SANDBOX/6G-Library/issues/new?assignees=&labels=&projects=&template=bug_report.md) · [Feature request](https://github.com/6G-SANDBOX/6G-Library/issues/new?assignees=&labels=&projects=&template=feature_request.md)
+  [Documentation](https://6g-sandbox.github.io/docs/category/6g-library) • [Report Error](https://github.com/6G-SANDBOX/6G-Library/issues/new?assignees=&labels=&projects=&template=bug_report.md) • [Feature Request](https://github.com/6G-SANDBOX/6G-Library/issues/new?assignees=&labels=&projects=&template=feature_request.md)
 </div>
 
 [6G-SANDBOX](https://6g-sandbox.eu/) is a HE funded research project (HORIZON-JU-SNS-2022-STREAM-C-01-01). The 6G-SANDBOX project brings a complete and modular facility for the European experimentation ecosystem (in line and under the directions set by SNS JU), which is expected to support for the next decade technology and research validation processes needed in the pathway towards 6G.
@@ -33,10 +33,10 @@ In simple words, the 6G library is the catalog of building blocks that can be us
   - [Component Structure](#component-structure)
     - [Tools](#tools)
     - [Component Directory Structure](#component-directory-structure)
-      - [.tnlcm/](#tnlcm)
-      - [code/](#code)
-      - [result\_templates/](#result_templates)
-      - [variables/](#variables)
+      - [`.tnlcm/`](#tnlcm)
+      - [`code/`](#code)
+      - [`result_templates/`](#result_templates)
+      - [`variables/`](#variables)
   - [Links](#links)
 
 ## Why do we use a git repository?
@@ -65,7 +65,7 @@ For the sake of simplicity, two aspects are closed for every component: usable t
 
 These are the selected tools used to automate how to create and configure a component:
 
-<img width="800" alt="component_structure" src="https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/images/tools_logo.png">
+<img width="800" alt="tools_logo" src="https://raw.githubusercontent.com/6G-SANDBOX/6G-Library/assets/tools_logo.png">
 
 + **[Terraform](https://www.terraform.io/)**: To create virtual infrastructure on the private cloud providers. Components like virtual networks, virtual machines, containers, k8s clusters, etc...
 + **[Ansible](https://www.ansible.com/)**: To configure components, equipments, integrations. Fine fine-grained actions over the Trial Network components. Idempotent warranty.
@@ -96,38 +96,39 @@ Component_Name
 │       └── private.yaml
 ├── changelog.md
 ├── README.md
-└── sample_input_file.yaml
+├── sample_input_file.yaml
+└── sample_tnlcm_descriptor.yaml
 ```
 
-#### .tnlcm/
+#### `.tnlcm/`
 
-Information used by the TNLCM to integrate the component into Trial Network descriptors.
-+ **public.yaml**: File describing metadata, input and output variables for the component. Further explanations in the [.dummy_component](https://github.com/6G-SANDBOX/6G-Library/blob/main/.dummy_component/.tnlcm/public.yaml) example
+Information used by the TNLCM to integrate the component into Trial Network descriptor files.
++ **`public.yaml`**: File describing metadata, input and output variables for the component. Further explanations in the [.dummy_component](https://github.com/6G-SANDBOX/6G-Library/blob/main/.dummy_component/.tnlcm/public.yaml) example
 
 
-#### code/
+#### `code/`
 
-+ **component_playbook.yaml**: Ansible playbook that starts the deployment with the variables passed by the TNLCM. Task files imported to its workflow can be unique to the component or common to all of them.
++ **`component_playbook.yaml`**: Ansible playbook that starts the deployment with the variables passed by the TNLCM. Task files imported to its workflow can be unique to the component or common to all of them.
 
-+ **`site_hypervisor`/**: Directory with CaC and IaC files adapted to a specific cloud provider (`one/`, `vmware/`, etc.) or to any of them (`all/`).
++ **`site_hypervisor/`**: Directory with CaC and IaC files adapted to a specific cloud provider (`one/`, `vmware/`, etc.) or to any of them (`all/`).
 
-    + **cac/**: Files related to configuration automation. Ideally only Ansible files. Complex configurations can distinguish different phases:
-        + **pre/**: Preliminary tasks related to the configuration of the environment that deploys the component.
-        + **install/**: Tasks to be executed during the component configuration
-        + **post/**: Colorary tasks to be executed after the compoent is already configured.
-    + **iac/**: Files related to infrastructure definition. Ideally only jinja2 templates of Terraform manifests. 
+    + **`cac/`**: Files related to configuration automation. Ideally only Ansible files. Complex configurations can distinguish different phases:
+        + **`01_pre/`**: Preliminary tasks related to the configuration of the environment that deploys the component.
+        + **`02_install/`**: Tasks to be executed during the component configuration
+        + **`03_post/`**: Colorary tasks to be executed after the compoent is already configured.
+    + **`iac/`**: Files related to infrastructure definition. Ideally only jinja2 templates of Terraform manifests. 
 
-#### result_templates/
+#### `result_templates/`
 
-Two jinja2 templates of markdown files related to two possible scenarios:
-- **fail_result.md.j2**: Templated and sent to the TNLCM when the component deployment was failed. Includes the corresponding stderr.
-- **ok_result.md.j2**: Templated and sent to the TNLCM when the component deployment was successful. Includes detailed information for the experimenter about the component.
+Jinja2 templates of markdown files related to two possible scenarios:
+- **`fail_result.md.j2`**: Templated and sent to the TNLCM when the component deployment was failed. Includes the corresponding stderr.
+- **`ok_result.md.j2`**: Templated and sent to the TNLCM when the component deployment was successful. Includes detailed information for the experimenter about the component.
 
-#### variables/
+#### `variables/`
 
-Variable files sepparated by the cloud provider used by each site.
+Variable files separated by the cloud provider used by each site.
 
-+ **private.yaml**: Default variables and their value. Their value depends on the selected site, and some of them can be overwritten by the TNLCM input.
++ **`private.yaml`**: Default variables and their value. Their value depends on the selected site, and some of them can be overwritten by the TNLCM input.
 
 ## Links
 
@@ -144,5 +145,5 @@ Variable files sepparated by the cloud provider used by each site.
 [issues-shield]: https://img.shields.io/github/issues/6G-SANDBOX/6G-Library.svg?style=for-the-badge
 [issues-url]: https://github.com/6G-SANDBOX/6G-Library/issues
 
-[6glibrary-badge]: https://img.shields.io/badge/6G--Library-v0.3.0-blue
-[6glibrary-url]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.3.0
+[6glibrary-badge]: https://img.shields.io/github/v/release/6G-SANDBOX/6G-Library?label=6G-Library&color=blue
+[6glibrary-url]: https://github.com/6G-SANDBOX/6G-Library/releases/latest

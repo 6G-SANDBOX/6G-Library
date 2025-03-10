@@ -3,27 +3,29 @@ trial_network:
     type: "tn_init"
     dependencies: []
     input: {}
-  vnet-private_oneKE:
+  vnet-internal:
     type: "vnet"
-    name: "private_oneKE"
+    name: "internal"
     dependencies:
       - "tn_init"
-    input: {}
-  oneKE-k8s:
+    input:
+      # one_vnet_first_ip: "10.21.12.1"   # Default value
+      # one_vnet_netmask: 24              # Default value
+      # one_vnet_address_size: 100        # Default value
+  oneKE-cluster:
     type: "oneKE"
-    name: "k8s"
+    name: "cluster"
     dependencies:
       - "tn_init"
-      - "vnet-private_oneKE"
+      - "vnet-internal"
     input:
       one_oneKE_external_vnet: "tn_vxlan"
-      one_oneKE_internal_vnet: "vnet-private_oneKE"
-      one_oneKE_version: "129"
-      one_oneKE_multus: "YES"
-      one_oneKE_cni_plugin: "cilium"
-      one_oneKE_cilium_range: "10.21.12.200-10.21.12.229"
-      one_oneKE_metallb: "YES"
-      one_oneKE_metallb_range: "10.21.12.230-10.21.12.250"
-      one_oneKE_longhorn: "YES"
-      one_oneKE_traefik: "NO"
-      one_oneKE_nginx_passthough: true
+      one_oneKE_internal_vnet: "vnet-internal"
+      one_oneKE_version: "131"
+      # one_oneKE_multus: true             # Default value
+      # one_oneKE_cni_plugin: "canal"      # Default value
+      # one_oneKE_metallb: true            # Default value
+      one_oneKE_metallb_range: "10.21.12.200-10.21.12.240"
+      # one_oneKE_longhorn: true           # Default value
+      # one_oneKE_traefik: false           # Default value
+      # one_oneKE_nginx_passthough: false  # Default value

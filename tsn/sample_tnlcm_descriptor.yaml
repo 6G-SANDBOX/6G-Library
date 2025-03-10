@@ -1,0 +1,14 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input:
+      one_vxlan_netmask: 24
+      one_vxlan_first_ip: "192.168.214.1"
+      one_vxlan_address_size: 254
+      one_bastion_vpn_clients: 3
+      one_bastion_vpn_allowedips: "0.0.0.0/0"
+  tsn:
+    type: "tsn"
+    dependencies: ["tn_init"]
+    input: {}

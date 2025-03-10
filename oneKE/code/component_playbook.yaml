@@ -37,10 +37,12 @@
         cluster_roles: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-roles'] }}"
         domain_name: >-
           {{
-            ((component_type | regex_replace('_', '') | lower) ~ '-' ~
-            (custom_name | regex_replace('_', '') | lower) ~ '.' ~
-            (tn_id | lower) ~ '.' ~
-            (site_domain | lower)) | trim
+            (
+              (component_type  | regex_replace('_', '') | lower) ~ '-' ~
+              (custom_name     | regex_replace('_', '') | lower) ~ '.' ~
+              (tn_id           | regex_replace('_', '') | lower) ~ '.' ~
+              site_domain
+            ) | trim
           }}
 
     - name: Fetch cluster node IDs
@@ -51,11 +53,28 @@
               (item.0.name + '_' + item.0.nodes.index(item.1) | string): item.1 | string
             })
           }}
-      loop: "{{ cluster_roles | subelements('nodes', skip_missing=True) }}"
+      loop: "{{ cluster_roles | subelements('nodes', skip_missing=true) }}"
 
     - name: Fetch cluster node IPs
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/node_ip.yaml"
       loop: "{{ node_ids | dict2items }}"
+
+    # For some weird reason, idempotency with this tool gives rc=255, but syntax errors give rc=0...
+    - name: Resize the disk reserved for Longhorn in the storage VMs
+      ansible.builtin.shell: >
+        /usr/local/bin/onevm
+        disk-resize {{ item }} 1 30G
+        --user {{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}
+        --password {{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}
+        --endpoint {{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}
+      register: disk_resize
+      failed_when: >
+        (disk_resize.rc !=  0 and 'must be larger' not in disk_resize.stderr) or
+        ('not found' in disk_resize.stderr)
+      changed_when:
+        - disk_resize.rc == 0
+        - "'not found' not in disk_resize.stderr"
+      loop: "{{ node_ids | dict2items | selectattr('key', 'search', '^storage_') | map(attribute='value') | list }}"
 
     - name: Add new VMs to Ansible Inventory
       ansible.builtin.add_host:
@@ -120,9 +139,18 @@
     - name: Apply extra Helm charts
       when: inventory_hostname == 'master_0'
       block:
+        - name: Install ansible for k8s dependencies
+          ansible.builtin.include_tasks: >-
+            {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_ansible_k8s.yaml
+
         - name: Apply ingress-nginx helm chart
           ansible.builtin.include_tasks: >-
             {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_nginx_controller.yaml
+
+        - name: Apply MetalLB helm chart
+          when: "hostvars['localhost']['one_oneKE_metallb']"
+          ansible.builtin.include_tasks: >-
+            {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_metallb.yaml
 
         - name: Apply Skooner helm chart
           ansible.builtin.include_tasks: >-
@@ -131,7 +159,7 @@
         - name: Apply nginx Ingress for the longhorn dashboard
           ansible.builtin.include_tasks: >-
             {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_longhorn_dashboard.yaml
-          when: hostvars['localhost']['one_oneKE_longhorn'] == "YES"
+          when: hostvars['localhost']['one_oneKE_longhorn']
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
@@ -140,7 +168,7 @@
   tasks:
     - name: Fetch master metadata from OpenNebula
       community.general.one_vm:
-        instance_ids: "{{ node_ids.master_0 | int }}" # TODO: Remove the |int
+        instance_ids: "{{ node_ids.master_0 | int }}"
         api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
         api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
         api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
@@ -167,12 +195,14 @@
           {
             'external_vnet': '{{ one_oneKE_external_vnet }}',
             'internal_vnet': '{{ one_oneKE_internal_vnet }}',
-            'version': '{{ one_oneKE_version }}',
+            'version': '{{ one_oneKE_version | string }}',
             'multus': '{{ one_oneKE_multus }}',
             'cni_plugin': '{{ one_oneKE_cni_plugin }}',
-            'cilium_range': '{{ one_oneKE_cilium_range }}',
-            'metallb_range': '{{ one_oneKE_metallb_range }}',
+            'cilium_range': '{{ one_oneKE_cilium_range | default('None') }}',
+            'metallb': '{{ one_oneKE_metallb }}',
+            'metallb_range': '{{ one_oneKE_metallb_range | default('None') }}',
             'longhorn': '{{ one_oneKE_longhorn }}',
+            'traefik': '{{ one_oneKE_traefik }}',
             'nginx_passthough': '{{ one_oneKE_nginx_passthough }}'
           }
 

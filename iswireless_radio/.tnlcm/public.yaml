@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -38,12 +26,14 @@ metadata:
     - `apn`: "internet"
     - `tac`: 1
     - `s_nssai_sst`: 1
-    - `s_nssai_sd`:
+    - `s_nssai_sd`: "000009"
     - `amf_ip`: "10.10.12.200"
     - `upf_ip`: "10.10.12.201"
     NOTE: Currently this component is only available in the site "uma".
-  hypervisors: [one]
+  hypervisors: ["one"]
   destroy_script: true
+  resource_manager: true
+
 
 ####################################
 ## Site-specific variables
@@ -52,16 +42,15 @@ site_variables:
   cp_ip: ISWIRELESS Control Plane IP address
   up_ip: ISWIRELESS User Plane IP address
 
-####################################
-## Component input
-####################################
 
+####################################
+## Input variables
+####################################
 input:
   one_iswireless_radio_open5gs:
     description: Name of the oneKE cluster to route ISWIRELESS traffic.
     type: "open5gs_vm or open5gs_k8s"
     required_when: true
-
   any_iswireless_radio_start_time:
     description: |
       Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
@@ -69,12 +58,12 @@ input:
     type: str
     default_value: Current time and date
     required_when: false
-
   any_iswireless_radio_duration:
     description: Time in seconds for the ISWIRELESS reservation
     type: int
     default_value: 3600
     required_when: false
+
 
 ####################################
 ## Generated terraform outputs

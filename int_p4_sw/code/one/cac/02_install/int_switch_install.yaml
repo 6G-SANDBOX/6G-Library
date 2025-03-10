@@ -12,7 +12,7 @@
       - gnupg
       - lsb-release
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Wait for 10 seconds
   pause:

@@ -29,7 +29,7 @@ This component is based on an Ubuntu 22.04 minimal image with the latest NaC and
 <img src="https://img.shields.io/badge/3GPP-R17-orange" />
 </p>
 
-![alt text](xrext_concept.png "XRext architecture")
+![xrext_concept](https://github.com/6G-SANDBOX/6G-Library/blob/assets/xrext/xrext_concept.png)
 
 The XR extension (**XRext**) is an abstraction layer that acts as a bridge, enabling the translation of high-level network configuration and management commands to run XR applications into actions that the 5G network can execute. 
 
@@ -107,15 +107,15 @@ def create_owl_streams(sim_owl, sim_hmd, polyp_server):
     peer_hmd = XRNode(XRNodeType.MOBILE, sim_hmd, 0)
     peer_polyp = XRNode(XRNodeType.SERVER, polyp_server, 1)
 
-    stream_owlup_video   = XRStream(1, "video360", peer_owl, peer_polyp, True, 1, qos_video)
-    stream_owlup_audio   = XRStream(2, "audio", peer_owl, peer_polyp, True, 1, qos_audio)
-    stream_owldown_audio = XRStream(3, "audio", peer_polyp, peer_owl, False, 1, qos_audio)
-    stream_owldown_data  = XRStream(4, "pose", peer_polyp, peer_owl, False, 0, qos_data)
+    stream_owlup_video   = XRStream(1, "video360", peer_owl, peer_polyp, true, 1, qos_video)
+    stream_owlup_audio   = XRStream(2, "audio", peer_owl, peer_polyp, true, 1, qos_audio)
+    stream_owldown_audio = XRStream(3, "audio", peer_polyp, peer_owl, false, 1, qos_audio)
+    stream_owldown_data  = XRStream(4, "pose", peer_polyp, peer_owl, false, 0, qos_data)
 
-    stream_hmdup_audio   = XRStream(101, "audio", peer_hmd, peer_polyp, True, 1, qos_audio)
-    stream_hmdup_pose    = XRStream(102, "pose", peer_hmd, peer_polyp, True, 0, qos_data)
-    stream_hmddown_video = XRStream(103, "video360", peer_polyp, peer_hmd, False, 1, qos_video)
-    stream_hmddown_audio = XRStream(104, "audio", peer_polyp, peer_hmd, False, 1, qos_audio)
+    stream_hmdup_audio   = XRStream(101, "audio", peer_hmd, peer_polyp, true, 1, qos_audio)
+    stream_hmdup_pose    = XRStream(102, "pose", peer_hmd, peer_polyp, true, 0, qos_data)
+    stream_hmddown_video = XRStream(103, "video360", peer_polyp, peer_hmd, false, 1, qos_video)
+    stream_hmddown_audio = XRStream(104, "audio", peer_polyp, peer_hmd, false, 1, qos_audio)
 
     session_streams = [stream_owlup_video, stream_owlup_audio, stream_owldown_audio, stream_owldown_data, \
                        stream_hmdup_audio, stream_hmdup_pose, stream_hmddown_video, stream_hmddown_audio]
@@ -127,10 +127,10 @@ def add_hmd(sim_hmd, polyp_server):
     peer_hmd = XRNode(XRNodeType.MOBILE, sim_hmd)
     peer_polyp = XRNode(XRNodeType.SERVER, polyp_server)
 
-    stream_hmdup_audio   = XRStream(111, "audio", peer_hmd, peer_polyp, True, 1, qos_audio)
-    stream_hmdup_pose    = XRStream(112, "pose", peer_hmd, peer_polyp, True, 0, qos_data)
-    stream_hmddown_video = XRStream(113, "video360", peer_polyp, peer_hmd, False, 1, qos_video)
-    stream_hmddown_audio = XRStream(114, "audio", peer_polyp, peer_hmd, False, 1, qos_audio)
+    stream_hmdup_audio   = XRStream(111, "audio", peer_hmd, peer_polyp, true, 1, qos_audio)
+    stream_hmdup_pose    = XRStream(112, "pose", peer_hmd, peer_polyp, true, 0, qos_data)
+    stream_hmddown_video = XRStream(113, "video360", peer_polyp, peer_hmd, false, 1, qos_video)
+    stream_hmddown_audio = XRStream(114, "audio", peer_polyp, peer_hmd, false, 1, qos_audio)
 
     new_streams = [stream_hmdup_audio, stream_hmdup_pose, stream_hmddown_video, stream_hmddown_audio]
     return new_streams

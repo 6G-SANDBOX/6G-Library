@@ -1,6 +1,9 @@
 # Changelog
 
-## [v0.3.0] - 2025-01-23
+## unreleased
+### Fixed
+- The open5gs proxy is now properly set
 
+## v0.4.0
 ### Added
-- New component
+- Initial release of `iswireless_radio` component to the 6G-Library. 

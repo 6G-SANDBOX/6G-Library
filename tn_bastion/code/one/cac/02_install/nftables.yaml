@@ -8,6 +8,7 @@
   loop:
     - /etc/nftables/custom_rules
     - /etc/nftables/fw_exceptions
+    - /etc/nftables/nat_exceptions
 
 - name: Write nftables.conf
   become: true
