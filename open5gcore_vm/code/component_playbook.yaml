@@ -211,9 +211,9 @@
         method: POST
         body_format: json
         status_code: [200]
-        until: "result.status == 200"
-        retry: 3
-        delay: 10
+      until: "result.status == 200"
+      retry: 3
+      delay: 10
 
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
