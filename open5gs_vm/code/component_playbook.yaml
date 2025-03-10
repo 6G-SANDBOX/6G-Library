@@ -134,6 +134,9 @@
 
     - name: Install Open5GS and MongoDB
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/install_open5gs.yml"
+      vars:
+        ips: "{{ hostvars['localhost']['ips'] }}"
+        access_vnet_id: "{{ hostvars['localhost']['access_vnet_id'] }}"
 
   handlers:
     - name: Restart Open5GS
