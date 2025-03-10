@@ -211,8 +211,9 @@
         method: POST
         body_format: json
         status_code: [200]
-      until: "result.status == 200"
-      retry: 3
+      register: _result
+      until: _result.status == 200
+      retries: 3
       delay: 10
 
     - name: Publish execution results to TNLCM
