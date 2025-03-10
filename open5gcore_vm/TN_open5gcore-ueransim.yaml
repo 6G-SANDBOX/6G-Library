@@ -7,7 +7,7 @@ trial_network:
     input:
       one_bastion_networks:
         - tn_vxlan
-        - "vnet-n2"
+        - vnet-n2
   vnet-n2:
     type: "vnet"
     name: "n2"
@@ -15,9 +15,8 @@ trial_network:
       #- "tn_init"
     input:
       one_vnet_first_ip: "10.10.10.1"
-      one_vnet_netmask: "255.255.255.0"
+      one_vnet_netmask: 24
       one_vnet_address_size: 253
-      one_vnet_gw: "" # there is no gateway in this network
   # vnet-n3:
   #   type: "vnet"
   #   name: "n3"
