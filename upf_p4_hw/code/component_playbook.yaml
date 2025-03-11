@@ -135,7 +135,14 @@
         connect_timeout: 5
         timeout: 200
 
-    # TODO: Configure the bastion server as needed for the component.
+    # TODO (Refactor): Configure the bastion server to permit IPs of the Intel Tofino 2 (N4, N3 and N6)
+    #         - Used task .global/cac/nftables_add.yaml
+
+    # TODO (Refactor): Configure the bastion server to do DNAT with UDP port routing from the Intel Tofino 2 to internal TNs networks
+    #         - I need to modify /etc/nftables.conf to include the new rules related to prerouting DNAT
+
+
+    # TODO: Remove all related to route manager
     - name: Write firewall exception for the route-manager-api of your site
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
