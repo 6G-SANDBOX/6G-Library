@@ -15,10 +15,6 @@ one_upf_p4_hw_open5gs_memory: 8192
 one_upf_p4_hw_open5gs_disk: 25600
 one_upf_p4_hw_networks:
   - tn_vxlan              # Management network
-  - vnet-vnet_n1          # N1: AMF <-> gNB signaling
-  - vnet-vnet_n3          # N3: gNB <-> UPF user plane
-  - vnet-vnet_n4          # N4: SMF <-> UPF control plane
-  - vnet-vnet_n6          # N6: UPF <-> Data Network
 
 
 #TODO: Check if the names are correct
