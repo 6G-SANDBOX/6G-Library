@@ -13,7 +13,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}_collector" {
     SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
   }
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
   disk {
     image_id = {{ site_available_components.int_p4_sw.collector_image_id }}
     size     = {{ one_int_p4_sw_disk }}

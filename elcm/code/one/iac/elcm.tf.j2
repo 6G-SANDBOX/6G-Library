@@ -20,7 +20,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     ONEAPP_ELCM_GRAFANA_PASSWORD = "{{ one_elcm_grafana_password }}"
   }
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
   disk {
     image_id = {{ site_available_components.elcm.image_id }}
     size     = {{ one_elcm_disk }}

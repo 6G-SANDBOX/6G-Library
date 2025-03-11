@@ -20,7 +20,7 @@ resource "opennebula_virtual_machine" "tn_bastion" {
     ONEAPP_BASTION_ROUTEMANAGER_APITOKEN: ""
   }
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
   disk {
     image_id = {{ site_available_components.tn_bastion.image_id }}
     size     = {{ one_bastion_disk }}

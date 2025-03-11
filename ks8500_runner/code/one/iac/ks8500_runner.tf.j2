@@ -16,7 +16,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     START_SCRIPT = "apk add python3 py3-pip py3-requests docker docker-cli-buildx docker-compose openrc docker-cli-compose"
   }
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
   disk {
     image_id = {{ site_available_components.ks8500_runner.image_id }}
     size     = {{ one_ks8500runner_disk }}

@@ -18,7 +18,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   }
 
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
   disk {
     image_id = {{ site_available_components.opensand_sat.image_id }}
     size     = {{ one_opensand_sat_disk }}

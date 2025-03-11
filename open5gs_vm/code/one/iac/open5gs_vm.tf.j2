@@ -15,7 +15,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
   }
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
   disk {
     image_id = {{ site_available_components.open5gs_vm.image_id }}
     size     = {{ one_open5gs_vm_disk }}
