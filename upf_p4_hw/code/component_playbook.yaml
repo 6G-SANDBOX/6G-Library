@@ -19,7 +19,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
 
-- name: "STAGE 2: Prepare to access the Open5GS Control Plane component"
+- name: "STAGE 2: Prepare access for Open5GS Control Plane and Bastion components"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -59,9 +59,15 @@
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "upf_p4_hw"
+        hostname: "upf_p4_hw_open5gs"
         ansible_host: "{{ ips[access_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+    - name: Add the bastion VM to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
         ansible_user: "jenkins"
 
     # While not used by the Jenkins, we included the configuration of a .ssh/config per TN in the Jenkins VM for debugging purposes.
@@ -75,8 +81,8 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
 
-- name: "STAGE 3.1: Apply CAC to prepare the Open5GS Control Plane component"
-  hosts: "upf_p4_hw"
+- name: "STAGE 3.1: Apply CAC to configure the Open5GS Control Plane component"
+  hosts: "upf_p4_hw_open5gs"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
@@ -115,7 +121,31 @@
         file: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/open5gs_install.yaml"
 
 
-- name: "STAGE 3.2: Apply CAC to prepare the UPF HW Intel Tofino 2 external component"
+- name: "STAGE 3.2: Apply CAC to configure the Bastion component"
+  hosts: "bastion"
+  gather_facts: false
+  tasks:
+    - name: Wait for system to become reachable
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        timeout: 200
+
+    # TODO: Configure the bastion server as needed for the component.
+    - name: Write firewall exception for the route-manager-api of your site
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        fw_exceptions:
+          - "{{ site_routemanager.api_endpoint }}"
+
+
+- name: "STAGE 3.3: Apply CAC to configure Router Manager external component"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  # TODO: Configure routes in router manager component
+
+
+- name: "STAGE 3.4: Apply CAC to configure the UPF HW Intel Tofino 2 external component"
   hosts: localhost
   gather_facts: false
   tasks:
@@ -154,6 +184,7 @@
       retries: 5
       delay: 10
       until: api_retry_result.status == 200
+
 
 # TODO
 - name: "STAGE 4: Publish execution results"

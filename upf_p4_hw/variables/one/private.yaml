@@ -9,19 +9,22 @@
 ######################################################
 
 #TODO: Think about the networks that I need (need to connect N2 to gNB and N4 to UPF)
-# Related to the Virtual Machine
-one_upf_p4_hw_cpu: 4
-one_upf_p4_hw_memory: 8192
-one_upf_p4_hw_disk: 25600
+# Related to the deployment of the Open5GS Control Plane VM
+one_upf_p4_hw_open5gs_cpu: 4
+one_upf_p4_hw_open5gs_memory: 8192
+one_upf_p4_hw_open5gs_disk: 25600
 one_upf_p4_hw_networks:
-  - tn_vxlan
-  - vnet-vnet_1
+  - tn_vxlan              # Management network
+  - vnet-vnet_n1          # N1: AMF <-> gNB signaling
+  - vnet-vnet_n3          # N3: gNB <-> UPF user plane
+  - vnet-vnet_n4          # N4: SMF <-> UPF control plane
+  - vnet-vnet_n6          # N6: UPF <-> Data Network
 
 
 #TODO: Check if the names are correct
-# Related to the Open5GS Control Plane
-one_upf_p4_hw_open5gs_smf_pfcp_addr: "10.11.3.1"
-one_upf_p4_hw_open5gs_upf_pfcp_addr: "10.11.3.1"
+# Related to the configuration of the Open5GS Control Plane
+one_upf_p4_hw_open5gs_smf_pfcp_addr: "10.11.1.1"              #smf_ipv4_n4
+one_upf_p4_hw_open5gs_upf_pfcp_addr: "10.11.23.35"
 
 one_upf_p4_hw_open5gs_control_mcc: "001"
 one_upf_p4_hw_open5gs_control_mnc: "01"
@@ -37,3 +40,5 @@ one_upf_p4_hw_ue_pool: "10.45.0.0/16"
 
 
 #TODO: Related to the UPF HW Intel Tofino 2 external component
+one_upf_p4_hw_tofino2_enb_ipv4_n3: "10.0.3.2"
+one_upf_p4_hw_tofino2_dn_ipv4_n6: "10.0.6.2"
