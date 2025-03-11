@@ -149,42 +149,54 @@
   hosts: localhost
   gather_facts: false
   tasks:
-  # TODO: In this stage, I am going to configure all necessary steps to start the external UPF Intel Tofino 2 (send API endpoint request, etc)
-    # Sends an API POST request to trigger the external hardware component.
-    - name: "Trigger external UPF HW component start via API"
+    # Check initial status of the UPF Intel Tofino 2 component
+    - name: "Check initial UPF status"
       ansible.builtin.uri:
-        url: "http://your-hw-component-endpoint/start"  # Replace with the actual API endpoint URL.
+        url: "http://{{ one_upf_p4_hw_open5gs_upf_pfcp_addr }}:8022/status"
+        method: GET
+        headers:
+          Content-Type: "application/json"
+        status_code: 200
+        validate_certs: no
+      register: initial_status
+      
+    - name: "Start UPF if not running"
+      ansible.builtin.uri:
+        url: "http://{{ one_upf_p4_hw_open5gs_upf_pfcp_addr }}:8022/start"
         method: POST
         headers:
           Content-Type: "application/json"
-        body: '{"parameter": "value"}'  # Adjust the JSON payload as required by the API.
-        body_format: json
-        status_code: 200  # Expected HTTP status code for a successful call.
-        validate_certs: no  # Change to 'no' if using self-signed certificates.
-      register: api_result
-
-    # Outputs the API response for debugging purposes.
-    - name: "Debug API result"
-      ansible.builtin.debug:
-        var: api_result
-     
-    # Optional: Retry mechanism if the API call initially fails.
-    # This task will retry the API call up to 5 times with a delay of 10 seconds between attempts.
-    - name: "Retry API call if not successful"
-      ansible.builtin.uri:
-        url: "http://your-hw-component-endpoint/start"  # Replace with the actual API endpoint URL.
-        method: POST
-        headers:
-          Content-Type: "application/json"
-        body: '{"parameter": "value"}'
+        body:
+          smf_ipv4_n4: "{{ one_upf_p4_hw_open5gs_smf_pfcp_addr }}"
+          enb_ipv4_n3: "{{ one_upf_p4_hw_tofino2_enb_ipv4_n3 }}"
+          dn_ipv4_n6: "{{ one_upf_p4_hw_tofino2_dn_ipv4_n6 }}"
+          subnet_ipv4: "{{ one_upf_p4_hw_ue_pool }}"
         body_format: json
         status_code: 200
-        validate_certs: yes
-      register: api_retry_result
-      retries: 5
-      delay: 10
-      until: api_retry_result.status == 200
+        validate_certs: no
+      register: start_result
+      when: not initial_status.json.upf_running
 
+    # Wait for 10 seconds after starting
+    - name: "Wait for 10 seconds"
+      ansible.builtin.pause:
+        seconds: 10
+      when: not initial_status.json.upf_running
+
+    # Check final status
+    - name: "Check final UPF status"
+      ansible.builtin.uri:
+        url: "http://{{ one_upf_p4_hw_open5gs_upf_pfcp_addr }}:8022/status"
+        method: GET
+        headers:
+          Content-Type: "application/json"
+        status_code: 200
+        validate_certs: no
+      register: final_status
+
+    - name: "Debug final status"
+      ansible.builtin.debug:
+        var: final_status.json
 
 # TODO
 - name: "STAGE 4: Publish execution results"
