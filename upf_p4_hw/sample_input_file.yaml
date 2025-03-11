@@ -1,7 +1,7 @@
 # Substitutes doc/create_component.yaml file
 
 # TODO
-one_upf_p4_hw_networks:
+one_upf_p4_hw_open5gs_networks:
   - tn_vxlan              # Management network
   - vnet-vnet_n1          # N1: AMF <-> gNB signaling
   - vnet-vnet_n3          # N3: gNB <-> UPF user plane
