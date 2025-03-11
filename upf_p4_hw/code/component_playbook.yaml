@@ -143,6 +143,29 @@
   gather_facts: false
   tasks:
   # TODO: Configure routes in router manager component
+    - name: Submit routes in route-manager-api from the Intel Tofino 2 CP to the Open5GS Core SMF (N4)
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ site_routemanager.api_endpoint }}"
+        token: "{{ site_routemanager.token }}"
+      loop:
+        - { to: "{{ one_upf_p4_hw_open5gs_smf_pfcp_addr }}", via: "{{ bastion_ip }}" }
+    
+    - name: Submit routes in route-manager-api from the Intel Tofino 2 DP N3 to the RAN (N3)
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ site_routemanager.api_endpoint }}"
+        token: "{{ site_routemanager.token }}"
+      loop:
+        - { to: "{{ one_upf_p4_hw_tofino2_enb_ipv4_n3 }}", via: "{{ bastion_ip }}" }
+
+    - name: Submit routes in route-manager-api from the Intel Tofino 2 DP N6 to the PDN (N6)
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ site_routemanager.api_endpoint }}"
+        token: "{{ site_routemanager.token }}"
+      loop:
+        - { to: "{{ one_upf_p4_hw_tofino2_dn_ipv4_n6 }}", via: "{{ bastion_ip }}" }
 
 
 - name: "STAGE 3.4: Apply CAC to configure the UPF HW Intel Tofino 2 external component"
