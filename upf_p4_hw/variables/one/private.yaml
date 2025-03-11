@@ -19,7 +19,7 @@ one_upf_p4_hw_open5gs_networks:
 
 #TODO: Check if the names are correct
 # Related to the configuration of the Open5GS Control Plane
-one_upf_p4_hw_open5gs_amf_ipv4_n4: "10.11.3.1"
+one_upf_p4_hw_open5gs_amf_ngap_addr: "10.11.3.1"
 one_upf_p4_hw_open5gs_smf_pfcp_addr: "10.11.4.1"              #smf_ipv4_n4
 one_upf_p4_hw_open5gs_upf_pfcp_addr: "10.11.23.35"
 
