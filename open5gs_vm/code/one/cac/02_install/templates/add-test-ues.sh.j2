@@ -3,5 +3,5 @@
 open5gs-dbctl reset
 
 {% for i in range(one_open5gs_vm_ue_count|int) %}
-open5gs-dbctl add_ue_with_slice {{ one_open5gs_vm_mcc | string }}{{ one_open5gs_vm_mnc | string }}{{ ('%0'+(12-one_open5gs_vm_mnc|length)|string +'d') % (one_open5gs_vm_msin|int + i) }} {{ one_open5gs_vm_key | string }} {{ one_open5gs_vm_opc | string }} {{ one_open5gs_vm_apn | string }} {{ one_open5gs_vm_s_nssai_sst | int }} "{{ one_open5gs_vm_s_nssai_sd | string }}";
+open5gs-dbctl add_ue_with_slice {{ one_open5gs_vm_mcc | string }}{{ one_open5gs_vm_mnc | string }}{{ ('%0'+(12-one_open5gs_vm_mnc|length)|string +'d') % (one_open5gs_vm_msin|int + i) }} {{ one_open5gs_vm_key | string }} {{ one_open5gs_vm_opc | string }} {{ one_open5gs_vm_apn | string }} {{ one_open5gs_vm_s_nssai_sst | int }} {{ one_open5gs_vm_s_nssai_sd | string }};
 {% endfor %}

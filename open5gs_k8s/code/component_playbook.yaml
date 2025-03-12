@@ -26,10 +26,12 @@
         node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_k8s_target + '-node_ips'] }}"
         domain_name: >-
           {{
-            ((component_type | regex_replace('_', '') | lower) ~ '-' ~
-            (custom_name | regex_replace('_', '') | lower) ~ '.' ~
-            (tn_id | lower) ~ '.' ~
-            (site_domain | lower)) | trim
+            (
+              (component_type  | regex_replace('_', '') | lower) ~ '-' ~
+              (custom_name     | regex_replace('_', '') | lower) ~ '.' ~
+              (tn_id           | regex_replace('_', '') | lower) ~ '.' ~
+              site_domain
+            ) | trim
           }}
 
     - name: Add the oneKE master to Ansible Inventory
@@ -47,7 +49,9 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
     - name: Helm install
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/all/cac/helm_install.yaml"
+      vars:
+        helm_release_name: "{{ hostvars['localhost']['entity_name'] | regex_replace('_', '') | lower }}"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_install.yaml"
 
 - name: "STAGE 3: Publish execution results"
   hosts: localhost

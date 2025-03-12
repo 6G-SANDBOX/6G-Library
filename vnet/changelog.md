@@ -1,5 +1,10 @@
 # Changelog
 
+## unreleased
+### Changed
+- Variable `one_vnet_gw` has now no default variable, and defined no gateway if empty.
+
+
 ## v0.4.0
 ### Added
 - New terraform output variable `_net`, allowing the following components to inferr the vnet subnet in CIDR form.

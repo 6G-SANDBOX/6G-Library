@@ -36,8 +36,8 @@ one_upf_p4_sw_open5gs_control_msin: "0000000001"
 one_upf_p4_sw_open5gs_control_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
 one_upf_p4_sw_open5gs_control_opc: "E8ED289DEBA952E4283B54E88E6183CA"
 one_upf_p4_sw_open5gs_control_apn: "internet"
-one_upf_p4_sw_open5gs_control_tac: "200"
-one_upf_p4_sw_open5gs_control_s_nssai_sst: "1"
+one_upf_p4_sw_open5gs_control_tac: 200
+one_upf_p4_sw_open5gs_control_s_nssai_sst: 1
 one_upf_p4_sw_open5gs_control_s_nssai_sd: "1"
 
 # Related to UPF-P4 data plane

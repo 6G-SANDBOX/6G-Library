@@ -140,7 +140,7 @@
 
     - name: "systemd daemon-reload"
       ansible.builtin.systemd:
-        daemon_reload: yes
+        daemon_reload: true
       when: systemdfiles.changed
       notify: Restart open5gcore
 

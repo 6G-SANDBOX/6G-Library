@@ -1,26 +1,18 @@
 ---
-- debug:
-    var: nat_exceptions
-  when: nat_exceptions is defined
+####################################################################################
+#
+# nftables_add.yaml
+#
+# This task file writes firewall exceptions in the nftables configuration of the tn_bastion
+# Task should be called from the jenkins itself
+#
+# vars:
+#   fw_exceptions: [List of private IPs/subnets to be allowed in the firewall]
+#   nat_exceptions: [List of private IPs/subnets to be allowed scaped from NAT]
+#
+####################################################################################
 
-- debug:
-    var: exceptions
-  when: exceptions is defined
-
-- name: create directories
-  become: true
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-  loop:
-    - /etc/nftables
-    - /etc/nftables/fw_exceptions
-    - /etc/nftables/nat_exceptions
-
-- name: Write firewall exception into a new file
+- name: Write nftables firewall exception into a new file
   become: true
   ansible.builtin.template:
     src: "{{ workspace }}/.global/templates/fw_exception.nft.j2"
@@ -28,9 +20,9 @@
     owner: root
     group: root
     mode: '0644'
-  when: exceptions is defined
+  when: fw_exceptions is defined
 
-- name: Write firewall NAT exception into a new file
+- name: Write nftables NAT exception into a new file
   become: true
   ansible.builtin.template:
     src: "{{ workspace }}/.global/templates/nat_exception.nft.j2"
@@ -39,15 +31,6 @@
     group: root
     mode: '0644'
   when: nat_exceptions is defined
-
-- name: copy nftables.conf (Temporary until appliance update)
-  become: true
-  copy:
-    src: "{{ workspace }}/.global/templates/nftables.conf"
-    dest: "/etc/nftables.conf"
-    owner: root
-    group: root
-    mode: '0644'
 
 - name: Check nftables syntax
   become: true

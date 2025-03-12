@@ -1,4 +1,24 @@
 # Changelog
+## unreleased
+### Fixed
+ - Component `open5gs_vm` remove hardcoded ip (10.45.0.1) from the `ogstun` interface (#99)
+
+## [unreleased]
+### Added
+- Component `oneKE` upgraded to version `unreleased`, now supporting OneKE 1.31 and OneKE 1.31 Airgapped. New custom templates for 6G-Sandbox available in the official marketplace.
+- Common task file `nftables_add.yaml` now also supports adding NAT exceptions.
+### Changed
+- *.tnlcm/public.yaml* files normalized between components
+- Component `open5gs_k8s` upgrades its software from `v2.7.0` to `v2.7.2`. Component upgraded to version `unreleased`.
+- New input variables for `int_p4_sw` and `upf_p4_sw`. Components upgraded to version `unreleased`.
+- Changes in many variables of `ueransim`. For more details check the component's changelog. Component upgraded to version `unreleased`.
+- Component `elcm` upgraded from version `v3.6.3` to `3.7.1`.
+- Variable `one_vnet_gw` in component `vnet` has now no default variable. Component upgraded to version `unreleased`.
+### Fixed
+- TN_IDs can now correctly set DNS records when they have _ and mixed mayor/minorcase characters.
+- The open5gs proxy in components `nokia_radio` and `iswireless_radio` is now properly set. Components upgraded to version `unreleased`.
+- Storage nodes of `oneKE` can now be resized from the deployment itself.
+
 
 ## unreleased
 ### Added 

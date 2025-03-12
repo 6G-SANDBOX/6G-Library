@@ -109,10 +109,12 @@
         tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         domain_name: >-
           {{
-            ((component_type | regex_replace('_', '') | lower) ~ '-' ~
-            (custom_name | regex_replace('_', '') | lower) ~ '.' ~
-            (tn_id | lower) ~ '.' ~
-            (site_domain | lower)) | trim
+            (
+              (component_type  | regex_replace('_', '') | lower) ~ '-' ~
+              (custom_name     | regex_replace('_', '') | lower) ~ '.' ~
+              (tn_id           | regex_replace('_', '') | lower) ~ '.' ~
+              site_domain
+            ) | trim
           }}
 
     - name: Add the bastion to Ansible Inventory
@@ -132,7 +134,7 @@
     - name: Write firewall exception for the STF web UI
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
-        exceptions:
+        fw_exceptions:
           - "{{ site_available_components.stf_ue.origin }}"
 
 

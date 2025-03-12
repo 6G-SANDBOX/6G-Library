@@ -39,16 +39,16 @@ one_open5gs_vm_internal_vnet:
   - "vnet-n2"
 one_open5gs_vm_ue_subnet: "10.45.0.0/16"
 
+one_open5gs_vm_amf_ip: "10.21.12.200"
+one_open5gs_vm_upf_ip: "10.21.12.201"
+one_open5gs_vm_ue_count: 20
+one_open5gs_vm_tac: 200
 one_open5gs_vm_mcc: "001"
 one_open5gs_vm_mnc: "01"
 one_open5gs_vm_msin: "0000000001"
 one_open5gs_vm_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
 one_open5gs_vm_opc: "E8ED289DEBA952E4283B54E88E6183CA"
 one_open5gs_vm_apn: "internet"
-one_open5gs_vm_tac: 200
 one_open5gs_vm_s_nssai_sst: 1
 one_open5gs_vm_s_nssai_sd: "000001"
-one_open5gs_vm_amf_ip: "10.21.12.200"
-one_open5gs_vm_upf_ip: "10.21.12.201"
-one_open5gs_vm_ue_count: 20
 one_open5gs_vm_use_nightly: false

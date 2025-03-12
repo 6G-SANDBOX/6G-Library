@@ -13,16 +13,25 @@
 ####################################
 metadata:
   maintainers:
-    - Carlos Andreo López <c.andreo@uma.es>
-  short_description: Deploys a virtual machine with the ELCM backend and frontend.
+    - Almudena Díaz Zayas <adz@uma.es>
+  short_description: Deploy a virtual machine with the ELCM backend and frontend.
   long_description: |
     Ubuntu 22.04 LTS virtual machine with the ELCM installed.
     It also contains OpenTAP, InfluxDB and Grafana services installed.
-  hypervisors: [one]
-  appliance: https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM"]
+
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the ELCM VM template to use in your OpenNebula environment
+  image_id: ID of the ELCM VM image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_elcm_influxdb_user:
@@ -35,10 +44,15 @@ input:
     type: str
     default_value: "admin"
     required_when: false
-  one_elcm_influxdb_database:
-    description: Database name
+  one_elcm_influxdb_org:
+    description: Organization name
     type: str
-    default_value: "elcmdb"
+    default_value: "elcmorg"
+    required_when: false
+  one_elcm_influxdb_bucket:
+    description: Bucket name
+    type: str
+    default_value: "elcmbucket"
     required_when: false
   one_elcm_grafana_password:
     description: Password used to login into the Grafana
@@ -46,16 +60,10 @@ input:
     default_value: "admin"
     required_when: false
 
-####################################
-## Component output
-####################################
-output:
-  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  id: VM ID in OpenNebula
 
 ####################################
-## Site-specific variables
+## Generated terraform outputs
 ####################################
-site_variables:
-  template_id: ID of the ELCM VM template to use in your OpenNebula environment
-  image_id: ID of the ELCM image to use in your OpenNebula environment
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
