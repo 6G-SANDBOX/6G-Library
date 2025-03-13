@@ -42,7 +42,7 @@ input:
     type: int
     default_value: 3600
     required_when: false
-  one_berlin_ran_linked_open5g:
+  any_berlin_ran_linked_open5g:
     description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
     type: open5gs_k8s or open5gs_vm or open5gcore_vm
     required_when: false
@@ -58,12 +58,10 @@ input:
 ## Site-specific variables
 ####################################
 site_variables:
-  #cp_ip: Address of n2 RAN interface
-  # up_ip: Address on n3 RAN interface
   subnet: Subnet used for the RAN N2 and N3 interfaces.
 
 ####################################
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__open5gs: input.one_berlin_ran_linked_open5g
+  __entity_name__open5gs: input.any_berlin_ran_linked_open5g

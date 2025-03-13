@@ -23,7 +23,7 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
-        open5gs_metadata: "{{ (terraform_outputs.stdout | from_json)[one_berlin_ran_linked_open5g + '-metadata'] }}"
+        open5gs_metadata: "{{ (terraform_outputs.stdout | from_json)[any_berlin_ran_linked_open5g + '-metadata'] }}"
 
     - name: Set start of lease time and date with RFC 3339 section 5.6 format
       ansible.builtin.set_fact:
@@ -82,7 +82,7 @@
     - name: Write firewall exception for the route-manager-api of your site
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
-        exceptions:
+        fw_exceptions:
           # ip daddr {{ exception }} accept
           - "{{ site_routemanager.api_endpoint }}"
           - "{{ site_available_components.berlin_ran.subnet }}"
@@ -93,16 +93,6 @@
           - "{{ hostvars['localhost']['open5gs_metadata']['amf_ip'] }}"
           - "{{ hostvars['localhost']['open5gs_metadata']['upf_ip'] }}"
           - "{{ site_available_components.berlin_ran.subnet }}"
-        #exceptions:
-        #  - "{{10.10.11.200}}"
-        #  - "10.10.11.201"
-        #  - "10.55.0.0/16"
-        #  - "192.168.248.102"
-        #nat_exceptions:
-        #  - "10.10.11.200"
-        #  - "10.10.11.201"
-        #  - "10.55.0.0/16"
-
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
@@ -114,7 +104,7 @@
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-open5gs"
-            value: "{{ one_berlin_ran_linked_open5g }}"
+            value: "{{ any_berlin_ran_linked_open5g }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

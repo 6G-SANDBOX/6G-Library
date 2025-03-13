@@ -153,8 +153,10 @@
     - name: Write firewall exception for the ue-subnet
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
-        exceptions: # ip daddr {{ exception }} accept
+        fw_exceptions:
+          # ip daddr {{ exception }} accept
           - "{{ one_open5gs_vm_ue_subnet }}"
+        #nat_exceptions: ## TODO xception for amf_ip/upf_ip ?
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
