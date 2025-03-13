@@ -57,6 +57,11 @@
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_upf_p4_hw_open5gs_networks[0] + '-id'] | string }}"
 
+    # NEW TASK: Dynamically set the SMF PFCP address to the VM's tn_vxlan IP
+    - name: Set SMF PFCP address to VM's tn_vxlan IP
+      ansible.builtin.set_fact:
+        one_upf_p4_hw_open5gs_smf_pfcp_addr: "{{ ips[access_vnet_id] }}"
+
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "upf_p4_hw_open5gs"
@@ -135,52 +140,66 @@
         connect_timeout: 5
         timeout: 200
 
-    # TODO (Refactor): Configure the bastion server to permit IPs of the Intel Tofino 2 (N4, N3 and N6)
-    #         - Used task .global/cac/nftables_add.yaml
+    ### Calling load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
+    ### But it makes the code much MUCH cleaner with almost no extra latency
+    - name: Load environmental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    # TODO (Refactor): Configure the bastion server to do DNAT with UDP port routing from the Intel Tofino 2 to internal TNs networks
-    #         - I need to modify /etc/nftables.conf to include the new rules related to prerouting DNAT
-
-
-    # TODO: Remove all related to route manager
-    - name: Write firewall exception for the route-manager-api of your site
+    # Configure the bastion server to permit IPs of the Intel Tofino 2 (N4, N3 and N6)
+    #   - Used task .global/cac/nftables_add.yaml
+    - name: Write firewall exception for the UPF Intel Tofino 2 N4 interface
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
         fw_exceptions:
-          - "{{ site_routemanager.api_endpoint }}"
+          - "{{ one_upf_p4_hw_open5gs_upf_pfcp_addr }}"
 
-
-- name: "STAGE 3.3: Apply CAC to configure Router Manager external component"
-  hosts: localhost
-  gather_facts: false
-  tasks:
-  # TODO: Configure routes in router manager component
-    - name: Submit routes in route-manager-api from the Intel Tofino 2 CP to the Open5GS Core SMF (N4)
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+    - name: Write firewall exception for the UPF Intel Tofino 2 N3 interface
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
-        endpoint: "{{ site_routemanager.api_endpoint }}"
-        token: "{{ site_routemanager.token }}"
-      loop:
-        - { to: "{{ one_upf_p4_hw_open5gs_smf_pfcp_addr }}", via: "{{ bastion_ip }}" }
-    
-    - name: Submit routes in route-manager-api from the Intel Tofino 2 DP N3 to the RAN (N3)
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+        fw_exceptions:
+          - "{{ one_upf_p4_hw_tofino2_enb_ipv4_n3 }}" 
+
+    - name: Write firewall exception for the UPF Intel Tofino 2 N6 interface
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
-        endpoint: "{{ site_routemanager.api_endpoint }}"
-        token: "{{ site_routemanager.token }}"
-      loop:
-        - { to: "{{ one_upf_p4_hw_tofino2_enb_ipv4_n3 }}", via: "{{ bastion_ip }}" }
+        fw_exceptions:
+          - "{{ one_upf_p4_hw_tofino2_dn_ipv4_n6 }}" 
 
-    - name: Submit routes in route-manager-api from the Intel Tofino 2 DP N6 to the PDN (N6)
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-      vars:
-        endpoint: "{{ site_routemanager.api_endpoint }}"
-        token: "{{ site_routemanager.token }}"
-      loop:
-        - { to: "{{ one_upf_p4_hw_tofino2_dn_ipv4_n6 }}", via: "{{ bastion_ip }}" }
+    # Configure the bastion server to do DNAT with UDP port routing from the Intel Tofino 2 to internal TNs networks
+    # Create directory for custom nftables rules if it doesn't exist
+    - name: Ensure custom nftables rules directory exists
+      ansible.builtin.file:
+        path: /etc/nftables/custom_rules
+        state: directory
+        mode: '0755'
+      become: true
+
+    # I can use directly "{{ hostvars['localhost'].one_upf_p4_hw_open5gs_smf_pfcp_addr }}" but I prefer to set it as a fact again for clarity
+    - name: Set SMF PFCP address in bastion context
+      ansible.builtin.set_fact:
+        one_upf_p4_hw_open5gs_smf_pfcp_addr: "{{ hostvars['localhost'].one_upf_p4_hw_open5gs_smf_pfcp_addr }}"
+
+    # Create custom DNAT rules
+    - name: Configure DNAT with UDP port routing for Tofino 2
+      ansible.builtin.template:
+        src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/dnat_upf_rules.nft.j2"
+        dest: /etc/nftables/custom_rules/dnat_upf_rules.nft
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+      register: nft_rules_added
+
+    # Reload nftables to apply new configuration
+    - name: Reload nftables service
+      ansible.builtin.systemd:
+        name: nftables
+        state: reloaded
+      become: true
+      when: nft_rules_added.changed
 
 
-- name: "STAGE 3.4: Apply CAC to configure the UPF HW Intel Tofino 2 external component"
+- name: "STAGE 3.3: Apply CAC to configure the UPF HW Intel Tofino 2 external component"
   hosts: localhost
   gather_facts: false
   tasks:

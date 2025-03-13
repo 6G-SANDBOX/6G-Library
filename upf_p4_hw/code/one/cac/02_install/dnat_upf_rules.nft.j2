@@ -1,0 +1,18 @@
+# Custom DNAT rules for UPF Intel Tofino 2 to internal TNs networks
+
+table ip nat {
+  chain prerouting {
+    type nat hook prerouting priority 0; policy accept;
+    
+    # DNAT rules based purely on UDP port numbers
+    # Route GTPU traffic (UDP port 2152) to RAN N3 interface
+    ip protocol udp udp dport 2152 dnat to {{ one_upf_p4_hw_ran_ipv4_n3 }}
+    
+    # Route PFCP traffic (UDP port 8805) to UPF N4 interface
+    ip protocol udp udp dport 8805 dnat to {{ one_upf_p4_hw_open5gs_smf_pfcp_addr }}
+    
+    # Route data traffic (example port 9000) to PDN N6 interface
+    # Adjust the port number as needed for your test application
+    ip protocol udp udp dport {{ one_upf_p4_hw_pdn_data_port }} dnat to {{ one_upf_p4_hw_pdn_ipv4_n6 }}
+  }
+}

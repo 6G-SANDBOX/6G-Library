@@ -19,9 +19,9 @@ one_upf_p4_hw_open5gs_networks:
 
 #TODO: Check if the names are correct
 # Related to the configuration of the Open5GS Control Plane
-one_upf_p4_hw_open5gs_amf_ngap_addr: "10.11.3.1"
-one_upf_p4_hw_open5gs_smf_pfcp_addr: "10.11.4.1"              #smf_ipv4_n4
-one_upf_p4_hw_open5gs_upf_pfcp_addr: "10.11.23.35"
+one_upf_p4_hw_open5gs_amf_ngap_addr: "10.11.1.1"
+#one_upf_p4_hw_open5gs_smf_pfcp_addr: "192.168.0.2"                     # This IP is obtained dynamically.
+one_upf_p4_hw_open5gs_upf_pfcp_addr: "10.11.23.35"                      # Don't modify.
 
 one_upf_p4_hw_open5gs_control_mcc: "001"
 one_upf_p4_hw_open5gs_control_mnc: "01"
@@ -37,5 +37,10 @@ one_upf_p4_hw_ue_pool: "10.45.0.0/16"
 
 
 #TODO: Related to the UPF HW Intel Tofino 2 external component
-one_upf_p4_hw_tofino2_enb_ipv4_n3: "10.0.3.2"
-one_upf_p4_hw_tofino2_dn_ipv4_n6: "10.0.6.2"
+one_upf_p4_hw_tofino2_enb_ipv4_n3: "10.11.23.21"                        # Don't modify.
+one_upf_p4_hw_tofino2_dn_ipv4_n6: "10.11.23.22"                         # Don't modify.
+
+#TODO: Related to RAN y PDN 
+one_upf_p4_hw_ran_ipv4_n3: "192.168.0.3"
+one_upf_p4_hw_pdn_ipv4_n6: "192.168.0.4"
+one_upf_p4_hw_pdn_data_port: 9000  # Port for routing data traffic to PDN N6 interface
