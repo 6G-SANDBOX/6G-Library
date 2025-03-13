@@ -12,8 +12,8 @@ trial_network:
     input:
       one_vnet_first_ip: "10.10.11.1"
       one_vnet_netmask: 24
-      one_vnet_gw: "" # there is no gateway in this network
-      one_vnet_dns: "" # there is no DNS in this network
+      one_vnet_gw: null # there is no gateway in this network
+      one_vnet_dns: null # there is no DNS in this network
 #####
   open5gs_vm-core:
     type: "open5gs_vm"
