@@ -27,7 +27,7 @@ metadata:
 ## Site-specific variables
 ####################################
 site_variables:
-  # None
+  quantity: Number of TSN endpoints to be deployed
 
 
 ####################################

@@ -41,6 +41,7 @@ metadata:
 site_variables:
   cp_ip: Nokia Airscale Control Plane IP address
   up_ip: Nokia Airscale User Plane IP address
+  quantity: Number of Nokia Airscale units to be deployed
 
 
 ####################################
