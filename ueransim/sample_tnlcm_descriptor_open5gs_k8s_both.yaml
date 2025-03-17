@@ -8,7 +8,7 @@ trial_network:
     name: "internal"
     dependencies:
       - "tn_init"
-    input:
+    input: {}
       # one_vnet_first_ip: "10.10.10.1"
       # one_vnet_netmask: 24
       # one_vnet_address_size: 100

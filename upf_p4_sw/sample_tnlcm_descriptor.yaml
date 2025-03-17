@@ -73,7 +73,7 @@ trial_network:
       one_ueransim_run_gnb: false
       one_ueransim_run_ue: true
       one_ueransim_ue_linked_gnb: "ueransim-gnb"
-      one_ueransim_ue_supi: "imsi-001010000000001"
+      # one_ueransim_ue_supi: "imsi-001010000000001"
       one_ueransim_ue_mcc: "001"
       one_ueransim_ue_mnc: "01"
       one_ueransim_ue_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"

@@ -75,7 +75,7 @@ trial_network:
       one_ueransim_gnb_tac: 200
       one_ueransim_gnb_slices_sst: 1
       one_ueransim_gnb_slices_sd: "1"
-      one_ueransim_ue_supi: "imsi-001010000000020"
+      # one_ueransim_ue_supi: "imsi-001010000000020"
       one_ueransim_ue_mcc: "001"
       one_ueransim_ue_mnc: "01"
       one_ueransim_ue_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
