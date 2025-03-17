@@ -22,7 +22,8 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     ONEAPP_UERANSIM_GNB_MNC = "{{ one_ueransim_gnb_mnc }}"
     ONEAPP_UERANSIM_GNB_SLICES_SST = {{ one_ueransim_gnb_slices_sst }}
     ONEAPP_UERANSIM_GNB_SLICES_SD =  "{{ one_ueransim_gnb_slices_sd }}"
-{% elif one_ueransim_mode in ['ue', 'both'] %}
+{% endif %}
+{% if one_ueransim_mode in ['ue', 'both'] %}
     ONEAPP_UERANSIM_RUN_UE =  "{% if one_ueransim_run_ue %}YES{% else %}NO{% endif %}"
     ONEAPP_UERANSIM_UE_GNBSEARCHLIST = "{{ one_ueransim_ue_gnbsearchlist }}"
     ONEAPP_UERANSIM_UE_MCC =  "{{ one_ueransim_ue_mcc }}"
