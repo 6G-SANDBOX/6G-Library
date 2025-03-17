@@ -12,9 +12,11 @@
 - Changes in many variables of `ueransim`. For more details check the component's changelog. Component upgraded to version `unreleased`.
 - Component `elcm` upgraded from version `v3.6.3` to `3.7.1`.
 - Variable `one_vnet_gw` in component `vnet` has now no default variable. Component upgraded to version `unreleased`.
+- updated KS8500 runner version 'v1.11.4' to 'v1.13.0'
 - updated `berlin_ran` to be used with updated bastion 
 - updated `open5gcore_vm` to be used with the platform `v0.4.0`
 - fixed `open5gs_vm` to include correct routing-manager token
+
 ### Fixed
 - TN_IDs can now correctly set DNS records when they have _ and mixed mayor/minorcase characters.
 - The open5gs proxy in components `nokia_radio` and `iswireless_radio` is now properly set. Components upgraded to version `unreleased`.
