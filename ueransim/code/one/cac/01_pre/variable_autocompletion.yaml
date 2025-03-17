@@ -10,8 +10,8 @@
 
 - name: Overwrite the run variables according to the mode
   ansible.builtin.set_fact:
-    one_ueransim_run_gnb: "{{ mode in ['gnb', 'both'] }}"
-    one_ueransim_run_ue: "{{ mode in ['ue', 'both'] }}"
+    one_ueransim_run_gnb: "{{ one_ueransim_mode in ['gnb', 'both'] }}"
+    one_ueransim_run_ue: "{{ one_ueransim_mode in ['ue', 'both'] }}"
 
 - name: Tasks for UERANSIM as gNB
   when: 
