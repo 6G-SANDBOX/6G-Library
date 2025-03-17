@@ -213,7 +213,7 @@
           Content-Type: "application/json"
         body:
           smf_ipv4_n4: "{{ bastion_ip }}"
-          enb_ipv4_n3: "{{ one_upf_p4_hw_tofino2_enb_ipv4_n3 }}"
+          enb_ipv4_n3: "{{ bastion_ip }}"
           dn_ipv4_n6: "{{ one_upf_p4_hw_tofino2_dn_ipv4_n6 }}"
           subnet_ipv4: "{{ one_upf_p4_hw_ue_pool }}"
         body_format: json
