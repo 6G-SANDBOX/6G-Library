@@ -65,7 +65,7 @@
           }}
 
     - name: "DEBUG: show variables"
-      debug:
+      ansible.builtin.debug:
         var:
           - ips
           - access_vnet_id
@@ -74,12 +74,12 @@
           - n6_vnet_id
       when: debug
 
-    #- name: Add Route Manager to Ansible Inventory
-    #  ansible.builtin.add_host:
-    #    hostname: "routemanager"
-    #    ansible_host: "{{ site_available_components.nokia_radio.route_manager_ip1 }}"
-    #    ansible_user: "root"
-    #    ansible_ssh_private_key_file: "/var/lib/jenkins/.ssh/id_ed25519"
+    # - name: Add Route Manager to Ansible Inventory
+    #   ansible.builtin.add_host:
+    #     hostname: "routemanager"
+    #     ansible_host: "{{ site_available_components.nokia_radio.route_manager_ip1 }}"
+    #     ansible_user: "root"
+    #     ansible_ssh_private_key_file: "/var/lib/jenkins/.ssh/id_ed25519"
 
     - name: Add the bastion to Ansible Inventory
       ansible.builtin.add_host:
@@ -107,8 +107,8 @@
         stop_time: "2030-12-31T23:59:42Z"
       loop:
         - { to: "{{ one_open5gcore_vm_ue_subnet }}", via: "{{ ips[access_vnet_id] }}" }
-        #- { to: "{{ one_open5gcore_vm_amf_ip }}/32", via: "{{ ips[access_vnet_id] }}" }
-        #- { to: "{{ one_open5gcore_vm_upf_ip }}/32", via: "{{ ips[access_vnet_id] }}" }
+        # - { to: "{{ one_open5gcore_vm_amf_ip }}/32", via: "{{ ips[access_vnet_id] }}" }
+        # - { to: "{{ one_open5gcore_vm_upf_ip }}/32", via: "{{ ips[access_vnet_id] }}" }
 
 - name: "STAGE 3: Apply CAC to prepare the component (open5gcore_vm)"
   hosts: "open5gcore_vm"
@@ -129,26 +129,26 @@
         key: "{{ site_admin_ssh_public_key }}"
       when: site_admin_ssh_public_key is defined and site_admin_ssh_public_key != ''
 
-    #- name: Create new user for experimenter access
-    #  become: true
-    #  ansible.builtin.user:
-    #    name: tnuser
-    #    shell: /bin/bash
-    #    groups: sudo
-    #    password: ''
-    #- name: Set TN ssh key as authorized in new user
-    #  become: true
-    #  ansible.posix.authorized_key:
-    #    user: tnuser
-    #    state: present
-    #    key: "{{ item }}"
-    #  loop:
-    #    - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
+    # - name: Create new user for experimenter access
+    #   become: true
+    #   ansible.builtin.user:
+    #     name: tnuser
+    #     shell: /bin/bash
+    #     groups: sudo
+    #     password: ''
+    # - name: Set TN ssh key as authorized in new user
+    #   become: true
+    #   ansible.posix.authorized_key:
+    #     user: tnuser
+    #     state: present
+    #     key: "{{ item }}"
+    #   loop:
+    #     - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
     - name: Configure open5gcore
       vars:
         vm_ips: "{{ hostvars['localhost']['ips'] | dict2items(key_name='id', value_name='ip') }}"
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/setup-open5gcore.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/setup-open5gcore.yaml"
 
   handlers:
     - name: Restart open5gcore

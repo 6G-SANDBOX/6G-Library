@@ -55,6 +55,7 @@ input:
   one_ueransim_mode: 
     description: |
       Set the component as a gNB, an UE or as both inside the Trial Network. Read the component's description for more details.
+    type: str
     default_value: "both"
     choices: ["gnb", "ue", "both"]
     required_when: false
