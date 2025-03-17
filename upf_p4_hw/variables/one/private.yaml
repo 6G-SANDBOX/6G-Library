@@ -32,12 +32,14 @@ one_upf_p4_hw_open5gs_control_tac: "200"
 one_upf_p4_hw_open5gs_control_s_nssai_sst: "1"
 one_upf_p4_hw_open5gs_control_s_nssai_sd: "1"
 
-one_upf_p4_hw_ue_pool: "10.45.0.0/16"
+#one_upf_p4_hw_ue_pool: "10.45.0.0/16"                                 # Revise. If I use mask, I get error in controller tofino.
+one_upf_p4_hw_ue_pool: "10.45.0.0"
 
 
 # Related to the UPF HW Intel Tofino 2 external component
 one_upf_p4_hw_tofino2_enb_ipv4_n3: "10.11.23.21"                        # Don't modify.
 one_upf_p4_hw_tofino2_dn_ipv4_n6: "10.11.23.22"                         # Don't modify.
+
 
 # Related to RAN and PDN connectivity
 one_upf_p4_hw_ran_ipv4_n3: "192.168.0.3"
