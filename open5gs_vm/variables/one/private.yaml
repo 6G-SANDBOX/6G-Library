@@ -51,3 +51,4 @@ one_open5gs_vm_opc: "E8ED289DEBA952E4283B54E88E6183CA"
 one_open5gs_vm_apn: "internet"
 one_open5gs_vm_s_nssai_sst: 1
 one_open5gs_vm_s_nssai_sd: "000001"
+one_open5gs_vm_use_nightly: false

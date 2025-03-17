@@ -1,7 +1,4 @@
 # Changelog
-## unreleased
-### Fixed
- - Component `open5gs_vm` remove hardcoded ip (10.45.0.1) from the `ogstun` interface (#99)
 
 ## [unreleased]
 ### Added
@@ -9,17 +6,19 @@
 - Common task file `nftables_add.yaml` now also supports adding NAT exceptions into the `tn_bastion`.
 - All '5G/6G core' components (`open5gcore_vm`, `open5gs_k8s`, `open5gs_vm` and `upf_p4_sw`) are now responsible of eanbling the necessary routing to their interfaces in the `tn_bastion`'s route-manager-api.    <!-- TODO: Actualizar todas y su changelog --> 
 ### Changed
-- *.tnlcm/public.yaml* files normalized between components
+- *.tnlcm/public.yaml* files normalized between components.
 - Software from `open5gs_k8s` upgraded from version `v2.7.0` to `v2.7.2`. Used Chart upgraded from version `v2.2.2` to `v2.2.6`.
 - New input variables for `int_p4_sw` and `upf_p4_sw`.
 - Changes in many variables of `ueransim`. For more details check the component's changelog.
 - Software from `elcm` upgraded from version `v3.6.3` to `3.7.1`.
+- Software from `ks8500_runner` upgraded from version `v1.11.4` to `1.13.0`.
 - Variable `one_vnet_gw` in component `vnet` has now no default variable.
 ### Deprecated
 - All 'gNB' components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`) no longer require a 'proxy' variable.   <!-- TODO: Actualizar todas y su changelog --> 
 ### Fixed
 - TN_IDs can now correctly set DNS records when they have _ and mixed mayor/minorcase characters.
 - Storage nodes of `oneKE` can now be resized from the deployment itself.
+- Removed hardcoded IP (10.45.0.1) from the `ogstun` interface in component `open5gs_vm` (#99).
 
 
 ## [v0.4.0]
