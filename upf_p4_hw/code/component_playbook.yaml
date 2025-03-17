@@ -202,6 +202,7 @@
 - name: "STAGE 3.3: Apply CAC to configure the UPF HW Intel Tofino 2 external component"
   hosts: localhost
   gather_facts: false
+  connection: local
   tasks:
     # Check initial status of the UPF Intel Tofino 2 component
     - name: "Check initial UPF status"
