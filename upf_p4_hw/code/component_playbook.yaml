@@ -147,22 +147,12 @@
 
     # Configure the bastion server to permit IPs of the Intel Tofino 2 (N4, N3 and N6)
     #   - Used task .global/cac/nftables_add.yaml
-    - name: Write firewall exception for the UPF Intel Tofino 2 N4 interface
+    - name: Write firewall exception for the UPF Intel Tofino 2 interfaces
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
         fw_exceptions:
           - "{{ one_upf_p4_hw_open5gs_upf_pfcp_addr }}"
-
-    - name: Write firewall exception for the UPF Intel Tofino 2 N3 interface
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
-      vars:
-        fw_exceptions:
-          - "{{ one_upf_p4_hw_tofino2_enb_ipv4_n3 }}" 
-
-    - name: Write firewall exception for the UPF Intel Tofino 2 N6 interface
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
-      vars:
-        fw_exceptions:
+          - "{{ one_upf_p4_hw_tofino2_enb_ipv4_n3 }}"
           - "{{ one_upf_p4_hw_tofino2_dn_ipv4_n6 }}" 
 
     # Configure the bastion server to do DNAT with UDP port routing from the Intel Tofino 2 to internal TNs networks
