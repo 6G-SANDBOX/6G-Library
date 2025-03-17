@@ -15,27 +15,8 @@ PLEASE ALSO UPDATE THE MAIN 6G-LIBRARY CHANGELOG WITH YOUR COMPONENT
 # Changelog
 
 ## unreleased
-### Changed
-- Updated description of what "default_value" in public.yaml is really for.
-
-
-## v0.3.0
-### Changed
-- Modified comments to make it less confusing.
-- Ansible hostname of created component no longer uses variables. It only added complexity without benefits.
-- Variable naming recommendations are now reflected on public.yaml.
-
-
-## v0.2.0
-### Changed
-- Component follows the new architecture.
-
-
-## v0.1.0
-### Added
-Initial release of the 6G Library. Changes will be kept on track for now on.
-
-
+### v1.0.0
+- Initial release of `upf_p4_sw` component to the 6G-Library.
 
 <!-- FIELDS PER VERSION -->
 <!--

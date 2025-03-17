@@ -17,7 +17,6 @@ one_upf_p4_hw_open5gs_networks:
   - tn_vxlan              # Management network
 
 
-#TODO: Check if the names are correct
 # Related to the configuration of the Open5GS Control Plane
 one_upf_p4_hw_open5gs_amf_ngap_addr: "10.11.1.1"
 #one_upf_p4_hw_open5gs_smf_pfcp_addr: "192.168.0.2"                     # This IP is obtained dynamically.
@@ -36,11 +35,11 @@ one_upf_p4_hw_open5gs_control_s_nssai_sd: "1"
 one_upf_p4_hw_ue_pool: "10.45.0.0/16"
 
 
-#TODO: Related to the UPF HW Intel Tofino 2 external component
+# Related to the UPF HW Intel Tofino 2 external component
 one_upf_p4_hw_tofino2_enb_ipv4_n3: "10.11.23.21"                        # Don't modify.
 one_upf_p4_hw_tofino2_dn_ipv4_n6: "10.11.23.22"                         # Don't modify.
 
-#TODO: Related to RAN y PDN 
+# Related to RAN and PDN connectivity
 one_upf_p4_hw_ran_ipv4_n3: "192.168.0.3"
 one_upf_p4_hw_pdn_ipv4_n6: "192.168.0.4"
 one_upf_p4_hw_pdn_data_port: 9000  # Port for routing data traffic to PDN N6 interface
