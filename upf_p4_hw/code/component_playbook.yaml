@@ -263,7 +263,7 @@
       ansible.builtin.set_fact:
         upf_p4_hw_metadata_dict:
           {
-            'proxy': '{{one_upf_p4_hw_ran_ipv4_n3}}',
+            'proxy': '192.168.199.1',
             'mcc': '{{ one_upf_p4_hw_open5gs_control_mcc }}',
             'mnc': '{{ one_upf_p4_hw_open5gs_control_mnc }}',
             'msin': '{{ one_upf_p4_hw_open5gs_control_msin }}',

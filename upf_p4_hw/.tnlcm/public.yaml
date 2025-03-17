@@ -7,104 +7,113 @@
 ##
 ######################################################
 
-# TODO
 
 ############################################################################################################
 ## Component metadata
-#  Gives the TNLCM some general information about the component.
 ############################################################################################################
 metadata:
-  # Unordered list of active component mantainers
   maintainers:
-    - Full Name <contact@mail.address>    
-  # One-sentence-long description.
-  short_description: Short description of a Component Type
-  # Description that can span multiple lines.
+    - Rafael Manuel García Arévalo <rafagarciaa31@uma.es>
+  short_description: Deploys a hardware-accelerated UPF-P4 module using Intel Tofino 2 with Open5GS Release 16 as the control plane.
   long_description: |
-    The long description of a Component Type may span multiple lines
-    and provide a more in depth outline of it's purpose.
-    This sample component needs a previous "X" component to be previously deployed, and referrenced in input: "sampleVariable"
-    This sample component uses a custom appliance previously installed in your site (Instructions on how to install the component should be in the README.md file)
-  # Unordered list of compatible virtualization platforms for the component. Currently only OpenNebula (one) is available
-  hypervisors: [one]
+    This component implements the User Plane Function (UPF) of a 5G core network using P4 language and 
+    Intel Tofino 2 programmable switches for hardware acceleration. It integrates with Open5GS Release 16
+    which serves as the control plane.
+    Unlike the software-based version, this implementation provides high-performance packet processing
+    using dedicated hardware.
+    Only available in Malaga platform.
+  hypervisors: ["one"]
   # Optional. true only in special components that require extra steps when being deleted. You probably don't need it
-  #destroy_script: false    
-  # Optional. (BROKEN, do not include yet) true in certain components that require the TNLCM to perform an accounting on how many instances of this component are deployed in a site, and for how long. Quantity and duration are instructed inside the sites repository
-  # resource_manager: false
-  # Optional. Link to download a custom appliance if the component requires a specific custom VM image/template
-  # appliance: <link>        
+  #destroy_script: false
 
 
 ############################################################################################################
 ## Site-specific variables
-#  Variables read from your site's encripted file in the 6G-Sandbox-Sites repository.
-#  TNLCM checks that the variables are defined, and errors if attempting to deploy the component without them
-#  Each variable has a short description of what it does for informational purposes
 ############################################################################################################
 site_variables:
-  template_id: Short description of what this variable represents.
-
+  template_id: ID of the Ubuntu 22.04 LTS VM template to use in your OpenNebula environment
+  image_id: ID of the Ubuntu 22.04 LTS VM image to use in your OpenNebula environment
+  harbor_token: Token to authenticate against the [Harbor registry](https://dockerhub.mobilesandbox.cloud:9443)
 
 ############################################################################################################
 ## Input variables
-#  Describes the variables shown in the TNLCM to be filled by the experimenter and included in a TN descriptor. 
-#  Most variables just serve to overwrite a private/default value, but others (mainly mandatory ones) serve to define dependencies between previoiusly deployed componentes.
-#  Each variable can contain the following fields:
-#    - description; A general description of the variable shown in the TNLCM Frontend. "" by default
-#    - type: Expected python built-in data type https://www.w3schools.com/python/python_datatypes.asp, but it can also be a component name. "str" by default
-#    - default_value: In optional variables, the value existing in privates.yaml that the variable can overwrite. "" by default.
-#                     Text here only has documentational value, if your default variable has complex logic you can just add a description (like in the tn_bastion) 
-#    - choices: List of possible input values. [] by default
-#    - required_when: Condition to satisfy to make the variable mandatory to fill by the experimenter. Values can be a simple true/false, or a boolean condition https://www.w3schools.com/python/python_booleans.asp
-#                     Conditions can include the value of other input variables of the same comopnent. false by default
 ############################################################################################################
 input:
-  dummy_one_simpletextvariable:
-    description: Description of an optional text variable. Variable for OpenNebula sites
-    #type: str
-    default_value: "Default string"
-    #choices: []
+  one_upf_p4_hw_networks:
+    description: Ordered list of Virtual Network names the VM will be part of. In most cases first one should always be the tn_vxlan
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
     required_when: false
-
-  dummy_one_mandatorylistofstrings:
-    description: |
-      Variable has not default and requires a list of mandatory_list_of_strings
-      A sample valid input would be ["one", "two", "three"]
-      Variable only for OpenNebula sites
-    type: list[str]
-    #default_value: ""
-    #choices: []
-    required_when: true
-
-  dummy_any_chooseanumber:
-    description: Select a numeric value from the list of choices. First choice by default. Variable for any kind of site
+  one_upf_p4_hw_open5gs_control_mcc:
+    description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "001"
+    required_when: false
+  one_upf_p4_hw_open5gs_control_mnc:
+    description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "01"
+    required_when: false
+  one_upf_p4_hw_open5gs_control_msin:
+    description: Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "0000000001"
+    required_when: false
+  one_upf_p4_hw_open5gs_control_key:
+    description: Permanent Subscription Key
+    type: str
+    default_value: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+    required_when: false
+  one_upf_p4_hw_open5gs_control_opc:
+    description: Operator Code
+    type: str
+    default_value: "E8ED289DEBA952E4283B54E88E6183CA"
+    required_when: false
+  one_upf_p4_hw_open5gs_control_apn:
+    description: Access Point Name (APN) of the initial PDU session to be stablished
+    type: str
+    default_value: "internet"
+    required_when: false
+  one_upf_p4_hw_open5gs_control_tac:
+    description: Tracking Area Code in the PLMN
+    type: int
+    default_value: 200
+    required_when: false
+  one_upf_p4_hw_open5gs_control_s_nssai_sst:
+    description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
     type: int
     default_value: 1
-    choices: [1,2,3]
     required_when: false
-
-  dummy_any_samplechoicevariable:
-    description: |
-      Mandatory variable taht stablishes a dependency with another component.
-      Through the previous component output, other variables from this component can be autocompleted 
-      Variable for any kind of site
-    type: vnet
-    #default_value: ""
-    #choices: []
-    required_when: true
-
-  dummy_vmware_autocompletedvariable:
-    description: |
-      The value will be overwritten in this order:
-        1. Initial value is in the private.yaml file (a.k.a. the value shown in default_value)
-        2. If another component was referrenced in "sample_choice_variable" a playbook step will overwrite the value with one of its output variables.
-        3. If this optional variable is filled, the final value will always be this one.
-      Most cases will be OK simply leaving the default_value for it to be automatically overwritten
-      Variable for VMWare sites
-    type: "strlist"
-    default_value: ["255.255.255.0"]
-    #choices: []
-    required_when: true
+  one_upf_p4_hw_open5gs_control_s_nssai_sd:
+    description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    type: str
+    default_value: "1"
+    required_when: false
+  one_upf_p4_hw_open5gs_amf_ngap_addr:
+    description: Address to expose the Core Access and Mobility Management Function (AMF)
+    type: str
+    default_value: "10.0.1.1"
+    required_when: false
+  one_upf_p4_hw_ran_ipv4_n3:
+    description: Address of the eNB to connect to the UPF
+    type: str
+    default_value: "192.168.0.3"
+    required_when: false
+  one_upf_p4_hw_pdn_ipv4_n6:
+    description: Address of the PDN to connect to the UPF
+    type: str
+    default_value: "192.168.0.4"
+    required_when: false
+  one_upf_p4_hw_pdn_data_port:
+    description: Port for routing data traffic to PDN N6 interface
+    type: int
+    default_value: 9000
+    required_when: false
+  one_upf_p4_hw_ue_pool:
+    description: Pool of IP addresses to be used as the UE pool
+    type: str
+    default_value: "10.45.0.0/16"
+    required_when: false
 
 
 ############################################################################################################
@@ -115,5 +124,19 @@ input:
 #  e.g. if a components name is vm_kvm-myubuntu, its ID saved as a terraform output will be "vm_kvm_myubuntu-id"
 ############################################################################################################
 terraform_outputs:
-  __entity_name__id: "Variable tied to a specific deployment of this component."
-  tn_ssh_public_key: "Variable with a global name. Generated by a component that can only be deployed once per TN, such as tn_init"
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
+  __entity_name__metadata:
+    proxy: "192.168.199.1"   # hardcoded
+    mcc: input.one_upf_p4_hw_open5gs_control_mcc
+    mnc: input.one_upf_p4_hw_open5gs_control_mnc
+    msin: input.one_upf_p4_hw_open5gs_control_msin
+    key: input.one_upf_p4_hw_open5gs_control_key
+    opc: input.one_upf_p4_hw_open5gs_control_opc
+    apn: input.one_upf_p4_hw_open5gs_control_apn
+    tac: input.one_upf_p4_hw_open5gs_control_tac
+    s_nssai_sd: input.one_upf_p4_hw_open5gs_control_s_nssai_sd
+    s_nssai_sst: input.one_upf_p4_hw_open5gs_control_s_nssai_sst
+    amf_ip: input.one_upf_p4_hw_open5gs_amf_ngap_addr 
+    upf_ip: input.one_upf_p4_hw_controller_upf_ipv4_n3
+    upf_ipv4_n6: input.one_upf_p4_hw_controller_upf_ipv4_n6
