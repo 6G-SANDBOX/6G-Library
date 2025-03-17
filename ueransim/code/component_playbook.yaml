@@ -164,7 +164,7 @@
               {
                 'run_ue':        '{{ one_ueransim_run_ue }}',
                 'linked_gnb':    '{{ one_ueransim_ue_linked_gnb | default('None') }}',
-                'gnbsearchlist': '{{ one_ueransim_ue_gnbsearchlist | join(',') }}',
+                'gnbsearchlist': '{{ ips[access_vnet_id] if one_ueransim_ue_gnbsearchlist == 'localhost' else one_ueransim_ue_gnbsearchlist | join(',') }}',
                 'mcc':  '{{ one_ueransim_ue_mcc }}',
                 'mnc':  '{{ one_ueransim_ue_mnc }}',
                 'msin': '{{ one_ueransim_ue_msin }}',

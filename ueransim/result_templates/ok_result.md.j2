@@ -44,7 +44,7 @@ Service `ueransim_gnb.service` is currently **not running** and **disabled**.
 ### UE Runtime
 {% if one_ueransim_run_ue %}
 Service `ueransim_ue.service` is currently **running** and **enabled** with the following configuration:
-- **Linked gNB**:    `{{ one_ueransim_ue_linked_gnb | default('None') }}`
+- **Linked gNBs**: `{{ one_ueransim_ue_gnbsearchlist }}`
 - **gNB Search List**: `{{ one_ueransim_ue_gnbsearchlist }}`
 - **MCC**:  `{{ one_ueransim_ue_mcc }}`
 - **MNC**:  `{{ one_ueransim_ue_mnc }}`
