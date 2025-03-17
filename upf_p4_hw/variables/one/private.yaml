@@ -20,7 +20,7 @@ one_upf_p4_hw_open5gs_networks:
 # Related to the configuration of the Open5GS Control Plane
 one_upf_p4_hw_open5gs_amf_ngap_addr: "10.11.1.1"
 #one_upf_p4_hw_open5gs_smf_pfcp_addr: "192.168.0.2"                     # This IP is obtained dynamically.
-one_upf_p4_hw_open5gs_upf_pfcp_addr: "10.11.23.35"                      # Don't modify.
+one_upf_p4_hw_open5gs_upf_pfcp_addr: "10.11.23.36"                      # Don't modify.
 
 one_upf_p4_hw_open5gs_control_mcc: "001"
 one_upf_p4_hw_open5gs_control_mnc: "01"
