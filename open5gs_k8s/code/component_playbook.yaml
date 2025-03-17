@@ -71,6 +71,10 @@
         method: POST
         body_format: json
         status_code: [200]
+      register: dns_response
+      until: dns_response.status == 200
+      retries: 3
+      delay: 10
 
     - name: Enable routes to the 5G Core AMF and UPF
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
@@ -101,6 +105,7 @@
         fw_exceptions:
           - "{{ one_open5gs_k8s_amf_ip }}"
           - "{{ one_open5gs_k8s_upf_ip }}"
+        # nat_exceptions: ## TODO xception for amf_ip/upf_ip ?
 
 
 - name: "STAGE 5: Publish execution results"

@@ -8,12 +8,10 @@ trial_network:
     name: "n2"
     dependencies: 
       - "tn_init"
-    input:
-      one_vnet_first_ip: "10.10.10.1"
-      one_vnet_netmask: 24
-      one_vnet_address_size: 254
-      # one_vnet_gw: null  # there is no gateway in this network
-      # one_vnet_dns: null # there is no DNS in this network
+    input: {}
+      # one_vnet_first_ip: "10.21.12.1"   # Default value
+      # one_vnet_netmask: 24              # Default value
+      # one_vnet_address_size: 100        # Default value
   # vnet-n3:
   #   type: "vnet"
   #   name: "n3"
@@ -38,16 +36,17 @@ trial_network:
         - "vnet-n2"  # network used for n2 and n3 (when list length=1)
         #- "vnet-n3" # optional network used for n3
       one_open5gs_vm_size: "small"
-      one_open5gs_vm_ue_subnet: "10.45.0.0/16"
-      one_open5gs_vm_amf_ip: "10.10.10.200"
-      one_open5gs_vm_upf_ip: "10.10.10.201"
-      one_open5gs_vm_ue_count: 20
-      one_open5gs_vm_tac: 200
-      one_open5gs_vm_mcc: "001"
-      one_open5gs_vm_mnc: "01"
-      one_open5gs_vm_msin: "0000000001"
-      one_open5gs_vm_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
-      one_open5gs_vm_opc: "E8ED289DEBA952E4283B54E88E6183CA"
-      one_open5gs_vm_apn: "internet"
-      one_open5gs_vm_s_nssai_sst: 1
-      one_open5gs_vm_s_nssai_sd: "000001"
+      # one_open5gs_vm_ue_subnet: "10.45.0.0/16"   # Default value
+      # one_open5gs_vm_amf_ip: "10.21.12.200"      # Default value
+      # one_open5gs_vm_upf_ip: "10.21.12.201"      # Default value
+      # one_open5gs_vm_ue_count: 20                # Default value
+      # one_open5gs_vm_tac: 200                    # Default value
+      # one_open5gs_vm_mcc: "001"                  # Default value
+      # one_open5gs_vm_mnc: "01"                   # Default value
+      # one_open5gs_vm_msin: "0000000001"          # Default value
+      # one_open5gs_vm_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"   # Default value
+      # one_open5gs_vm_opc: "E8ED289DEBA952E4283B54E88E6183CA"   # Default value
+      # one_open5gs_vm_apn: "internet"             # Default value
+      # one_open5gs_vm_s_nssai_sst: 1              # Default value
+      # one_open5gs_vm_s_nssai_sd: "000001"        # Default value
+      # one_open5gs_vm_use_nightly: false          # Default value
