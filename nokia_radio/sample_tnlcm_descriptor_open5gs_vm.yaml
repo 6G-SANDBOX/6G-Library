@@ -1,0 +1,47 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  vnet-n2:
+    type: "vnet"
+    name: "n2"
+    dependencies:
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.10.12.1"     # Default is 10.21.12.1
+      # one_vnet_netmask: 24              # Default value
+      # one_vnet_address_size: 100        # Default value
+  open5gs_vm-core:
+    type: "open5gs_vm"
+    name: "core"
+    dependencies:
+      - "tn_init"
+      - "vnet-n2"
+    input:
+      one_open5gs_vm_external_vnet: "tn_vxlan"
+      one_open5gs_vm_internal_vnet:
+        - "vnet-n2"
+      one_open5gs_vm_size: "small"
+      one_open5gs_vm_ue_subnet: "10.45.0.0/16"
+      one_open5gs_vm_amf_n2_ip: "10.10.12.200"
+      one_open5gs_vm_upf_n3_ip: "10.10.12.201"
+      one_open5gs_vm_ue_count: 1           # Default value is 20
+      one_open5gs_vm_tac: 1                # Default value is 200
+      one_open5gs_vm_mcc: "214"            # Default value is "001"
+      one_open5gs_vm_mnc: "701"            # Default value is "01"
+      # one_open5gs_vm_msin: "0000000001"  # Default value
+      # one_open5gs_vm_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"  # Default value
+      # one_open5gs_vm_opc: "E8ED289DEBA952E4283B54E88E6183CA"  # Default value
+      # one_open5gs_vm_apn: "internet"     # Default value
+      # one_open5gs_vm_s_nssai_sst: 1      # Default value
+      one_open5gs_vm_s_nssai_sd: "000009"  # Default value is "000001"
+  
+  nokia_radio-RAN:
+    type: "nokia_radio"
+    name: "RAN"
+    dependencies:
+      - "open5gs_k8s-core"
+    input:
+      one_nokia_radio_open5gs: "open5gs_k8s-core"
+      any_nokia_radio_duration: 7200                # Default is 3600 seconds
