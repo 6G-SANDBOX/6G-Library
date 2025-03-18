@@ -46,7 +46,7 @@ trial_network:
       # one_open5gs_k8s_opc: "E8ED289DEBA952E4283B54E88E6183CA"  # Default value
       # one_open5gs_k8s_apn: "internet"        # Default value
       # one_open5gs_k8s_s_nssai_sst: 1         # Default value
-      # one_open5gs_k8s_s_nssai_sd: "000009"   # Default value is "000001"
+      one_open5gs_k8s_s_nssai_sd: "000009"   # Default value is "000001"
   nokia_radio-RAN:
     type: "nokia_radio"
     name: "RAN"
