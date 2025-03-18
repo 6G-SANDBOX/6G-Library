@@ -23,17 +23,13 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
-        open5gs_metadata: "{{ (terraform_outputs.stdout | from_json)[one_nokia_radio_open5gs + '-metadata'] }}"
+        open5gs_metadata: "{{ (terraform_outputs.stdout | from_json)[one_nokia_radio_open5gs + '-metadata'] }}"  
+    - name: Set start of lease time and date with RFC 3339 section 5.6 format
+      ansible.builtin.set_fact:
         current_timestamp: "{{ any_nokia_radio_start_time | default(lookup('pipe', 'date -u +\"%Y-%m-%dT%H:%M:%SZ\"'), true) }}"
+    - name: Set end of lease time and date with RFC 3339 section 5.6 format
+      ansible.builtin.set_fact:
         ending_timestamp: "{{ lookup('pipe', 'date -u -d \"' ~ current_timestamp ~ ' + ' ~ any_nokia_radio_duration ~ ' seconds\" +\"%Y-%m-%dT%H:%M:%SZ\"') }}"
-
-    # - name: Set start of lease time and date with RFC 3339 section 5.6 format
-    #   ansible.builtin.set_fact:
-    #     start_time: "{{ any_nokia_radio_start_time | default(lookup('pipe', 'date -u +\"%Y-%m-%dT%H:%M:%SZ\"'), true) }}"
-
-    # - name: Set end of lease time and date with RFC 3339 section 5.6 format
-    #   ansible.builtin.set_fact:
-    #     stop_time: "{{ lookup('pipe', 'date -u -d \"' ~ start_time ~ ' + ' ~ any_nokia_radio_duration ~ ' seconds\" +\"%Y-%m-%dT%H:%M:%SZ\"') }}"
 
     - name: Submit routes in route-manager-api from the Nokia Airscale to the 5G Core
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
