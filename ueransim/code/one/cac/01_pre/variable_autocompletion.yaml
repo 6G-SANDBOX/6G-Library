@@ -44,7 +44,7 @@
     - name: Validate that the provided gNB is valid for autocompletion
       ansible.builtin.fail:
         msg: "The gnB: {{ one_ueransim_ue_linked_gnb }} is not valid for variable autocompletion."
-      when: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-mode'] not in in ['gnb', 'both'] }}"
+      when: "(terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-mode'] not in ['gnb', 'both']"
 
     - name: Create variables for gNB from terraform outputs
       set_fact:
