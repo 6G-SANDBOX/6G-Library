@@ -19,6 +19,7 @@
 - TN_IDs can now correctly set DNS records when they have _ and mixed mayor/minorcase characters.
 - Storage nodes of `oneKE` can now be resized from the deployment itself.
 - Removed hardcoded IP (10.45.0.1) from the `ogstun` interface in component `open5gs_vm` (#99).
+- Add firewall exception for the `loadcore_agent` middleware  (#112).
 
 
 ## [v0.4.0]
