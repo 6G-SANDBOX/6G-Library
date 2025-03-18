@@ -131,7 +131,7 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Write firewall exception for the STF web UI
+    - name: Write firewall exception to let the experimenter access the STF webUI
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
         fw_exceptions:
