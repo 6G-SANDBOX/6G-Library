@@ -32,16 +32,18 @@ metadata:
   destroy_script: true
   resource_manager: true
 
-####################################
-## Component input
-####################################
 
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  subnet: Subnet used for the RAN N2 and N3 interfaces.
+
+
+####################################
+## Input variables
+####################################
 input:
-  any_berlin_ran_duration:
-    description: Time in seconds for the RAN equipment reservation
-    type: int
-    default_value: 3600
-    required_when: false
   any_berlin_ran_linked_open5g:
     description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
     type: open5gs_k8s or open5gs_vm or open5gcore_vm
@@ -53,12 +55,12 @@ input:
     type: str
     default_value: Current time and date
     required_when: false
+  any_berlin_ran_duration:
+    description: Time in seconds for the RAN equipment reservation
+    type: int
+    default_value: 3600
+    required_when: false
 
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  subnet: Subnet used for the RAN N2 and N3 interfaces.
 
 ####################################
 ## Generated terraform outputs

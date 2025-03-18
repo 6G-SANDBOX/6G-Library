@@ -12,6 +12,9 @@ The configuration exposed by this component should be synchronized with the 5G c
 - `amf_n2_ip`: "10.10.12.200"
 - `upf_n3_ip`: "10.10.12.201"
 
+> [!NOTE]
+> Aditional routing configuration that is not dependent on the Trial Network may also need to be done beforehand.
+
 > [!NOTE]  
 > Currently this component is only available in the site "uma".
 

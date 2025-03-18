@@ -54,7 +54,7 @@
         - { to: "{{ site_available_components.nokia_radio.up_ip }}", via: "{{ site_routemanager.api_endpoint }}" }
 
 
-- name: "STAGE 2: Prepare access to tn_bastion to allow access to the STF webUI"
+- name: "STAGE 2: Prepare access to tn_bastion to allow access to the route-manager-api"
   hosts: localhost
   gather_facts: false
   tasks:
