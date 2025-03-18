@@ -144,7 +144,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
         fw_exceptions:
-          - "{{ hostvars['localhost'].get('loadcore_middleware_ip', '') }}"
+          - "{{ hostvars.localhost.site_available_components.loadcore_agent.loadcore_middleware_ip | default('') }}"
 
 
 - name: "STAGE 5: Publish execution results"
