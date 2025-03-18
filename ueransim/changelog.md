@@ -8,6 +8,7 @@
 - Variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` are now boolean and false by default.
 - Variables `one_ueransim_gnb_linked_open5gs` and `one_ueransim_gnb_linked_gnb` are now optional.
 - Variable `one_ueransim_ue_op` renamed to `one_ueransim_ue_opc`.
+- Changed reference to 5GCore variable from `amf_ip` to `amf_n2_ip`.
 ### Deprecated
 - Variable `one_ueransim_ue_supi` removed from input variables, but still used. Will be removed with the next release of the UERANSIM appliance.
 - Variables `one_ueransim_ue_configured_nssai_sst`, `one_ueransim_ue_configured_nssai_sd`, `one_ueransim_ue_default_nssai_sst` and `one_ueransim_ue_default_nssai_sd` temorarily commented out, until they are useful.

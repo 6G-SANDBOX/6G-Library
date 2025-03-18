@@ -47,7 +47,7 @@ one_open5gcore_vm_apn: "internet"
 one_open5gcore_vm_tac: 200
 one_open5gcore_vm_s_nssai_sst: 1
 one_open5gcore_vm_s_nssai_sd: "000001"
-one_open5gcore_vm_amf_ip: "10.10.10.200"
-one_open5gcore_vm_upf_ip: "10.10.10.201"
+one_open5gcore_vm_amf_n2_ip: "10.10.10.200"
+one_open5gcore_vm_upf_n3_ip: "10.10.10.201"
 one_open5gcore_vm_ue_count: 20
 one_open5gcore_vm_upf_xdp: false

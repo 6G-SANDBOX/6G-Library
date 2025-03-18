@@ -38,14 +38,14 @@ input:
     description: Name of a previously deployed `oneKE` component, where the the Open5GS Helm Chart will be applied. E.g. `oneKE-my_cluster`.
     type: "oneKE"
     required_when: true
-  one_open5gs_k8s_amf_ip:
+  one_open5gs_k8s_amf_n2_ip:
     description: |
       IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
       Value should be part of the `one_oneKE_metallb_range` in `one_open5gs_k8s_target`.
     type: str
     default_value: "10.21.12.200"
     required_when: false
-  one_open5gs_k8s_upf_ip:
+  one_open5gs_k8s_upf_n3_ip:
     description: |
       IPv4 Address of the Core User Plane Function (UPF) in the 5G core network.
       Value should be part of the `one_oneKE_metallb_range` in `one_open5gs_k8s_target`.
@@ -117,9 +117,8 @@ input:
 ####################################
 terraform_outputs:
   __entity_name__metadata:
-    oneKE: input.one_open5gs_k8s_target
-    amf_ip: input.one_open5gs_k8s_amf_ip
-    upf_ip: input.one_open5gs_k8s_upf_ip
+    amf_n2_ip: input.one_open5gs_k8s_amf_n2_ip
+    upf_n3_ip: input.one_open5gs_k8s_upf_n3_ip
     ue_count: input.one_open5gs_k8s_ue_count
     tac: input.one_open5gs_k8s_tac
     mcc: input.one_open5gs_k8s_mcc
@@ -130,3 +129,4 @@ terraform_outputs:
     apn: input.one_open5gs_k8s_apn
     s_nssai_sst: input.one_open5gs_k8s_s_nssai_sd
     s_nssai_sd: input.one_open5gs_k8s_s_nssai_sst
+    oneke: input.one_open5gs_k8s_target

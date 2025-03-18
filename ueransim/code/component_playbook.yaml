@@ -137,7 +137,7 @@
               {
                 'run_gnb':        '{{ one_ueransim_run_gnb }}',
                 'linked_open5gs': '{{ one_ueransim_gnb_linked_open5gs | default('None') }}',
-                'amf_ip': '{{ one_ueransim_gnb_amf_ip }}',
+                'amf_n2_ip': '{{ one_ueransim_gnb_amf_n2_ip }}',
                 'tac':  '{{ one_ueransim_gnb_tac }}',
                 'mcc':  '{{ one_ueransim_gnb_mcc }}',
                 'mnc':  '{{ one_ueransim_gnb_mnc }}',

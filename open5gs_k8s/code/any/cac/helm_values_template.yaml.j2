@@ -41,7 +41,7 @@ amf:
   services:
     ngap:
       type: "LoadBalancer"  # Default "ClusterIP"
-      loadBalancerIP: "{{ one_open5gs_k8s_amf_ip | string }}"  # Default ""
+      loadBalancerIP: "{{ one_open5gs_k8s_amf_n2_ip | string }}"  # Default ""
 
 nrf:
   config:
@@ -60,11 +60,11 @@ upf:
   config:
     upf:
       gtpu:
-        advertise: "{{ one_open5gs_k8s_upf_ip | string }}"  # Default ""
+        advertise: "{{ one_open5gs_k8s_upf_n3_ip | string }}"  # Default ""
   services:
     gtpu:
       type: "LoadBalancer"  # Default "ClusterIP"
-      loadBalancerIP: "{{ one_open5gs_k8s_upf_ip | string }}"  # Default ""
+      loadBalancerIP: "{{ one_open5gs_k8s_upf_n3_ip | string }}"  # Default ""
 
 
 # Common

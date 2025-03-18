@@ -36,8 +36,8 @@ trial_network:
       - "oneKE-cluster"
     input:
       one_open5gs_k8s_target: "oneKE-cluster"
-      # one_open5gs_k8s_amf_ip: "10.21.12.200"   # Default value
-      # one_open5gs_k8s_upf_ip: "10.21.12.201"   # Default value
+      # one_open5gs_k8s_amf_n2_ip: "10.21.12.200"   # Default value
+      # one_open5gs_k8s_upf_n3_ip: "10.21.12.201"   # Default value
       # one_open5gs_k8s_k8s_ue_count: 20    # Default value
       # one_open5gs_k8s_tac: 200            # Default value
       # one_open5gs_k8s_mcc: "001"          # Default value
@@ -61,7 +61,7 @@ trial_network:
       # one_ueransim_run_gnb: true   # Default value in mode 'gnb'
       # one_ueransim_run_ue: false   # Default value in mode 'gnb'
       one_ueransim_gnb_linked_open5gs: "open5gs_k8s-core"
-      # one_ueransim_gnb_amf_ip: "10.21.12.200"   # Default value + autocompleted from open5gs_k8s-core
+      # one_ueransim_gnb_amf_n2_ip: "10.21.12.200"   # Default value + autocompleted from open5gs_k8s-core
       # one_ueransim_gnb_tac: 200                 # Default value + autocompleted from open5gs_k8s-core
       # one_ueransim_gnb_mcc: "001"               # Default value + autocompleted from open5gs_k8s-core
       # one_ueransim_gnb_mnc: "01"                # Default value + autocompleted from open5gs_k8s-core

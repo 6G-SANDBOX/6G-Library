@@ -25,8 +25,8 @@ metadata:
     - `tac`: 122
     - `s_nssai_sst`: 1
     - `s_nssai_sd`: null
-    - `amf_ip`: "10.10.11.200"
-    - `upf_ip`: "10.10.11.201"
+    - `amf_n2_ip`: "10.10.11.200"
+    - `upf_n3_ip`: "10.10.11.201"
     NOTE: Currently this component is only available in the site "fokus".
   hypervisors: ["one"]
   destroy_script: true

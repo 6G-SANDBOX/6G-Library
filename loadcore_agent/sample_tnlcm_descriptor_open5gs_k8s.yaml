@@ -31,8 +31,8 @@ trial_network:
       - "oneKE-cluster"
     input:
       one_open5gs_k8s_target: "oneKE-cluster"
-      one_open5gs_k8s_amf_ip: "10.10.10.200"
-      one_open5gs_k8s_upf_ip: "10.10.10.201"
+      one_open5gs_k8s_amf_n2_ip: "10.10.10.200"
+      one_open5gs_k8s_upf_n3_ip: "10.10.10.201"
       one_open5gs_k8s_k8s_ue_count: 1
       one_open5gs_k8s_tac: 1
       one_open5gs_k8s_mcc: "214"

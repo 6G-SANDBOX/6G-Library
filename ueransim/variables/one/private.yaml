@@ -19,7 +19,7 @@ one_ueransim_mode: "both"
 # one_ueransim_run_ue: true if mode in ['ue', 'both']
 
 # one_ueransim_gnb_linked_open5gs: null
-one_ueransim_gnb_amf_ip: "10.21.12.200"
+one_ueransim_gnb_amf_n2_ip: "10.21.12.200"
 one_ueransim_gnb_tac: 200
 one_ueransim_gnb_mcc: "001"
 one_ueransim_gnb_mnc: "01"

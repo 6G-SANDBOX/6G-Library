@@ -39,8 +39,8 @@
         endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
         token: "{{ site_iswireless_routemanager.token }}"
       loop:
-        - { to: "{{ open5gs_metadata['amf_ip'] }}", via: "{{ bastion_ip }}" }
-        - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ open5gs_metadata['amf_n2_ip'] }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ open5gs_metadata['upf_n3_ip'] }}", via: "{{ bastion_ip }}" }
 
     - name: Submit routes in tn_bastion from the Trial Network to the ISWIRELESS Radio
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"

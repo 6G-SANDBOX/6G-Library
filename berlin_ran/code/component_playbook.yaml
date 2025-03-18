@@ -39,8 +39,8 @@
         endpoint: "{{ site_routemanager.api_endpoint }}"
         token: "{{ site_routemanager.token }}"
       loop:
-        - { to: "{{ open5gs_metadata['amf_ip'] }}", via: "{{ bastion_ip }}" }
-        - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ open5gs_metadata['amf_n2_ip'] }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ open5gs_metadata['upf_n3_ip'] }}", via: "{{ bastion_ip }}" }
 
     - name: Submit routes in tn_bastion from the Trial Network to the Berlin RAN
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
@@ -56,8 +56,8 @@
         endpoint: "{{ bastion_ip }}"
         token: "{{ tn_routemanager_token }}"
       loop:
-        - { to: "{{ open5gs_metadata['amf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
-        - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
+        - { to: "{{ open5gs_metadata['amf_n2_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
+        - { to: "{{ open5gs_metadata['upf_n3_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
       when: open5gs_metadata['proxy'] is defined and open5gs_metadata['proxy'] != ''
 
 
@@ -86,12 +86,12 @@
           # ip daddr {{ exception }} accept
           - "{{ site_routemanager.api_endpoint }}"
           - "{{ site_available_components.berlin_ran.subnet }}"
-          - "{{ hostvars['localhost']['open5gs_metadata']['amf_ip'] }}"
-          - "{{ hostvars['localhost']['open5gs_metadata']['upf_ip'] }}"
+          - "{{ hostvars['localhost']['open5gs_metadata']['amf_n2_ip'] }}"
+          - "{{ hostvars['localhost']['open5gs_metadata']['upf_n3_ip'] }}"
         nat_exceptions:
           # ip saddr {{ item }} return
-          - "{{ hostvars['localhost']['open5gs_metadata']['amf_ip'] }}"
-          - "{{ hostvars['localhost']['open5gs_metadata']['upf_ip'] }}"
+          - "{{ hostvars['localhost']['open5gs_metadata']['amf_n2_ip'] }}"
+          - "{{ hostvars['localhost']['open5gs_metadata']['upf_n3_ip'] }}"
           - "{{ site_available_components.berlin_ran.subnet }}"
 
 - name: "STAGE 4: Publish execution results"

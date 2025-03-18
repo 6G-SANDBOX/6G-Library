@@ -65,6 +65,26 @@ input:
       - "small"
       - "very_small"
     required_when: true
+  one_open5gcore_vm_amf_n2_ip:
+    description: Address to expose the Core Access and Mobility Management Function (AMF). Requires to be part of the N2 networks range.
+    type: str
+    default_value: "10.10.10.200"
+    required_when: false
+  one_open5gcore_vm_upf_n3_ip:
+    description: Address to expose the Core User Plane Function (UPF). Requires to be part of the N3 networks range.
+    type: str
+    default_value: "10.10.10.201"
+    required_when: false
+  one_open5gcore_vm_ue_count:
+    description: Number of UEs to be provisioned staring from MSIN
+    type: int
+    default_value: 20
+    required_when: false
+  one_open5gcore_vm_tac:
+    description: Tracking Area Code in the PLMN
+    type: int
+    default_value: 200
+    required_when: false
   one_open5gcore_vm_mcc:
     description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
     type: str
@@ -95,11 +115,6 @@ input:
     type: str
     default_value: "internet"
     required_when: false
-  one_open5gcore_vm_tac:
-    description: Tracking Area Code in the PLMN
-    type: int
-    default_value: 200
-    required_when: false
   one_open5gcore_vm_s_nssai_sst:
     description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
     type: int
@@ -109,21 +124,6 @@ input:
     description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
     type: str
     default_value: "000001"
-    required_when: false
-  one_open5gcore_vm_amf_ip:
-    description: Address to expose the Core Access and Mobility Management Function (AMF). Requires to be part of the N2 networks range.
-    type: str
-    default_value: "10.10.10.200"
-    required_when: false
-  one_open5gcore_vm_upf_ip:
-    description: Address to expose the Core User Plane Function (UPF). Requires to be part of the N3 networks range.
-    type: str
-    default_value: "10.10.10.201"
-    required_when: false
-  one_open5gcore_vm_ue_count:
-    description: Number of UEs to be provisioned staring from MSIN
-    type: int
-    default_value: 20
     required_when: false
   one_open5gcore_vm_upf_xdp:
     description: Enable UDP XDP Datapath acceleration
@@ -139,7 +139,9 @@ terraform_outputs:
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
   __entity_name__metadata:
-    oneKE: None
+    amf_n2_ip: input.one_open5gcore_vm_amf_n2_ip
+    upf_n3_ip: input.one_open5gcore_vm_upf_n3_ip
+    ue_count: input.one_open5gcore_vm_ue_count
     mcc: input.one_open5gcore_vm_mcc
     mnc: input.one_open5gcore_vm_mnc
     msin: input.one_open5gcore_vm_msin
@@ -149,7 +151,4 @@ terraform_outputs:
     tac: input.one_open5gcore_vm_tac
     s_nssai_sd: input.one_open5gcore_vm_s_nssai_sst
     s_nssai_sst: input.one_open5gcore_vm_s_nssai_sd
-    amf_ip: input.one_open5gcore_vm_amf_ip
-    upf_ip: input.one_open5gcore_vm_upf_ip
-    ue_count: input.one_open5gcore_vm_ue_count
     upf_xdp: input.one_open5gcore_vm_upf_xdp

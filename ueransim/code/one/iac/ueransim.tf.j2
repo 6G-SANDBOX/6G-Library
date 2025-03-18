@@ -15,7 +15,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
 {% if one_ueransim_mode in ['gnb', 'both'] %}
     ONEAPP_UERANSIM_RUN_GNB = "{% if one_ueransim_run_gnb %}YES{% else %}NO{% endif %}"
-    ONEAPP_UERANSIM_GNB_AMF_IP = "{{ one_ueransim_gnb_amf_ip }}"
+    ONEAPP_UERANSIM_GNB_AMF_IP = "{{ one_ueransim_gnb_amf_n2_ip }}"
     ONEAPP_UERANSIM_GNB_TAC = {{ one_ueransim_gnb_tac }}
     ONEAPP_UERANSIM_GNB_MCC = "{{ one_ueransim_gnb_mcc }}"
     ONEAPP_UERANSIM_GNB_MNC = "{{ one_ueransim_gnb_mnc }}"

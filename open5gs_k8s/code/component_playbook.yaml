@@ -82,8 +82,8 @@
         endpoint: "{{ bastion_ip }}"
         token: "{{ tn_routemanager_token }}"
       loop:
-        - { to: "{{ one_open5gs_k8s_amf_ip }}", via: "{{ node_ips.vnf_0 }}" }
-        - { to: "{{ one_open5gs_k8s_upf_ip }}", via: "{{ node_ips.vnf_0 }}" }
+        - { to: "{{ one_open5gs_k8s_amf_n2_ip }}", via: "{{ node_ips.vnf_0 }}" }
+        - { to: "{{ one_open5gs_k8s_upf_n3_ip }}", via: "{{ node_ips.vnf_0 }}" }
 
     - name: Add tn_bastion to Ansible Inventory
       ansible.builtin.add_host:
@@ -99,13 +99,13 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Write firewall exception for the route-manager-api of your site
+    - name: Write firewall exceptions for the 5G Core AMF and UPF
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
         fw_exceptions:
-          - "{{ one_open5gs_k8s_amf_ip }}"
-          - "{{ one_open5gs_k8s_upf_ip }}"
-        # nat_exceptions: ## TODO xception for amf_ip/upf_ip ?
+          - "{{ one_open5gs_k8s_amf_n2_ip }}"
+          - "{{ one_open5gs_k8s_upf_n3_ip }}"
+        # nat_exceptions: ## TODO xception for amf_n2_ip/upf_n3_ip ?
 
 
 - name: "STAGE 5: Publish execution results"
@@ -117,9 +117,8 @@
       ansible.builtin.set_fact:
         open5gs_metadata_dict: >-
           {
-            'oneKE': '{{ one_open5gs_k8s_target }}',
-            'amf_ip': '{{ one_open5gs_k8s_amf_ip }}',
-            'upf_ip': '{{ one_open5gs_k8s_upf_ip }}',
+            'amf_n2_ip': '{{ one_open5gs_k8s_amf_n2_ip }}',
+            'upf_n3_ip': '{{ one_open5gs_k8s_upf_n3_ip }}',
             'ue_count': '{{ one_open5gs_k8s_ue_count }}',
             'tac': '{{ one_open5gs_k8s_tac }}',
             'mcc': '{{ one_open5gs_k8s_mcc }}',
@@ -129,7 +128,8 @@
             'opc': '{{ one_open5gs_k8s_opc }}',
             'apn': '{{ one_open5gs_k8s_apn }}',
             's_nssai_sst': '{{ one_open5gs_k8s_s_nssai_sst }}',
-            's_nssai_sd': '{{ one_open5gs_k8s_s_nssai_sd }}'
+            's_nssai_sd': '{{ one_open5gs_k8s_s_nssai_sd }}',
+            'oneke': '{{ one_open5gs_k8s_target }}'
           }
 
     - name: Set custom terraform outputs for future components
