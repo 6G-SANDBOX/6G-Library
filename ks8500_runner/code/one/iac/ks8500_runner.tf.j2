@@ -13,7 +13,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     SET_HOSTNAME = "$NAME"
     USERNAME = "jenkins"
     SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
-    START_SCRIPT = "apk add python3 py3-pip py3-requests docker docker-cli-buildx docker-compose openrc docker-cli-compose"
+    START_SCRIPT = "sudo apk add python3 py3-pip py3-requests docker docker-cli-buildx docker-compose openrc docker-cli-compose"
   }
 
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
