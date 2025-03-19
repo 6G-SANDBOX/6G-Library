@@ -50,7 +50,7 @@
         ('not found' in disk_resize.stderr)
       changed_when:
         - disk_resize.rc == 0
-        - "'not found' not in disk_resize.stderr
+        - "'not found' not in disk_resize.stderr"
         
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
