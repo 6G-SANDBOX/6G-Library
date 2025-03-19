@@ -51,8 +51,9 @@
       changed_when:
         - disk_resize.rc == 0
         - "'not found' not in disk_resize.stderr"
-     # loop: "{{ node_ids | dict2items | selectattr('key', 'search', '^storage_') | map(attribute='value') | list }}"
-    
+      # loop: "{{ node_ids | dict2items | selectattr('key', 'search', '^storage_') | map(attribute='value') | list }}"
+      loop: "{{dict2items}}"
+      
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "ks8500runner"
