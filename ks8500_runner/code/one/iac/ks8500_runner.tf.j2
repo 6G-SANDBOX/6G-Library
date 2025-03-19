@@ -14,7 +14,9 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     USERNAME = "jenkins"
     SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
     # START_SCRIPT = "sudo apk add python3 py3-pip py3-requests docker docker-cli-buildx docker-compose openrc docker-cli-compose"
-    START_SCRIPT_BASE64="IyEvYmluL2Jhc2gKc3VkbyBhcGsgYWRkIHB5dGhvbjMgcHkzLXBpcCBweTMtcmVxdWVzdHMgZG9ja2VyIGRvY2tlci1jbGktYnVpbGR4IGRvY2tlci1jb21wb3NlIG9wZW5yYyBkb2NrZXItY2xpLWNvbXBvc2U="
+    # START_SCRIPT_BASE64="IyEvYmluL2Jhc2gKc3VkbyBhcGsgYWRkIHB5dGhvbjMgcHkzLXBpcCBweTMtcmVxdWVzdHMgZG9ja2VyIGRvY2tlci1jbGktYnVpbGR4IGRvY2tlci1jb21wb3NlIG9wZW5yYyBkb2NrZXItY2xpLWNvbXBvc2U="
+    # install sudo apk update apk add python3
+    START_SCRIPT_BASE64="c3VkbyBhcGsgdXBkYXRlIGFwayBhZGQgcHl0aG9uMw==" 
   }
 
 {# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
