@@ -35,7 +35,17 @@
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ks8500runner_networks[0] + '-id'] | string }}"
-        
+  
+    - name: Fetch cluster node IDs
+      ansible.builtin.set_fact:
+        node_ids: >-
+          {{
+            node_ids | default({}) | combine({
+              (item.0.name + '_' + item.0.nodes.index(item.1) | string): item.1 | string
+            })
+          }}
+      loop: "{{ cluster_roles | subelements('nodes', skip_missing=true) }}"
+
     # For some weird reason, idempotency with this tool gives rc=255, but syntax errors give rc=0...
     - name: Resize the disk reserved for Longhorn in the storage VMs
       ansible.builtin.shell: >
