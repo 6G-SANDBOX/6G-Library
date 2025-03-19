@@ -6,11 +6,11 @@ resource "opennebula_virtual_machine" "{{ entity_name }}_collector" {
   memory      = {{ one_int_p4_sw_memory }}
 
   context = {
-    NETWORK = "YES"
-    NETCFG_TYPE: "interfaces"
-    SET_HOSTNAME = "$NAME"
-    USERNAME = "jenkins"
-    SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
+    NETWORK =        "YES"
+    NETCFG_TYPE =    "interfaces"
+    SET_HOSTNAME =   "$NAME"
+    USERNAME =       "jenkins"
+    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
   }
 
 {# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
