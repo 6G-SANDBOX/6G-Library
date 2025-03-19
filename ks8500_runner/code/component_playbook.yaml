@@ -52,7 +52,7 @@
         - disk_resize.rc == 0
         - "'not found' not in disk_resize.stderr"
       # loop: "{{ node_ids | dict2items | selectattr('key', 'search', '^storage_') | map(attribute='value') | list }}"
-      loop: "{{dict2items}}"
+      loop: "{{ node_ids | selectattr('key', 'search', '^storage_') | map(attribute='value') | list }}"
       
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
