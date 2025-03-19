@@ -72,6 +72,12 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: jenkins
 
+    - name: Add tn_bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
 
@@ -130,8 +136,18 @@
       become: true
       changed_when: false
 
+- name: "STAGE 4: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
+  gather_facts: false
+  tasks:
+    - name: Write firewall exception for the Loadcore Middleware
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        fw_exceptions:
+          - "{{ hostvars.localhost.site_available_components.loadcore_agent.loadcore_middleware_ip | default('') }}"
 
-- name: "STAGE 4: Publish execution results"
+
+- name: "STAGE 5: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local
