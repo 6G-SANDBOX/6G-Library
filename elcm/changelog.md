@@ -4,7 +4,8 @@
 ### Added
 - Migrate influxdb from `v1.7.6` to `v2.7.11`.
 - Migrate grafana from `v5.4` to `v11.5.1`.
-- Component now registers a DNS record in `tn_bastion`'s DNS server
+- Component now registers a DNS record in `tn_bastion`'s DNS server.
+- Add the endpoints and credentials of the component in the `ok_result.md.j2` template.
 ### Fixed
 - Result template `ok_result.md.j2` with links to backend, frontend, grafana and influxdb.
 

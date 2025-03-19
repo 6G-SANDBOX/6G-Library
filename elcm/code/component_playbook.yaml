@@ -111,5 +111,20 @@
         method: POST
         body_format: json
         status_code: [200]
+    - name: Define endpoints dictionary
+      ansible.builtin.set_fact:
+        endpoints:
+          backend:
+            url: "http://{{ domain_name }}:5001"
+          frontend:
+            url: "http://{{ domain_name }}:5000"
+          grafana:
+            url: "http://{{ domain_name }}:3000"
+            username: "admin"
+            password: "{{ one_elcm_grafana_password }}"
+          influxdb:
+            url: "http://{{ domain_name }}:8086"
+            username: "{{ one_elcm_influxdb_user }}"
+            password: "{{ one_elcm_influxdb_password }}"
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
