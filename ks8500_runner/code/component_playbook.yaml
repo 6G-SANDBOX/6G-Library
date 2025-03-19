@@ -95,6 +95,19 @@
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
       
+    # Install additional packages
+    - name: Install additional required packages
+      ansible.builtin.package:
+        name:
+          - py3-pip
+          - py3-requests
+          - docker
+          - docker-cli-buildx
+          - docker-compose
+          - openrc
+          - docker-cli-compose
+        state: present
+      
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
     - name: Verify connectivity
