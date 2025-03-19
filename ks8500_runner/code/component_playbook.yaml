@@ -44,7 +44,6 @@
     - name: Resize the disk reserved for Longhorn in the storage VMs
       ansible.builtin.shell: >
         /usr/local/bin/onevm
-        # disk-resize {{ item }} 0 30G
         disk-resize {{  vm_id.stdout }} 0 30G
         --user {{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}
         --password {{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}
