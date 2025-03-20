@@ -96,7 +96,6 @@
       when: item != ''
       
     # Install additional packages
-  tasks:
     - name: Install additional required packages
       become: true
       ansible.builtin.package:
