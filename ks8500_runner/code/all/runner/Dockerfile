@@ -31,10 +31,11 @@ RUN chmod -R a+w /opt/tap
 RUN chmod a+x /opt/tap/tap
 
 # Update the package list and install dependencies for python venv plugins
-RUN apk update && apk add --no-cache python3 py3-pip tshark libcap
+# TVD this step fails during creating image. let disable it temporary 
+# RUN apk update && apk add --no-cache python3 py3-pip tshark libcap
 
 USER $APP_UID
-
-COPY preferences /home/app/.config/wireshark/preferences
+# TVD: comment out temporary for debug purpose
+# COPY preferences /home/app/.config/wireshark/preferences
 
 ENTRYPOINT "tap" "runner" "start" "-v"
