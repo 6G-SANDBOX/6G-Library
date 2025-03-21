@@ -2,8 +2,9 @@
 
 ## unreleased
 ### Added
- - support for NAT exceptions when connecting the RAN subnet to the TN
- 
+- Support for NAT exceptions when connecting the RAN subnet to the TN
+- Param `quantity` to `site_variables`.
+
 ### Changed
  - updated 5G coere medatada output to new format
  - fixed default TAC used in Berlin Huawei RAN

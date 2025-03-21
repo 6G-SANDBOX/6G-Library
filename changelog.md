@@ -5,7 +5,7 @@
 - Component `oneKE` upgraded to version `unreleased`, now supporting OneKE 1.31 and OneKE 1.31 Airgapped. New custom templates for 6G-Sandbox available in the official marketplace.
 - Common task file `nftables_add.yaml` now also supports adding NAT exceptions.
 - NAT exception for nftables in `tn_bastion`
-- New param `quantity` to `site_variables` in component `tsn` and `nokia_radio`.
+- New param `quantity` to `site_variables` in component `tsn`, `nokia_radio`, `iswireless_radio` and `berlin_ran`.
 ### Changed
 - *.tnlcm/public.yaml* files normalized between components
 - Component `open5gs_k8s` upgrades its software from `v2.7.0` to `v2.7.2`. Component upgraded to version `unreleased`.

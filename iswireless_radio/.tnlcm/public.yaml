@@ -41,6 +41,7 @@ metadata:
 site_variables:
   cp_ip: ISWIRELESS Control Plane IP address
   up_ip: ISWIRELESS User Plane IP address
+  quantity: Number of ISWIRELESS Radio units available
 
 
 ####################################
