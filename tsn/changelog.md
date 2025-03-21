@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+### Added
+- Param `quantity` to `site_variables`.
+
 ## v0.4.0
 ### Fixed
 - Markdown report file `ok_result.md.j2` corrected.
