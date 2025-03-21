@@ -38,6 +38,7 @@ amf:
           mcc: "{{ one_open5gs_k8s_mcc | string }}"  # Default "999"
           mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default "70"
         tac: [ {{ one_open5gs_k8s_tac | int }} ]  # Default [1, 2, 3]
+    networkName: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['entity_name'] }}"
   services:
     ngap:
       type: "LoadBalancer"  # Default "ClusterIP"
