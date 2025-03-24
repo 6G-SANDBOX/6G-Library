@@ -1,0 +1,9 @@
+dockerhub_organization: iswirelesspoland
+image:
+  tag: 2.3.0-52fd48fd-develop-b153
+networking:
+  ric_net:
+    interface: "{{ worker_interface | string }}"
+    RIC_IP: 10.10.12.202
+    prefix: 24
+targetNode: worker_0

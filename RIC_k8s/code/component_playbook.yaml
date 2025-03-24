@@ -1,0 +1,94 @@
+---
+- name: "STAGE 1: Prepare to access a previous target component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
+        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_k8s_target + '-node_ips'] }}"
+        domain_name: >-
+          {{
+            (
+              (component_type  | regex_replace('_', '') | lower) ~ '-' ~
+              (custom_name     | regex_replace('_', '') | lower) ~ '.' ~
+              (tn_id           | regex_replace('_', '') | lower) ~ '.' ~
+              site_domain
+            ) | trim
+          }}
+
+    - name: Add the oneKE master to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "master_0"
+        ansible_host: "{{ node_ips.master_0 }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
+        ansible_user: "root"
+
+
+- name: "STAGE 2: Apply IaC to deploy the component"
+  hosts: "master_0"
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Authenticate in dockerhub
+      script: "{{ workspace }}/{{ component_type }}/code/any/cac/scripts/set_authentication.sh"
+      environment:
+        DOCKERHUB_TOKEN: "{{ dockerhub_token }}"
+
+    - name: Helm install
+      vars:
+        helm_release_name: "{{ hostvars['localhost']['entity_name'] | regex_replace('_', '') | lower }}"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_install.yaml"
+
+- name: "STAGE 2: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Define RIC metadata dictionary
+      ansible.builtin.set_fact:
+        ric_metadata_dict: >-
+          {
+            'example': 'something'
+          }
+
+    - name: Set custom terraform outputs for future components
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "{{ entity_name }}-metadata"
+            value: "{{ ric_metadata_dict }}"
+
+    - name: Set DNS record for the component
+      ansible.builtin.uri:
+        url: >-
+          {{
+            'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
+            '&domain=' ~ domain_name ~
+            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ node_ips.vnf_0 | trim
+          }}
+        method: POST
+        body_format: json
+        status_code: [200]
+
+    - name: Publish execution results to TNLCM and S3 object storage
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

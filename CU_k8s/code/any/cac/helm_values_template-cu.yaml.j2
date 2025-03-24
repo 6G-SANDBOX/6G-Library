@@ -1,0 +1,14 @@
+image:
+  repo: iswirelesspoland/isw-sdran_5g_cu
+  tag: 1.15.0-d79c1b115-b44
+deployment_name: sandbox
+networking:
+  bh:
+    open5gs_CP_IP: "{{ one_open5gs_amf_ip | string }}"
+    open5gs_UP_IP: "{{ one_open5gs_upf_ip | string }}"
+  mh:
+    CU_IP: 10.10.12.203
+    DU_IP: 10.10.12.204
+    prefix: 24
+    interface: "{{ worker_interface | string }}"
+targetNode: worker_0

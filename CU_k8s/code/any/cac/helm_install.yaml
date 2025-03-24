@@ -1,0 +1,19 @@
+---
+- name: Render helm values template
+  ansible.builtin.template:
+    src: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_values_template-cu.yaml.j2"
+    dest: "/root/{{ helm_release_name }}-values-cu.yaml"
+
+- name: Deploy CU helm
+  kubernetes.core.helm:
+    kubeconfig: /etc/rancher/rke2/rke2.yaml
+    name: "{{ helm_release_name }}"
+    chart_ref: oci://registry-1.docker.io/iswirelesspoland/cu-helm-charts
+    chart_version: 0.1.0
+    namespace: "{{ helm_release_name }}"
+    create_namespace: true
+    values_files:
+    - "/root/{{ helm_release_name }}-values-cu.yaml"
+
+- name: Wait until all pods are Running
+  ansible.builtin.command: "kubectl wait pod --all --for=condition=Ready -n {{ helm_release_name }} --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=240s"
