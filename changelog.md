@@ -1,6 +1,7 @@
 # Changelog
 
 ## [unreleased]
+
 ### Added
 - Component `open5gs_vm` new parameter `one_open5gs_vm_install_webui` to install the WEB ui
 
@@ -21,6 +22,7 @@
 ### Deprecated
 - All 'gNB' components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`) no longer require a 'proxy' variable.
 ### Fixed
+- 
 - TN_IDs can now correctly set DNS records when they have _ and mixed mayor/minorcase characters.
 - Storage nodes of `oneKE` can now be resized from the deployment itself.
 - Component `open5gs_vm` removed hardcoded ip (10.45.0.1) from the `ogstun` interface (#99)
