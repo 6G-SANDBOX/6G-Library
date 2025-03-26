@@ -1,0 +1,7 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+# athens_ran_one_oneKE: null
+# athens_ran_one_reservation_time: 180
+any_athens_ran_start_time: "2025-01-13T09:12:00+00:00"
+any_athens_ran_duration: 7200
+#any_athens_ran_linked_open5g: "test_core1"

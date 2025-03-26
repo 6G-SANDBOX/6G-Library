@@ -1,0 +1,73 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Vasilis Pitsilis <vpitsilis@dat.demokritos.gr>
+    - George Pappas <g.pappas@oteresearch.gr>
+    - Jason Diakoumakos <i.diakoumakos@oteresearch.gr>
+  short_description: Enables the capability of using physical RAN in a Trial Network (Athens RAN Erricson).
+  long_description: |
+    This component enables the integration of Erricson physical equipment located at Athens with an open5Gs 5G core deployed as part of the Trial Network.
+    open5Gs is a commercial 5G core deployed by COSMOTE and its internal components are not exposed to the experimenter. This component will only
+    configure the routing path between the Trial Network and the Erricson RAN.
+    It is done by enabling the necessary routing path through the use of the element called ‘Route Manager’ (already deployed in the site). 
+    The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
+    - `mcc`: "001"
+    - `mnc`: "01"
+    - `apn`: "internet"
+    - `tac`: 200
+    - `s_nssai_sst`: 1
+    - `s_nssai_sd`: "000001"
+    - `amf_ip`: "10.10.10.200"
+    - `upf_ip`: "10.10.10.201"
+    NOTE: Currently this component is only available in the site "athens".
+  hypervisors: ["one"]
+  destroy_script: true
+  resource_manager: true
+
+####################################
+## Component input
+####################################
+
+input:
+  any_athens_ran_duration:
+    description: Time in seconds for the RAN equipment reservation
+    type: int
+    default_value: 3600
+    required_when: false
+  any_athens_ran_linked_open5g:
+    description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
+    type: open5gs_k8s or open5gs_vm or open5gcore_vm
+    required_when: false
+  any_athens_ran_start_time:
+    description: |
+      Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
+      If unspecified, value takes current time and date.
+    type: str
+    default_value: Current time and date
+    required_when: false
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  subnet: Subnet used for the RAN N2 and N3 interfaces.
+  cp_ip: Ericsson Control Plane IP address
+  up_ip: Ericsson User Plane IP address
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__open5gs: input.any_athens_ran_linked_open5g

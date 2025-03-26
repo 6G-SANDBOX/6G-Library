@@ -1,0 +1,52 @@
+trial_network:
+
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input:
+      one_bastion_vpn_clients: 3
+  vnet-n2:
+    type: "vnet"
+    name: "n2"
+    dependencies: []
+    input:
+      one_vnet_first_ip: "10.100.100.1"
+      one_vnet_netmask: 24
+      one_vnet_gw: null # there is no gateway in this network
+      one_vnet_dns: null # there is no DNS in this network
+#####
+  open5gs_vm-core:
+    type: "open5gs_vm"
+    name: "core"
+    dependencies:
+      - "tn_init"
+      - "vnet-n2"
+      # - "vnet-n3"
+    input:
+      one_open5gs_vm_networks:
+        - "tn_vxlan"
+      one_open5gs_vm_internal_vnet:
+        - "vnet-n2"  # network used for n2 and n3 (when list length=1)
+        #- "vnet-n3" # optional network used for n3
+      one_open5gs_vm_size: "small"
+      one_open5gs_vm_ue_subnet: "10.45.0.0/16"
+      one_open5gs_vm_mcc: "001"
+      one_open5gs_vm_mnc: "01"
+      one_open5gs_vm_msin: "0000000001"
+      one_open5gs_vm_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+      one_open5gs_vm_opc: "E8ED289DEBA952E4283B54E88E6183CA"
+      one_open5gs_vm_apn: "default"
+      one_open5gs_vm_tac: 200
+      one_open5gs_vm_s_nssai_sst: 1
+      one_open5gs_vm_s_nssai_sd: "000001"
+      one_open5gs_vm_amf_ip: "10.10.10.200"
+      one_open5gs_vm_upf_ip: "10.10.10.201"
+      one_open5gs_vm_ue_count: 20
+  athens_ran-o5gs:
+    type: "athens_ran"
+    name: "o5gs"
+    dependencies:
+      - "open5gs_vm-core"
+    input:
+      any_athens_ran_linked_open5g: "open5gs_vm-core"
+      any_athens_ran_duration: 3600
