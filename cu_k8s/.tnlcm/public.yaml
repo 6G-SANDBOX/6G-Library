@@ -33,17 +33,17 @@ site_variables:
 ## Input variables
 ####################################
 input:
-  one_k8s_target:
+  one_cu_k8s_target:
     description: Name of a previously deployed `oneKE` component, where the the CU Helm Chart will be applied. E.g. `oneKE-my_cluster`.
     type: "oneKE"
     required_when: true
-  open5gs_amf_ip:
+  one_cu_k8s_amf_n2_ip:
     description: |
       IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
     type: str
     default_value: "10.21.12.200"
     required_when: false
-  open5gs_upf_ip:
+  one_cu_k8s_upf_n3_ip:
     description: |
       IPv4 Address of the Core User Plane Function (UPF) in the 5G core network.
     type: str

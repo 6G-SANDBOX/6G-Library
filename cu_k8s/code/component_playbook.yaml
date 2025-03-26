@@ -23,7 +23,7 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
-        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_k8s_target + '-node_ips'] }}"
+        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_cu_k8s_target + '-node_ips'] }}"
         domain_name: >-
           {{
             (

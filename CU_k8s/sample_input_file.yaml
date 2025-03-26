@@ -1,5 +1,0 @@
-# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
-
-one_k8s_target: "oneKE-cluster"
-open5gs_amf_ip: "10.21.12.200"
-open5gs_upf_ip: "10.21.12.201"

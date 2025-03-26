@@ -40,19 +40,22 @@ trial_network:
       one_open5gs_k8s_apn: "internet"
       one_open5gs_k8s_s_nssai_sst: 1
       one_open5gs_k8s_s_nssai_sd: "000001"
-  ric_k8s:
-    type: "RIC_k8s"
-    name: "ric"
+  ric_k8s-demo:
+    type: "ric_k8s"
+    name: "demo"
+    dependencias:
+    - “oneKE-cluster”      # optional, if its already after the open5gs_k8s, but good for clarity
+    - "open5gs_k8s-core"
     input:
-      one_k8s_target: "oneKE-cluster"
-  cu_k8s:
-    type: "CU_k8s"
-    name: "cu"
+      one_ric_k8s_target: "oneKE-cluster"
+  cu_k8s-demo:
+    type: "cu_k8s"
+    name: "demo"
     dependencies:
-      - "oneKE-cluster"
-      - "ric_k8s"
-      - "open5gs_k8s-core"
+      - "oneKE-cluster"             # optional, if its already after the ric_k8s, but good for clarity
+      - "ric_k8s-demo"
+      - "open5gs_k8s-core"   # optional, if its already after the ric_k8s, but good for clarity
     input:
-      one_k8s_target: "oneKE-cluster"
-      open5gs_amf_ip: "10.21.12.200"
-      open5gs_upf_ip: "10.21.12.201"
+      one_cu_k8s_target: "oneKE-cluster"
+      one_cu_k8s_amf_n2_ip: "10.21.12.200"
+      one_cu_k8s_upf_n3_ip: "10.21.12.201"

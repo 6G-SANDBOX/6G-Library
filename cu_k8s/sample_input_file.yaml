@@ -1,0 +1,5 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+one_cu_k8s_target: "oneKE-cluster"
+one_cu_k8s_amf_n2_ip: "10.21.12.200"
+one_cu_k8s_upf_n3_ip: "10.21.12.201"
