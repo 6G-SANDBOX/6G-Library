@@ -21,15 +21,15 @@
 - Component `int_p4_sw` requires new variables in sites repository. For more details check the component's changelog.
 ### Deprecated
 - All 'gNB' components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`) no longer require a 'proxy' variable.
+
 ### Fixed
-- 
+- START_SCRIPT_BASE64 defined in ks8500_runner.tfj2   
 - TN_IDs can now correctly set DNS records when they have _ and mixed mayor/minorcase characters.
 - Storage nodes of `oneKE` can now be resized from the deployment itself.
 - Component `open5gs_vm` removed hardcoded ip (10.45.0.1) from the `ogstun` interface (#99)
 - Component `vm_kvm` change param `required_when` to false in field `one_vm_kvm_size` and add default value to private yaml.
 - Add firewall exception for the `loadcore_agent` middleware  (#112).
 - Hardware RAN components (`berlin_ran`, `iswireless_radio` and `nokia_radio`) are now correctly exposed to the Trial Network by adding a NATting exception into the `tn_bastion`.
-
 
 ## [v0.4.0]
 ### Added
