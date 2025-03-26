@@ -1,4 +1,11 @@
 # Changelog
+## v1.13.0.1
+### Changed
+- updated sample_tnlcm_descriptor.yaml
+- update component_playbook.yaml with task to increase VM disc size
+- update component_playbook.yaml with task to install additional packages 
+### Fixed
+- ks8500_runner.tfj2   
 ## v1.13.0
 ### Added
 - updated K8500 runner version 1.30.0
