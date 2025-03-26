@@ -6,6 +6,7 @@
 - Common task file `nftables_add.yaml` now also supports adding NAT exceptions.
 - NAT exception for nftables in `tn_bastion`
 ### Changed
+- add content to ks8500 runner sample_tnlcm_descriptor.yaml
 - *.tnlcm/public.yaml* files normalized between components
 - Component `open5gs_k8s` upgrades its software from `v2.7.0` to `v2.7.2`. Component upgraded to version `unreleased`.
 - New input variables for `int_p4_sw` and `upf_p4_sw`. Components upgraded to version `unreleased`.
@@ -18,6 +19,7 @@
 - fixed `open5gs_vm` to include correct routing-manager token
 
 ### Fixed
+- 
 - TN_IDs can now correctly set DNS records when they have _ and mixed mayor/minorcase characters.
 - The open5gs proxy in components `nokia_radio` and `iswireless_radio` is now properly set. Components upgraded to version `unreleased`.
 - Storage nodes of `oneKE` can now be resized from the deployment itself.
