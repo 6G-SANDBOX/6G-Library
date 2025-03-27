@@ -63,8 +63,8 @@ input:
 ####################################
 site_variables:
   subnet: Subnet used for the RAN N2 and N3 interfaces.
-  cp_ip: Ericsson Control Plane IP address
-  up_ip: Ericsson User Plane IP address
+  #cp_ip: Ericsson Control Plane IP address
+  #up_ip: Ericsson User Plane IP address
 
 ####################################
 ## Generated terraform outputs

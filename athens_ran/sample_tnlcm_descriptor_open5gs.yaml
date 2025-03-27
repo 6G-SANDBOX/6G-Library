@@ -4,17 +4,21 @@ trial_network:
     type: "tn_init"
     dependencies: []
     input:
+      one_vxlan_mtu: 1450
+      one_vxlan_guest_mtu: 1400
       one_bastion_vpn_clients: 3
   vnet-n2:
     type: "vnet"
     name: "n2"
     dependencies: []
     input:
-      #one_vnet_first_ip: "10.10.11.1"
-      one_vnet_first_ip: "10.100.100.1"
+      one_vnet_first_ip: "10.10.11.1"
       one_vnet_netmask: 24
-      one_vnet_gw: null
-      one_vnet_dns: null
+      one_vnet_address_size: 254
+      one_vnet_mtu: 1450
+      one_vnet_guest_mtu: 1400
+      # one_vnet_gw: null # there is no gateway in this network
+      # one_vnet_dns: null # there is no DNS in this network
 #####
   open5gs_vm-core:
     type: "open5gs_vm"
