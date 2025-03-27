@@ -1,9 +1,8 @@
 # {{ tn_id }}-{{ entity_name }}
 
 The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
-The RAN Equipment at `{{ site_available_components.athens_ran.subnet|default('') }}` is now linked to the 5G Core of component `{{ any_athens_ran_linked_open5g }}`.
+The ericsson at `{{ site_available_components.ericsson_radio.cp_ip }}` is now linked to the 5G Core of component `{{ one_ericsson_radio_open5gs }}`.
 
 ## Important information:
 
-Routing configuration between your Trial Network and the Athens RAN will only be active from `{{ start_time }}` to `{{ stop_time }}`.
-
+Routing configuration between your Trial Network and the ericsson RADIO will only be active from `{{ start_time }}` to `{{ stop_time }}`.
