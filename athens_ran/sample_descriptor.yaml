@@ -31,15 +31,15 @@ trial_network:
       - "oneKE-cluster"
     input:
       one_open5gs_k8s_target: "oneKE-cluster"
-      one_open5gs_k8s_mcc: "214"
-      one_open5gs_k8s_mnc: "702"
+      one_open5gs_k8s_mcc: "001"
+      one_open5gs_k8s_mnc: "01"
       one_open5gs_k8s_apn: "internet"
-      one_open5gs_k8s_tac: 1
+      one_open5gs_k8s_tac: 200
       one_open5gs_k8s_s_nssai_sst: 1
-      one_open5gs_k8s_s_nssai_sd: "000009"
-      one_open5gs_k8s_amf_ip: "10.10.12.200"
-      one_open5gs_k8s_upf_ip: "10.10.12.201"
-      one_open5gs_k8s_ue_count: 1
+      one_open5gs_k8s_s_nssai_sd: "000001"
+      one_open5gs_k8s_amf_ip: "10.10.10.200"  
+      one_open5gs_k8s_upf_ip: "10.10.10.201"
+      one_open5gs_k8s_ue_count: 20
   athens_ran-RAN:
     type: "athens_ran"
     name: "RAN"
