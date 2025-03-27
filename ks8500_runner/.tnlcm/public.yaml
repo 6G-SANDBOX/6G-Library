@@ -26,7 +26,7 @@ metadata:
 ## Site-specific variables
 ####################################
 site_variables:
-  loadcore_middleware_ip: IP address of the loadcore middleware in your site
+  loadcore_middleware_url: Url address of the loadcore middleware in your site
   template_id: ID of the Alpine Linux 3.20 VM template to use in your OpenNebula environment
   image_id: ID of the Alpine Linux 3.20 VM image to use in your OpenNebula environment
 
