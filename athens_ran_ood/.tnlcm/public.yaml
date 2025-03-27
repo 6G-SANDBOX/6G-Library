@@ -36,25 +36,21 @@ metadata:
   destroy_script: true
   resource_manager: true
 
+####################################
+## Component input
+####################################
 
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  cp_ip: 172.31.44.0/252 #ericsson Control Plane IP address
-  up_ip: 172.31.43.0/252 #ericsson User Plane IP address
-
-
-####################################
-## Input variables
-####################################
 input:
-  one_ericsson_radio_open5gs:
-    description: Name of a previosly deployed Open5GS 5G Core
-    type: "open5gs_vm or open5gs_k8s"
-    required_when: true
-
-  any_ericsson_radio_start_time:
+  any_athens_ran_duration:
+    description: Time in seconds for the RAN equipment reservation
+    type: int
+    default_value: 3600
+    required_when: false
+  any_athens_ran_linked_open5g:
+    description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
+    type: open5gs_k8s or open5gs_vm or open5gcore_vm
+    required_when: false
+  any_athens_ran_start_time:
     description: |
       Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
       If unspecified, value takes current time and date.
@@ -62,15 +58,17 @@ input:
     default_value: Current time and date
     required_when: false
 
-  any_ericsson_radio_duration:
-    description: Time in seconds for the ericsson reservation
-    type: int
-    default_value: 3600
-    required_when: false
-
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  #subnet: Subnet used for the RAN N2 and N3 interfaces.
+  subnet: "10.100.100.0/24"
+  #cp_ip: Ericsson Control Plane IP address
+  #up_ip: Ericsson User Plane IP address
 
 ####################################
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__open5gs: input.one_ericsson_radio_open5gs
+  __entity_name__open5gs: input.any_athens_ran_linked_open5g
