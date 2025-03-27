@@ -63,7 +63,7 @@ input:
 ####################################
 site_variables:
   #subnet: Subnet used for the RAN N2 and N3 interfaces.
-  subnet: "10.100.100.0/24"
+  subnet: "10.10.11.0/24"     #Does this need a list? of N2 and N3? or only one?
   #cp_ip: Ericsson Control Plane IP address
   #up_ip: Ericsson User Plane IP address
 
