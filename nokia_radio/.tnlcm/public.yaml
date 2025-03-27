@@ -48,9 +48,9 @@ site_variables:
 ## Input variables
 ####################################
 input:
-  one_nokia_radio_open5gs:
+  any_nokia_radio_linked_5gcore:
     description: Name of a previosly deployed Open5GS 5G Core
-    type: "open5gs_vm or open5gs_k8s"
+    type: "open5gs_k8s or open5gs_vm or open5gcore_vm or upf_p4_sw"
     required_when: true
   any_nokia_radio_start_time:
     description: |
@@ -70,4 +70,4 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__open5gs: input.one_nokia_radio_open5gs
+  __entity_name__open5gs: input.any_nokia_radio_linked_5gcore

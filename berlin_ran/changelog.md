@@ -3,6 +3,8 @@
 ## unreleased
 ### Added
  - Support for NAT exceptions when connecting the RAN subnet to the TN.
+### Changed
+- Variable `any_berlin_ran_linked_open5g` renamed to `any_berlin_ran_linked_5gcore`.
  
 ### Changed
  - Updated 5G coere medatada output to new format.

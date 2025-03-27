@@ -3,6 +3,7 @@
 ## unreleased
 ### Changed
 - Changed references to 5GCore variables from `upf_ip`, `amf_ip` to `upf_n3_ip`, `amf_n2_ip`.
+- Variable `one_nokia_radio_open5gs` renamed to `any_nokia_radio_linked_5gcore`.
 ### Fixed
 - The open5gs proxy is now properly set
 
@@ -10,7 +11,7 @@
 ## v0.4.0
 Complete redisign of the component following the changes in tn_bastion and route-manager-api.
 ### Added
-- New public input files `one_nokia_radio_open5gs`, `one_nokia_radio_start_time` and `any_nokia_radio_duration`.
+- New public input variables `one_nokia_radio_open5gs`, `one_nokia_radio_start_time` and `any_nokia_radio_duration`.
 - Deployment now needs to define an exception on tn_bastion's firewall.
 ### Changed
 - Site-specific variables reduced to only `cp_ip` and `up_ip`.

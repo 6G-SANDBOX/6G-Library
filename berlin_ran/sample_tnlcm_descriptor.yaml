@@ -46,5 +46,5 @@ trial_network:
     dependencies:
       - "open5gcore_vm-core"
     input:
-      any_berlin_ran_linked_open5g: "open5gcore_vm-core"
+      any_berlin_ran_linked_5gcore: "open5gcore_vm-core"
       any_berlin_ran_duration: 3600
