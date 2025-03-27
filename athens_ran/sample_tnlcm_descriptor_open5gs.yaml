@@ -10,10 +10,11 @@ trial_network:
     name: "n2"
     dependencies: []
     input:
-      one_vnet_first_ip: "10.10.11.1"
+      #one_vnet_first_ip: "10.10.11.1"
+      one_vnet_first_ip: "10.100.100.1"
       one_vnet_netmask: 24
-      # one_vnet_gw: null # there is no gateway in this network
-      # one_vnet_dns: null # there is no DNS in this network
+      one_vnet_gw: null
+      one_vnet_dns: null
 #####
   open5gs_vm-core:
     type: "open5gs_vm"

@@ -1,0 +1,319 @@
+Started by user admin
+Checking out git ${LIBRARY_URL} into /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01@script/a66dc7c3b25f84bbbc4c248b9716e17348674e20edfed801f33eab2efabf6333 to read .global/pac/TN_DEPLOY.groovy
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/6G-SANDBOX/6G-Library.git
+ > git init /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01@script/a66dc7c3b25f84bbbc4c248b9716e17348674e20edfed801f33eab2efabf6333 # timeout=10
+Fetching upstream changes from https://github.com/6G-SANDBOX/6G-Library.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.34.1'
+ > git fetch --tags --force --progress -- https://github.com/6G-SANDBOX/6G-Library.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/6G-SANDBOX/6G-Library.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse 0ce32f42895224d5c4792e8e02399267cc2f6dd7^{commit} # timeout=10
+Checking out Revision 0ce32f42895224d5c4792e8e02399267cc2f6dd7 (detached)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 0ce32f42895224d5c4792e8e02399267cc2f6dd7 # timeout=10
+Commit message: "add athens_ran & open5gs_k8s"
+ > git rev-list --no-walk 0ce32f42895224d5c4792e8e02399267cc2f6dd7 # timeout=10
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/6G-SANDBOX/6G-Library.git
+ > git init /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01 # timeout=10
+Fetching upstream changes from https://github.com/6G-SANDBOX/6G-Library.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.34.1'
+ > git fetch --tags --force --progress -- https://github.com/6G-SANDBOX/6G-Library.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/6G-SANDBOX/6G-Library.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse 0ce32f42895224d5c4792e8e02399267cc2f6dd7^{commit} # timeout=10
+Checking out Revision 0ce32f42895224d5c4792e8e02399267cc2f6dd7 (detached)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 0ce32f42895224d5c4792e8e02399267cc2f6dd7 # timeout=10
+Commit message: "add athens_ran & open5gs_k8s"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $AWS_ACCESS_KEY_ID or $OPENNEBULA_USERNAME or $OPENNEBULA_INSECURE or $AWS_SECRET_ACCESS_KEY or $OPENNEBULA_PASSWORD or $OPENNEBULA_ENDPOINT or $OPENNEBULA_FLOW_ENDPOINT
+[Pipeline] {
+[Pipeline] timeout
+Timeout set to expire in 45 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Stage 1: Import input file into the workspace)
+[Pipeline] echo
+Stage 1: Import input file into the workspace
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ base64 -d
++ echo YW55X2F0aGVuc19yYW5fbGlua2VkX29wZW41ZzogIm9wZW41Z3Nfdm0tY29yZSIKYW55X2F0aGVuc19yYW5fZHVyYXRpb246IDM2MDAK
+[Pipeline] writeFile
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Stage 2: Clone 6G-Sandbox-Sites repository)
+[Pipeline] echo
+Stage 2: Clone 6G-Sandbox-Sites repository
+[Pipeline] checkout
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git
+ > git init /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01/6G-Sandbox-Sites # timeout=10
+Fetching upstream changes from https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.34.1'
+ > git fetch --tags --force --progress -- https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/6G-SANDBOX/6G-Sandbox-Sites.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse 0bb6cfbc68a5b48ee15306b165cc7af9b5b39f79^{commit} # timeout=10
+Checking out Revision 0bb6cfbc68a5b48ee15306b165cc7af9b5b39f79 (detached)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 0bb6cfbc68a5b48ee15306b165cc7af9b5b39f79 # timeout=10
+Commit message: "athens_ran & open5gs_k8s component"
+ > git rev-list --no-walk 0bb6cfbc68a5b48ee15306b165cc7af9b5b39f79 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Stage 3: Deploy the selected component)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+Stage 3: Run ansible playbook to deploy ath01-athens_ran-o5gs in the athens site
+[Pipeline] ansiblePlaybook
+[TN_DEPLOY_ath01] $ ansible-playbook /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01/athens_ran/code/component_playbook.yaml -i localhost, --vault-password-file /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01/vault6791747461971355365.password -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ******** -e ********
+
+PLAY [STAGE 1: Set new routes in route-manager-api and tn_bastion] *************
+
+TASK [Load enviromental variables from different sources] **********************
+Thursday 27 March 2025  11:31:25 +0000 (0:00:00.013)       0:00:00.013 ******** 
+included: /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01/.global/cac/load_variables.yaml for localhost
+
+TASK [Load site-specific variables] ********************************************
+Thursday 27 March 2025  11:31:25 +0000 (0:00:00.036)       0:00:00.050 ******** 
+ok: [localhost]
+
+TASK [Load private component-specific variables for any hypervisor] ************
+Thursday 27 March 2025  11:31:25 +0000 (0:00:00.081)       0:00:00.131 ******** 
+ok: [localhost]
+
+TASK [Load private component-specific variables for the site hypervisor] *******
+Thursday 27 March 2025  11:31:25 +0000 (0:00:00.032)       0:00:00.164 ******** 
+ok: [localhost]
+
+TASK [Load public component-specific variables from input file] ****************
+Thursday 27 March 2025  11:31:25 +0000 (0:00:00.028)       0:00:00.193 ******** 
+ok: [localhost]
+
+TASK [Prepare terraform working directory] *************************************
+Thursday 27 March 2025  11:31:25 +0000 (0:00:00.028)       0:00:00.222 ******** 
+included: /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01/.global/cac/terraform_workdir.yaml for localhost
+
+TASK [Create directory for terraform manifests] ********************************
+Thursday 27 March 2025  11:31:25 +0000 (0:00:00.041)       0:00:00.263 ******** 
+[WARNING]: Platform linux on host localhost is using the discovered Python
+interpreter at /usr/bin/python3.10, but future installation of another Python
+interpreter could change the meaning of that path. See
+https://docs.ansible.com/ansible-
+core/2.17/reference_appendices/interpreter_discovery.html for more information.
+changed: [localhost]
+
+TASK [Prepare terraform manifest for provider: one] ****************************
+Thursday 27 March 2025  11:31:26 +0000 (0:00:00.517)       0:00:00.781 ******** 
+changed: [localhost]
+
+TASK [Prepare AWS s3 backend terraform manifest] *******************************
+Thursday 27 March 2025  11:31:26 +0000 (0:00:00.719)       0:00:01.501 ******** 
+changed: [localhost]
+
+TASK [Get terraform manifests from previously deployed components] *************
+Thursday 27 March 2025  11:31:27 +0000 (0:00:00.459)       0:00:01.960 ******** 
+included: /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01/.global/cac/s3_download.yaml for localhost
+
+TASK [Get list of files from S3 object storage] ********************************
+Thursday 27 March 2025  11:31:27 +0000 (0:00:00.048)       0:00:02.009 ******** 
+ok: [localhost]
+
+TASK [Download previous terraform manifests from S3 object storage] ************
+Thursday 27 March 2025  11:31:28 +0000 (0:00:00.956)       0:00:02.966 ******** 
+skipping: [localhost] => (item=ath01/misc-ath01-id_ed25519) 
+skipping: [localhost] => (item=ath01/misc-ath01-id_ed25519.pub) 
+skipping: [localhost] => (item=ath01/misc-ath01-ssh_config) 
+skipping: [localhost] => (item=ath01/misc-ath01-wg_client0.conf) 
+skipping: [localhost] => (item=ath01/misc-ath01-wg_client1.conf) 
+skipping: [localhost] => (item=ath01/misc-ath01-wg_client2.conf) 
+skipping: [localhost] => (item=ath01/ok_result-open5gs_vm-core.md) 
+skipping: [localhost] => (item=ath01/ok_result-tn_init.md) 
+skipping: [localhost] => (item=ath01/ok_result-vnet-n2.md) 
+skipping: [localhost] => (item=ath01/terraform.tfstate) 
+changed: [localhost] => (item=ath01/tf-custom_outputs.tf)
+changed: [localhost] => (item=ath01/tf-open5gs_vm-core.tf)
+changed: [localhost] => (item=ath01/tf-tn_bastion.tf)
+changed: [localhost] => (item=ath01/tf-tn_vxlan.tf)
+changed: [localhost] => (item=ath01/tf-vnet-n2.tf)
+
+TASK [Download experimenter ssh_config file if exists] *************************
+Thursday 27 March 2025  11:31:31 +0000 (0:00:03.669)       0:00:06.635 ******** 
+skipping: [localhost] => (item=ath01/misc-ath01-id_ed25519) 
+skipping: [localhost] => (item=ath01/misc-ath01-id_ed25519.pub) 
+changed: [localhost] => (item=ath01/misc-ath01-ssh_config)
+skipping: [localhost] => (item=ath01/misc-ath01-wg_client0.conf) 
+skipping: [localhost] => (item=ath01/misc-ath01-wg_client1.conf) 
+skipping: [localhost] => (item=ath01/misc-ath01-wg_client2.conf) 
+skipping: [localhost] => (item=ath01/ok_result-open5gs_vm-core.md) 
+skipping: [localhost] => (item=ath01/ok_result-tn_init.md) 
+skipping: [localhost] => (item=ath01/ok_result-vnet-n2.md) 
+skipping: [localhost] => (item=ath01/terraform.tfstate) 
+skipping: [localhost] => (item=ath01/tf-custom_outputs.tf) 
+skipping: [localhost] => (item=ath01/tf-open5gs_vm-core.tf) 
+skipping: [localhost] => (item=ath01/tf-tn_bastion.tf) 
+skipping: [localhost] => (item=ath01/tf-tn_vxlan.tf) 
+skipping: [localhost] => (item=ath01/tf-vnet-n2.tf) 
+
+TASK [Run 'terraform init'] ****************************************************
+Thursday 27 March 2025  11:31:32 +0000 (0:00:00.814)       0:00:07.450 ******** 
+changed: [localhost]
+
+TASK [Retrieve terraform outputs] **********************************************
+Thursday 27 March 2025  11:31:36 +0000 (0:00:03.971)       0:00:11.422 ******** 
+ok: [localhost]
+
+TASK [Set Terraform outputs as playbook facts] *********************************
+Thursday 27 March 2025  11:31:37 +0000 (0:00:00.397)       0:00:11.819 ******** 
+ok: [localhost]
+
+TASK [Set start of lease time and date with RFC 3339 section 5.6 format] *******
+Thursday 27 March 2025  11:31:37 +0000 (0:00:00.055)       0:00:11.875 ******** 
+ok: [localhost]
+
+TASK [Set end of lease time and date with RFC 3339 section 5.6 format] *********
+Thursday 27 March 2025  11:31:37 +0000 (0:00:00.069)       0:00:11.945 ******** 
+ok: [localhost]
+
+TASK [Submit routes in route-manager-api from the Athens RAN to the 5G Core] ***
+Thursday 27 March 2025  11:31:37 +0000 (0:00:00.046)       0:00:11.991 ******** 
+included: /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01/.global/cac/routemanager_add.yaml for localhost => (item={'to': '10.10.10.200', 'via': '10.100.100.33'})
+included: /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01/.global/cac/routemanager_add.yaml for localhost => (item={'to': '10.10.10.201', 'via': '10.100.100.33'})
+
+TASK [Make a PUT request to a route-manager-api] *******************************
+Thursday 27 March 2025  11:31:37 +0000 (0:00:00.036)       0:00:12.028 ******** 
+ok: [localhost]
+
+TASK [Display response content] ************************************************
+Thursday 27 March 2025  11:31:37 +0000 (0:00:00.637)       0:00:12.665 ******** 
+skipping: [localhost]
+
+TASK [Make a PUT request to a route-manager-api] *******************************
+Thursday 27 March 2025  11:31:37 +0000 (0:00:00.032)       0:00:12.698 ******** 
+ok: [localhost]
+
+TASK [Display response content] ************************************************
+Thursday 27 March 2025  11:31:38 +0000 (0:00:00.374)       0:00:13.073 ******** 
+skipping: [localhost]
+
+TASK [Submit routes in tn_bastion from the Trial Network to the Athens RAN] ****
+Thursday 27 March 2025  11:31:38 +0000 (0:00:00.020)       0:00:13.094 ******** 
+fatal: [localhost]: FAILED! => 
+  msg: '''None'' has no attribute ''subnet'''
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=22   changed=6    unreachable=0    failed=1    skipped=2    rescued=0    ignored=0   
+
+Thursday 27 March 2025  11:31:38 +0000 (0:00:00.029)       0:00:13.123 ******** 
+=============================================================================== 
+Run 'terraform init' ---------------------------------------------------- 3.97s
+Download previous terraform manifests from S3 object storage ------------ 3.67s
+Get list of files from S3 object storage -------------------------------- 0.96s
+Download experimenter ssh_config file if exists ------------------------- 0.81s
+Prepare terraform manifest for provider: one ---------------------------- 0.72s
+Make a PUT request to a route-manager-api ------------------------------- 0.64s
+Create directory for terraform manifests -------------------------------- 0.52s
+Prepare AWS s3 backend terraform manifest ------------------------------- 0.46s
+Retrieve terraform outputs ---------------------------------------------- 0.40s
+Make a PUT request to a route-manager-api ------------------------------- 0.37s
+Load site-specific variables -------------------------------------------- 0.08s
+Set start of lease time and date with RFC 3339 section 5.6 format ------- 0.07s
+Set Terraform outputs as playbook facts --------------------------------- 0.06s
+Get terraform manifests from previously deployed components ------------- 0.05s
+Set end of lease time and date with RFC 3339 section 5.6 format --------- 0.05s
+Prepare terraform working directory ------------------------------------- 0.04s
+Load enviromental variables from different sources ---------------------- 0.04s
+Submit routes in route-manager-api from the Athens RAN to the 5G Core --- 0.04s
+Load private component-specific variables for any hypervisor ------------ 0.03s
+Display response content ------------------------------------------------ 0.03s
+Playbook run took 0 days, 0 hours, 0 minutes, 13 seconds
+FATAL: command execution failed
+hudson.AbortException: Ansible playbook execution failed
+	at PluginClassLoader for ansible//org.jenkinsci.plugins.ansible.AnsiblePlaybookBuilder.perform(AnsiblePlaybookBuilder.java:328)
+	at PluginClassLoader for ansible//org.jenkinsci.plugins.ansible.workflow.AnsiblePlaybookStep$AnsiblePlaybookExecution.run(AnsiblePlaybookStep.java:466)
+	at PluginClassLoader for ansible//org.jenkinsci.plugins.ansible.workflow.AnsiblePlaybookStep$AnsiblePlaybookExecution.run(AnsiblePlaybookStep.java:365)
+	at PluginClassLoader for workflow-step-api//org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution$1$1.call(AbstractSynchronousNonBlockingStepExecution.java:47)
+	at hudson.security.ACL.impersonate2(ACL.java:451)
+	at hudson.security.ACL.impersonate(ACL.java:463)
+	at PluginClassLoader for workflow-step-api//org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution$1.run(AbstractSynchronousNonBlockingStepExecution.java:44)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+PIPELINE FINISHED
+[Pipeline] script
+[Pipeline] {
+[Pipeline] echo
+Clean up Workspace
+[Pipeline] deleteDir
+[Pipeline] echo
+Clean up tmp directory
+[Pipeline] dir
+Running in /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01@tmp
+[Pipeline] {
+[Pipeline] deleteDir
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] echo
+Clean up script directory
+[Pipeline] dir
+Running in /var/lib/jenkins/workspace/TNLCM/TN_DEPLOY_ath01@script
+[Pipeline] {
+[Pipeline] deleteDir
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: Ansible playbook execution failed
+Finished: FAILURE
