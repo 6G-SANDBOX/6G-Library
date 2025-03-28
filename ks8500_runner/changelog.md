@@ -1,5 +1,8 @@
 # Changelog
-
+## v1.13.0
+### Added
+- updated K8500 runner version 1.30.0
+- updated OpenTap framework version 9.27.1
 ## v1.11.4.0
 ### Added
 - Python and pip for plugins that use python venv
