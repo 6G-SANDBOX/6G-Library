@@ -5,6 +5,7 @@
 - Component `oneKE` upgraded to version `unreleased`, now supporting OneKE 1.31 and OneKE 1.31 Airgapped. New custom templates for 6G-Sandbox available in the official marketplace.
 - Common task file `nftables_add.yaml` now also supports adding NAT exceptions.
 - NAT exception for nftables in `tn_bastion`
+
 ### Changed
 - *.tnlcm/public.yaml* files normalized between components
 - Component `open5gs_k8s` upgrades its software from `v2.7.0` to `v2.7.2`. Component upgraded to version `unreleased`.
@@ -22,6 +23,7 @@
 - The open5gs proxy in components `nokia_radio` and `iswireless_radio` is now properly set. Components upgraded to version `unreleased`.
 - Storage nodes of `oneKE` can now be resized from the deployment itself.
 - Component `open5gs_vm` remove hardcoded ip (10.45.0.1) from the `ogstun` interface (#99)
+- Component `vm_kvm` change param `required_when` to false in field `one_vm_kvm_size` and add default value to private yaml.
 
 
 ## [v0.4.0]
