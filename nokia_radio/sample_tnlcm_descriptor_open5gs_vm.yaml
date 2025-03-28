@@ -41,7 +41,7 @@ trial_network:
     type: "nokia_radio"
     name: "RAN"
     dependencies:
-      - "open5gs_k8s-core"
+      - "open5gs_vm-core"
     input:
-      any_nokia_radio_linked_5gcore: "open5gs_k8s-core"
+      any_nokia_radio_linked_5gcore: "open5gs_vm-core"
       any_nokia_radio_duration: 7200                # Default is 3600 seconds
