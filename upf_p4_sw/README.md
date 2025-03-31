@@ -32,24 +32,30 @@ The component uses specific versions for its core services:
 
 1. **Data Plane (BMv2-Stratum)**
    - Version format: `ubuntu{version}-stratum-bmv2_{version}`
-   - Example: `ubuntu18-stratum-bmv2_0.0.1`
+   - Current version: `ubuntu18-stratum-bmv2_0.0.1`
    - Used for specific Ubuntu + Stratum-BMv2 combinations
 
 2. **Control Plane (UPF Controller)**
    - Version format: `{major}.{minor}.{patch}`
-   - Example: `2.0.0`
+   - Current version: `2.0.0`
    - Follows semantic versioning for controller updates (It also includes the P4 data plane)
+   - New features in version 2.0.0:
+     - Enhanced ARP handling for improved neighbor discovery
+     - Improved logging functionality for the control plane
+     - Refactored testing framework
+     - Better overall stability and error handling
+     - Improved routing table with UDP destination port support
   
 3. **Open5GS Control Plane**
    - Version format: `{major}.{minor}.{patch}`
-   - Example: `2.5.6`
+   - Current version: `2.5.6`
    - Includes all core network functions (AMF, SMF, etc.)
    - Compatible with 3GPP Release 16 specifications
 
 ### Component Version
 The overall UPF-P4 SW component in 6G-Library uses its own version:
 - Format: `v{major}.{minor}.{patch}`
-- Example: `v0.5.0`
+- Current version: `v0.5.0`
 - Documented in [CHANGELOG.md](./CHANGELOG.md)
 
 > [!NOTE]
@@ -83,12 +89,7 @@ Here's a detailed overview of the configuration directory and its contents:
     - **UE IP Pool**:
       - Defines the range of IP addresses to be assigned to User Equipments (UEs).
 
-#### 2. `/home/jenkins/config/freeDiameter/`
-
-- **Description**: Contains configuration files and keys for freeDiameter, which is used by Open5GS for Diameter protocol operations.
-- **Note**: **Do not modify**.
-
-#### 3. `/home/jenkins/config/open5gs/`
+#### 2. `/home/jenkins/config/open5gs/`
 
 - **Description**: Houses individual YAML configuration files for each Open5GS network function.
 - **Key Files**:
@@ -103,7 +104,7 @@ Here's a detailed overview of the configuration directory and its contents:
   - Subscriber data management
   - Inter-component communication settings
 
-#### 4. `/home/jenkins/config/register_subscriber.sh`
+#### 3. `/home/jenkins/config/register_subscriber.sh`
 
 - **Description**: A shell script used to register new UEs (User Equipments) into the Open5GS core network.
 - **Usage**:
@@ -111,7 +112,7 @@ Here's a detailed overview of the configuration directory and its contents:
   - Allows specifying parameters such as IMSI, authentication keys, and subscriber profiles.
 - **Instructions**: For detailed steps on registering new UEs, please refer to the [Registering New User Equipments](#registering-new-user-equipments) section.
 
-#### 5. `/home/jenkins/config/stratum-upf/`
+#### 4. `/home/jenkins/config/stratum-upf/`
 
 - **Description**: Contains configuration files necessary for the P4 data plane component of the UPF.
 - **Key Files**:
@@ -180,7 +181,7 @@ After making changes to the configuration files, it's essential to restart the s
 - **Consistency Across Files**:
 
   - Ensure that any IP addresses, ports, and interface names are consistently updated across all relevant configuration files to prevent misconfigurations.
-  - For example, if you change the `n4` interface IP address in `config.yaml`, ensure that the corresponding settings in Open5GS configuration files are also updated if necessary.
+  - For example, if you change the `n4` interface IP address in `controller-upf/config.yaml`, ensure that the corresponding settings in Open5GS configuration files are also updated if necessary.
 
 ### Registering new user equipments
 By default, the SIM <MCC|MNC|MSIN> is automatically registered with the <Key>, <OPC>, <APN> and <SLICE> configured in the component input parameters.
@@ -263,7 +264,60 @@ By default, the `upf-dn-bmv2-stratum` service runs in normal mode. To enable deb
    - Check interface mappings in chassis config
    - Monitor packet counters for drops
 
-TODO: Explain how to do NAT (in other VMs)
+### Configuring NAT in Other VMs
+To enable Internet access for UEs through the UPF-P4 component, you may need to configure Network Address Translation (NAT) on a separate VM. This section explains how to set up NAT functionality on another virtual machine that communicates with the UPF VM.
+
+#### Prerequisites
+- UPF-P4 VM with the component properly deployed
+- A second VM (referred to as "NAT VM") with connectivity to both the UPF VM and external networks
+- Root/sudo access on both VMs
+
+#### Step 1: Configure the UPF VM
+Enable Proxy ARP on the interface that connects to the NAT VM:
+
+```bash
+# Replace eth2 with the actual interface connecting to the NAT VM
+sudo sysctl -w net.ipv4.conf.eth2.proxy_arp=1
+
+# Make the change permanent
+echo "net.ipv4.conf.eth2.proxy_arp=1" | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+```
+This allows the UPF VM to respond to ARP requests for IPs that it doesn't actually have configured on its interfaces, which is necessary for the NAT setup.
+
+#### Step 2: Configure the NAT VM (VM2)
+1. **Enable IP forwarding**
+```bash
+sudo sysctl -w net.ipv4.ip_forward=1
+
+# To make this permanent, add to /etc/sysctl.conf:
+echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+```
+
+2. **Configure NAT with iptables**
+```bash
+# Replace 10.45.0.0/24 with your actual UE IP pool
+# Replace eth1 with your external-facing interface
+sudo iptables -t nat -A POSTROUTING -s 10.45.0.0/24 -o eth1 -j MASQUERADE
+
+# For a more restrictive rule that excludes specific interfaces:
+# sudo iptables -t nat -A POSTROUTING -s 10.45.0.0/24 ! -o eth2 -j MASQUERADE
+# This would apply NAT to all traffic from the UE pool except that going through eth2
+```
+
+3. **Add a route for UE traffic (if necessary)**
+
+If the interfaces connecting the UPF VM and NAT VM use IP addresses outside the UE pool range, add a route on the NAT VM to ensure return traffic is properly directed:
+
+```bash
+# Replace 10.45.0.0/24 with your UE IP pool
+# Replace eth1 with the interface connected to the UPF VM
+sudo ip route add 10.45.0.0/24 dev eth1
+
+# To make this route persistent, add it to /etc/network/interfaces or equivalent
+```
+
 
 ## 📚 References
 - [P4 Language Specification](https://p4.org/p4-spec/p4-16/docs/P4-16-spec.html)
