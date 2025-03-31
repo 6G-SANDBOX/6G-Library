@@ -64,9 +64,45 @@
   gather_facts: false
   connection: local
   tasks:
+    - name: Upload Vault keys to S3 object storage
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/vault_keys.txt"
+        src: "{{ workspace }}/{{ component_type }}/code/vault_keys.txt"
+        encrypt: false
+        validate_certs: false
+
+    - name: Upload Tests results keys to S3 object storage
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/ocf_robot_results.zip"
+        src: "{{ workspace }}/{{ component_type }}/code/ocf_robot_results.zip"
+        encrypt: false
+        validate_certs: false
+
+    - name: Upload Create User Results keys to S3 object storage
+      amazon.aws.s3_object:
+        endpoint_url: "{{ site_s3_server.endpoint }}"
+        mode: put
+        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+        bucket: "{{ site_s3_server.bucket }}"
+        object: "{{ tn_id }}/ocf_user_creation_results.zip"
+        src: "{{ workspace }}/{{ component_type }}/code/ocf_user_creation_results.zip"
+        encrypt: false
+        validate_certs: false
+
     - name: Define OpenCAPIF metadata dictionary
       ansible.builtin.set_fact:
-        metadata_dict: >-
+        ocf_metadata_dict: >-
           {
             'oneKE': '{{ ocf_one_oneKE }}',
             'repo': '{{ ocf_any_repo }}',
@@ -93,51 +129,12 @@
             'password': '{{ ocf_any_password }}',
           }
 
-    - name: Upload Vault keys to S3
-      amazon.aws.s3_object:
-        endpoint_url: "{{ site_s3_server.endpoint }}"
-        mode: put
-        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
-        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
-        bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/vault_keys.txt"
-        src: "{{ workspace }}/{{ component_type }}/code/vault_keys.txt"
-        encrypt: false
-        validate_certs: false
-
-    - name: Upload Tests results keys to S3
-      amazon.aws.s3_object:
-        endpoint_url: "{{ site_s3_server.endpoint }}"
-        mode: put
-        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
-        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
-        bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/ocf_robot_results.zip"
-        src: "{{ workspace }}/{{ component_type }}/code/ocf_robot_results.zip"
-        encrypt: false
-        validate_certs: false
-
-    - name: Upload Create User Results keys to S3
-      amazon.aws.s3_object:
-        endpoint_url: "{{ site_s3_server.endpoint }}"
-        mode: put
-        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
-        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
-        bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/ocf_user_creation_results.zip"
-        src: "{{ workspace }}/{{ component_type }}/code/ocf_user_creation_results.zip"
-        encrypt: false
-        validate_certs: false
-
-    - name: Publish OpenCAPIF metadata as terraform outputs"
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-metadata"
-            value: "{{ metadata_dict }}"
+            value: "{{ ocf_metadata_dict }}"
 
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          metadata_dict: "{{ metadata_dict | b64encode }}"

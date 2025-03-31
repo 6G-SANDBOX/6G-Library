@@ -34,7 +34,7 @@
     # - name: Set Terraform outputs as playbook facts
     #   ansible.builtin.set_fact:
     #     bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-    #     node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_oneKE + '-node_ips'] }}"
+    #     node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_k8s_target + '-node_ips'] }}"
 
 
     # More than just a simple terraform apply. Templates all manifests from {{ component_type }}/code/{{ site_hypervisor }}/iac/*.tf.j2, writes them
@@ -89,10 +89,15 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
-    # While not used by the Jenkins, we included the configuration of a .ssh/config per TN in the Jenkins for debugging purposes.
-    - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
-      loop: "{{ node_ips | dict2items }}"
+    # While not used by the Jenkins, we included the configuration of a .ssh/config per TN in the Jenkins VM for debugging purposes.
+    # If the configuration created doesn't fit your component, feel free to create another task file in your components cac/01_pre directory
+    - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
+
+    # In order to facilitate SSH connections to the experimenter, an aditional ssh config file for them can also be created.
+    # If your component is not ment to be accessed by the experimenter (its not a VM or its a restricted one) do not configure ssh config for it
+    - name: Add new VM to an SSH config file ment to be usable by the experimenter
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
 
 # Configuration play. Modules executed in the deployment component.
@@ -147,21 +152,23 @@
   gather_facts: false
   connection: local
   tasks:
-    # You can publish files to the MINIO S3 Storage
-    - name: Upload kubeconfig to S3
+    # You can publish files to the MINIO S3 Storage. By convention, please use misc-{{ entity_name }} as prefix
+    # misc- files should be intended to be shared with the experimenter. They are PUBLIC
+    - name: Upload file to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put
         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/extra-kubeconfig-{{ entity_name }}.yaml"
-        src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
+        object: "{{ tn_id }}/misc-{{ entity_name }}-something.yaml"
+        content_base64: "{{ encoded_variable }}"
         encrypt: false
         validate_certs: false
 
-    # Common task to create custom terraform outputs with information of interest for future deployments.
-    - name: Publish node IDs and IPs as a terraform outputs"
+    # Common task to create custom terraform outputs with information of interest for future component deployments.
+    # Variables here may or may NOT be intended to be seen by the experimenters. They remain PRIVATE
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
@@ -175,12 +182,7 @@
     # 2. Generate markdown OK file with information about the component
     # 3. Post the markdown OK file to the MINIO S3 Storage
     # 4. Send a JSON OK notification to the TNLCM. JSON message also includes the markdown content.
-    - name: Publish execution results to TNLCM
+    # Dictionary output should include the same variables as the markdown file, but in an indexable way for the TNLCM
+    # Both the markdown and the variables sent to the TNLCM are intended to be shared with the experimenter. They are PUBLIC
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          id: "{{ id | b64encode }}"
-          node_ids: "{{ node_ids | b64encode }}"
-          node_ips: "{{ node_ips | b64encode }}"
-          kubeconfig: "{{ kubeconfig | b64encode }}"
-          skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"

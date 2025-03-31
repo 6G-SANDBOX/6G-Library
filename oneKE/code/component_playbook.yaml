@@ -32,8 +32,18 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         cluster_roles: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-roles'] }}"
+        domain_name: >-
+          {{
+            (
+              (component_type  | regex_replace('_', '') | lower) ~ '-' ~
+              (custom_name     | regex_replace('_', '') | lower) ~ '.' ~
+              (tn_id           | regex_replace('_', '') | lower) ~ '.' ~
+              site_domain
+            ) | trim
+          }}
 
     - name: Fetch cluster node IDs
       ansible.builtin.set_fact:
@@ -43,15 +53,32 @@
               (item.0.name + '_' + item.0.nodes.index(item.1) | string): item.1 | string
             })
           }}
-      loop: "{{ cluster_roles | subelements('nodes', skip_missing=True) }}"
+      loop: "{{ cluster_roles | subelements('nodes', skip_missing=true) }}"
 
     - name: Fetch cluster node IPs
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/node_ip.yaml"
       loop: "{{ node_ids | dict2items }}"
 
+    # For some weird reason, idempotency with this tool gives rc=255, but syntax errors give rc=0...
+    - name: Resize the disk reserved for Longhorn in the storage VMs
+      ansible.builtin.shell: >
+        /usr/local/bin/onevm
+        disk-resize {{ item }} 1 30G
+        --user {{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}
+        --password {{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}
+        --endpoint {{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}
+      register: disk_resize
+      failed_when: >
+        (disk_resize.rc !=  0 and 'must be larger' not in disk_resize.stderr) or
+        ('not found' in disk_resize.stderr)
+      changed_when:
+        - disk_resize.rc == 0
+        - "'not found' not in disk_resize.stderr"
+      loop: "{{ node_ids | dict2items | selectattr('key', 'search', '^storage_') | map(attribute='value') | list }}"
+
     - name: Add new VMs to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "{{ entity_name }}-{{ item.key }}"
+        hostname: "{{ item.key }}"
         groups: "OneKE_VMs"
         ansible_host: "{{ item.value }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}{% if not item.key.startswith('vnf') %},root@{{ node_ips.vnf_0 }}{% else %}{% endif %}"
@@ -59,25 +86,12 @@
       loop: "{{ node_ips | dict2items }}"
 
     - name: Add new VMs to SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
       loop: "{{ node_ips | dict2items }}"
 
-    - name: Fetch master metadata
-      community.general.one_vm:
-        instance_ids: "{{ node_ids.master_0 | int }}"
-        api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
-        api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
-        api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
-      register: master_metadata
-    - name: Extract kubeconfig file from master metadata
-      ansible.builtin.set_fact:
-        kubeconfig: "{{ master_metadata.instances[0].attributes.ONEKE_KUBECONFIG }}"
-
-    - name: Create kubeconfig
-      ansible.builtin.copy:
-        content: "{{ kubeconfig | b64decode }}"
-        dest: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
-        mode: "644"
+    - name: Add new VMs to an SSH config file ment to be usable by the experimenter
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/tnuser_ssh_config.yaml"
+      loop: "{{ node_ips | dict2items }}"
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
@@ -123,11 +137,20 @@
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
     - name: Apply extra Helm charts
-      when: inventory_hostname == hostvars['localhost']['entity_name'] + '-master_0'
+      when: inventory_hostname == 'master_0'
       block:
+        - name: Install ansible for k8s dependencies
+          ansible.builtin.include_tasks: >-
+            {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_ansible_k8s.yaml
+
         - name: Apply ingress-nginx helm chart
           ansible.builtin.include_tasks: >-
             {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_nginx_controller.yaml
+
+        - name: Apply MetalLB helm chart
+          when: "hostvars['localhost']['one_oneKE_metallb']"
+          ansible.builtin.include_tasks: >-
+            {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_metallb.yaml
 
         - name: Apply Skooner helm chart
           ansible.builtin.include_tasks: >-
@@ -136,22 +159,33 @@
         - name: Apply nginx Ingress for the longhorn dashboard
           ansible.builtin.include_tasks: >-
             {{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/install_longhorn_dashboard.yaml
-          when: hostvars['localhost']['one_oneKE_longhorn'] == "YES"
+          when: hostvars['localhost']['one_oneKE_longhorn']
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local
   tasks:
-    - name: Upload kubeconfig to S3
+    - name: Fetch master metadata from OpenNebula
+      community.general.one_vm:
+        instance_ids: "{{ node_ids.master_0 | int }}"
+        api_url: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}"
+        api_username: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}"
+        api_password: "{{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}"
+      register: master_metadata
+    - name: Extract kubeconfig file from master metadata
+      ansible.builtin.set_fact:
+        kubeconfig: "{{ master_metadata.instances[0].attributes.ONEKE_KUBECONFIG }}"
+
+    - name: Upload kubeconfig to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
         mode: put
         access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
         secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
         bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/kconf-{{ entity_name }}.kubeconfig"
-        src: "{{ workspace }}/{{ component_type }}/code/{{ entity_name }}.kubeconfig"
+        object: "{{ tn_id }}/misc-{{ entity_name }}-kubeconfig.yaml"
+        content_base64: "{{ kubeconfig }}"
         encrypt: false
         validate_certs: false
 
@@ -161,17 +195,18 @@
           {
             'external_vnet': '{{ one_oneKE_external_vnet }}',
             'internal_vnet': '{{ one_oneKE_internal_vnet }}',
-            'version': '{{ one_oneKE_version }}',
+            'version': '{{ one_oneKE_version | string }}',
             'multus': '{{ one_oneKE_multus }}',
             'cni_plugin': '{{ one_oneKE_cni_plugin }}',
-            'cilium_range': '{{ one_oneKE_cilium_range }}',
-            'metallb_range': '{{ one_oneKE_metallb_range }}',
+            'cilium_range': '{{ one_oneKE_cilium_range | default('None') }}',
+            'metallb': '{{ one_oneKE_metallb }}',
+            'metallb_range': '{{ one_oneKE_metallb_range | default('None') }}',
             'longhorn': '{{ one_oneKE_longhorn }}',
-            'dns': '{{ one_oneKE_dns }}',
+            'traefik': '{{ one_oneKE_traefik }}',
             'nginx_passthough': '{{ one_oneKE_nginx_passthough }}'
           }
 
-    - name: Publish node IDs and IPs as a terraform outputs"
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
@@ -182,13 +217,23 @@
           - key: "{{ entity_name }}-metadata"
             value: "{{ oneke_metadata_dict }}"
 
-    - name: Publish execution results to TNLCM
+    - name: Set DNS record for the component
+      ansible.builtin.uri:
+        url: >-
+          {{
+            'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
+            '&domain=' ~ (item ~ domain_name) | trim ~
+            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ node_ips.vnf_0 | trim
+          }}
+        method: POST
+        body_format: json
+        status_code: [200]
+      loop:
+        - ""
+        - "skooner."
+        - "longhorn."
+      loop_control:
+        label: "{{ item }}.{{ domain_name }}"
+
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          id: "{{ id | b64encode }}"
-          node_ids: "{{ node_ids | b64encode }}"
-          node_ips: "{{ node_ips | b64encode }}"
-          metadata_dict: "{{ oneke_metadata_dict | b64encode }}"
-          kubeconfig: "{{ kubeconfig | b64encode }}"
-          skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"

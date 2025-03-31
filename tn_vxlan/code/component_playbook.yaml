@@ -30,10 +30,8 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
-        id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
+        tn_vxlan_id: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-id'] }}"
+        tn_vxlan_net: "{{ (terraform_outputs.stdout | from_json)['tn_vxlan-net'] }}"
 
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          id: "{{ id | b64encode }}"

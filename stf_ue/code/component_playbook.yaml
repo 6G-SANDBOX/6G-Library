@@ -7,20 +7,20 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Get current time and date with RFC 3339 section 5.6 format
-      ansible.builtin.command: "date -u +'%Y-%m-%dT%H:%M:%SZ'"
-      register: start_time
-      changed_when: false
+    - name: Set start of lease time and date with RFC 3339 section 5.6 format
+      ansible.builtin.set_fact:
+        start_time: "{{ any_stf_ue_start_time | default(lookup('pipe', 'date -u +\"%Y-%m-%dT%H:%M:%SZ\"'), true) }}"
 
-    - name: Get end of lease time and date with RFC 3339 section 5.6 format
-      ansible.builtin.shell: |
-        date -u -d "{{ start_time.stdout }} + {{ stf_ue_any_lease }} seconds" +'%Y-%m-%dT%H:%M:%SZ'
-      register: stop_time
-      changed_when: false
+    - name: Set end of lease time and date with RFC 3339 section 5.6 format
+      ansible.builtin.set_fact:
+        stop_time: "{{ lookup('pipe', 'date -u -d \"' ~ start_time ~ ' + ' ~ any_stf_ue_duration ~ ' seconds\" +\"%Y-%m-%dT%H:%M:%SZ\"') }}"
 
     - name: Create a transient group with the requested device
       ansible.builtin.uri:
-        url: "{{ site_available_components.stf_ue.origin }}/api/v1/groups/"
+        url: >-
+          {{
+            'http://' ~ site_available_components.stf_ue.origin ~ ':7100/api/v1/groups/'
+          }}
         method: POST
         body_format: json
         status_code: [200, 201]
@@ -30,8 +30,8 @@
         body: |-
           {
             "name": "{{ tn_id }}-{{ entity_name }}",
-            "startTime": "{{ start_time.stdout }}",
-            "stopTime": "{{ stop_time.stdout }}",
+            "startTime": "{{ start_time }}",
+            "stopTime": "{{ stop_time }}",
             "class": "once",
             "repetitions": 0
           }
@@ -45,7 +45,10 @@
     - name: Add device to the new group
       ansible.builtin.uri:
         url: >-
-          {{ site_available_components.stf_ue.origin }}/api/v1/groups/{{ create_group.json.group.id }}/devices/{{ site_available_components.stf_ue.device }}
+          {{
+            'http://' ~ site_available_components.stf_ue.origin ~ ':7100/api/v1/groups/' ~
+            create_group.json.group.id ~ '/devices/' ~ site_available_components.stf_ue.device
+          }}
         method: PUT
         status_code: [200]
         headers:
@@ -59,31 +62,98 @@
         - name: Delete new group
           ansible.builtin.uri:
             url: >-
-              {{ site_available_components.stf_ue.origin }}/api/v1/groups/{{ create_group.json.group.id }}
+              {{
+                'http://' ~ site_available_components.stf_ue.origin ~ ':7100/api/v1/groups/' ~ create_group.json.group.id
+              }}
             method: DELETE
             status_code: [200]
             headers:
               Authorization: "Bearer {{ site_available_components.stf_ue.administrator_token }}"
 
-        - name: Publish failed execution results to TNLCM
+        - name: Publish failed execution results to TNLCM and S3 object storage
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_fail_results.yaml"
-
 
     - name: Add user tnuser to the new group
       ansible.builtin.uri:
         url: >-
-          {{ site_available_components.stf_ue.origin }}/api/v1/groups/{{ create_group.json.group.id }}/users/{{ site_available_components.stf_ue.user_mail }}
+          {{
+            'http://' ~ site_available_components.stf_ue.origin ~ ':7100/api/v1/groups/' ~
+            create_group.json.group.id ~ '/users/' ~ site_available_components.stf_ue.user_mail
+          }}
         method: PUT
         status_code: [200]
         headers:
           Authorization: "Bearer {{ site_available_components.stf_ue.administrator_token }}"
       when: add_device.json.success
 
-
-- name: "STAGE 2: Publish execution results"
+- name: "STAGE 2: Prepare access to tn_bastion to allow access to the STF webUI"
   hosts: localhost
   gather_facts: false
   connection: local
   tasks:
-    - name: Publish execution results to TNLCM
+    - name: Prepare terraform working directory
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
+
+    - name: Set Terraform outputs as playbook facts
+      ansible.builtin.set_fact:
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
+        domain_name: >-
+          {{
+            (
+              (component_type  | regex_replace('_', '') | lower) ~ '-' ~
+              (custom_name     | regex_replace('_', '') | lower) ~ '.' ~
+              (tn_id           | regex_replace('_', '') | lower) ~ '.' ~
+              site_domain
+            ) | trim
+          }}
+
+    - name: Add the bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+
+- name: "STAGE 3: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Write firewall exception for the STF web UI
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        fw_exceptions:
+          - "{{ site_available_components.stf_ue.origin }}"
+
+
+- name: "STAGE 4: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Set DNS record for the component
+      ansible.builtin.uri:
+        url: >-
+          {{
+            'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
+            '&domain=' ~ domain_name ~
+            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ site_available_components.stf_ue.origin | trim
+          }}
+        method: POST
+        body_format: json
+        status_code: [200]
+
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

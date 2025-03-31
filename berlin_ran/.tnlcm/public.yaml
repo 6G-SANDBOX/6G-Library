@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -36,71 +24,44 @@ metadata:
     - `apn`: "internet"
     - `tac`: 122
     - `s_nssai_sst`: 1
-    - `s_nssai_sd`: ""
+    - `s_nssai_sd`: null
     - `amf_ip`: "10.10.11.200"
     - `upf_ip`: "10.10.11.201"
     NOTE: Currently this component is only available in the site "fokus".
-  hypervisors: [one]
+  hypervisors: ["one"]
   destroy_script: true
+  resource_manager: true
 
 ####################################
 ## Component input
 ####################################
 
 input:
-  berlin_ran_one_oneKE:
-    description: Name of the oneKE cluster to route RAN traffic.
-    type: "oneKE"
-    required_when: false
-  berlin_ran_one_reservation_time:
-    description: Time in minutes for the RAN equipment reservation
+  any_berlin_ran_duration:
+    description: Time in seconds for the RAN equipment reservation
     type: int
-    default_value: 60
-    required_when: true
-  berlin_ran_one_linked_open5g:
-    description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
-    type: open5gs or open5gs_vm or open5gcore_vm
+    default_value: 3600
     required_when: false
-
-
-####################################
-## Component output
-####################################
-output:
-  metadata_dict: # Dictionary with multiple parameters about the berlin_ran component
-    reservation_time: input.berlin_ran_one_reservation_time
-    oneKE: input.berlin_ran_one_oneKE
-    linked_open5g: input.berlin_ran_one_linked_open5g
-    ran_subnet: site_variables.subnet
-    #cp_ip: site_variables.cp_ip
-    #up_ip: site_variables.up_ip
-    core_network: site_variables.core_network
-    route_manager_ip1: site_variables.route_manager_ip1
-    #route_manager_ip2: site_variables.route_manager_ip2
-    mcc: site_variables.mcc
-    mnc: site_variables.mnc
-    tac: site_variables.tac
-    s_nssai_sst: site_variables.s_nssai_sst
-    s_nssai_sd: site_variables.s_nssai_sd
-    amf_ip: site_variables.amf_ip
-    upf_ip: site_variables.upf_ip
-
+  any_berlin_ran_linked_open5g:
+    description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
+    type: open5gs_k8s or open5gs_vm or open5gcore_vm
+    required_when: false
+  any_berlin_ran_start_time:
+    description: |
+      Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
+      If unspecified, value takes current time and date.
+    type: str
+    default_value: Current time and date
+    required_when: false
 
 ####################################
 ## Site-specific variables
 ####################################
 site_variables:
-  #cp_ip: Address of n2 RAN interface
-  # up_ip: Address on n3 RAN interface
   subnet: Subnet used for the RAN N2 and N3 interfaces.
-  core_network: Subnetwork (CIDR) of the private subnet of the input.berlin_ran_one_oneKE. Will be autocompleted in the future
-  route_manager_ip1: First IP address of the route manager that will enable routing between RAN and 5G Core.
-  #route_manager_ip2:
-  mcc:   # Unused, will complete other components dependencies in the future
-  mnc:   # Unused, will complete other components dependencies in the future
-  tac:   # Unused, will complete other components dependencies in the future
-  s_nssai_sst:   # Unused, will complete other components dependencies in the future
-  s_nssai_sd:    # Unused, will complete other components dependencies in the future
-  amf_ip:    # Unused, will complete other components dependencies in the future
-  upf_ip:    # Unused, will complete other components dependencies in the future
-  token: Token to authorize the route-manager API
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__open5gs: input.any_berlin_ran_linked_open5g

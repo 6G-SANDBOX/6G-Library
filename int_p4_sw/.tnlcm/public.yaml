@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 4 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -33,10 +21,23 @@ metadata:
     The component supports various configurations for source, transit, and sink switches, allowing for flexible 
     network setups. It is compatible with the 'one' hypervisor and can be customized to meet specific deployment 
     requirements.  
-  hypervisors: [one]
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_Collector_INT"]
+
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  collector_template_id: ID of the INT-P4 Collector VM template to use in your OpenNebula environment
+  collector_image_id: ID of the INT-P4 Collector VM image to use in your OpenNebula environment
+  switch_template_id: ID of the Ubuntu 22.04 LTS VM template to use in your OpenNebula environment
+  switch_image_id: ID of the Ubuntu 22.04 LTS VM image to use in your OpenNebula environment
+  harbor_token: Token to authenticate against the [Harbor registry](https://dockerhub.mobilesandbox.cloud:9443)
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_int_p4_sw_cpu:
@@ -44,19 +45,16 @@ input:
     type: int
     default_value: 2
     required_when: false
-
   one_int_p4_sw_memory:
     description: Memory in MB for all VMs (switches and collector)
     type: int
     default_value: 4096
     required_when: false
-
   one_int_p4_sw_disk:
     description: Disk size in MB for all VMs (switches and collector)
     type: int
     default_value: 25600
     required_when: false
-
   one_int_p4_sw_switches:
     description: |
       Configuration for INT-P4 switches. Dictionary with the following structure per switch:
@@ -154,7 +152,6 @@ input:
       }
     }
     required_when: true
-
   one_int_p4_sw_collector:
     description: |
       Configuration for INT-P4 collector. Dictionary with:
@@ -172,8 +169,9 @@ input:
     }
     required_when: true
 
+
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  metadata_dict: Metadata dictionary
+terraform_outputs: # TODO: Complete the output section
+  metadata: Metadata dictionary

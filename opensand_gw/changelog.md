@@ -1,11 +1,9 @@
 # Changelog
 
-## [v0.3.1]
-
+## v0.4.0
 ### Changed
-- Added to the Component inputs the one_opensand_gw_networks 
+- Added input variable `one_opensand_gw_networks`.
 
-## [v0.3.0]
-
+## v0.3.0
 ### Added
-- New component opensand_gw
+- Initial release of `opensand_gw` component to the 6G-Library.

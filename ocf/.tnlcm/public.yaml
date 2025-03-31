@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -28,12 +16,21 @@ metadata:
     - Jorge Moratinos <jorge.moratinossalcines@telefonica.com>
   short_description: Deploys an OpenCAPIF inside a Kubernetes cluster 
   long_description: |
-    Helm Chart deploying a 5G SA Core inside a Kubernetes cluster
-    More info in the official documentation: https://open5gs.org/open5gs/docs/
-  hypervisors: [one]
+    This component will deploy OpenCAPIF from ETSI.
+    Helm Chart deploying OpenCAPIF inside kubernetes cluster
+    More info in the official documentation: https://ocf.etsi.org/documentation/latest/
+  hypervisors: ["one"]
+
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  # None
+
+
+####################################
+## Input variables
 ####################################
 input:
   ocf_one_oneKE:
@@ -140,10 +137,10 @@ input:
 
 
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  metadata_dict:   # Dictionary with multiple parameters used in the core bootstrap
+terraform_outputs:
+  __entity_name__metadata:
     oneKE: input.ocf_one_oneKE
     repo: input.ocf_any_repo
     branch: input.ocf_any_branch
@@ -167,9 +164,3 @@ output:
     capif_register_hostname: private.ocf_any_capif_register_hostname
     user: input.ocf_any_user
     password: input.ocf_any_password
-
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  # None

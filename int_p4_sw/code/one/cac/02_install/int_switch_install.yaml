@@ -12,7 +12,7 @@
       - gnupg
       - lsb-release
     state: present
-    update_cache: yes
+    update_cache: true
 
 - name: Wait for 10 seconds
   pause:
@@ -20,17 +20,17 @@
 
 - name: Install docker engine
   block:
-    - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_install.yaml"
+    - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/docker_install.yaml"
   become: true
 
 - name: Configure Harbor Container Registry authentication
   block:
-    - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker_configuration.yaml"
+    - ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/docker_configuration.yaml"
   become: true
 
 - name: Copy docker-compose file
   copy:
-    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/docker-compose.yaml"
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/docker-compose.yaml"
     dest: "/home/jenkins/docker-compose.yaml"
     owner: jenkins
     group: jenkins
@@ -41,7 +41,7 @@
 - name: Copy static config folder recursively
   become: true
   ansible.builtin.copy:
-    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config-switch/static/"
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/config-switch/static/"
     dest: "/home/jenkins/config"
     owner: jenkins
     group: jenkins
@@ -64,7 +64,7 @@
 
 - name: Apply switch configuration templates
   template:
-    src: "{{ workspace }}/{{ component_type }}/code/one/cac/02_install/config-switch/templates/{{ item.src }}"
+    src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/config-switch/templates/{{ item.src }}"
     dest: "/home/jenkins/config/{{ item.dest }}"
     owner: jenkins
     group: jenkins

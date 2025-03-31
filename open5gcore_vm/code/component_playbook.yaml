@@ -34,11 +34,20 @@
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
+        tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         #ips_dict: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] | dict2items(key_name='id', value_name='ip') }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gcore_vm_external_vnet + '-id'] }}"
+        domain_name: >-
+          {{
+            ((component_type | regex_replace('_', '') | lower) ~ '-' ~
+            (custom_name | regex_replace('_', '') | lower) ~ '.' ~
+            (tn_id | lower) ~ '.' ~
+            (site_domain | lower)) | trim
+          }}
         n2_vnet_id: >-
           {{
             (terraform_outputs.stdout | from_json)[one_open5gcore_vm_internal_vnet[0] + '-id'] | string
@@ -85,9 +94,21 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
-    - name: Create SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/ssh_config.yaml"
+    - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
 
+    - name: Enable routing path in Bastion
+      # ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_bastion.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ bastion_ip }}"
+        token: "{{ tn_routemanager_token }}"
+        start_time: "{{ lookup('pipe', 'date -u +\"%Y-%m-%dT%H:%M:%SZ\"') }}"
+        stop_time: "2030-12-31T23:59:42Z"
+      loop:
+        - { to: "{{ one_open5gcore_vm_ue_subnet }}", via: "{{ ips[access_vnet_id] }}" }
+        #- { to: "{{ one_open5gcore_vm_amf_ip }}/32", via: "{{ ips[access_vnet_id] }}" }
+        #- { to: "{{ one_open5gcore_vm_upf_ip }}/32", via: "{{ ips[access_vnet_id] }}" }
 
 - name: "STAGE 3: Apply CAC to prepare the component (open5gcore_vm)"
   hosts: "open5gcore_vm"
@@ -98,14 +119,15 @@
         connect_timeout: 5
         timeout: 200
 
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
         user: jenkins
         state: present
-        key: "{{ item }}"
-      loop:
-        - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
-      when: item != ''
+        key: "{{ site_admin_ssh_public_key }}"
+      when: site_admin_ssh_public_key is defined and site_admin_ssh_public_key != ''
 
     #- name: Create new user for experimenter access
     #  become: true
@@ -123,23 +145,29 @@
     #  loop:
     #    - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
-    - name: Load enviromental variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
-
     - name: Configure open5gcore
       vars:
         vm_ips: "{{ hostvars['localhost']['ips'] | dict2items(key_name='id', value_name='ip') }}"
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ hostvars['localhost']['site_hypervisor'] }}/cac/02_install/setup-open5gcore.yaml"
 
-- name: "STAGE 3: Apply CaC to deploy the component - STEP 2 (bastion)"
-  hosts: "bastion"
+  handlers:
+    - name: Restart open5gcore
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/restart-open5gcore.yaml"
+
+- name: "STAGE 3b: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
   gather_facts: false
   tasks:
-    - name: Load enviromental variables from different sources inside the component
+    - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Enable routing path in Bastion
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_bastion.yaml"
+    - name: Write firewall exception for the ue-subnet
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        fw_exceptions:
+          # ip daddr {{ exception }} accept
+          - "{{ one_open5gcore_vm_ue_subnet }}"
+        #nat_exceptions: ## TODO xception for amf_ip/upf_ip ?
 
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
@@ -151,7 +179,7 @@
         open5gcore_metadata_dict: >-
           {
             'oneKE': '',
-            'proxy': '',
+            'proxy': '{{ ips[access_vnet_id] }}',
             'mcc': '{{ one_open5gcore_vm_mcc }}',
             'mnc': '{{ one_open5gcore_vm_mnc }}',
             'msin': '{{ one_open5gcore_vm_msin }}',
@@ -161,23 +189,34 @@
             'tac': '{{ one_open5gcore_vm_tac }}',
             's_nssai_sst': '{{ one_open5gcore_vm_s_nssai_sst }}',
             's_nssai_sd': '{{ one_open5gcore_vm_s_nssai_sd }}',
-            'amf_ip': '{{ hostvars['open5gcore_vm']['n2_ip'] }}',
-            'upf_ip': '{{ hostvars['open5gcore_vm']['n3_ip'] }}',
+            'amf_ip': '{{ one_open5gcore_vm_amf_ip }}',
+            'upf_ip': '{{ one_open5gcore_vm_upf_ip }}',
             'ue_count': '{{ one_open5gcore_vm_ue_count }}',
             'upf_xdp': '{{ one_open5gcore_vm_upf_xdp }}'
           }
 
-    - name: Publish open5gcore metadata as terraform outputs"
+    - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-metadata"
             value: "{{ open5gcore_metadata_dict }}"
 
+    - name: Set DNS record for the component
+      ansible.builtin.uri:
+        url: >-
+          {{
+            'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
+            '&domain=' ~ domain_name ~
+            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ ips[access_vnet_id] | trim
+          }}
+        method: POST
+        body_format: json
+        status_code: [200]
+      register: _result
+      until: _result.status == 200
+      retries: 3
+      delay: 10
+
     - name: Publish execution results to TNLCM
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          ips: "{{ ips | b64encode }}"
-          id: "{{ id | b64encode }}"
-          metadata_dict: "{{ open5gcore_metadata_dict | b64encode }}"

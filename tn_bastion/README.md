@@ -1,12 +1,13 @@
-# tn_bastion (LEGACY)
+# tn_bastion
 
-Legacy bootrap VM in any Trial Network. tn_init is the new recommended component for starting Trial Networks
-It manages external access to the TN and hosting various networking services such as:
-- DHCP server
-- NTP server
+Bootstrap VM of any Trial Network.
+It manages external access to the TN and hosts various networking services such as:
+- DHCP server (not yet)
+- NTP server (not yet)
 - Public network masquerading
-- Port forwarding
+- Port forwarding (not yet)
 - DNS server
 - VPN Server
+Deploying `tn_init` instead is the recommended approach, as it serves as a wrapper of both tn_vxlan and tn_bastion.
 
-NOTE: Current tn_bastion only hosts the VPN Server
+![tn_bastion](https://github.com/6G-SANDBOX/6G-Library/blob/assets/tn_bastion/tn_bastion.png)

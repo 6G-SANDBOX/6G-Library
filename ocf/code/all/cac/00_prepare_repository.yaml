@@ -1,10 +1,10 @@
 - name: Clean OCF Repository If it exists
   ansible.builtin.shell: "rm -rf capif || echo \"folder capif is not present\""
-  become: yes
+  become: true
 
 - name: Clone OCF Repository
   ansible.builtin.shell: "git clone -b {{hostvars['localhost']['ocf_any_branch']}} {{hostvars['localhost']['ocf_any_repo']}} capif"
-  become: yes
+  become: true
 
 - name: Configure Variables.sh
   ansible.builtin.shell: "sed -i {{ item }} capif/helm/scripts/variables.sh"
@@ -32,9 +32,9 @@
   - "\"s/export CAPIF_HOSTNAME=.*/export CAPIF_HOSTNAME={{ ocf_any_capif_hostname }}/g\""
   - "\"s/export REGISTER_HOSTNAME=.*/export REGISTER_HOSTNAME={{ ocf_any_capif_register_hostname }}/g\""
   - "\"s/export CAPIF_DOMAIN=.*/export CAPIF_DOMAIN={{ ocf_any_capif_domain }}/g\""
-  become: yes
+  become: true
 
 - name: Setup kubectl alias
   ansible.builtin.shell: "echo \"alias  k='kubectl'\" >> ~/.bashrc"
-  become: yes
+  become: true
 

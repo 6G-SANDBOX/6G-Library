@@ -1,14 +1,18 @@
 ## {{ tn_id }}-{{ entity_name }}
 
 The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
-It works as a secondary subnet inside your Trial Network
+It works as a secondary subnet inside your Trial Network components
 
 ## Important information:
+
 - **OpenNebula VNet ID**: `{{ id }}`
+- **VXLAN subnet**: `{{ net }}`
 - **VNET first IP**: `{{ one_vnet_first_ip }}`
 - **VNET address size**: `{{ one_vnet_address_size }}`
 - **VNET netmask**: `{{ one_vnet_netmask }}`
-- **VNET gateway**: `{{ one_vnet_gw }}`
-- **VNET DNS**: `{{ one_vnet_dns }}`
+- **VNET gateway**: `{{ one_vnet_gw | default('None') }}`
+- **VNET DNS**: `{{ one_vnet_dns | default('None') }}`
 - **VNET MTU**: `{{ one_vnet_mtu }}`
 - **VNET guest MTU**: `{{ one_vnet_guest_mtu }}`
+
+---

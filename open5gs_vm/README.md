@@ -1,16 +1,14 @@
-# Open5GS
+# Open5GS as a standalone Virtual Machine
 
-The **Open5GS** 6G-Library component deploys a 5G SA Core inside a Kubernetes cluster using a Helm Chart.
+The **open5gs_vm** 6G-Library component deploys a 5G SA Core inside an Ubuntu VM using scripts.
 Current versions:
 - Open5GS v2.7.2
 
-
 > [!NOTE]  
-> The VM need a CPU architecture with the vmx instructions set.
+> The VM needs a CPU architecture with the vmx instructions set.
 > In Opennebula, selecting a non-default architecture for the worker templates might be needed.
 
-
-This VM supports seperated networks for N2 and N3 but will fall back to use the n2 network for n3 if executed with only 2 networks.
+This VM supports separated networks for N2 and N3 but will fallback to use the n2 network for n3 if executed with only 2 networks.
 If the VM is deployed with only one network then this mgmt network will be used for n2 and n3.
 
 | network number | used for | notes |

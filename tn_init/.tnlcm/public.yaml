@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -28,39 +16,37 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  short_description: Bootstraps the Trial Network with an initial vnet (tn_vxlan) and a bastion VM (tn_bastion)
+  short_description: Bootstraps the Trial Network with an initial Virtual Network (tn_vxlan) and a bastion VM (tn_bastion)
   long_description: |
     First component of any Trial Network, composed of two sepparate entities: tn_vxlan and tn_bastion:
-    **tn_vxlan** is the main Virtual Network of the Trial Network and is accessible through the tn_bastion VPN
+    **tn_vxlan** is the main Virtual Network of the Trial Network and is accessible through the tn_bastion VPN.
     **tn_bastion** is a VM managing external access to the Trial Network and hosting various networking services such as:
-    - DHCP server
-    - NTP server
+    - DHCP server (not yet)
+    - NTP server (not yet)
     - Public network masquerading
-    - Port forwarding
+    - Port forwarding (not yet)
     - DNS server
     - VPN Server
+    Internally this component works as a wrapper of both components within the same ansible playook.
+  hypervisors: ["one"]
 
-    NOTE: Current tn_bastion only hosts the VPN Server
-  hypervisors: [one]
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  # None
+  # Currently, site variables from tn_bastion and tn_vxlan are used instead
+
+
+####################################
+## Input variables
 ####################################
 input:
-  one_vxlan_gw:
-    description: Default gateway of the tn_vxlan subnet
-    type: str
-    default_value: "192.168.199.1"
-    required_when: false
   one_vxlan_netmask:
     description: Network mask of the tn_vxlan subnet
-    type: str
-    default_value: "255.255.255.0"
-    required_when: false
-  one_vxlan_dns:
-    description: Space-separated list of DNS servers configured in VMs with tn_vxlan as their main Network Interface
-    type: str
-    default_value: "1.1.1.1 1.0.0.1"
+    type: int
+    default_value: 24
     required_when: false
   one_vxlan_first_ip:
     description: First IP address of the VNet range
@@ -72,28 +58,26 @@ input:
     type: int
     default_value: 254
     required_when: false
-  one_bastion_wireguard_allowedips:
-    description: List of (comma-separated) subnets overriding 'AllowedIPs' field in the wireguard VPN client config file. Leave this field as is default unless you know what you are doing.
+  one_bastion_vpn_clients:
+    description: For the Wireguard VPN, the number of client configurations to generate. Modify it to the number of experimenters expected to access the Trial Network simultaneously.
+    type: int
+    default_value: 1
+    required_when: false
+  one_bastion_vpn_allowedips:
+    description: For the Wireguard VPN, comma-separated list of subnets that client configurations will route to the bastion.
     type: str
-    default_value: "192.168.199.0/24"
+    default_value: "The subnet of tn_vxlan"
     required_when: false
 
 
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-output:
-  tn_vxlan_id: VNet ID in OpenNebula
-  tn_bastion_ips: "dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  tn_bastion_id: VM ID in OpenNebula
-  vpn_client_tunnel: VPN Client config to connect to this Trial Network
-  tn_ssh_public_key: SSH public key present in the TN VMs for the user tnuser
-  tn_ssh_private_key: SSH public key to access the TN VMs with the user tnuser
-
-
-####################################
-## Site-specific variables
-####################################
-site_variables:
-  # None
-  # Currently, site variables from tn_bastion and tn_vxlan are used instead
+terraform_outputs:
+  __tn_vxlan__id: "VNet ID in Opennebula. Generated from Terraform Manifest"
+  __tn_vxlan__net: "Subnet of the VNet in CIDR format. Generated from Terraform Manifest"
+  __tn_bastion__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __tn_bastion__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
+  tn_dns_token: Token to authenticate to the tn_bastion DNS Server
+  tn_routemanager_token: Bearer token to authenticate to the tn_bastion route-manager-api.
+  tn_ssh_public_key: SSH public key to include in TN Virtual Machines for login with user tnuser

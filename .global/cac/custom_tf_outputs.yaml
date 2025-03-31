@@ -18,7 +18,7 @@
     state: "present"
     force_init: true
 
-- name: Upload terraform manifest to S3
+- name: Upload terraform manifest to S3 object storage
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"
     mode: put

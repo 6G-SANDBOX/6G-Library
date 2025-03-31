@@ -2,20 +2,8 @@
 ##
 ## Component public variables
 ##
-## Variables accesible to the experimenter.
-##
-## They are contained inside 3 global variables
-## with all required info:
-##
-##   1. metadata: General information like mantainers,
-##      component dependencies and allowed platforms
-##
-##   2. input: Customizable variables for each
-##      deployment to be filled by the experimenter
-##      or the TNLCM
-##
-##   3. output: Values sent to the TNLCM callback to
-##      keep track of the TN deployments
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
 ##
 ######################################################
 
@@ -37,11 +25,20 @@ metadata:
     - **medium**: 8 GiB of memory, 4 vCPU and 25GiB of storage
     - **small**: 4 GiB of memory, 2 vCPU and 15GiB of storage
     - **very_small**: 2 GiB of memory, 1 vCPU and 10GiB of storage
-  hypervisors: [one]
-  appliance: https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05"]
+
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the Ubuntu 22.04 LTS VM template to use in your OpenNebula environment
+  image_id: ID of the Ubuntu 22.04 LTS VM image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_vm_kvm_networks:
@@ -64,19 +61,12 @@ input:
       - "medium"
       - "small"
       - "very_small"
-    required_when: true
-
-####################################
-## Component output
-####################################
-output:
-  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
-  id: VM ID in OpenNebula
+    required_when: false
 
 
 ####################################
-## Site-specific variables
+## Generated terraform outputs
 ####################################
-site_variables:
-  template_id: ID of the Ubuntu 22.04 LTS VM template to use in your OpenNebula environment
-  image_id: ID of the Ubuntu 22.04 LTS image to use in your OpenNebula environment
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"

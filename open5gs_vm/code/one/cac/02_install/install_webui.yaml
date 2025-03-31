@@ -1,0 +1,58 @@
+---
+- name: Import Node.js public key
+  ansible.builtin.get_url:
+    url: https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key
+    dest: /etc/apt/keyrings/nodesource-repo.gpg.asc
+
+- name: Create Node.js repository list file
+  vars:
+    node_mayor: 20
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/nodesource-repo.gpg.asc] https://deb.nodesource.com/node_{{ node_mayor }}.x nodistro main"
+    state: present
+
+- name: Install Node.js package
+  ansible.builtin.apt:
+    name: nodejs
+    update_cache: true
+    state: present
+
+- name: Install WebUI from source
+  shell: 'curl -fsSL https://open5gs.org/open5gs/assets/webui/install | sudo -E bash -'
+
+# file module will create a directory if missing
+- name: Create open5gs-webui.service.d directory
+  file:
+    path: /etc/systemd/system/open5gs-webui.service.d/
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+# template module will create a file
+- name: Copy open5gs-webui.service drop-in
+  copy:
+    src: /lib/systemd/system/open5gs-webui.service
+    dest: /etc/systemd/system/open5gs-webui.service.d/override.conf
+    owner: root
+    group: root
+    remote_src: yes
+    mode: 0644
+
+- name: Ensure open5gs-webui service is listening on all interfaces
+  lineinfile:
+    path: /etc/systemd/system/open5gs-webui.service.d/override.conf
+    insertafter: 'Environment=NODE_ENV=production'
+    line: 'Environment=HOSTNAME="0.0.0.0"'
+
+- name: Fixing the override.conf file and reloading the services config files
+  lineinfile:
+    path: /etc/systemd/system/open5gs-webui.service.d/override.conf
+    insertafter: 'Environment=HOSTNAME="0.0.0.0"'
+    line: 'ExecStart='
+
+- name: Restart open5gs-webui service
+  ansible.builtin.systemd_service:
+    state: restarted
+    daemon_reload: true 
+    name: open5gs-webui

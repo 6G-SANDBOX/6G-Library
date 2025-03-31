@@ -1,0 +1,72 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  short_description: Enables the capability of using ISWIRELESS Radio in a Trial Network.
+  long_description: |
+    This component enables the integration of ISWIRELESS physical equipment located at UMA with a 5G core deployed in the Trial Network.
+    It is done by enabling the necessary routing path through the use of the element called ‘Route Manager’ (already deployed in the site). 
+    The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
+    - `mcc`: "001" 
+    - `mnc`: "01"
+    - `apn`: "internet"
+    - `tac`: 1
+    - `s_nssai_sst`: 1
+    - `s_nssai_sd`: "000009"
+    - `amf_ip`: "10.10.12.200"
+    - `upf_ip`: "10.10.12.201"
+    NOTE: Currently this component is only available in the site "uma".
+  hypervisors: ["one"]
+  destroy_script: true
+  resource_manager: true
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  cp_ip: ISWIRELESS Control Plane IP address
+  up_ip: ISWIRELESS User Plane IP address
+
+
+####################################
+## Input variables
+####################################
+input:
+  one_iswireless_radio_open5gs:
+    description: Name of the oneKE cluster to route ISWIRELESS traffic.
+    type: "open5gs_vm or open5gs_k8s"
+    required_when: true
+  any_iswireless_radio_start_time:
+    description: |
+      Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
+      If unspecified, value takes current time and date.
+    type: str
+    default_value: Current time and date
+    required_when: false
+  any_iswireless_radio_duration:
+    description: Time in seconds for the ISWIRELESS reservation
+    type: int
+    default_value: 3600
+    required_when: false
+
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__open5gs: input.one_iswireless_radio_open5gs

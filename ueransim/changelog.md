@@ -1,23 +1,32 @@
 # Changelog
 
-## [v0.3.1]
-
+## unreleased
+### Added
+- New variable `one_ueransim_ue_msin`, replacing `one_ueransim_ue_supi`.
 ### Changed
-- Input variable `one_ueransim_gnb_linked_open5gs` now supports both `upf_p4_sw` and `open5gs_vm` and `open5gcore_vm` as component type.
-- Fix `gnbSearchList` of the ueransim-UE to use the correct ip address of the componnet when in BOTH mode (Temporary fix until the appliance is fixed)
+- Variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` are now boolean and false by default.
+- Variables `one_ueransim_gnb_linked_open5gs` and `one_ueransim_gnb_linked_gnb` are now optional.
+- Variable `one_ueransim_gnb_proxy` renamed to `one_ueransim_gnb_amf_proxy`.
+- Variable `one_ueransim_ue_op` renamed to `one_ueransim_ue_opc`.
+### Deprecated
+- Variable `one_ueransim_ue_supi` removed from input variables, but still used. Will be removed with the next release of the UERANSIM appliance.
+- Variables `one_ueransim_ue_configured_nssai_sst`, `one_ueransim_ue_configured_nssai_sd`, `one_ueransim_ue_default_nssai_sst` and `one_ueransim_ue_default_nssai_sd` temorarily commented out, until they are useful.
 
-## [v0.3.0]
+## v0.4.0
+### Changed
+- Input variable `one_ueransim_gnb_linked_open5gs` now supports `upf_p4_sw` and `open5gs_vm` and `open5gcore_vm` as component types.
+### Fixed
+- Variable `gnbSearchList` of the ueransim-UE now uses the correct ip address of the componnet when in BOTH mode (Temporary change until the appliance fixes it)
 
+## v0.3.0
 ### Fixed
 - Fixed image visualization in README.md and ok_result.md
 
-## [v0.2.0]
-
+## v0.2.0
 ### Changed
 - Component follows the new architecture.
 - Updated README.md
 
-## [v0.1.0]
-
+## v0.1.0
 ### Added
 Initial release of the 6G Library. Changes will be kept on track for now on.

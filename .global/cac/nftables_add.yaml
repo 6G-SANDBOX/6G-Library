@@ -1,0 +1,47 @@
+---
+####################################################################################
+#
+# nftables_add.yaml
+#
+# This task file writes firewall exceptions in the nftables configuration of the tn_bastion
+# Task should be called from the jenkins itself
+#
+# vars:
+#   fw_exceptions: [List of private IPs/subnets to be allowed in the firewall]
+#   nat_exceptions: [List of private IPs/subnets to be allowed scaped from NAT]
+#
+####################################################################################
+
+- name: Write nftables firewall exception into a new file
+  become: true
+  ansible.builtin.template:
+    src: "{{ workspace }}/.global/templates/fw_exception.nft.j2"
+    dest: "/etc/nftables/fw_exceptions/{{ entity_name }}.nft"
+    owner: root
+    group: root
+    mode: '0644'
+  when: fw_exceptions is defined
+
+- name: Write nftables NAT exception into a new file
+  become: true
+  ansible.builtin.template:
+    src: "{{ workspace }}/.global/templates/nat_exception.nft.j2"
+    dest: "/etc/nftables/nat_exceptions/{{ entity_name }}.nft"
+    owner: root
+    group: root
+    mode: '0644'
+  when: nat_exceptions is defined
+
+- name: Check nftables syntax
+  become: true
+  ansible.builtin.command: nft -c -f /etc/nftables.conf
+  register: nft_check
+  failed_when: nft_check.rc != 0
+  changed_when: false
+
+- name: Reload nftables rules
+  become: true
+  ansible.builtin.systemd_service:
+    name: nftables.service
+    state: restarted
+    enabled: true

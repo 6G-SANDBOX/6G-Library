@@ -17,7 +17,7 @@
     dest: "{{ workspace }}/.terraform/backend.tf"
     mode: "640"
 
-- name: "Get terraform manifests from previous deployed components"
+- name: "Get terraform manifests from previously deployed components"
   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/s3_download.yaml"
 
 - name: Run 'terraform init'

@@ -1,0 +1,50 @@
+---
+- name: Create extra nftables directories
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /etc/nftables/custom_rules
+    - /etc/nftables/fw_exceptions
+    - /etc/nftables/nat_exceptions
+
+- name: Write nftables.conf
+  become: true
+  ansible.builtin.copy:
+    src: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/files/nftables.conf"
+    dest: /etc/nftables.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Get tn_bastion current routes
+  ansible.builtin.command: ip route
+  register: bastion_routes
+  changed_when: false
+- name: Get subnets from routes
+  set_fact:
+    bastion_subnets: "{{ bastion_routes.stdout_lines | map('regex_search', '\\d+\\.\\d+\\.\\d+\\.\\d+/\\d+') | select('string') | list }}"
+
+- name: Write initial firewall exceptions
+  become: true
+  ansible.builtin.template:
+    src: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/templates/fw_exceptions.nft.j2"
+    dest: "/etc/nftables/fw_exceptions/tn_init.nft"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Check nftables syntax
+  become: true
+  ansible.builtin.command: nft -c -f /etc/nftables.conf
+  register: nft_check
+  failed_when: nft_check.rc != 0
+
+- name: Enable nftables rules
+  become: true
+  ansible.builtin.systemd_service:
+    name: nftables.service
+    state: started
+    enabled: true
