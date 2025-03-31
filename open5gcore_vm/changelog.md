@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v0.5.0
 ### Changed
 - Renamed variable `one_open5gcore_vm_amf_ip` to `one_open5gcore_vm_amf_n2_ip`.
 - Renamed variable `one_open5gcore_vm_upf_ip` to `one_open5gcore_vm_upf_n3_ip`.

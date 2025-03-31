@@ -1,8 +1,11 @@
 # Changelog
 
 ## [unreleased]
+
+
+## [v0.5.0]
 ### Added
-- Component `oneKE` now supports OneKE 1.31 and OneKE 1.31 Airgapped. New custom templates for 6G-Sandbox available in the official marketplace.
+- Component `oneKE` now supports OneKE 1.31 and OneKE 1.31 Airgapped, and they are the new default version. New custom templates for 6G-Sandbox available in the official marketplace.
 - Common task file `nftables_add.yaml` now also supports adding NAT exceptions into the `tn_bastion`.
 - All '5G/6G core' components (`open5gcore_vm`, `open5gs_k8s`, `open5gs_vm` and `upf_p4_sw`) are now responsible of eanbling the necessary routing to their interfaces in the `tn_bastion`'s route-manager-api.    <!-- TODO: Actualizar todas y su changelog --> 
 ### Changed
@@ -13,6 +16,7 @@
 - Software from `elcm` upgraded from version `v3.6.3` to `3.7.1`.
 - Software from `ks8500_runner` upgraded from version `v1.11.4` to `1.13.0`.
 - Variable `one_vnet_gw` in component `vnet` has now no default variable.
+- Component `int_p4_sw` requires new variables in sites repository. For more details check the component's changelog.
 ### Deprecated
 - All 'gNB' components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`) no longer require a 'proxy' variable.   <!-- TODO: Actualizar todas y su changelog --> 
 ### Fixed
@@ -143,7 +147,8 @@ Initial set of components is:
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.4.0...unreleased
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.5.0...unreleased
+[v0.5.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.3.0
 [v0.2.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...v0.2.1

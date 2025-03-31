@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v0.5.0
 ### Added
 - New parameter `one_open5gs_vm_use_nightly` to install the nightly version of open5gs (Needed for MOCN).
 ### Changed
