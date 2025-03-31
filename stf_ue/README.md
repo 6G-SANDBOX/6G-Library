@@ -85,3 +85,5 @@ The access time for the device is set to 1h by default, but can be modified
   - Set the default groups quotas applicable to all users
   - Set the groups quotas applicable to a specific user
 * Simple REST [API](doc/API.md)
+
+![stf_ue](https://github.com/6G-SANDBOX/6G-Library/blob/assets/stf_ue/stf_ue.png)

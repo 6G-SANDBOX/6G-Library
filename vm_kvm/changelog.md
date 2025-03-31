@@ -1,8 +1,12 @@
 # Changelog
 
+## unreleased
+### Fixed
+- Change param `required_when` to false in field `one_vm_kvm_size` and add default value to private yaml.
+
 ## v0.4.0
 ### Added
-- Component now registers a DNS record in tn_bastion's DNS server
+- Component now registers a DNS record in `tn_bastion`'s DNS server
 
 
 ## v0.2.0

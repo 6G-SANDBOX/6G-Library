@@ -64,35 +64,6 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: Define OpenCAPIF metadata dictionary
-      ansible.builtin.set_fact:
-        metadata_dict: >-
-          {
-            'oneKE': '{{ ocf_one_oneKE }}',
-            'repo': '{{ ocf_any_repo }}',
-            'branch': '{{ ocf_any_branch }}',
-            'vault_namespace': '{{ ocf_any_vault_namespace }}',
-            'vault_storage_class': '{{ ocf_any_vault_storage_class }}',
-            'vault_storage_size': '{{ ocf_any_vault_storage_size }}',
-            'vault_hostname': '{{ ocf_any_vault_hostname }}',
-            'monitoring_namespace': '{{ ocf_any_monitoring_namespace }}',
-            'monitoring_service_name': '{{ ocf_any_monitoring_service_name }}',
-            'monitoring_prometheus_hostname': '{{ ocf_any_monitoring_prometheus_hostname }}',
-            'monitoring_snooker_enabled': '{{ ocf_any_monitoring_snooker_enabled }}',
-            'capif_namespace': '{{ ocf_any_capif_namespace }}',
-            'capif_resources_reserve': '{{ ocf_any_capif_resources_reserve }}',
-            'capif_storage_class': '{{ ocf_any_capif_storage_class }}',
-            'capif_storage_access_mode': '{{ ocf_any_capif_storage_access_mode }}',
-            'capif_grafana_storage_size': '{{ ocf_any_capif_grafana_storage_size }}',
-            'capif_loki_storage_size': '{{ ocf_any_capif_loki_storage_size }}',
-            'capif_mongo_storage_size': '{{ ocf_any_capif_mongo_storage_size }}',
-            'capif_mongo_register_storage_size': '{{ ocf_any_capif_mongo_register_storage_size }}',
-            'capif_hostname': '{{ ocf_any_capif_hostname }}',
-            'capif_register_hostname': '{{ ocf_any_capif_register_hostname }}',
-            'user': '{{ ocf_any_user }}',
-            'password': '{{ ocf_any_password }}',
-          }
-
     - name: Upload Vault keys to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
@@ -129,15 +100,41 @@
         encrypt: false
         validate_certs: false
 
+    - name: Define OpenCAPIF metadata dictionary
+      ansible.builtin.set_fact:
+        ocf_metadata_dict: >-
+          {
+            'oneKE': '{{ ocf_one_oneKE }}',
+            'repo': '{{ ocf_any_repo }}',
+            'branch': '{{ ocf_any_branch }}',
+            'vault_namespace': '{{ ocf_any_vault_namespace }}',
+            'vault_storage_class': '{{ ocf_any_vault_storage_class }}',
+            'vault_storage_size': '{{ ocf_any_vault_storage_size }}',
+            'vault_hostname': '{{ ocf_any_vault_hostname }}',
+            'monitoring_namespace': '{{ ocf_any_monitoring_namespace }}',
+            'monitoring_service_name': '{{ ocf_any_monitoring_service_name }}',
+            'monitoring_prometheus_hostname': '{{ ocf_any_monitoring_prometheus_hostname }}',
+            'monitoring_snooker_enabled': '{{ ocf_any_monitoring_snooker_enabled }}',
+            'capif_namespace': '{{ ocf_any_capif_namespace }}',
+            'capif_resources_reserve': '{{ ocf_any_capif_resources_reserve }}',
+            'capif_storage_class': '{{ ocf_any_capif_storage_class }}',
+            'capif_storage_access_mode': '{{ ocf_any_capif_storage_access_mode }}',
+            'capif_grafana_storage_size': '{{ ocf_any_capif_grafana_storage_size }}',
+            'capif_loki_storage_size': '{{ ocf_any_capif_loki_storage_size }}',
+            'capif_mongo_storage_size': '{{ ocf_any_capif_mongo_storage_size }}',
+            'capif_mongo_register_storage_size': '{{ ocf_any_capif_mongo_register_storage_size }}',
+            'capif_hostname': '{{ ocf_any_capif_hostname }}',
+            'capif_register_hostname': '{{ ocf_any_capif_register_hostname }}',
+            'user': '{{ ocf_any_user }}',
+            'password': '{{ ocf_any_password }}',
+          }
+
     - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-metadata"
-            value: "{{ metadata_dict }}"
+            value: "{{ ocf_metadata_dict }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          metadata_dict: "{{ metadata_dict | b64encode }}"

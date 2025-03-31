@@ -8,7 +8,7 @@ resource "opennebula_virtual_network" "{{ entity_name }}" {
   mtu             = {{ one_vnet_mtu }}
   guest_mtu       = {{ one_vnet_guest_mtu }}
 
-  gateway         = "{{ one_vnet_gw }}"
+  gateway         = "{{ one_vnet_gw | default('') }}"
   network_mask    = "{{ one_vnet_netmask }}"
   dns             = "{{ one_vnet_dns | default('') }}"
 }

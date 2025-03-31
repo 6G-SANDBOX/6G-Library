@@ -20,38 +20,52 @@ Component configuration logs can be foud at `/var/log/post-ueransim.log`
 - **OpenNebula VM ID**: `{{ id }}`
 - **VM memory**: `{{ one_ueransim_memory}} MiB`
 - **VM VCPUs**: `{{ one_ueransim_cpu }}`
-- **VM available storage**: `5 GiB`
+- **VM available storage**: `10 GiB`
 - **VM network interfaces**:
   ```json
   {{ ips }}
   ```
 
-{% if one_ueransim_run_gnb is defined and one_ueransim_run_gnb == 'YES' %}
 ### gNB Runtime
-Values used to launch the ueransim_gnb.service:
-- **proxy**: `{{ one_ueransim_gnb_proxy }}`
-- **amf_address**: `{{ one_ueransim_gnb_amf_address}}`
-- **mcc**: `{{ one_ueransim_gnb_mcc}}`
-- **mnc**: `{{ one_ueransim_gnb_mnc}}`
-- **tac**: `{{ one_ueransim_gnb_mcc}}`
-- **slices_sst**: `{{ one_ueransim_gnb_slices_sst }}`
-- **slices_sd**: `{{ one_ueransim_gnb_slices_sd }}`
-
+{% if one_ueransim_run_gnb %}
+Service `ueransim_gnb.service` is currently **running** and **enabled** with the following configuration:
+- **Linked Open5GS**: `{{ one_ueransim_gnb_linked_open5gs | default('None') }}`
+- **AMF IPv4 address**: `{{ one_ueransim_gnb_amf_ip }}`
+- **AMF proxy**: `{{ one_ueransim_gnb_amf_proxy | default('None') }}`
+- **TAC**:  `{{ one_ueransim_gnb_mcc }}`
+- **MCC**:  `{{ one_ueransim_gnb_mcc }}`
+- **MNC**:  `{{ one_ueransim_gnb_mnc }}`
+- **Slice SST**: `{{ one_ueransim_gnb_slices_sst }}`
+- **Slice SD**:  `{{ one_ueransim_gnb_slices_sd }}`
+{% else %}
+Service `ueransim_gnb.service` is currently **not running** and **disabled**.
 {% endif %}
-{% if one_ueransim_run_ue is defined and one_ueransim_run_ue == 'YES' %}
+
+
 ### UE Runtime
-Values used to launch the ueransim_ue.service:
-- **supi**: `{{ one_ueransim_ue_supi }}`
-- **mcc**: `{{ one_ueransim_ue_mcc}}`
-- **mnc**: `{{ one_ueransim_ue_mnc}}`
-- **key**: `{{ one_ueransim_ue_key}}`
-- **op**: `{{ one_ueransim_ue_op }}`
-- **gnbSearchList**: `{{ one_ueransim_ue_gnbSearchList }}`
-- **session_apn**: `{{ one_ueransim_ue_session_apn }}`
-- **session_sst**: `{{ one_ueransim_ue_session_sst }}`
-- **session_sd**: `{{ one_ueransim_ue_session_sd }}`
-- **configured_nssai_sst**: `{{ one_ueransim_ue_configured_nssai_sst }}`
+{% if one_ueransim_run_ue %}
+Service `ueransim_ue.service` is currently **running** and **enabled** with the following configuration:
+- **Linked gNB**:    `{{ one_ueransim_ue_linked_gnb | default('None') }}`
+- **gNB Search List**: `{{ one_ueransim_ue_gnbsearchlist }}`
+- **MCC**:  `{{ one_ueransim_ue_mcc }}`
+- **MNC**:  `{{ one_ueransim_ue_mnc }}`
+- **MSIN**: `{{ one_ueransim_ue_msin }}`
+- **Resulting SUPI**:  `imsi-{{ one_ueransim_ue_mcc }}{{ one_ueransim_ue_mnc }}{{ one_ueransim_ue_msin }}`
+- **Permanent Subscription Key**: `{{ one_ueransim_ue_key }}`
+- **Operator Code**: `{{ one_ueransim_ue_opc }}`
+- **Session APN**: `{{ one_ueransim_ue_session_apn }}`
+- **Session SST**: `{{ one_ueransim_ue_session_sst }}`
+- **Session SD**:  `{{ one_ueransim_ue_session_sd }}`
+{# - **configured_nssai_sst**: `{{ one_ueransim_ue_configured_nssai_sst }}`
 - **configured_nssai_sd**: `{{ one_ueransim_ue_configured_nssai_sd }}`
 - **default_nssai_sst**: `{{ one_ueransim_ue_default_nssai_sst }}`
-- **default_nssai_sd**: `{{ one_ueransim_ue_default_nssai_sd }}`
+- **default_nssai_sd**: `{{ one_ueransim_ue_default_nssai_sd }}` 
+
+TODO: Also show the resulting IMSI from mcc,mnc and msin
+#}
+{% else %}
+Service `ueransim_ue.service` is currently **not running** and **disabled**.
 {% endif %}
+
+
+---

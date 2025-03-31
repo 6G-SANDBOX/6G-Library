@@ -1,5 +1,10 @@
 # Changelog
 
+## unreleased
+### Fixed
+- The open5gs proxy is now properly set
+
+
 ## v0.4.0
 Complete redisign of the component following the changes in tn_bastion and route-manager-api.
 ### Added

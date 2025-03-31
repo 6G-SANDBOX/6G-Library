@@ -12,7 +12,7 @@
 
 - name: Update apt cache
   apt:
-    update_cache: yes
+    update_cache: true
 
 - name: Install Docker Engine
   apt:
@@ -28,7 +28,7 @@
   user:
     name: jenkins
     groups: docker
-    append: yes
+    append: true
 
 - name: Set correct permissions for Docker socket
   file:

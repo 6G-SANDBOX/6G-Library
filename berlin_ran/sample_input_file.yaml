@@ -1,4 +1,7 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
-# berlin_ran_one_oneKE: ""
+# berlin_ran_one_oneKE: null
 # berlin_ran_one_reservation_time: 180
+any_berlin_ran_start_time: "2025-01-13T09:12:00+00:00"
+any_berlin_ran_duration: 7200
+#any_berlin_ran_linked_open5g: "test_core1"

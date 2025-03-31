@@ -1,5 +1,5 @@
 ---
-- name: "STAGE 1: Prepare to access a previous target component"
+- name: "STAGE 1: Set new routes in route-manager-api and tn_bastion"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -20,84 +20,91 @@
       changed_when: false
 
     - name: Set Terraform outputs as playbook facts
-      vars:
-        terraform_output: "{{terraform_outputs.stdout | from_json}}"
       ansible.builtin.set_fact:
-        bastion_ip: "{{ terraform_output['tn_bastion-ips'][site_networks_id.default | string] }}"
-        node_ips: "{{ terraform_output.get(berlin_ran_one_oneKE|default('NONE') + '-node_ips',{}) }}"
-        core_ips: "{{ terraform_output[berlin_ran_one_linked_open5g|default('NONE') + '-ips'] | default('{}') }}"
-        tn_vxlan_id: "{{ terraform_output['tn_vxlan-id'] | string }}"
+        bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
+        open5gs_metadata: "{{ (terraform_outputs.stdout | from_json)[any_berlin_ran_linked_open5g + '-metadata'] }}"
 
-    - name: Add Route Manager to Ansible Inventory
-      ansible.builtin.add_host:
-        hostname: "routemanager"
-        ansible_host: "{{ site_available_components.berlin_ran.route_manager_ip1 }}"
-        ansible_user: "root"
-        ansible_ssh_private_key_file: "/var/lib/jenkins/.ssh/id_ed25519"
+    - name: Set start of lease time and date with RFC 3339 section 5.6 format
+      ansible.builtin.set_fact:
+        start_time: "{{ any_berlin_ran_start_time | default(lookup('pipe', 'date -u +\"%Y-%m-%dT%H:%M:%SZ\"'), true) }}"
 
+    - name: Set end of lease time and date with RFC 3339 section 5.6 format
+      ansible.builtin.set_fact:
+        stop_time: "{{ lookup('pipe', 'date -u -d \"' ~ start_time ~ ' + ' ~ any_berlin_ran_duration ~ ' seconds\" +\"%Y-%m-%dT%H:%M:%SZ\"') }}"
+
+    - name: Submit routes in route-manager-api from the Berlin RAN to the 5G Core
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ site_routemanager.api_endpoint }}"
+        token: "{{ site_routemanager.token }}"
+      loop:
+        - { to: "{{ open5gs_metadata['amf_ip'] }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ bastion_ip }}" }
+
+    - name: Submit routes in tn_bastion from the Trial Network to the Berlin RAN
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ bastion_ip }}"
+        token: "{{ tn_routemanager_token }}"
+      loop:
+        - { to: "{{ site_available_components.berlin_ran.subnet }}", via: "{{ site_routemanager.api_endpoint }}" }
+
+    - name: If required, submit routes in tn_bastion for proxy access to the 5G Core
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ bastion_ip }}"
+        token: "{{ tn_routemanager_token }}"
+      loop:
+        - { to: "{{ open5gs_metadata['amf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
+        - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
+      when: open5gs_metadata['proxy'] is defined and open5gs_metadata['proxy'] != ''
+
+
+- name: "STAGE 2: Prepare access to tn_bastion to allow access to the STF webUI"
+  hosts: localhost
+  gather_facts: false
+  tasks:
     - name: Add the bastion to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "bastion"
         ansible_host: "{{ bastion_ip }}"
         ansible_user: "jenkins"
 
-    - name: Enable routing path in Route Manager (via REST api)
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_manager.yaml"
 
-
-#- name: "STAGE 2: Apply IaC to deploy the component - STEP 1"
-#  hosts: "routemanager"
-#  gather_facts: false
-#  tasks:
-#    - name: Load enviromental variables from different sources inside the component
-#      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
-#
-#    - name: Enable routing path in Route Manager
-#      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_manager.yaml"
-
-- name: "STAGE 2: Apply IaC to deploy the component - STEP 2"
-  hosts: "bastion"
+- name: "STAGE 3: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
   gather_facts: false
   tasks:
-    - name: Load enviromental variables from different sources inside the component
+    - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Enable routing path in Bastion
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/enable_routing_bastion.yaml"
+    - name: Write firewall exception for the route-manager-api of your site
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        fw_exceptions:
+          # ip daddr {{ exception }} accept
+          - "{{ site_routemanager.api_endpoint }}"
+          - "{{ site_available_components.berlin_ran.subnet }}"
+          - "{{ hostvars['localhost']['open5gs_metadata']['amf_ip'] }}"
+          - "{{ hostvars['localhost']['open5gs_metadata']['upf_ip'] }}"
+        nat_exceptions:
+          # ip saddr {{ item }} return
+          - "{{ hostvars['localhost']['open5gs_metadata']['amf_ip'] }}"
+          - "{{ hostvars['localhost']['open5gs_metadata']['upf_ip'] }}"
+          - "{{ site_available_components.berlin_ran.subnet }}"
 
-
-- name: "STAGE 3: Publish execution results"
+- name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local
   tasks:
-    - name: Define metadata dictionary
-      ansible.builtin.set_fact:
-        berlin_ran_metadata_dict: >-
-          {
-            'reservation_time': '{{ berlin_ran_one_reservation_time }}',
-            'oneKE': '{{ berlin_ran_one_oneKE | default('') }}',
-            'linked_open5g': '{{ berlin_ran_one_linked_open5g | default('') }}',
-            'subnet': '{{ site_available_components.berlin_ran.subnet }}',
-            'core_network': '{{ site_available_components.berlin_ran.core_network }}',
-            'route_manager_ip1': '{{ site_available_components.berlin_ran.route_manager_ip1 }}',
-            'mcc': '{{ site_available_components.berlin_ran.mcc }}',
-            'mnc': '{{ site_available_components.berlin_ran.mnc }}',
-            'tac': '{{ site_available_components.berlin_ran.tac }}',
-            's_nssai_sst': '{{ site_available_components.berlin_ran.s_nssai_sst }}',
-            's_nssai_sd': '{{ site_available_components.berlin_ran.s_nssai_sd }}',
-            'amf_ip': '{{ site_available_components.berlin_ran.amf_ip }}',
-            'upf_ip': '{{ site_available_components.berlin_ran.upf_ip }}'
-          }
     - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-metadata"
-            value: "{{ berlin_ran_metadata_dict }}"
+          - key: "{{ entity_name }}-open5gs"
+            value: "{{ any_berlin_ran_linked_open5g }}"
 
-    - name: Publish execution results to TNLCM
+    - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          metadata_dict: "{{ berlin_ran_metadata_dict | b64encode }}"
