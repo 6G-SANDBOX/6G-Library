@@ -29,7 +29,7 @@ Component configuration logs can be foud at `/var/log/post-ueransim.log`
 ### gNB Runtime
 {% if one_ueransim_run_gnb %}
 Service `ueransim_gnb.service` is currently **running** and **enabled** with the following configuration:
-- **Linked Open5GS**: `{{ one_ueransim_gnb_linked_open5gs | default('None') }}`
+- **Linked Open5GS**: `{{ one_ueransim_gnb_linked_5gcore | default('None') }}`
 - **AMF IPv4 address**: `{{ one_ueransim_gnb_amf_n2_ip }}`
 - **TAC**:  `{{ one_ueransim_gnb_mcc }}`
 - **MCC**:  `{{ one_ueransim_gnb_mcc }}`

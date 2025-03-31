@@ -6,7 +6,7 @@
 - New variable `one_ueransim_ue_msin`, replacing `one_ueransim_ue_supi`.
 ### Changed
 - Variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` are now boolean and false by default.
-- Variables `one_ueransim_gnb_linked_open5gs` and `one_ueransim_gnb_linked_gnb` are now optional.
+- Variables `one_ueransim_gnb_linked_open5gs` and `one_ueransim_gnb_linked_gnb` are now optional. First one renamed to `one_ueransim_gnb_linked_5gcore`.
 - Variable `one_ueransim_ue_op` renamed to `one_ueransim_ue_opc`.
 - Changed reference to 5GCore variable from `amf_ip` to `amf_n2_ip`.
 ### Deprecated

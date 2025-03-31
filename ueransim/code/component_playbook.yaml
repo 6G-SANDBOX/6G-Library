@@ -136,7 +136,7 @@
             gnb_metadata_dict: >-
               {
                 'run_gnb':        '{{ one_ueransim_run_gnb }}',
-                'linked_open5gs': '{{ one_ueransim_gnb_linked_open5gs | default('None') }}',
+                'linked_open5gs': '{{ one_ueransim_gnb_linked_5gcore | default('None') }}',
                 'amf_n2_ip': '{{ one_ueransim_gnb_amf_n2_ip }}',
                 'tac':  '{{ one_ueransim_gnb_tac }}',
                 'mcc':  '{{ one_ueransim_gnb_mcc }}',

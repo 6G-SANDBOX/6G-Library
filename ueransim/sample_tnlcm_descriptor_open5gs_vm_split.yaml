@@ -49,7 +49,7 @@ trial_network:
       one_ueransim_mode: "gnb"
       one_ueransim_run_gnb: true
       one_ueransim_run_ue: false
-      one_ueransim_gnb_linked_open5gs: "open5gs_vm-core"
+      one_ueransim_gnb_linked_5gcore: "open5gs_vm-core"
       one_ueransim_gnb_amf_n2_ip: "10.10.10.200"
       one_ueransim_gnb_tac: 200
       one_ueransim_gnb_mcc: "001"
