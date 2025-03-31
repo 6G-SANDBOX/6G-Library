@@ -37,6 +37,42 @@ input:
     description: Name of a previously deployed `oneKE` component, where the the RIC Helm Chart will be applied. E.g. `oneKE-my_cluster`.
     type: "oneKE"
     required_when: true
+  one_ric_k8s_ip:
+    description: |
+      The IP address of a ric_k8s
+    type: str
+    default_value: "10.21.12.202"
+    required_when: false  
+  one_ric_k8s_quota1:
+    description: |
+      Determines the ratio (in percentage) of available resources for slice with slice_id1 
+    type: str
+    default_value: "20"
+    required_when: false  
+  one_ric_k8s_quota2:
+    description: |
+      Determines the ratio (in percentage) of available resources for slice with slice_id2
+    type: str
+    default_value: "80"
+    required_when: false  
+  one_ric_k8s_slice_id1:
+    description: |
+      Gives ID of the slice, so that it is assigned with quota1
+    type: str
+    default_value: "1"
+    required_when: false  
+  one_ric_k8s_slice_id2:
+    description: |
+      Gives ID of the slice, so that it is assigned with quota2
+    type: str
+    default_value: "2"
+    required_when: false  
+  one_ric_k8s_flip_period:
+    description: |
+      Corresponds to the time period (in seconds) between each PRB quota flips 
+    type: str
+    default_value: "5"
+    required_when: false  
   dockerhub_token:
     description: |
       Token required to authenticate to dockerhub
@@ -49,3 +85,4 @@ input:
 terraform_outputs:
   __entity_name__metadata:
     oneKE: input.one_open5gs_k8s_target
+    ric_ip: input.one_ric_k8s_ip

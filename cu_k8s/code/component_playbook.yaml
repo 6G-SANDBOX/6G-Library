@@ -90,7 +90,8 @@
       ansible.builtin.set_fact:
         cu_metadata_dict: >-
           {
-            'example': 'something'
+            'oneKE': '{{ one_cu_k8s_target }}',
+            'cu_ip': '{{ one_cu_k8s_ip }}'
           }
 
     - name: Set custom terraform outputs for future components

@@ -68,7 +68,8 @@
       ansible.builtin.set_fact:
         ric_metadata_dict: >-
           {
-            'example': 'something'
+            'oneKE': '{{ one_ric_k8s_target }}',
+            'ric_ip': '{{ one_ric_k8s_ip }}'
           }
 
     - name: Set custom terraform outputs for future components

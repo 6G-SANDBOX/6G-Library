@@ -13,13 +13,17 @@
 ####################################
 metadata:
   maintainers:
-    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
-    - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
-    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  short_description: Deploys a 5G Core inside a Kubernetes cluster 
+    - Szymon Mecina <s.mecina@is-wireless.com>
+    - Robert Gdowski <r.gdowski@is-wireless.com>
+  short_description: Deploys a CU inside a Kubernetes cluster 
   long_description: |
-    The **open5gs_k8s** 6G-Library component deploys a 5G SA Core inside a Kubernetes cluster using the [Helm Chart from Gradiant](https://artifacthub.io/packages/helm/open5gs/open5gs).
-    More info in the official documentation: https://open5gs.org/open5gs/docs/
+    The **CU_k8s** 6G-Library component deploys a 5G CU inside a Kubernetes cluster for the following config:
+    - `mcc`: "001" 
+    - `mnc`: "01"
+    - `apn`: "internet"
+    - `tac`: 1
+    - `s_nssai_sst`: 1
+    - `s_nssai_sd`:
   hypervisors: ["one"]
 
 ####################################
@@ -49,6 +53,18 @@ input:
     type: str
     default_value: "10.21.12.201"
     required_when: false
+  one_cu_k8s_ip:
+    description: |
+      The IP address of a cu_k8s
+    type: str
+    default_value: "10.21.12.203"
+    required_when: false  
+  one_ric_k8s_ip:
+    description: |
+      The IP address of a ric_k8s
+    type: str
+    default_value: "10.21.12.202"
+    required_when: false  
   dockerhub_token:
     description: |
       Token required to authenticate to dockerhub
@@ -60,4 +76,5 @@ input:
 ####################################
 terraform_outputs:
   __entity_name__metadata:
-    oneKE: input.one_open5gs_k8s_target
+    oneKE: input.one_cu_k8s_target
+    cu_ip: input.one_cu_k8s_ip

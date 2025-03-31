@@ -8,11 +8,4 @@
 ##
 ######################################################
 
-one_ric_k8s_target: "oneKE-cluster"
-one_ric_k8s_ip: "10.21.12.202"
-dockerhub_token: "XXX"
-quota1: "20"
-quota2: "80"
-slice_id1: "1"
-slice_id2: "2"
-flip_period: "5"
+any_iswireless_radio_duration: 3600

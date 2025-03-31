@@ -4,6 +4,11 @@ image:
 networking:
   ric_net:
     interface: "{{ worker_interface | string }}"
-    RIC_IP: 10.10.12.202
+    RIC_IP: "{{ one_ric_k8s_ip | string }}"
     prefix: 24
+quota1: "{{ one_ric_k8s_quota1 | string }}"
+quota2: "{{ one_ric_k8s_quota2 | string }}"
+slice_id1: "{{ one_ric_k8s_slice_id1 | string }}"
+slice_id2: "{{ one_ric_k8s_slice_id2 | string }}"
+flip_period: "{{ one_ric_k8s_flip_period | string }}"
 targetNode: worker_0

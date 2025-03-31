@@ -7,8 +7,8 @@ networking:
     open5gs_CP_IP: "{{ one_cu_k8s_amf_n2_ip | string }}"
     open5gs_UP_IP: "{{ one_cu_k8s_upf_n3_ip | string }}"
   mh:
-    CU_IP: 10.10.12.203
-    DU_IP: 10.10.12.204
+    CU_IP: "{{ one_cu_k8s_ip | string }}"
+    DU_IP: "{{ site_available_components.iswireless_radio.f1_ip }}"
     prefix: 24
     interface: "{{ worker_interface | string }}"
 targetNode: worker_0
