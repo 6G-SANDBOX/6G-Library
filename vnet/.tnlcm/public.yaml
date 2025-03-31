@@ -23,7 +23,7 @@ metadata:
     The Virtual Network is of type VXLAN, and spans the subnet formed with one_vnet_first_ip and one_vnet_netmask
     A Virtual Network ranges "one_vnet_address_size" successive IPs starting from "one_vnet_first_ip"
     The maximum value for a full /24 subnet starting from X.X.X.1 should be 254
-  hypervisors: [one]
+  hypervisors: ["one"]
 
 
 ####################################
@@ -37,8 +37,8 @@ site_variables:
 ## Input variables
 ####################################
 input:
-  one_vnet_gw:
-    description: Default gateway of the Virtual Network subnet
+  one_vnet_first_ip:
+    description: First IP address of the Virtual Network range
     type: str
     default_value: "10.21.12.1"
     required_when: false
@@ -47,20 +47,20 @@ input:
     type: int
     default_value: 24
     required_when: false
-  one_vnet_dns:
-    description: Space-separated list of DNS servers configured in VMs with vnet as their main Network Interface
-    type: str
-    default_value: ""
-    required_when: false
-  one_vnet_first_ip:
-    description: First IP address of the Virtual Network range
-    type: str
-    default_value: "10.21.12.1"
-    required_when: false
   one_vnet_address_size:
     description: Amount of IP addresses that compose the Virtual Network range
     type: int
     default_value: 100
+    required_when: false
+  one_vnet_gw:
+    description: Default gateway of the Virtual Network subnet
+    type: str
+    default_value: null
+    required_when: false
+  one_vnet_dns:
+    description: Space-separated list of DNS servers configured in VMs with vnet as their main Network Interface
+    type: str
+    default_value: null
     required_when: false
 
 

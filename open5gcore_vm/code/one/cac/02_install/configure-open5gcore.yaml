@@ -47,6 +47,7 @@
         dest: "{{ item.dest }}"
         backup: true
       register: config_changed
+      notify: Restart open5gcore
       with_items:
         - { src: 'open5gcore/systemd_env.j2', dest: '/etc/open5gcore/systemd_env' }
         - { src: 'open5gcore/env.sh.j2', dest: '/etc/open5gcore/env.sh' }
@@ -89,11 +90,19 @@
       become: true
       register: add_ue_script
 
+    - name: install testbed-sim-info
+      ansible.builtin.copy:
+        content: "{{ testbed_sim_sql }}"
+        dest: "/etc/open5gcore/sql/zz_testbed-sim.sql"
+      when: (testbed_sim_sql is defined) and (testbed_sim_sql|length > 0)
+      register: config_changed
+
     - name: Apply databases
       ansible.builtin.command:
         cmd: "./apply-databases.sh"
         chdir: "/etc/open5gcore/sql"
-      changed_when: config_changed.changed
+      notify: Restart open5gcore
+      when: config_changed.changed
 
     - name: add UEs to UDM
       ansible.builtin.command:
@@ -124,24 +133,19 @@
         src: "{{ item }}"
         dest: /etc/systemd/system/
       register: systemdfiles
+      notify: Restart open5gcore
       loop:
         - "phoenix@.service"
         - "open5gcore.service"
 
     - name: "systemd daemon-reload"
       ansible.builtin.systemd:
-        daemon_reload: yes
+        daemon_reload: true
       when: systemdfiles.changed
+      notify: Restart open5gcore
 
     - name: enable & start services
       service:
         name: "open5gcore"
         state: started
         enabled: true
-
-    - name: restart services
-      service:
-        name: "open5gcore"
-        state: restarted
-        enabled: true
-      when: systemdfiles.changed or config_changed.changed

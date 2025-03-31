@@ -25,8 +25,8 @@ metadata:
     - **medium**: 8 GiB of memory, 4 vCPU and 25GiB of storage
     - **small**: 4 GiB of memory, 2 vCPU and 15GiB of storage
     - **very_small**: 2 GiB of memory, 1 vCPU and 10GiB of storage
-  hypervisors: [one]
-  appliance: https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05"]
 
 
 ####################################
@@ -34,7 +34,7 @@ metadata:
 ####################################
 site_variables:
   template_id: ID of the Ubuntu 22.04 LTS VM template to use in your OpenNebula environment
-  image_id: ID of the Ubuntu 22.04 LTS image to use in your OpenNebula environment
+  image_id: ID of the Ubuntu 22.04 LTS VM image to use in your OpenNebula environment
 
 
 ####################################
@@ -61,7 +61,7 @@ input:
       - "medium"
       - "small"
       - "very_small"
-    required_when: true
+    required_when: false
 
 
 ####################################

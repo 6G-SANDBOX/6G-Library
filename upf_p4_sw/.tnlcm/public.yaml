@@ -19,10 +19,21 @@ metadata:
     Ubuntu 22.04 LTS virtual machine with the UPF-P4 BMV2 software module installed.
     It also contains the different Open5GS services that act as the control plane for the 5G core.
     Containerized applications with Docker.
-  hypervisors: [one]
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05"]
+
 
 ####################################
-## Component input
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the Ubuntu 22.04 LTS VM template to use in your OpenNebula environment
+  image_id: ID of the Ubuntu 22.04 LTS VM image to use in your OpenNebula environment
+  harbor_token: Token to authenticate against the [Harbor registry](https://dockerhub.mobilesandbox.cloud:9443)
+
+
+####################################
+## Input variables
 ####################################
 input:
   one_upf_p4_sw_networks:
@@ -30,115 +41,104 @@ input:
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
     required_when: false
-
-  
-  one_upf_p4_sw_open5gs_control_mcc:
-    description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
-    type: str
-    default_value: "001"
-    required_when: false
-
-  one_upf_p4_sw_open5gs_control_mnc:
-    description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
-    type: str
-    default_value: "01"
-    required_when: false
-
-  one_upf_p4_sw_open5gs_control_msin:
-    description: Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes. mcc + mnc + msin must add to exactly 15
-    type: str
-    default_value: "0000000001"
-    required_when: false
-
-  one_upf_p4_sw_open5gs_control_key:
-    description: Permanent Subscription Key
-    type: str
-    default_value: "465B5CE8B199B49FAA5F0A2EE238A6BC"
-    required_when: false
-
-  one_upf_p4_sw_open5gs_control_opc:
-    description: Operator Code
-    type: str
-    default_value: "E8ED289DEBA952E4283B54E88E6183CA"
-    required_when: false
-
-  one_upf_p4_sw_open5gs_control_apn:
-    description: Access Point Name (APN) of the initial PDU session to be stablished
-    type: str
-    default_value: "internet"
-    required_when: false
-
-  one_upf_p4_sw_open5gs_control_tac:
-    description: Tracking Area Code in the PLMN
-    type: int
-    default_value: 200
-    required_when: false
-
-  one_upf_p4_sw_open5gs_control_s_nssai_sst:
-    description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
-    type: int
-    default_value: 1
-    required_when: false
-
-  one_upf_p4_sw_open5gs_control_s_nssai_sd:
-    description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
-    type: str
-    default_value: "1"
-    required_when: false
-
   one_upf_p4_sw_open5gs_amf_ngap_addr:
     description: Address to expose the Core Access and Mobility Management Function (AMF)
     type: str
     default_value: "10.0.1.2"
     required_when: false
-
   one_upf_p4_sw_controller_upf_ipv4_n3:
-    description: Address to expose the N3 (gnb-upf) Core User Plane Function (UPF)
+    description: Address to expose the N3 (upf-gnb) Core User Plane Function (UPF)
     type: str
     default_value: "10.0.3.1"
     required_when: false
-
+  one_upf_p4_sw_open5gs_control_tac:
+    description: Tracking Area Code in the PLMN
+    type: int
+    default_value: 200
+    required_when: false
+  one_upf_p4_sw_open5gs_control_mcc:
+    description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "001"
+    required_when: false
+  one_upf_p4_sw_open5gs_control_mnc:
+    description: Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "01"
+    required_when: false
+  one_upf_p4_sw_open5gs_control_msin:
+    description: Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes. mcc + mnc + msin must add to exactly 15
+    type: str
+    default_value: "0000000001"
+    required_when: false
+  one_upf_p4_sw_open5gs_control_key:
+    description: Permanent Subscription Key
+    type: str
+    default_value: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+    required_when: false
+  one_upf_p4_sw_open5gs_control_opc:
+    description: Operator Code
+    type: str
+    default_value: "E8ED289DEBA952E4283B54E88E6183CA"
+    required_when: false
+  one_upf_p4_sw_open5gs_control_apn:
+    description: Access Point Name (APN) of the initial PDU session to be stablished
+    type: str
+    default_value: "internet"
+    required_when: false
+  one_upf_p4_sw_open5gs_control_s_nssai_sst:
+    description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    type: int
+    default_value: 1
+    required_when: false
+  one_upf_p4_sw_open5gs_control_s_nssai_sd:
+    description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
+    type: str
+    default_value: "1"
+    required_when: false
   one_upf_p4_sw_controller_upf_ipv4_n6:
     description: Address to expose the N6 (upf-pdn) Core User Plane Function (UPF)
     type: str
     default_value: "10.0.6.1"
     required_when: false
-
   one_upf_p4_sw_controller_enb_ipv4_n3:
     description: Address of the eNB to connect to the UPF
     type: str
     default_value: "10.0.3.2"
     required_when: false
-
   one_upf_p4_sw_controller_dn_ipv4_n6:
     description: Address of the PDN to connect to the UPF
     type: str
     default_value: "10.0.6.2"
     required_when: false
-
   one_upf_p4_sw_ue_pool:
     description: Pool of IP addresses to be used as the UE pool
     type: str
     default_value: "10.45.0.0/16"
     required_when: false
 
+
+
 ####################################
-## Component output
+## Generated terraform outputs
 ####################################
-# TODO: Maybe I should put more fields
-output:
-  metadata_dict:
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
+  __entity_name__metadata:
+    amf_n2_ip: input.one_upf_p4_sw_open5gs_amf_ngap_addr 
+    upf_n3_ip: input.one_upf_p4_sw_controller_upf_ipv4_n3
+    ue_count: '1'
+    tac: input.one_upf_p4_sw_open5gs_control_tac
     mcc: input.one_upf_p4_sw_open5gs_control_mcc
     mnc: input.one_upf_p4_sw_open5gs_control_mnc
     msin: input.one_upf_p4_sw_open5gs_control_msin
     key: input.one_upf_p4_sw_open5gs_control_key
     opc: input.one_upf_p4_sw_open5gs_control_opc
     apn: input.one_upf_p4_sw_open5gs_control_apn
-    tac: input.one_upf_p4_sw_open5gs_control_tac
-    s_nssai_sd: input.one_upf_p4_sw_open5gs_control_s_nssai_sd
     s_nssai_sst: input.one_upf_p4_sw_open5gs_control_s_nssai_sst
-    amf_ip: input.one_upf_p4_sw_open5gs_amf_ngap_addr 
-    upf_ip: input.one_upf_p4_sw_controller_upf_ipv4_n3
-    upf_ipv4_n6: input.one_upf_p4_sw_controller_upf_ipv4_n6
-  id: "ID of the VM in OpenNebula"
-  ips: "Dictionary of VM addresses: key='VNet ID in OpenNebula', value='the IP address'"
+    s_nssai_sd: input.one_upf_p4_sw_open5gs_control_s_nssai_sd
+    upf_n6_ip: input.one_upf_p4_sw_controller_upf_ipv4_n6
+    enb_n3_ip: input.one_upf_p4_sw_controller_enb_ipv4_n3
+    dn_n6_ip: input.one_upf_p4_sw_controller_dn_ipv4_n6
+    ue_subnet: input.one_upf_p4_sw_ue_pool

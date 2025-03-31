@@ -10,13 +10,15 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 
 
   context = {
-    NETWORK = "YES"
-    SET_HOSTNAME = "$NAME"
-    USERNAME = "jenkins"
+    NETWORK =        "YES"
+    NETCFG_TYPE =    "interfaces"
+    SET_HOSTNAME =   "$NAME"
+    USERNAME =       "jenkins"
+    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
   }
 
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
   disk {
     image_id = {{ site_available_components.opensand_st.image_id }}
     size     = {{ one_opensand_st_disk }}

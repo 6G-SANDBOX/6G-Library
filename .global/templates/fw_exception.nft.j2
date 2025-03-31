@@ -1,5 +1,5 @@
 #!/usr/sbin/nft -f
 
-{% for exception in exceptions %}
-ip daddr {{ exception }} accept
+{% for fw_exception in fw_exceptions %}
+ip daddr {{ fw_exception }} accept
 {% endfor %}

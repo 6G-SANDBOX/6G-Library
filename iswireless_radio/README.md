@@ -9,8 +9,8 @@ The configuration exposed by this component should be synchronized with the 5G c
 - `tac`: 1
 - `s_nssai_sst`: 1
 - `s_nssai_sd`:
-- `amf_ip`: "10.10.12.200"
-- `upf_ip`: "10.10.12.201"
+- `amf_n2_ip`: "10.10.12.200"
+- `upf_n3_ip`: "10.10.12.201"
 
 > [!NOTE]  
 > Currently this component is only available in the site "uma".

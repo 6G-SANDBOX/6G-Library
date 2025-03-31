@@ -23,16 +23,23 @@ metadata:
     More info in the official documentation: https://github.com/OpenNebula/one-apps/wiki/oneke_intro
 
     NOTE: Cluster customization will be progresivelly incorporated ad the OpenNebula Terraform provider gets more functionalities
-  hypervisors: [one]
-  appliance: https://marketplace.opennebula.io/appliance/591dd3f1-220f-46a5-83f4-31031c753b8a
+  hypervisors: ["one"]
+  appliances:
+    - "https://marketplace.opennebula.io/appliance/591dd3f1-220f-46a5-83f4-31031c753b8a"
+    - "https://marketplace.mobilesandbox.cloud:9443/appliance/OneKE_1.31_service"
+    - "https://marketplace.mobilesandbox.cloud:9443/appliance/OneKE_1.31a_service"
 
 
 ####################################
 ## Site-specific variables
 ####################################
 site_variables:
-  129:
-    template_id: ID of the OneKE v1.29 template to use in your OpenNebula environment
+  "129":
+    template_id: ID of the OneKE v1.29 service template to use in your OpenNebula environment
+  "131":
+    template_id: ID of the OneKE v1.31 service template to use in your OpenNebula environment
+  "131a":
+    template_id: ID of the OneKE v1.31 Airgapped service template to use in your OpenNebula environment
 
 
 ####################################
@@ -51,20 +58,18 @@ input:
     required_when: true
 
   one_oneKE_version:
-    description: Version of the OneKE Appliance. 127A and 129A to be added in the future. Default value is "129"
+    description: "Version of the OneKE Appliance to deploy. Default value is '131'."
     type: str
-    default_value: "129"
-    choices: ["129"]
+    default_value: "131"
+    choices: ["129","131","131a"]
     required_when: false
 
   one_oneKE_multus:
     description: |
-      Multus is a CNI (Container Network Interface) that enables attaching multiple network interfaces to pods.
-      The Multus CNI is compatible with the primary CNI chosen, not a substitute for it
-      Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
-    type: str
-    default_value: "YES"
-    choices: ["YES", "NO"]
+      Enable Multus, a CNI (Container Network Interface) that enables attaching multiple network interfaces to pods.
+      Multus CNI is compatible with the primary CNI chosen, not a substitute for it
+    type: bool
+    default_value: true
     required_when: false
 
   one_oneKE_cni_plugin:
@@ -87,47 +92,41 @@ input:
 
   one_oneKE_cilium_range:
     description: |
-      Range of IPs available for cilium CNI if it was selected in the "one_oneKE_cni_plugin" variable. The range will be ignored otherwise.
+      Pool of IPs available to Cilium's BGP Control Plane to allocate Kubernetes services (svc)  if `one_oneKE_cni_plugin` is set to `cilium`.
       The range has to be inside the "one_oneKE_internal_vnet" subnet, but preferably outside it's address range.
-      Syntax is <min_IPv4>-<max_IPv4>
+      Syntax is a CIDR subnet. E.g. `"10.11.12.0/24"`
     type: str
-    default_value: ""
-    required_when: "one_oneKE_cni_plugin == 'cilium'"
+    default_value: null
+    required_when: false
 
   one_oneKE_metallb: 
     description: |
-      Load-balancer implementation for bare-metal Kubernetes clusters, using standard routing protocols.
-      Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
-    type: str
-    default_value: "YES"
-    choices: ["YES", "NO"]
+      Enable MetalLB, a Load-Balancer implementation for bare-metal Kubernetes clusters, using standard routing protocols. Default value is true.
+    type: bool
+    default_value: true
     required_when: false 
 
   one_oneKE_metallb_range:
     description: |
-      Range of IPs available for metalLB to allocate services if it was selected in the "one_oneKE_metallb" variable. The range will be ignored otherwise.
+      Range of IPs available to MetalLB to allocate Kubernetes services (svc) when variable `one_oneKE_metallb` is true (default).
       The range has to be inside the "one_oneKE_internal_vnet" subnet, but preferably outside it's address range.
-      Syntax is <min_IPv4>-<max_IPv4>
+      Syntax is <min_IPv4>-<max_IPv4>. E.g. `"10.21.12.200-10.21.12.240"`.
     type: str
-    default_value: "10.21.12.200-10.21.12.240"
-    required_when: "one_oneKE_metallb == 'YES'"
+    default_value: null
+    required_when: false
 
   one_oneKE_longhorn:
     description: |
-      Longhorn provides highly available persistent storage for Kubernetes
-      Accepted values are "YES" or "NO" (quotes included). Default value is "YES"
-    type: str
-    default_value: "YES"
-    choices: ["YES", "NO"]
+      Enable Longhorn, a Storage Class providing highly available persistent storage for Kubernetes.
+    type: bool
+    default_value: true
     required_when: false 
 
   one_oneKE_traefik:
     description: |
-      Ingress controller that manages access to cluster services.
-      Accepted values are "YES" or "NO" (quotes included). Default value is "NO"
-    type: str
-    default_value: "NO"
-    choices: ["YES", "NO"]
+      Enable Traefik, an Ingress controller that manages the access to cluster services.
+    type: bool
+    default_value: false
     required_when: false 
 
   one_oneKE_nginx_passthough:
@@ -146,13 +145,15 @@ terraform_outputs:
   __entity_name__roles: "Array with service roles information. Generated from Terraform Manifest"
   __entity_name__node_ids: "Dictionary of VM IDs in OpenNebula: key='VM name', value='the VM ID'"
   __entity_name__node_ips: "Dictionary of VM addresses: key='VM name', value='the VM main address'"
-  __entity_name__metadata_dict:
+  __entity_name__metadata:
     external_vnet: input.one_oneKE_external_vnet
     internal_vnet: input.one_oneKE_internal_vnet
     version: input.one_oneKE_version
     multus: input.one_oneKE_multus
     cni_plugin: input.one_oneKE_cni_plugin
     cilium_range: input.one_oneKE_cilium_range
+    metallb: input.one_oneKE_metallb
     metallb_range: input.one_oneKE_metallb_range
     longhorn: input.one_oneKE_longhorn
+    traefik: input.one_oneKE_traefik
     nginx_passthrough: input.one_oneKE_nginx_passthrough

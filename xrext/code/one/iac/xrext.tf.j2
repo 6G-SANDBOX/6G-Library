@@ -8,24 +8,26 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   memory      = {{ one_xrext_memory }}
 
   context = {
-    NETWORK = "YES"
-    SET_HOSTNAME = "$NAME"
-    USERNAME = "jenkins"
-    ONEAPP_XR_CAPIF_API_NAME = "{{ one_xr_capif_api_name }}",
-    ONEAPP_XR_CAPIF_HTTPS_HOST = "{{ one_xr_capif_https_host }}",
-    ONEAPP_XR_CAPIF_HTTPS_PORT = "{{ one_xr_capif_https_port }}",
-    ONEAPP_XR_CAPIF_HTTP_HOST = "{{ one_xr_capif_http_host }}",
-    ONEAPP_XR_CAPIF_HTTP_PORT = "{{ one_xr_capif_http_port }}",
-    ONEAPP_XR_CAPIF_INVOKER_ID = "{{ one_xr_capif_invoker_id }}",
-    ONEAPP_XR_CAPIF_PASSWORD = "{{ one_xr_capif_password }}",
-    ONEAPP_XR_CAPIF_UNAME = "{{ one_xr_capif_uname }}",
-    ONEAPP_XR_NAC_SERVER_IP = "{{ one_xr_nac_server_ip }}",
-    ONEAPP_XR_NAC_SERVER_PASSWORD = "{{ one_xr_nac_server_password }}",
-    ONEAPP_XR_NAC_SERVER_PORT = "{{ one_xr_nac_server_port }}",
-    ONEAPP_XR_NAC_SERVER_UNAME = "{{ one_xr_nac_server_uname }}",
+    NETWORK =        "YES"
+    NETCFG_TYPE =    "interfaces"
+    SET_HOSTNAME =   "$NAME"
+    USERNAME =       "jenkins"
+    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
+    ONEAPP_XR_CAPIF_API_NAME = "{{ one_xr_capif_api_name }}"
+    ONEAPP_XR_CAPIF_HTTPS_HOST = "{{ one_xr_capif_https_host }}"
+    ONEAPP_XR_CAPIF_HTTPS_PORT = "{{ one_xr_capif_https_port }}"
+    ONEAPP_XR_CAPIF_HTTP_HOST = "{{ one_xr_capif_http_host }}"
+    ONEAPP_XR_CAPIF_HTTP_PORT = "{{ one_xr_capif_http_port }}"
+    ONEAPP_XR_CAPIF_INVOKER_ID = "{{ one_xr_capif_invoker_id }}"
+    ONEAPP_XR_CAPIF_PASSWORD = "{{ one_xr_capif_password }}"
+    ONEAPP_XR_CAPIF_UNAME = "{{ one_xr_capif_uname }}"
+    ONEAPP_XR_NAC_SERVER_IP = "{{ one_xr_nac_server_ip }}"
+    ONEAPP_XR_NAC_SERVER_PASSWORD = "{{ one_xr_nac_server_password }}"
+    ONEAPP_XR_NAC_SERVER_PORT = "{{ one_xr_nac_server_port }}"
+    ONEAPP_XR_NAC_SERVER_UNAME = "{{ one_xr_nac_server_uname }}"
   }
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
   disk {
     image_id = {{ site_available_components.xrext.image_id }}
     size     = {{ one_xrext_disk }}

@@ -3,26 +3,15 @@
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
   template_id = {{ site_available_components.ixc_endpoint.template_id }}
-  {# cpu         = {{ one_vm_kvm_cpu }}
-  vcpu        = {{ one_vm_kvm_cpu }}
-  memory      = {{ one_vm_kvm_memory }} #}
 
   context = {
-    NETWORK = "YES"
-    NETCFG_TYPE: "interfaces"
-    SET_HOSTNAME = "$NAME"
-    USERNAME = "jenkins"
-    SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
-    ONEAPP_IXCHARIOT_ENDPOINT_RS_ADDRESS: "{{ one_ixc_endpoint_rs }}"
+    NETWORK =        "YES"
+    NETCFG_TYPE =    "interfaces"
+    SET_HOSTNAME =   "$NAME"
+    USERNAME =       "jenkins"
+    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
+    ONEAPP_IXCHARIOT_ENDPOINT_RS_ADDRESS = "{{ one_ixc_endpoint_rs }}"
   }
-
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
-  disk {
-    image_id = {{ site_available_components.ixc_endpoint.image_id }}
-    size     = {{ one_vm_kvm_disk }}
-    target   = "vda"
-    driver   = "qcow2"
-  } #}
 
 {% for network in one_ixc_endpoint_networks %}
   nic {

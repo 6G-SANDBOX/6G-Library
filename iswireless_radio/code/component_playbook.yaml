@@ -23,7 +23,7 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
-        open5gs_metadata: "{{ (terraform_outputs.stdout | from_json)[one_iswireless_radio_open5gs + '-metadata'] }}"
+        open5gs_metadata: "{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_5gcore + '-metadata'] }}"
 
     - name: Set start of lease time and date with RFC 3339 section 5.6 format
       ansible.builtin.set_fact:
@@ -39,8 +39,8 @@
         endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
         token: "{{ site_iswireless_routemanager.token }}"
       loop:
-        - { to: "{{ open5gs_metadata['amf_ip'] }}", via: "{{ bastion_ip }}" }
-        - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ open5gs_metadata['amf_n2_ip'] }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ open5gs_metadata['upf_n3_ip'] }}", via: "{{ bastion_ip }}" }
 
     - name: Submit routes in tn_bastion from the Trial Network to the ISWIRELESS Radio
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
@@ -51,15 +51,6 @@
         - { to: "{{ site_available_components.iswireless_radio.cp_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
         - { to: "{{ site_available_components.iswireless_radio.up_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
 
-    - name: If required, submit routes in tn_bastion for proxy access to the 5G Core
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-      vars:
-        endpoint: "{{ bastion_ip }}"
-        token: "{{ tn_routemanager_token }}"
-      loop:
-        - { to: "{{ open5gs_metadata['amf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
-        - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
-      when: proxy is defined and proxy != ''
 
 - name: "STAGE 2: Prepare access to tn_bastion to allow access"
   hosts: localhost
@@ -81,7 +72,7 @@
     - name: Write firewall exception for the route-manager-api of your site
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
-        exceptions:
+        fw_exceptions:
           - "{{ site_iswireless_routemanager.api_endpoint }}"
 
 
@@ -95,7 +86,7 @@
       vars:
         custom_outputs:
           - key: "{{ entity_name }}-open5gs"
-            value: "{{ one_iswireless_radio_open5gs }}"
+            value: "{{ any_iswireless_radio_linked_5gcore }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

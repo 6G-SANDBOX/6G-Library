@@ -9,11 +9,11 @@
 ######################################################
 
 ### opennebula_virtual_network resource
-one_vnet_gw: "10.21.12.1"
-one_vnet_netmask: 24
 one_vnet_mtu: 1500
 one_vnet_guest_mtu: 1450
 one_vnet_physical_device: "{{ site_vxlan_if }}"
+
+one_vnet_netmask: 24
 
 ### opennebula_virtual_network_address_range resource
 one_vnet_first_ip: "10.21.12.1"

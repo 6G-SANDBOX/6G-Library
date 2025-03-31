@@ -8,72 +8,80 @@
   register: terraform_outputs
   changed_when: false
 
-- name: Tasks for UERANSIM as gNB
-  when: one_ueransim_run_gnb == 'YES'
-  block:
-    - name: Convert open5gs terraform output to a dictionary
-      set_fact:
-        terraform_outputs_open5gs_dict: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'] }}"
+- name: Overwrite the run variables according to the mode
+  ansible.builtin.set_fact:
+    one_ueransim_run_gnb: "{{ one_ueransim_mode in ['gnb', 'both'] }}"
+    one_ueransim_run_ue: "{{ one_ueransim_mode in ['ue', 'both'] }}"
 
-    - name: "Overwrite gNB defaults with {{ one_ueransim_gnb_linked_open5gs }} values"
+- name: Tasks for UERANSIM as gNB
+  when: 
+    - one_ueransim_mode in ['gnb', 'both']
+    - one_ueransim_gnb_linked_5gcore is defined and one_ueransim_gnb_linked_5gcore != ''
+  block:
+    - name: Convert open5gs terraform outputs to a dictionary
       ansible.builtin.set_fact:
-        one_ueransim_gnb_mcc: "{{ terraform_outputs_open5gs_dict.mcc }}"
-        one_ueransim_gnb_mnc: "{{ terraform_outputs_open5gs_dict.mnc }}"
-        one_ueransim_gnb_tac: "{{ terraform_outputs_open5gs_dict.tac }}"
-        one_ueransim_gnb_proxy: "{{ terraform_outputs_open5gs_dict.proxy }}"
-        one_ueransim_gnb_amf_address: "{{ terraform_outputs_open5gs_dict.amf_ip }}"
-        one_ueransim_gnb_slices_sst: "{{ terraform_outputs_open5gs_dict.s_nssai_sst }}"
-        one_ueransim_gnb_slices_sd: "{{ terraform_outputs_open5gs_dict.s_nssai_sd }}"
+        open5gs_metadata_dict: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_5gcore + '-metadata'] }}"
+
+    - name: Autocomplete gNB-related variables
+      ansible.builtin.set_fact:
+        one_ueransim_gnb_amf_n2_ip: "{{ open5gs_metadata_dict.amf_n2_ip }}"
+        one_ueransim_gnb_tac:  "{{ open5gs_metadata_dict.tac }}"
+        one_ueransim_gnb_mcc:  "{{ open5gs_metadata_dict.mcc }}"
+        one_ueransim_gnb_mnc:  "{{ open5gs_metadata_dict.mnc }}"
+        one_ueransim_gnb_msin: "{{ open5gs_metadata_dict.msin | default('None') }}"  # Not used by the gNB, but required for UE autocompletion
+        one_ueransim_gnb_key:  "{{ open5gs_metadata_dict.key  | default('None') }}"  # Not used by the gNB, but required for UE autocompletion
+        one_ueransim_gnb_opc:  "{{ open5gs_metadata_dict.opc  | default('None') }}"  # Not used by the gNB, but required for UE autocompletion
+        one_ueransim_gnb_apn:  "{{ open5gs_metadata_dict.apn  | default('None') }}"  # Not used by the gNB, but required for UE autocompletion
+        one_ueransim_gnb_slices_sst: "{{ open5gs_metadata_dict.s_nssai_sst }}"
+        one_ueransim_gnb_slices_sd:  "{{ open5gs_metadata_dict.s_nssai_sd }}"
 
 
 - name: Tasks for UERANSIM as UE with external gNB
   when:
-    - one_ueransim_run_ue == 'YES'
-    - one_ueransim_run_gnb == 'NO'
+    - one_ueransim_mode in ['ue', 'both']
+    - one_ueransim_ue_linked_gnb is defined and one_ueransim_ue_linked_gnb != ''
   block:
-    - name: Convert ueransim-gnb terraform output to a dictionary
+    - name: Validate that the provided gNB is valid for autocompletion
+      ansible.builtin.fail:
+        msg: "The gnB: {{ one_ueransim_ue_linked_gnb }} is not valid for variable autocompletion."
+      when: "(terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-mode'] not in ['gnb', 'both']"
+
+    - name: Create variables for gNB from terraform outputs
       set_fact:
-        terraform_outputs_gnb_dict: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_metadata'] }}"
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_networks[0] + '-id'] | string }}"
+        gnb_ips: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-ips'] }}"
+        gnb_metadata_dict: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_metadata'] }}"
 
-    - name: "Overwrite UE defaults with {{ one_ueransim_ue_linked_gnb }} values"
+    - name: Autocomplete UE-related variables
       ansible.builtin.set_fact:
-        one_ueransim_ue_supi: "imsi-{{ terraform_outputs_gnb_dict.mcc }}{{ terraform_outputs_gnb_dict.mnc }}{{ terraform_outputs_gnb_dict.msin }}"
-        one_ueransim_ue_mcc: "{{ terraform_outputs_gnb_dict.mcc }}"
-        one_ueransim_ue_mnc: "{{ terraform_outputs_gnb_dict.mnc }}"
-        one_ueransim_ue_key: "{{ terraform_outputs_gnb_dict.key }}"
-        one_ueransim_ue_op: "{{ terraform_outputs_gnb_dict.opc }}"
-        one_ueransim_ue_gnbSearchList: "{{ terraform_outputs_gnb_dict.gnb_address }}"
-        one_ueransim_ue_session_apn: "{{ terraform_outputs_gnb_dict.apn}}"
-        one_ueransim_ue_session_sst: "{{ terraform_outputs_gnb_dict.sst }}"
-        one_ueransim_ue_session_sd: "{{ terraform_outputs_gnb_dict.sd }}"
-        one_ueransim_ue_configured_nssai_sst: "{{ terraform_outputs_gnb_dict.sst }}"
-        one_ueransim_ue_configured_nssai_sd: "{{ terraform_outputs_gnb_dict.sd }}"
-        one_ueransim_ue_default_nssai_sst: "{{ terraform_outputs_gnb_dict.sst }}"
-        one_ueransim_ue_default_nssai_sd: "{{ terraform_outputs_gnb_dict.sd }}"
-
-
+        one_ueransim_ue_gnbsearchlist: "{{ gnb_ips[access_vnet_id] }}"
+        one_ueransim_ue_mcc:     "{{ gnb_metadata_dict.mcc }}"
+        one_ueransim_ue_mnc:     "{{ gnb_metadata_dict.mnc }}"
+        one_ueransim_ue_msin:    "{{ gnb_metadata_dict.msin | default(omit) }}"
+        one_ueransim_ue_key:     "{{ gnb_metadata_dict.key  | default(omit) }}"
+        one_ueransim_ue_opc:     "{{ gnb_metadata_dict.opc  | default(omit) }}"
+        one_ueransim_ue_session_apn: "{{ gnb_metadata_dict.apn  | default(omit) }}"
+        one_ueransim_ue_session_sst: "{{ gnb_metadata_dict.sst }}"
+        one_ueransim_ue_session_sd:  "{{ gnb_metadata_dict.sd }}"
+  
 - name: Tasks for UERANSIM as UE with internal gNB
   when:
-    - one_ueransim_run_ue == 'YES'
-    - one_ueransim_run_gnb == 'YES'
+    - one_ueransim_mode in 'both'
+    - one_ueransim_ue_linked_gnb is not defined
   block:
-    - name: "Overwrite UE defaults with {{ one_ueransim_gnb_linked_open5gs }} values"
+    - name: Autocomplete UE-related variables
       ansible.builtin.set_fact:
-        one_ueransim_ue_supi: "imsi-{{ terraform_outputs_open5gs_dict.mcc }}{{ terraform_outputs_open5gs_dict.mnc }}{{ terraform_outputs_open5gs_dict.msin }}"
-        one_ueransim_ue_mcc: "{{ terraform_outputs_open5gs_dict.mcc }}"
-        one_ueransim_ue_mnc: "{{ terraform_outputs_open5gs_dict.mnc }}"
-        one_ueransim_ue_key: "{{ terraform_outputs_open5gs_dict.key }}"
-        one_ueransim_ue_op: "{{ terraform_outputs_open5gs_dict.opc }}"
-        one_ueransim_ue_gnbSearchList: null
-        one_ueransim_ue_session_apn: "{{ terraform_outputs_open5gs_dict.apn }}"
-        one_ueransim_ue_session_sst: "{{ terraform_outputs_open5gs_dict.s_nssai_sst }}"
-        one_ueransim_ue_session_sd: "{{ terraform_outputs_open5gs_dict.s_nssai_sd }}"
-        one_ueransim_ue_configured_nssai_sst: "{{ terraform_outputs_open5gs_dict.s_nssai_sst }}"
-        one_ueransim_ue_configured_nssai_sd: "{{ terraform_outputs_open5gs_dict.s_nssai_sd }}"
-        one_ueransim_ue_default_nssai_sst: "{{ terraform_outputs_open5gs_dict.s_nssai_sst }}"
-        one_ueransim_ue_default_nssai_sd: "{{ terraform_outputs_open5gs_dict.s_nssai_sd }}"
+        one_ueransim_ue_linked_gnb: "{{ entity_name }}"
+        one_ueransim_ue_gnbsearchlist: 'localhost'
+        one_ueransim_ue_mcc:     "{{ one_ueransim_gnb_mcc }}"
+        one_ueransim_ue_mnc:     "{{ one_ueransim_gnb_mnc }}"
+        one_ueransim_ue_msin:    "{{ ne_ueransim_gnb_msin | default(omit) }}"
+        one_ueransim_ue_key:     "{{ one_ueransim_gnb_key | default(omit) }}"
+        one_ueransim_ue_opc:     "{{ one_ueransim_gnb_opc | default(omit) }}"
+        one_ueransim_ue_session_apn: "{{ one_ueransim_gnb_apn | default(omit) }}"
+        one_ueransim_ue_session_sst: "{{ one_ueransim_gnb_slices_sst }}"
+        one_ueransim_ue_session_sd:  "{{ one_ueransim_gnb_slices_sd }}"
 
-  
-- name: Overwrite again with explicit values from the input file
+- name: Overwrite autocompleted values again with explicit values from the input file
   ansible.builtin.include_vars:
     file: "{{ workspace }}/{{ component_type }}/variables/input_file.yaml"

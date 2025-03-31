@@ -13,10 +13,10 @@
     msin: "{{ one_open5gcore_vm_msin | default('0000000001') }}"
     ue_key: "{{ one_open5gcore_vm_key | default('465B5CE8B199B49FAA5F0A2EE238A6BC') }}"
     ue_opc: "{{ one_open5gcore_vm_opc | default('E8ED289DEBA952E4283B54E88E6183CA') }}"
-    n2_ip: "{{ one_open5gcore_vm_amf_ip | default('10.10.10.2') }}"
+    n2_ip: "{{ one_open5gcore_vm_amf_n2_ip | default('10.10.10.2') }}"
     #n2_ip: "{{ vm_ips[1]['ip'] if vm_ips|length > 1 else vm_ips[0]['ip'] }}"
     ##
-    n3_ip: "{{ one_open5gcore_vm_upf_ip | default('10.10.10.2') }}"
+    n3_ip: "{{ one_open5gcore_vm_upf_n3_ip | default('10.10.10.2') }}"
     #n3_ip: "{{ vm_ips[2]['ip'] if vm_ips|length > 2 else vm_ips[1].ip if vm_ips|length > 1 else vm_ips[0]['ip'] }}"
     n3_if: "{{ 'eth2' if vm_ips|length > 2 else 'eth1' if vm_ips|length > 1 else 'eth0' }}"
     ##
@@ -27,6 +27,9 @@
     dnn_mtu: 1406 #when GUEST_MTU == 1450
     playbookdir: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/"
     license_crt: "{{ site_available_components.open5gcore_vm.license_crt }}"
+    testbed_sim_sql: "{{ site_available_components.open5gcore_vm.testbed_sim_sql | default('') }}"
+    s_nssai_sd: "{{ one_open5gcore_vm_s_nssai_sd  }}"
+    s_nssai_sst: "{{ one_open5gcore_vm_s_nssai_sst }}"
   block:
     - name: render netplan aliases
       template:

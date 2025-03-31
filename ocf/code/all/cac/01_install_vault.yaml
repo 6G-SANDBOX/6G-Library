@@ -1,6 +1,6 @@
 - name: Execute Install Vault Script
   ansible.builtin.shell: "/root/capif/helm/scripts/install_vault.sh"
-  become: yes
+  become: true
   environment:
     KUBECONFIG: /etc/rancher/rke2/rke2.yaml
 
@@ -8,4 +8,4 @@
   ansible.builtin.fetch:
     src: "capif/helm/vault_keys.txt"
     dest: "{{ workspace }}/{{ component_type }}/code/vault_keys.txt"
-    flat: yes
+    flat: true

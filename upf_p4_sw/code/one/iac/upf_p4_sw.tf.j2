@@ -1,14 +1,16 @@
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
-  template_id = {{ site_available_components.vm_kvm.template_id }}
+  template_id = {{ site_available_components.upf_p4_sw.template_id }}
   cpu         = {{ one_upf_p4_sw_cpu }}
   vcpu        = {{ one_upf_p4_sw_cpu }}
   memory      = {{ one_upf_p4_sw_memory }}
 
   context = {
-    NETWORK = "YES"
-    SET_HOSTNAME = "$NAME"
-    USERNAME = "jenkins"
+    NETWORK =        "YES"
+    NETCFG_TYPE =    "interfaces"
+    SET_HOSTNAME =   "$NAME"
+    USERNAME =       "jenkins"
+    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
   }
 
 {% for network in one_upf_p4_sw_networks %}

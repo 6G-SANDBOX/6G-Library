@@ -2,15 +2,17 @@
 {% set switch_index = loop.index0 %}
 resource "opennebula_virtual_machine" "{{ entity_name }}_{{ switch_index }}" {
   name        = "{{ tn_id }}-{{ entity_name }}-{{ switch_index }}"
-  template_id = {{ site_available_components.vm_kvm.template_id }}
+  template_id = {{ site_available_components.vm_kvm.switch_template_id }}
   cpu         = {{ one_int_p4_sw_cpu }}
   vcpu        = {{ one_int_p4_sw_cpu }}
   memory      = {{ one_int_p4_sw_memory }}
 
   context = {
-    NETWORK = "YES"
-    SET_HOSTNAME = "$NAME"
-    USERNAME = "jenkins"
+    NETWORK =        "YES"
+    NETCFG_TYPE =    "interfaces"
+    SET_HOSTNAME =   "$NAME"
+    USERNAME =       "jenkins"
+    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
   }
 
 {% for network in switch_config.networks %}

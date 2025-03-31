@@ -176,18 +176,18 @@
         ks8500runner_registration_info: "{{ docker_container_output.container.Output }}"
       when: docker_container_output.container.Output is defined
 
-# Final phase of the deployments. Gather information and publish it
+
 - name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local
   tasks:
-    - name: Merge all component component outputs into one "output" variable
-      ansible.builtin.set_fact:
-        output:
-          ips: "{{ ips | b64encode }}"
-          id: "{{ id | b64encode }}"
-          registration_info: "{{ hostvars['ks8500runner']['ks8500runner_registration_info'] | b64encode }}"
+    - name: Set custom terraform outputs for future components
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+      vars:
+        custom_outputs:
+          - key: "registration_info"
+            value: "{{ hostvars['ks8500runner']['ks8500runner_registration_info'] | b64encode }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

@@ -3,18 +3,15 @@
 The [**UERANSIM**](https://github.com/aligungr/UERANSIM) 6G-Library component allows the experimenters to test and deploy their own Appliance of a 5G-SA UE and gNodeB.
 It is based on an Ubuntu 22.04 LTS image with the latest UERANSIM binaries (v3.2.6): `nr-cli`, `nr-gnb`, `nr-ue` and `nroff`.
 
-This appliance can be used as a 5G User Equipment (UE), a gNB, as both or as None, according to input variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` or a combination of them. These variables set systemd services `ueransimb-gnb.service` and `ueransimb-ue.service` respectively as started and enabled at boottime.
+This appliance can be used as a 5G User Equipment (UE), a gNB, as both or as None, according to input variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` or a combination of them. These variables set systemd services `ueransimb-gnb.service` and `ueransimb-ue.service` respectively as started and enabled at boot time.
 
 The behaviour of the services depends on the config files at `/etc/ueransim/open5gs-gnb.yaml` and `/etc/ueransim/open5gs-ue.yaml` are modified during the first deployment according to prior components dependencies and/or the values specified in the input file.
 For advanced configurations, you manually edit those files and restart the services. Examples can be found in [this repository](https://github.com/s5uishida/open5gs_5gc_ueransim_sample_config).
 
 Depending on the chosen behaviour (with input variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` respectivelly), the following dependencies are aplied:
-- If `one_ueransim_run_gnb == 'YES'`, a previously deployed open5gs component needs to be selected in the `one_ueransim_gnb_linked_open5gs` input variable
-- If `one_ueransim_run_gnb == 'NO' and one_ueransim_run_ue == 'YES'`, a previously deployed ueransim with `run_gnb == 'YES'` needs to be selected in the `one_ueransim_ue_linked_gnb` input variable
-
-
-
-
+- If `one_ueransim_run_gnb == true`, a previously deployed `open5gs` component can be referenced in the `one_ueransim_gnb_linked_5gcore` input variable to autocomplete gNB-related variables.
+- If `one_ueransim_run_gnb == false and one_ueransim_run_ue == true`, a previously deployed `ueransim` component with `one_ueransim_run_gnb == true` can be referenced in the `one_ueransim_ue_linked_gnb` input variable to autocomplete UE-related variables.
+- If `one_ueransim_run_gnb == true` and `one_ueransim_run_ue == true`, the UE-related variables will be automatically autocompleted by default with the gnB-related variables.
 
 
 
@@ -49,10 +46,10 @@ On the other hand, UERANSIM does not fully provide physical layer. 5G-NR radio i
 <img src="https://img.shields.io/badge/User%20Plane-functional-green" alt="OS Linux"/>
 </p>
 
-### Ueransim both configuration
+### Ueransim both `open5gs_k8s` configuration
 
-![ueransim_both](https://github.com/6G-SANDBOX/6G-Library/blob/assets/ueransim/ueransim_both.png)
+![ueransim_both](https://github.com/6G-SANDBOX/6G-Library/blob/assets/ueransim/ueransim_both_open5gs_k8s.png)
 
-### Ueransim split configuration
+### Ueransim split `open5gs_k8s` configuration
 
-![ueransim_split](https://github.com/6G-SANDBOX/6G-Library/blob/assets/ueransim/ueransim_split.png)
+![ueransim_split](https://github.com/6G-SANDBOX/6G-Library/blob/assets/ueransim/ueransim_split_open5gs_k8s.png)

@@ -8,16 +8,19 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   memory      = {{ one_elcm_memory }}
 
   context = {
-    NETWORK = "YES"
-    SET_HOSTNAME = "$NAME"
-    USERNAME = "jenkins"
-    ONEAPP_ELCM_INFLUXDB_USER = "{{ one_elcm_influxdb_user }}"
+    NETWORK =        "YES"
+    NETCFG_TYPE =    "interfaces"
+    SET_HOSTNAME =   "$NAME"
+    USERNAME =       "jenkins"
+    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
+    ONEAPP_ELCM_INFLUXDB_USER =     "{{ one_elcm_influxdb_user }}"
     ONEAPP_ELCM_INFLUXDB_PASSWORD = "{{ one_elcm_influxdb_password }}"
-    ONEAPP_ELCM_INFLUXDB_DATABASE = "{{ one_elcm_influxdb_database }}"
-    ONEAPP_ELCM_GRAFANA_PASSWORD = "{{ one_elcm_grafana_password }}"
+    ONEAPP_ELCM_INFLUXDB_ORG =      "{{ one_elcm_influxdb_org }}"
+    ONEAPP_ELCM_INFLUXDB_BUCKET =   "{{ one_elcm_influxdb_bucket }}"
+    ONEAPP_ELCM_GRAFANA_PASSWORD =  "{{ one_elcm_grafana_password }}"
   }
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
   disk {
     image_id = {{ site_available_components.elcm.image_id }}
     size     = {{ one_elcm_disk }}
