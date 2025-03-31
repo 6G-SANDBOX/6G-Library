@@ -209,7 +209,17 @@
         ks8500runner_registration_info: "{{ docker_container_output.container.Output }}"
       when: docker_container_output.container.Output is defined
 
-- name: "STAGE 4: Access tn_bastion to set firewall exceptions"
+- name: "STAGE 4: Prepare access to tn_bastion"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Add the bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+- name: "STAGE 5: Access tn_bastion to set firewall exceptions"
   hosts: bastion
   gather_facts: false
   tasks:
@@ -219,7 +229,7 @@
         fw_exceptions:
           - "{{ hostvars.localhost.site_available_components.ks8500_runner.loadcore_middleware_ip | default('') }}"
           
-- name: "STAGE 5: Publish execution results"
+- name: "STAGE 6: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local
