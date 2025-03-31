@@ -18,19 +18,18 @@ metadata:
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   short_description: Deploys a VM with UERANSIM services 
   long_description: |
-    The UERANSIM instance can be used as a 5G User Equipment (UE), a gNB, as both or as None, according
-    to input variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` or a combination of them.
-    
-    Depending on the chosen behaviour (with input variables `one_ueransim_run_gnb` and 
-    `one_ueransim_run_ue` respectivelly), the following dependencies are aplied:
-    - If `one_ueransim_run_gnb == true`, a previously deployed `open5gs` component can be
-    referenced in the `one_ueransim_gnb_linked_open5gs` input variable to autocomplete gNB-related
-    variables.
-    - If `one_ueransim_run_gnb == false and one_ueransim_run_ue == true`, a previously deploye
-     `ueransim` component with `one_ueransim_run_gnb == true` can be referenced in the
-     `one_ueransim_ue_linked_gnb` input variable to autocomplete UE-related variables.
-    - If `one_ueransim_run_gnb == true` and `one_ueransim_run_ue == true`, the UE-related variables
-    will be automatically autocompleted by default with the gnB-related variables.
+    The UERANSIM component can be used as a 5G User Equipment (UE), a gNB or as both, according to input variable `one_ueransim_mode`.
+
+    - In *gnb* mode, all gNB-related variables are used to modify the yaml config file used by the `ueransim-gnb.service`.
+      If a previously deployed 'open5gs' component is specified in the `one_ueransim_gnb_linked_open5gs` input variable, its variables will be used
+      to autocomplete the gNB-related variables not provided by the experimenter.
+
+    - In *ue* mode, all UE-related variables are used to modify the yaml config file used by the `ueransim-ue.service`.
+      If a previously deployed 'ueransim' component (with mode *gnb* or *both*) is specified in the `one_ueransim_ue_linked_gnb` input variable, its variables will be used
+      to autocomplete the UE-related variables not provided by the experimenter.
+
+    - *both* mode will act as *gnb* and *ue* modes at the same time. Moreover, if `one_ueransim_ue_linked_gnb` is left blank,
+      UE-related variables not provided by the experimenter can be autocompleted using their respective gNB equivalent variables. 
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_UERANSIM"]
 
@@ -52,67 +51,68 @@ input:
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
     required_when: false
+  # TODO: case insensitive, por si acaso
+  one_ueransim_mode: 
+    description: |
+      Set the component as a gNB, an UE or as both inside the Trial Network. Read the component's description for more details.
+    type: str
+    default_value: "both"
+    choices: ["gnb", "ue", "both"]
+    required_when: false
 
   # gNB-related variables
   one_ueransim_run_gnb: 
     description: |
-      Start and enable systemd service `ueransim-gnb.service` at boot.
+      In *gnb* mode, start and enable systemd service `ueransim-gnb.service` at boot.
     type: bool
-    default_value: false
+    default_value: "True if `one_ueransim_mode` is set to 'gnb' or `both`. False otherwise."
     required_when: false
   one_ueransim_gnb_linked_open5gs:
     description: |
-      Name of a previously deployed 'open5gs' component (either `open5gs_k8s` or `open5gs_vm`).
-      When variable `one_ueransim_run_gnb` is true, it defines the 5G SA core the gNB will try to connect to, and will autocomplete other variables acordingly.
+      Name of a previously deployed 'open5gs' component (`open5gs_k8s`, `open5gs_vm`, `upf_p4_sw` or `open5gcore_vm`).
+      In *gnb* mode, defines the 5G SA core the gNB will try to connect to.
+      This variable enables the autocompletion of all gNB-related variables from the selected component's configuration.
     type: "open5gs_k8s or open5gs_vm or upf_p4_sw or open5gcore_vm"
     default_value: null
     required_when: false
-  one_ueransim_gnb_amf_ip:
+  one_ueransim_gnb_amf_n2_ip:
     description: |
-      In gNB simulation, IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
+      In *gnb* mode, IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
       AMF port is currently hardcoded to always be 38412.
-      Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
+      Autocompletes itself if `one_ueransim_gnb_linked_open5gs` is defined.
     type: str
     default_value: "10.21.12.200"
     required_when: false
-  # TODO: delete it as the tn_bastion can directly handle the routing.
-  one_ueransim_gnb_amf_proxy:
-    description: |
-      In gNB simulation, IPv4 address where traffic to the `one_ueransim_gnb_amf_ip` should be routed to.
-      Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
-    type: str
-    default_value: null
-    required_when: false
   one_ueransim_gnb_tac:
-    description: In gNB simulation, Tracking Area Code (TAC) of the PLMN. Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
+    description: In *gnb* mode, Tracking Area Code (TAC) of the PLMN. Autocompletes itself if `one_ueransim_gnb_linked_open5gs` is defined.
     type: int
     default_value: 200
     required_when: false
   one_ueransim_gnb_mcc:
     description: |
-      In gNB simulation, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
-      Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
+      In *gnb* mode, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
+      Autocompletes itself if `one_ueransim_gnb_linked_open5gs` is defined.
     type: str
     default_value: "001"
     required_when: false
   one_ueransim_gnb_mnc:
     description: |
-      In gNB simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
-      Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
+      In *gnb* mode, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
+      Autocompletes itself if `one_ueransim_gnb_linked_open5gs` is defined.
     type: str
     default_value: "01"
     required_when: false
   one_ueransim_gnb_slices_sst:
     description: |
-      In gNB simulation, Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI).
-      Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
+      In *gnb* mode, Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI).
+      Autocompletes itself if `one_ueransim_gnb_linked_open5gs` is defined.
     type: int
     default_value: 1
     required_when: false
   one_ueransim_gnb_slices_sd:
     description: |
-      In gNB simulation, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
-      Autocompleted by default with values from `one_ueransim_gnb_linked_open5gs` if defined.
+      In *gnb* mode, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
+      Autocompletes itself if `one_ueransim_gnb_linked_open5gs` is defined.
     type: str
     default_value: "000001"
     required_when: false
@@ -120,113 +120,105 @@ input:
   # UE-related variables
   one_ueransim_run_ue: 
     description: |
-      Start and enable systemd service `ueransim-ue.service` at boot.
+      In *ue* mode, start and enable systemd service `ueransim-ue.service` at boot.
     type: bool
-    default_value: false
+    default_value: "True if `one_ueransim_mode` is set to 'ue' or `both`. False otherwise."
     required_when: false
   one_ueransim_ue_linked_gnb:
     description: |
-      Name of a previously deployed `ueransim` component serving as gNB (with `one_ueransim_run_gnb == true`)
-      When variable `one_ueransim_run_ue` is true, it defines the gNB/RAN the User Equipment will try to connect to, and will autocomplete other variables acordingly.
+      Name of a previously deployed `ueransim` component in *gnb* mode.
+      In *ue* mode, defines the gNB/RAN the User Equipment will try to connect to.
+      In *both* mode, it will use by default the same component's gNB.
+      This variable enables the autocompletion of all gNB-related variables from the selected component's configuration.
     type: "ueransim"
     default_value: null
     required_when: false
   one_ueransim_ue_gnbsearchlist:
     description: |
-      In UE simulation, comma-separated list of IPv4 addresses where the UE will search for gNBs for Radio Link Simulation.
+      In *ue* mode, comma-separated list of IPv4 addresses where the UE will search for gNBs for Radio Link Simulation.
       The special value 'localhost' will be replaced with the IP of the first asigned vnet to the VM (usually tn_vxlan).
-      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
-      with values from `one_ueransim_ue_linked_gnb` if defined.
+      Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
     type: "str"
     default_value: "localhost"
     required_when: false
   one_ueransim_ue_mcc:
     description: |
-      In UE simulation, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
-      Values `one_ueransim_ue_mcc` + `one_ueransim_ue_mnc` + `one_ueransim_ue_msin` must add to exactly 15 digits to form a valid IMSI.
-      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
-      with values from `one_ueransim_ue_linked_gnb` if defined.
+      In *ue* mode, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
+      Values `one_ueransim_ue_mcc` + `one_ueransim_ue_mnc` + `one_ueransim_ue_msin` must add to exactly 15 digits to form a valid SUPI in IMSI format.
+      Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
     type: str
     default_value: "001"
     required_when: false
   one_ueransim_ue_mnc:
     description: |
-      In UE simulation, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
-      Values `one_ueransim_ue_mcc` + `one_ueransim_ue_mnc` + `one_ueransim_ue_msin` must add to exactly 15 digits to form a valid IMSI.
-      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
-      with values from `one_ueransim_ue_linked_gnb` if defined.
+      In *ue* mode, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
+      Values `one_ueransim_ue_mcc` + `one_ueransim_ue_mnc` + `one_ueransim_ue_msin` must add to exactly 15 digits to form a valid SUPI in IMSI format.
+      Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
     type: str
     default_value: "01"
     required_when: false
   one_ueransim_ue_msin:
     description: |
-      In UE simulation, Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes.
-      Values `one_ueransim_ue_mcc` + `one_ueransim_ue_mnc` + `one_ueransim_ue_msin` must add to exactly 15 digits to form a valid IMSI.
-      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
-      with values from `one_ueransim_ue_linked_gnb` if defined.
+      In *ue* mode, Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes.
+      Values `one_ueransim_ue_mcc` + `one_ueransim_ue_mnc` + `one_ueransim_ue_msin` must add to exactly 15 digits to form a valid SUPI in IMSI format.
+      Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
     type: str
     default_value: "0000000001"
     required_when: false
   one_ueransim_ue_key:
-    description: In UE simulation, Permanent subscription key of the UE. Autocompleted by default with values from `one_ueransim_ue_linked_gnb` if defined.
+    description: In *ue* mode, Permanent subscription key of the UE. Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
     type: str
     default_value: "465B5CE8B199B49FAA5F0A2EE238A6BC"
     required_when: false
   one_ueransim_ue_opc:
-    description: In UE simulation, Operator code (OP or OPC) of the UE. Autocompleted by default with values from `one_ueransim_ue_linked_gnb` if defined.
+    description: In *ue* mode, Operator code (OP or OPC) of the UE. Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
     type: str
     default_value: "E8ED289DEBA952E4283B54E88E6183CA"
     required_when: false
   one_ueransim_ue_session_apn:
-    description: In UE simulation, Access Point Name (APN) of the initial PDU session to be established. Autocompleted by default with values from `one_ueransim_ue_linked_gnb` if defined.
+    description: In *ue* mode, Access Point Name (APN) of the initial PDU session to be established. Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
     type: str
     default_value: "internet"
     required_when: false
   one_ueransim_ue_session_sst:
     description: |
-      In UE simulation, Slice/Service Type (SST) of the initial PDU session to be established.
-      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
-      with values from `one_ueransim_ue_linked_gnb` if defined.
+      In *ue* mode, Slice/Service Type (SST) of the initial PDU session to be established.
+      Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
     type: int
     default_value: 1
     required_when: false
   one_ueransim_ue_session_sd:
     description: |
-      In UE simulation, Slice Differentiator (SD) of the initial PDU session to be established. Minimum length of 6.
-      Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
-      with values from `one_ueransim_ue_linked_gnb` if defined.
+      In *ue* mode, Slice Differentiator (SD) of the initial PDU session to be established. Minimum length of 6.
+      Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
     type: str
     default_value: "000001"
     required_when: false
   # one_ueransim_ue_configured_nssai_sst:
   #   description: |
-  #     In UE simulation, Slice/Service Type (SST) of the configured NSSAI by HPLMN.
-  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
-  #     with values from `one_ueransim_ue_linked_gnb` if defined.
+  #     In *ue* mode, Slice/Service Type (SST) of the configured NSSAI by HPLMN.
+  #     Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
   #   type: int
   #   default_value: 1
   #   required_when: false
   # one_ueransim_ue_configured_nssai_sd:
   #   description: |
-  #     In UE simulation, Slice Differentiator (SD) of the configured NSSAI by HPLMN. Minimum length of 6.
-  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
-  #     with values from `one_ueransim_ue_linked_gnb` if defined.
+  #     In *ue* mode, Slice Differentiator (SD) of the configured NSSAI by HPLMN. Minimum length of 6.
+  #     Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
   #   type: str
   #   default_value: "000001"
   #   required_when: false
   # one_ueransim_ue_default_nssai_sst:
   #   description: |
-  #     In UE simulation, Slice/Service Type (SST) of the default NSSAI.
-  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
-  #     with values from `one_ueransim_ue_linked_gnb` if defined.
+  #     In *ue* mode, Slice/Service Type (SST) of the default NSSAI.
+  #     Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
   #   type: int
   #   default_value: 1
   #   required_when: false
   # one_ueransim_ue_default_nssai_sd:
   #   description: |
-  #     In UE simulation, Slice Differentiator (SD) of the default NSSAI. Minimum length of 6.
-  #     Autocompleted by default from gNB-related variables if `one_ueransim_run_gnb == true`, or else 
-  #     with values from `one_ueransim_ue_linked_gnb` if defined.
+  #     In *ue* mode, Slice Differentiator (SD) of the default NSSAI. Minimum length of 6.
+  #     Autocompletes itself if `one_ueransim_ue_linked_gnb` is defined, or if the component is in *both* mode.
   #   type: str
   #   default_value: "000001"
   #   required_when: false
@@ -238,22 +230,22 @@ input:
 terraform_outputs:
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
-  __entity_name__run_gnb: input.one_ueransim_run_gnb
+  __entity_name__mode: input.one_ueransim_mode
   __entity_name__gnb_metadata:
+    run_gnb: input.one_ueransim_run_gnb
     linked_open5gs: input.one_ueransim_gnb_linked_open5gs
-    amf_address: input.one_ueransim_gnb_amf_ip
-    amf_proxy: input.one_ueransim_gnb_amf_proxy
+    amf_n2_ip: input.one_ueransim_gnb_amf_n2_ip  # TODO: delete it as the tn_bastion can directly handle the routing.
     tac: input.one_ueransim_gnb_tac
     mcc: input.one_ueransim_gnb_mcc
     mnc: input.one_ueransim_gnb_mnc
-    msin: "Inferred from 'linked_open5gs', or generated by padding mcc and mnc in order to form a valid IMSI"
+    msin: "Inferred from 'linked_open5gs', or generated by padding mcc and mnc in order to form a valid SUPI in IMSI format"
     key: "Inferred from 'linked_open5gs', or set to None"
     opc: "Inferred from 'linked_open5gs', or set to None"
     apn: "Inferred from 'linked_open5gs', or set to None"
     sst: input.one_ueransim_gnb_slices_sst
     sd: input.one_ueransim_gnb_slices_sd
-  __entity_name__run_ue: input.one_ueransim_run_ue
   __entity_name__ue_metadata:
+    run_ue: input.one_ueransim_run_ue
     linked_gnb: input.one_ueransim_ue_linked_gnb
     gnbsearchlist: input.one_ueransim_ue_gnbsearchlist
     mcc: input.one_ueransim_ue_mcc

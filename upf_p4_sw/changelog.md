@@ -11,6 +11,7 @@
 - Enhanced `README.md` documentation.
 - Enhanced `sample_input_file.yaml` documentation.
 - Component now specifies two new variables in the sites repository: `template_id` and `image_id`. They were previously inferred from `vm_kvm`.
+- Add routing rules and firewall exceptions to `tn_bastion` in order to expose the UPF and AMF.
 
 ### Fixed
 - Fixed bastion host connectivity issue: Added SSH key configuration in `component_playbook.yaml` ansible playbook and `upf_p4_sw.tf.j2` terraform file to solve connectivity problem with bastion.

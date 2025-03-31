@@ -38,14 +38,14 @@ input:
     description: Name of a previously deployed `oneKE` component, where the the Open5GS Helm Chart will be applied. E.g. `oneKE-my_cluster`.
     type: "oneKE"
     required_when: true
-  one_open5gs_k8s_amf_ip:
+  one_open5gs_k8s_amf_n2_ip:
     description: |
       IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
       Value should be part of the `one_oneKE_metallb_range` in `one_open5gs_k8s_target`.
     type: str
     default_value: "10.21.12.200"
     required_when: false
-  one_open5gs_k8s_upf_ip:
+  one_open5gs_k8s_upf_n3_ip:
     description: |
       IPv4 Address of the Core User Plane Function (UPF) in the 5G core network.
       Value should be part of the `one_oneKE_metallb_range` in `one_open5gs_k8s_target`.
@@ -54,7 +54,7 @@ input:
     required_when: false
   one_open5gs_k8s_ue_count:
     description: |
-      Total number of UEs to be provisioned. UE IMSIs will be generated sequentially starting to count from
+      Total number of UEs to be provisioned. UE SUPIs will be generated sequentially starting to count from
       `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin`.
     type: int
     default_value: 20
@@ -67,21 +67,21 @@ input:
   one_open5gs_k8s_mcc:
     description: |
       Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
-      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid IMSI.
+      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid SUPI in IMSI format.
     type: str
     default_value: "001"
     required_when: false
   one_open5gs_k8s_mnc:
     description: |
       Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
-      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid IMSI.
+      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid SUPI in IMSI format.
     type: str
     default_value: "01"
     required_when: false
   one_open5gs_k8s_msin:
     description: |
       Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes.
-      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid IMSI.
+      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid SUPI in IMSI format.
     type: str
     default_value: "0000000001"
     required_when: false
@@ -117,10 +117,8 @@ input:
 ####################################
 terraform_outputs:
   __entity_name__metadata:
-    oneKE: input.one_open5gs_k8s_target
-    proxy: vnf_0 IP from input.one_open5gs_k8s_target
-    amf_ip: input.one_open5gs_k8s_amf_ip
-    upf_ip: input.one_open5gs_k8s_upf_ip
+    amf_n2_ip: input.one_open5gs_k8s_amf_n2_ip
+    upf_n3_ip: input.one_open5gs_k8s_upf_n3_ip
     ue_count: input.one_open5gs_k8s_ue_count
     tac: input.one_open5gs_k8s_tac
     mcc: input.one_open5gs_k8s_mcc
@@ -131,3 +129,4 @@ terraform_outputs:
     apn: input.one_open5gs_k8s_apn
     s_nssai_sst: input.one_open5gs_k8s_s_nssai_sd
     s_nssai_sd: input.one_open5gs_k8s_s_nssai_sst
+    oneke: input.one_open5gs_k8s_target

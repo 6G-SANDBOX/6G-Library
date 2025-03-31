@@ -10,9 +10,9 @@ trial_network:
       - "tn_init"
     input:
       one_vnet_first_ip: "10.11.3.1"
-      one_vnet_netmask: 24
-      one_vnet_address_size: 100
-      one_vnet_gw: "192.168.199.1"
+      # one_vnet_netmask: 24              # Default value
+      # one_vnet_address_size: 100        # Default value
+      # one_vnet_gw: "192.168.199.1"
   vnet-n6:
     type: "vnet"
     name: "n6"
@@ -20,9 +20,9 @@ trial_network:
       - "tn_init"
     input:
       one_vnet_first_ip: "10.11.6.1"
-      one_vnet_netmask: 24
-      one_vnet_address_size: 100
-      one_vnet_gw: "192.168.199.1"
+      # one_vnet_netmask: 24              # Default value
+      # one_vnet_address_size: 100        # Default value
+      # one_vnet_gw: "192.168.199.1"
   upf_p4_sw-upf:
     type: "upf_p4_sw"
     name: "upf"
@@ -45,8 +45,8 @@ trial_network:
     name: "gnb"
     dependencies:
       - "tn_init"
-      - "upf_p4_sw-upf"
       - "vnet-n1_n3"
+      - "upf_p4_sw-upf"
     input:
       one_ueransim_networks:
         - "tn_vxlan"
@@ -54,11 +54,10 @@ trial_network:
       one_ueransim_run_gnb: true
       one_ueransim_run_ue: false
       one_ueransim_gnb_linked_open5gs: "upf_p4_sw-upf"
-      # one_ueransim_gnb_amf_proxy: null
       one_ueransim_gnb_mcc: "001"
       one_ueransim_gnb_mnc: "01"
       one_ueransim_gnb_tac: 200
-      one_ueransim_gnb_amf_ip: "10.11.3.1"
+      one_ueransim_gnb_amf_n2_ip: "10.11.3.1"
       one_ueransim_gnb_slices_sst: 1
       one_ueransim_gnb_slices_sd: "000001"
   ueransim-ue:
@@ -74,7 +73,7 @@ trial_network:
       one_ueransim_run_gnb: false
       one_ueransim_run_ue: true
       one_ueransim_ue_linked_gnb: "ueransim-gnb"
-      one_ueransim_ue_supi: "imsi-001010000000001"
+      # one_ueransim_ue_supi: "imsi-001010000000001"
       one_ueransim_ue_mcc: "001"
       one_ueransim_ue_mnc: "01"
       one_ueransim_ue_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"

@@ -2,12 +2,15 @@
 
 ## unreleased
 ### Added
- - support for NAT exceptions when connecting the RAN subnet to the TN
+ - Support for NAT exceptions when connecting the RAN subnet to the TN.
+### Changed
+- Variable `any_berlin_ran_linked_open5g` renamed to `any_berlin_ran_linked_5gcore`.
  
 ### Changed
- - updated 5G coere medatada output to new format
- - fixed default TAC used in Berlin Huawei RAN
- - changed interface towards the new bastion v0.4.0
+ - Updated 5G coere medatada output to new format.
+ - Fixed default TAC used in Berlin Huawei RAN.
+ - Changed interface towards the new bastion v0.4.0.
+ - Changed references to 5GCore variables from `upf_ip`, `amf_ip` to `upf_n3_ip`, `amf_n2_ip`.
 
 ## v0.5.0
 ### Added

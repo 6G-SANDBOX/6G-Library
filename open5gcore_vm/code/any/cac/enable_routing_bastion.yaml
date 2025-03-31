@@ -1,3 +1,4 @@
+# TODO: Deprecated taskfile, Remove
 - name: Add routes in bastion
   vars:
     o5gcore_tn_vxlan_ip: "{{ hostvars['localhost']['ips'][hostvars['localhost']['access_vnet_id']]}}"

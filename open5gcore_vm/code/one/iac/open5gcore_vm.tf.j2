@@ -8,14 +8,14 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   memory      = {{ one_open5gcore_vm_memory }}
 
   context = {
-    NETWORK = "YES"
-    NETCFG_TYPE: "interfaces"
-    SET_HOSTNAME = "$NAME"
-    USERNAME = "jenkins"
-    SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
+    NETWORK =        "YES"
+    NETCFG_TYPE =    "interfaces"
+    SET_HOSTNAME =   "$NAME"
+    USERNAME =       "jenkins"
+    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
   }
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
   disk {
     image_id = {{ site_available_components.open5gcore_vm.image_id }}
     size     = {{ one_open5gcore_vm_disk }}
@@ -39,14 +39,14 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 }
 
 {% if one_open5gcore_vm_internal_vnet | length >= 1 %}
-resource "opennebula_virtual_network_address_range" "amf_ip" {
+resource "opennebula_virtual_network_address_range" "amf_n2_ip" {
   count              = 1
   virtual_network_id = opennebula_virtual_network.{{ one_open5gcore_vm_internal_vnet[0] }}.id
   ar_type            = "IP4"
   size               = 1
-  ip4                = "{{ one_open5gcore_vm_amf_ip }}"
+  ip4                = "{{ one_open5gcore_vm_amf_n2_ip }}"
 
-  hold_ips = ["{{ one_open5gcore_vm_amf_ip }}"]
+  hold_ips = ["{{ one_open5gcore_vm_amf_n2_ip }}"]
 }
 {% endif %}
 
@@ -56,9 +56,9 @@ resource "opennebula_virtual_network_address_range" "upf_ip_1" {
   virtual_network_id = opennebula_virtual_network.{{ one_open5gcore_vm_internal_vnet[0] }}.id
   ar_type            = "IP4"
   size               = 1
-  ip4                = "{{ one_open5gcore_vm_upf_ip }}"
+  ip4                = "{{ one_open5gcore_vm_upf_n3_ip }}"
 
-  hold_ips = ["{{ one_open5gcore_vm_upf_ip }}"]
+  hold_ips = ["{{ one_open5gcore_vm_upf_n3_ip }}"]
 }
 {% endif %}
 
@@ -68,9 +68,9 @@ resource "opennebula_virtual_network_address_range" "upf_ip_2" {
   virtual_network_id = opennebula_virtual_network.{{ one_open5gcore_vm_internal_vnet[1] }}.id
   ar_type            = "IP4"
   size               = 1
-  ip4                = "{{ one_open5gcore_vm_upf_ip }}"
+  ip4                = "{{ one_open5gcore_vm_upf_n3_ip }}"
 
-  hold_ips = ["{{ one_open5gcore_vm_upf_ip }}"]
+  hold_ips = ["{{ one_open5gcore_vm_upf_n3_ip }}"]
 }
 {% endif %}
 

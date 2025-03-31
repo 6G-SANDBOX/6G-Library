@@ -35,8 +35,8 @@ Current versions:
 - **TAC**: `{{ one_open5gcore_vm_tac }}`
 - **S-NSSAI (SST)**: `{{ one_open5gcore_vm_s_nssai_sst }}`
 - **S-NSSAI (SD)**: `{{ one_open5gcore_vm_s_nssai_sd }}`
-- **AMF IP**: `{{ open5gcore_metadata_dict['amf_ip'] }}`
-- **UPF IP**: `{{ open5gcore_metadata_dict['upf_ip'] }}`
+- **AMF N2 IP**: `{{ open5gcore_metadata_dict['amf_n2_ip'] }}`
+- **UPF N3 IP**: `{{ open5gcore_metadata_dict['upf_n3_ip'] }}`
 - **UPF XDP mode**: `{{ open5gcore_metadata_dict['upf_xdp'] }}`
 - **Web CLI URL**: `{{ entity_name | default("UNDEFINED") }}.{{ tn_id }}.{{ site_domain }}`
   - AMF:  [port 13020](http://{{ entity_name | default("UNDEFINED") }}.{{ tn_id }}.{{ site_domain }}:13020/cli)
