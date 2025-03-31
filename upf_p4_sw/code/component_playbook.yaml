@@ -64,8 +64,20 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
+    - name: Display host inventory information
+      ansible.builtin.debug:
+        msg: |
+          Host inventory details:
+          - Hostname: upf_p4_sw
+          - IP Address: {{ hostvars['upf_p4_sw'].ansible_host }}
+          - SSH User: {{ hostvars['upf_p4_sw'].ansible_user }}
+          - SSH Common Args: {{ hostvars['upf_p4_sw'].ansible_ssh_common_args }}
+
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
+
+    - name: Add new VM to an SSH config file meant to be usable by the experimenter
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
@@ -103,9 +115,13 @@
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
+    ### Calling load_variables.yaml is unnecessary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
+    ### But it makes the code much MUCH cleaner with almost no extra latency
+    - name: Load enviromental variables from different sources inside the component
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
     - name: UPF P4 SW install
-      ansible.builtin.include_tasks:
-        file: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/upf_p4_install.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/upf_p4_install.yaml"
 
 
 - name: "STAGE 4: Publish execution results"
