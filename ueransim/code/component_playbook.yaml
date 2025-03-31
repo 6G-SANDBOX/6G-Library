@@ -60,9 +60,6 @@
 
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
-      
-    - name: Add new VM to an SSH config file ment to be usable by the experimenter
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
     - name: Add new VM to an SSH config file ment to be usable by the experimenter
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
