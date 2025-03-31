@@ -105,7 +105,6 @@
         fw_exceptions:
           - "{{ one_open5gs_k8s_amf_n2_ip }}"
           - "{{ one_open5gs_k8s_upf_n3_ip }}"
-        # nat_exceptions: ## TODO xception for amf_n2_ip/upf_n3_ip ?
 
 
 - name: "STAGE 5: Publish execution results"

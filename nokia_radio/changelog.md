@@ -4,8 +4,10 @@
 ### Changed
 - Changed references to 5GCore variables from `upf_ip`, `amf_ip` to `upf_n3_ip`, `amf_n2_ip`.
 - Variable `one_nokia_radio_open5gs` renamed to `any_nokia_radio_linked_5gcore`.
-### Fixed
-- The open5gs proxy is now properly set
+### Removed
+- Component no longer requires a proxy IP address coming from `any_nokia_radio_linked_5gcore`. `tn_bastion` now takes care of all the Trial Networks routing.
+### Fixed
+- Hardware RAN is now correctly exposed to the Trial Network by adding a NATting exception into the `tn_bastion`.
 
 
 ## v0.4.0
@@ -18,7 +20,7 @@ Complete redisign of the component following the changes in tn_bastion and route
 - The rest of the information is fetched from a linked previously-deployed 5G core with variable `one_nokia_radio_open5gs`.
 - Jenkins configures routes via route-manager-api, instead of ssh to the component.
 ### Removed
-Removal of multiple hardcoded site-specific variables.
+- Removal of multiple hardcoded site-specific variables.
 
 ## v0.3.0
 ### Changed

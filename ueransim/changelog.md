@@ -5,6 +5,7 @@
 - New variable `one_ueransim_mode` allowing to switch the behabiour of the component between gNB, UE or both, and relegating `run_gnb` and `run_ue` variables into simply enabling the serfice or not.
 - New variable `one_ueransim_ue_msin`, replacing `one_ueransim_ue_supi`.
 ### Changed
+- UERANSIM appliance version upgraded its software to version `v3.2.7`.
 - Variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` are now boolean and false by default.
 - Variables `one_ueransim_gnb_linked_open5gs` and `one_ueransim_gnb_linked_gnb` are now optional. First one renamed to `one_ueransim_gnb_linked_5gcore`.
 - Variable `one_ueransim_ue_op` renamed to `one_ueransim_ue_opc`.

@@ -7,24 +7,25 @@
 ### Added
 - Component `oneKE` now supports OneKE 1.31 and OneKE 1.31 Airgapped, and they are the new default version. New custom templates for 6G-Sandbox available in the official marketplace.
 - Common task file `nftables_add.yaml` now also supports adding NAT exceptions into the `tn_bastion`.
-- All '5G/6G core' components (`open5gcore_vm`, `open5gs_k8s`, `open5gs_vm` and `upf_p4_sw`) are now responsible of eanbling the necessary routing to their interfaces in the `tn_bastion`'s route-manager-api.    <!-- TODO: Actualizar todas y su changelog --> 
+- All '5G/6G core' components (`open5gcore_vm`, `open5gs_k8s`, `open5gs_vm` and `upf_p4_sw`) are now responsible of enabling the necessary routing to their interfaces in the `tn_bastion`'s route-manager-api.
 ### Changed
 - *.tnlcm/public.yaml* files normalized between components.
 - Software from `open5gs_k8s` upgraded from version `v2.7.0` to `v2.7.2`. Used Chart upgraded from version `v2.2.2` to `v2.2.6`.
 - New input variables for `int_p4_sw` and `upf_p4_sw`.
-- Changes in many variables of `ueransim`. For more details check the component's changelog.
+- Big changes in many variables of `ueransim`. New appliance required, and new mandatory variable to select its operating mode. For more details check the component's changelog.
 - Software from `elcm` upgraded from version `v3.6.3` to `3.7.1`.
 - Software from `ks8500_runner` upgraded from version `v1.11.4` to `1.13.0`.
 - Variable `one_vnet_gw` in component `vnet` has now no default variable.
 - Component `int_p4_sw` requires new variables in sites repository. For more details check the component's changelog.
 ### Deprecated
-- All 'gNB' components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`) no longer require a 'proxy' variable.   <!-- TODO: Actualizar todas y su changelog --> 
+- All 'gNB' components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`) no longer require a 'proxy' variable.
 ### Fixed
 - TN_IDs can now correctly set DNS records when they have _ and mixed mayor/minorcase characters.
 - Storage nodes of `oneKE` can now be resized from the deployment itself.
 - Component `open5gs_vm` removed hardcoded ip (10.45.0.1) from the `ogstun` interface (#99)
 - Component `vm_kvm` change param `required_when` to false in field `one_vm_kvm_size` and add default value to private yaml.
 - Add firewall exception for the `loadcore_agent` middleware  (#112).
+- Hardware RAN components (`berlin_ran`, `iswireless_radio` and `nokia_radio`) are now correctly exposed to the Trial Network by adding a NATting exception into the `tn_bastion`.
 
 
 ## [v0.4.0]

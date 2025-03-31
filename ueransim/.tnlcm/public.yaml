@@ -51,7 +51,6 @@ input:
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
     required_when: false
-  # TODO: case insensitive, por si acaso
   one_ueransim_mode: 
     description: |
       Set the component as a gNB, an UE or as both inside the Trial Network. Read the component's description for more details.
@@ -234,7 +233,7 @@ terraform_outputs:
   __entity_name__gnb_metadata:
     run_gnb: input.one_ueransim_run_gnb
     linked_open5gs: input.one_ueransim_gnb_linked_5gcore
-    amf_n2_ip: input.one_ueransim_gnb_amf_n2_ip  # TODO: delete it as the tn_bastion can directly handle the routing.
+    amf_n2_ip: input.one_ueransim_gnb_amf_n2_ip
     tac: input.one_ueransim_gnb_tac
     mcc: input.one_ueransim_gnb_mcc
     mnc: input.one_ueransim_gnb_mnc

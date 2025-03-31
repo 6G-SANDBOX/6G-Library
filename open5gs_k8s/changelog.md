@@ -1,6 +1,8 @@
 # Changelog
 
 ## v0.5.0
+### Added
+- Component is now responsible to expose its AMF and UPF interfaces, by adding rules and firewall exceptions to `tn_bastion`.
 ### Changed
 - Open5GS upgraded from `v2.7.0` to `v2.7.2`. Chart version upgraded from `v2.2.2` to `v2.2.6`.
 - Simplified chart values.yaml manifest.
