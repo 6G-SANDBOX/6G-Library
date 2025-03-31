@@ -11,7 +11,7 @@ services:
   # Service to run the INT-P4 BMv2 controller
   int-cp-bmv2:
     container_name: p4-int-controller-bmv2
-    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/int-p4-controller-bmv2:latest
+    image: dockerhub.mobilesandbox.cloud:9443/6gsandbox/int-p4-controller-bmv2:2.0.0
     volumes:
       - "./config/controller-int:/controller-int-config"
     network_mode: host
