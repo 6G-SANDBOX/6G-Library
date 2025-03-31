@@ -43,7 +43,7 @@ trial_network:
   ric_k8s-demo:
     type: "ric_k8s"
     name: "demo"
-    dependencias:
+    dependencies:
     - “oneKE-cluster”      # optional, if its already after the open5gs_k8s, but good for clarity
     - "open5gs_k8s-core"
     input:
