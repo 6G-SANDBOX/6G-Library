@@ -9,7 +9,7 @@
 one_ueransim_mode: "both"
 
 one_ueransim_run_gnb: true
-one_ueransim_gnb_linked_open5gs: open5gs_k8s-sample_name
+one_ueransim_gnb_linked_5gcore: open5gs_k8s-sample_name
 #one_ueransim_gnb_amf_n2_ip: "10.21.12.200"
 #one_ueransim_gnb_tac: 200
 #one_ueransim_gnb_mcc: "001"

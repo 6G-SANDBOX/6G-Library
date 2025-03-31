@@ -1,6 +1,8 @@
 # Changelog
 
-## unreleased
+## v0.5.0
+### Added
+- Component is now responsible to expose its AMF and UPF interfaces, by adding rules and firewall exceptions to `tn_bastion`.
 ### Changed
 - Renamed variable `one_open5gcore_vm_amf_ip` to `one_open5gcore_vm_amf_n2_ip`.
 - Renamed variable `one_open5gcore_vm_upf_ip` to `one_open5gcore_vm_upf_n3_ip`.

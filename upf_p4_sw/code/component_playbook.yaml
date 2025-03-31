@@ -161,7 +161,6 @@
           - "{{ one_upf_p4_sw_open5gs_amf_ngap_addr }}"
           - "{{ one_upf_p4_sw_controller_upf_ipv4_n3 }}"
           - "{{ one_upf_p4_sw_ue_pool }}"
-        # nat_exceptions: ## TODO xception for amf_n2_ip/upf_n3_ip ?
 
 
 - name: "STAGE 6: Publish execution results"

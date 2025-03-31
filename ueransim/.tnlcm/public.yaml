@@ -21,7 +21,7 @@ metadata:
     The UERANSIM component can be used as a 5G User Equipment (UE), a gNB or as both, according to input variable `one_ueransim_mode`.
 
     - In *gnb* mode, all gNB-related variables are used to modify the yaml config file used by the `ueransim-gnb.service`.
-      If a previously deployed 'open5gs' component is specified in the `one_ueransim_gnb_linked_open5gs` input variable, its variables will be used
+      If a previously deployed 'open5gs' component is specified in the `one_ueransim_gnb_linked_5gcore` input variable, its variables will be used
       to autocomplete the gNB-related variables not provided by the experimenter.
 
     - In *ue* mode, all UE-related variables are used to modify the yaml config file used by the `ueransim-ue.service`.
@@ -51,7 +51,6 @@ input:
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
     required_when: false
-  # TODO: case insensitive, por si acaso
   one_ueransim_mode: 
     description: |
       Set the component as a gNB, an UE or as both inside the Trial Network. Read the component's description for more details.
@@ -67,7 +66,7 @@ input:
     type: bool
     default_value: "True if `one_ueransim_mode` is set to 'gnb' or `both`. False otherwise."
     required_when: false
-  one_ueransim_gnb_linked_open5gs:
+  one_ueransim_gnb_linked_5gcore:
     description: |
       Name of a previously deployed 'open5gs' component (`open5gs_k8s`, `open5gs_vm`, `upf_p4_sw` or `open5gcore_vm`).
       In *gnb* mode, defines the 5G SA core the gNB will try to connect to.
@@ -79,40 +78,40 @@ input:
     description: |
       In *gnb* mode, IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
       AMF port is currently hardcoded to always be 38412.
-      Autocompletes itself if `one_ueransim_gnb_linked_open5gs` is defined.
+      Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
     type: str
     default_value: "10.21.12.200"
     required_when: false
   one_ueransim_gnb_tac:
-    description: In *gnb* mode, Tracking Area Code (TAC) of the PLMN. Autocompletes itself if `one_ueransim_gnb_linked_open5gs` is defined.
+    description: In *gnb* mode, Tracking Area Code (TAC) of the PLMN. Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
     type: int
     default_value: 200
     required_when: false
   one_ueransim_gnb_mcc:
     description: |
       In *gnb* mode, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
-      Autocompletes itself if `one_ueransim_gnb_linked_open5gs` is defined.
+      Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
     type: str
     default_value: "001"
     required_when: false
   one_ueransim_gnb_mnc:
     description: |
       In *gnb* mode, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
-      Autocompletes itself if `one_ueransim_gnb_linked_open5gs` is defined.
+      Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
     type: str
     default_value: "01"
     required_when: false
   one_ueransim_gnb_slices_sst:
     description: |
       In *gnb* mode, Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI).
-      Autocompletes itself if `one_ueransim_gnb_linked_open5gs` is defined.
+      Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
     type: int
     default_value: 1
     required_when: false
   one_ueransim_gnb_slices_sd:
     description: |
       In *gnb* mode, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
-      Autocompletes itself if `one_ueransim_gnb_linked_open5gs` is defined.
+      Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
     type: str
     default_value: "000001"
     required_when: false
@@ -233,8 +232,8 @@ terraform_outputs:
   __entity_name__mode: input.one_ueransim_mode
   __entity_name__gnb_metadata:
     run_gnb: input.one_ueransim_run_gnb
-    linked_open5gs: input.one_ueransim_gnb_linked_open5gs
-    amf_n2_ip: input.one_ueransim_gnb_amf_n2_ip  # TODO: delete it as the tn_bastion can directly handle the routing.
+    linked_open5gs: input.one_ueransim_gnb_linked_5gcore
+    amf_n2_ip: input.one_ueransim_gnb_amf_n2_ip
     tac: input.one_ueransim_gnb_tac
     mcc: input.one_ueransim_gnb_mcc
     mnc: input.one_ueransim_gnb_mnc

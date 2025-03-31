@@ -16,11 +16,11 @@
 - name: Tasks for UERANSIM as gNB
   when: 
     - one_ueransim_mode in ['gnb', 'both']
-    - one_ueransim_gnb_linked_open5gs is defined and one_ueransim_gnb_linked_open5gs != ''
+    - one_ueransim_gnb_linked_5gcore is defined and one_ueransim_gnb_linked_5gcore != ''
   block:
     - name: Convert open5gs terraform outputs to a dictionary
       ansible.builtin.set_fact:
-        open5gs_metadata_dict: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_open5gs + '-metadata'] }}"
+        open5gs_metadata_dict: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_5gcore + '-metadata'] }}"
 
     - name: Autocomplete gNB-related variables
       ansible.builtin.set_fact:

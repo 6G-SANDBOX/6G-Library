@@ -1,8 +1,8 @@
 # Changelog
 
-## unreleased
+## v0.5.0
 ### Fixed
-- Add firewall exception to be able to connecto to the middleware through the tn_bastion.
+- Add firewall exception to be able to connect to the middleware through the `tn_bastion`.
 
 
 ## v0.4.0

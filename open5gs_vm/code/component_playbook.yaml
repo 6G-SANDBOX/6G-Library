@@ -178,7 +178,6 @@
           - "{{ one_open5gs_vm_amf_n2_ip }}"
           - "{{ one_open5gs_vm_upf_n3_ip }}"
           - "{{ one_open5gs_vm_ue_subnet }}"
-        # nat_exceptions: ## TODO xception for amf_n2_ip/upf_n3_ip ?
 
 
 - name: "STAGE 6: Publish execution results"

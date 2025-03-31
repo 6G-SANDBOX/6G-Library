@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v0.5.0
 ### Changed
 - Variable `one_vnet_gw` has now no default variable, and defined no gateway if empty.
 
