@@ -8,6 +8,8 @@ trial_network:
     name: "exp"
     dependencies: ["tn_init"]
     input:
+      one_elcm_networks:
+        - tn_vxlan
       one_elcm_influxdb_user: "admin"
       one_elcm_influxdb_password: "adminadmin"
       one_elcm_influxdb_org: "elcmorg"

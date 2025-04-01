@@ -1,5 +1,9 @@
 # Changelog
 
+## unreleased
+### Added
+- Add `one_elcm_networks` input in `public.yaml`.
+
 ## v3.7.1
 ### Added
 - Migrate influxdb from `v1.7.6` to `v2.7.11`.

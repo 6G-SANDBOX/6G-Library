@@ -1,6 +1,8 @@
 # Changelog
 
 ## [unreleased]
+### Added
+- Component `elcm` add `one_elcm_networks` input in `public.yaml`.
 
 
 ## [v0.5.0]
