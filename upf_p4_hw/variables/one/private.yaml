@@ -10,9 +10,29 @@
 
 #TODO: Think about the networks that I need (need to connect N2 to gNB and N4 to UPF)
 # Related to the deployment of the Open5GS Control Plane VM
-one_upf_p4_hw_open5gs_cpu: 4
-one_upf_p4_hw_open5gs_memory: 8192
-one_upf_p4_hw_open5gs_disk: 25600
+one_upf_p4_hw_open5gs_resources:
+  extra_large:
+    cpu: 8
+    memory: 32768
+    disk: 102400
+  large:
+    cpu: 4
+    memory: 16384
+    disk: 51200
+  medium:
+    cpu: 4
+    memory: 8192
+    disk: 25600
+  small:
+    cpu: 2
+    memory: 4096
+    disk: 15360
+  very_small:
+    cpu: 1
+    memory: 2048
+    disk: 10240
+one_upf_p4_hw_open5gs_size: "small"         # Small for default. It can be changed in the input file.
+
 one_upf_p4_hw_open5gs_networks:
   - tn_vxlan              # Management network
 
