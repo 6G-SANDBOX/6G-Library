@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.0
+### Added
+- NFTables firewall now accepts exception files for NATting at `/etc/nftables/nat_exceptions/*.nft`.
+
+
 ## v0.4.0
 ### Added
 - New public input variables `one_bastion_vpn_clients` and `one_bastion_vpn_allowedips`.
@@ -10,9 +15,11 @@
 - Public input variable `one_bastion_wireguard_allowedips` has been deleted.
 - Variables `one_vxlan_gw` and `one_vxlan_dns` have been deleted, as the new tn_bastion fills those roles now.
 
+
 ## v0.3.0
 ### Removed
 - Deleted ansible task overwriting `entity_name` with the component type. `entity_name` is now only defined during the Jenkins Pipeline.
+
 
 ## v0.2.0
 ### Added

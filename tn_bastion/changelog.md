@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.0
+### Added
+- NFTables firewall now accepts exception files for NATting at `/etc/nftables/nat_exceptions/*.nft`.
+
+
 ## v0.4.0
 Massive update. Component is no longer deprecated, and tn_init will just use files from it when necessary.
 ### Added

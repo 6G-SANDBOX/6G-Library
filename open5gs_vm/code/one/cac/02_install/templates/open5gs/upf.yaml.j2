@@ -17,7 +17,7 @@ upf:
 #        - address: 127.0.0.4
   gtpu:
     server:
-      - address: {{ one_open5gs_vm_upf_ip }}
+      - address: {{ one_open5gs_vm_upf_n3_ip }}
   session:
     - subnet: {{ one_open5gs_vm_ue_subnet }}
       dev: ogstun

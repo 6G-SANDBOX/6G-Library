@@ -41,6 +41,21 @@ input:
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
     required_when: false
+  one_upf_p4_sw_open5gs_amf_ngap_addr:
+    description: Address to expose the Core Access and Mobility Management Function (AMF)
+    type: str
+    default_value: "10.0.1.2"
+    required_when: false
+  one_upf_p4_sw_controller_upf_ipv4_n3:
+    description: Address to expose the N3 (upf-gnb) Core User Plane Function (UPF)
+    type: str
+    default_value: "10.0.3.1"
+    required_when: false
+  one_upf_p4_sw_open5gs_control_tac:
+    description: Tracking Area Code in the PLMN
+    type: int
+    default_value: 200
+    required_when: false
   one_upf_p4_sw_open5gs_control_mcc:
     description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
     type: str
@@ -71,11 +86,6 @@ input:
     type: str
     default_value: "internet"
     required_when: false
-  one_upf_p4_sw_open5gs_control_tac:
-    description: Tracking Area Code in the PLMN
-    type: int
-    default_value: 200
-    required_when: false
   one_upf_p4_sw_open5gs_control_s_nssai_sst:
     description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
     type: int
@@ -85,16 +95,6 @@ input:
     description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
     type: str
     default_value: "1"
-    required_when: false
-  one_upf_p4_sw_open5gs_amf_ngap_addr:
-    description: Address to expose the Core Access and Mobility Management Function (AMF)
-    type: str
-    default_value: "10.0.1.2"
-    required_when: false
-  one_upf_p4_sw_controller_upf_ipv4_n3:
-    description: Address to expose the N3 (gnb-upf) Core User Plane Function (UPF)
-    type: str
-    default_value: "10.0.3.1"
     required_when: false
   one_upf_p4_sw_controller_upf_ipv4_n6:
     description: Address to expose the N6 (upf-pdn) Core User Plane Function (UPF)
@@ -118,6 +118,7 @@ input:
     required_when: false
 
 
+
 ####################################
 ## Generated terraform outputs
 ####################################
@@ -125,16 +126,19 @@ terraform_outputs:
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
   __entity_name__metadata:
-    proxy: "10.11.3.1"   # hardcoded
+    amf_n2_ip: input.one_upf_p4_sw_open5gs_amf_ngap_addr 
+    upf_n3_ip: input.one_upf_p4_sw_controller_upf_ipv4_n3
+    ue_count: '1'
+    tac: input.one_upf_p4_sw_open5gs_control_tac
     mcc: input.one_upf_p4_sw_open5gs_control_mcc
     mnc: input.one_upf_p4_sw_open5gs_control_mnc
     msin: input.one_upf_p4_sw_open5gs_control_msin
     key: input.one_upf_p4_sw_open5gs_control_key
     opc: input.one_upf_p4_sw_open5gs_control_opc
     apn: input.one_upf_p4_sw_open5gs_control_apn
-    tac: input.one_upf_p4_sw_open5gs_control_tac
-    s_nssai_sd: input.one_upf_p4_sw_open5gs_control_s_nssai_sd
     s_nssai_sst: input.one_upf_p4_sw_open5gs_control_s_nssai_sst
-    amf_ip: input.one_upf_p4_sw_open5gs_amf_ngap_addr 
-    upf_ip: input.one_upf_p4_sw_controller_upf_ipv4_n3
-    upf_ipv4_n6: input.one_upf_p4_sw_controller_upf_ipv4_n6
+    s_nssai_sd: input.one_upf_p4_sw_open5gs_control_s_nssai_sd
+    upf_n6_ip: input.one_upf_p4_sw_controller_upf_ipv4_n6
+    enb_n3_ip: input.one_upf_p4_sw_controller_enb_ipv4_n3
+    dn_n6_ip: input.one_upf_p4_sw_controller_dn_ipv4_n6
+    ue_subnet: input.one_upf_p4_sw_ue_pool

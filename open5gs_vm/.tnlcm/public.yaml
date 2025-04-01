@@ -26,6 +26,7 @@ metadata:
     - **small**: 4 GiB of memory, 2 vCPU and 15GiB of storage
     - **very_small**: 2 GiB of memory, 1 vCPU and 10GiB of storage
   hypervisors: ["one"]
+  appliances: ["https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05"]
 
 
 ####################################
@@ -70,19 +71,14 @@ input:
       - "small"
       - "very_small"
     required_when: true
-  one_open5gs_vm_ue_subnet:
-    description: Subnet to be used by the UEs. It is unrelated to any vxlan or vnet components in your Trial Network.
-    type: str
-    default_value: "10.45.0.0/16"
-    required_when: false
-  one_open5gs_vm_amf_ip:
+  one_open5gs_vm_amf_n2_ip:
     description: |
       IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network. 
       It needs to be inside the "one_oneKE_internal_vnet" subnet, but preferably outside it's address range to avoid possible reservation conflicts.
     type: str
     default_value: "10.21.12.200"
     required_when: false
-  one_open5gs_vm_upf_ip:
+  one_open5gs_vm_upf_n3_ip:
     description: |
       IPv4 Address of the Core User Plane Function (UPF) in the 5G core network.
       It needs to be inside the "one_oneKE_internal_vnet" subnet, but preferably outside it's address range to avoid possible reservation conflicts.
@@ -91,7 +87,7 @@ input:
     required_when: false
   one_open5gs_vm_ue_count:
     description: |
-      Total number of UEs to be provisioned. UE IMSIs will be generated sequentially starting to count from
+      Total number of UEs to be provisioned. UE SUPIs will be generated sequentially starting to count from
       `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin`.
     type: int
     default_value: 20
@@ -104,21 +100,21 @@ input:
   one_open5gs_vm_mcc:
     description: |
       Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
-      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid IMSI.
+      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid SUPI in IMSI format.
     type: str
     default_value: "001"
     required_when: false
   one_open5gs_vm_mnc:
     description: |
       Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
-      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid IMSI.
+      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid SUPI in IMSI format.
     type: str
     default_value: "01"
     required_when: false
   one_open5gs_vm_msin:
     description: |
       Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes.
-      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid IMSI.
+      Values `one_open5gs_k8s_mcc` + `one_open5gs_k8s_mnc` + `one_open5gs_k8s_msin` must add to exactly 15 digits to form a valid SUPI in IMSI format.
     type: str
     default_value: "0000000001"
     required_when: false
@@ -147,7 +143,16 @@ input:
     type: str
     default_value: "000001"
     required_when: false
-
+  one_open5gs_vm_ue_subnet:
+    description: Subnet to be used by the UEs. It is unrelated to any vxlan or vnet components in your Trial Network.
+    type: str
+    default_value: "10.45.0.0/16"
+    required_when: false
+  one_open5gs_vm_use_nightly:
+    description: Install the Nightly version of Open5GS. Note that this could cause isseues when there are breaking changes in the nightly version.
+    type: bool
+    default_value: false
+    required_when: false
 
 ####################################
 ## Generated terraform outputs
@@ -156,10 +161,8 @@ terraform_outputs:
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
   __entity_name__metadata:
-    oneKE: None
-    proxy: None
-    amf_ip: input.one_open5gs_vm_amf_ip
-    upf_ip: input.one_open5gs_vm_upf_ip
+    amf_n2_ip: input.one_open5gs_vm_amf_n2_ip
+    upf_n3_ip: input.one_open5gs_vm_upf_n3_ip
     ue_count: input.one_open5gs_vm_ue_count
     tac: input.one_open5gs_vm_tac
     mcc: input.one_open5gs_vm_mcc
@@ -168,5 +171,7 @@ terraform_outputs:
     key: input.one_open5gs_vm_key
     opc: input.one_open5gs_vm_opc
     apn: input.one_open5gs_vm_apn
-    s_nssai_sd: input.one_open5gs_vm_s_nssai_sst
     s_nssai_sst: input.one_open5gs_vm_s_nssai_sd
+    s_nssai_sd: input.one_open5gs_vm_s_nssai_sst
+    ue_subnet: input.one_open5gs_vm_ue_subnet
+    nightly: input.one_open5gs_vm_use_nightly

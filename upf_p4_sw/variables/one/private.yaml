@@ -13,7 +13,6 @@ one_upf_p4_sw_memory: 8192
 one_upf_p4_sw_disk: 25600
 one_upf_p4_sw_networks:
   - tn_vxlan
-  - vnet-vnet_1
 
 # Related to the UPF-P4 control plane
 one_upf_p4_sw_controller_enb_ipv4_n3: "10.11.3.2"
@@ -27,16 +26,16 @@ one_upf_p4_sw_controller_upf_mac_n6: "02:00:0a:0b:06:01"
 
 one_upf_p4_sw_ue_pool: "10.45.0.0/16"
 
-# Related to Open5Gs
+# Related to Open5GS
 one_upf_p4_sw_open5gs_amf_ngap_addr: "10.11.3.1"
 
+one_upf_p4_sw_open5gs_control_tac: 200
 one_upf_p4_sw_open5gs_control_mcc: "001"
 one_upf_p4_sw_open5gs_control_mnc: "01"
 one_upf_p4_sw_open5gs_control_msin: "0000000001"
 one_upf_p4_sw_open5gs_control_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
 one_upf_p4_sw_open5gs_control_opc: "E8ED289DEBA952E4283B54E88E6183CA"
 one_upf_p4_sw_open5gs_control_apn: "internet"
-one_upf_p4_sw_open5gs_control_tac: 200
 one_upf_p4_sw_open5gs_control_s_nssai_sst: 1
 one_upf_p4_sw_open5gs_control_s_nssai_sd: "1"
 

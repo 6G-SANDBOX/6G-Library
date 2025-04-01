@@ -1,1 +1,50 @@
-# TODO
+trial_network:
+
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input:
+      one_bastion_vpn_clients: 3
+  vnet-n2:
+    type: "vnet"
+    name: "n2"
+    dependencies: []
+    input:
+      one_vnet_first_ip: "10.10.11.1"
+      one_vnet_netmask: 24
+      one_vnet_gw: null # there is no gateway in this network
+      one_vnet_dns: null # there is no DNS in this network
+  open5gcore_vm-core:
+    type: "open5gcore_vm"
+    name: "core"
+    dependencies:
+      - "tn_init"
+      - "vnet-n2"
+    input:
+      one_open5gcore_vm_size: "small"
+      one_open5gcore_vm_external_vnet: "tn_vxlan"
+      one_open5gcore_vm_internal_vnet:
+        - "vnet-n2"  # network used for n2 and n3 (when list length=1)
+      one_open5gcore_vm_ue_subnet: "10.45.0.0/16"
+      one_open5gcore_vm_mcc: "999"
+      one_open5gcore_vm_mnc: "38"
+      one_open5gcore_vm_msin: "0000000001"
+      one_open5gcore_vm_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+      one_open5gcore_vm_opc: "E8ED289DEBA952E4283B54E88E6183CA"
+      one_open5gcore_vm_apn: "internet"
+      one_open5gcore_vm_tac: 122
+      one_open5gcore_vm_s_nssai_sst: 1
+      one_open5gcore_vm_s_nssai_sd: "000001"
+      one_open5gcore_vm_amf_n2_ip: "10.10.11.200"
+      one_open5gcore_vm_upf_n3_ip: "10.10.11.201"
+      one_open5gcore_vm_ue_count: 20
+      one_open5gcore_vm_upf_xdp: True
+######
+  berlin_ran-foo:
+    type: "berlin_ran"
+    name: "foo"
+    dependencies:
+      - "open5gcore_vm-core"
+    input:
+      any_berlin_ran_linked_5gcore: "open5gcore_vm-core"
+      any_berlin_ran_duration: 3600

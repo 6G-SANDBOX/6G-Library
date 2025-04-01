@@ -1,9 +1,13 @@
 # Changelog
 
-## unreleased
+## v0.5.0
+### Added
+- Component is now responsible to expose its AMF and UPF interfaces, by adding rules and firewall exceptions to `tn_bastion`.
 ### Changed
 - Open5GS upgraded from `v2.7.0` to `v2.7.2`. Chart version upgraded from `v2.2.2` to `v2.2.6`.
 - Simplified chart values.yaml manifest.
+- Renamed variable `one_open5gs_k8s_amf_ip` to `one_open5gs_k8s_amf_n2_ip`.
+- Renamed variable `one_open5gs_k8s_upf_ip` to `one_open5gs_k8s_upf_n3_ip`.
   
 
 ## v0.4.0
@@ -17,7 +21,7 @@
 ### Removed
 - Removed variable `one_open5gs_k8s_webui_subdomain`. Subdomain is now deduced from the one from the `tn_bastion` and the `entity_name`.
 ### Fixed
-- Variable `one_open5gs_upf_ip` is now correctly set as an output variable.
+- Variable `one_open5gs_k8s_upf_ip` is now correctly set as an output variable.
 
 
 ## v0.3.0

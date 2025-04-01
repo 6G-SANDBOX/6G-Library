@@ -5,12 +5,12 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   template_id = {{ site_available_components.ixc_endpoint.template_id }}
 
   context = {
-    NETWORK = "YES"
-    NETCFG_TYPE: "interfaces"
-    SET_HOSTNAME = "$NAME"
-    USERNAME = "jenkins"
-    SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
-    ONEAPP_IXCHARIOT_ENDPOINT_RS_ADDRESS: "{{ one_ixc_endpoint_rs }}"
+    NETWORK =        "YES"
+    NETCFG_TYPE =    "interfaces"
+    SET_HOSTNAME =   "$NAME"
+    USERNAME =       "jenkins"
+    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
+    ONEAPP_IXCHARIOT_ENDPOINT_RS_ADDRESS = "{{ one_ixc_endpoint_rs }}"
   }
 
 {% for network in one_ixc_endpoint_networks %}
