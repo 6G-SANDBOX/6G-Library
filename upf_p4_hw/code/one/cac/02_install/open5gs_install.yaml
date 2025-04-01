@@ -59,9 +59,47 @@
   args:
     chdir: /home/jenkins
 
-- name: Pause to wait for mongo to deployment
+- name: Pause to wait for services deployment
   pause:
     seconds: 5
+
+- name: Verify Open5GS services are running
+  become: true
+  become_user: jenkins
+  command: docker ps --format '{{.Names}} - {{.Status}}'"
+  register: docker_status
+  changed_when: false
+  failed_when: >
+    'mongo - Up' not in docker_status.stdout or
+    'amf - Up' not in docker_status.stdout or
+    'ausf - Up' not in docker_status.stdout or
+    'bsf - Up' not in docker_status.stdout or
+    'nrf - Up' not in docker_status.stdout or
+    'nssf - Up' not in docker_status.stdout or
+    'pcf - Up' not in docker_status.stdout or
+    'smf - Up' not in docker_status.stdout or
+    'udm - Up' not in docker_status.stdout or
+    'udr - Up' not in docker_status.stdout or
+    'webui - Up' not in docker_status.stdout
+    
+- name: Verify specific Open5GS container health
+  become: true
+  become_user: jenkins
+  command: "docker inspect -f '{{.State.Running}}' {{ item }}"
+  loop:
+    - mongo
+    - amf
+    - smf
+    - nrf
+    - ausf
+    - udm
+    - udr
+    - pcf
+    - nssf
+    - bsf
+    - webui
+  register: container_status
+  failed_when: "'true' not in container_status.stdout"
 
 # TODO: At the moment, only one UE is registed
 - name: Apply template to UEs registration script
@@ -80,7 +118,6 @@
   command: /home/jenkins/config/register_subscriber.sh
   register: ue_register_result
   failed_when: ue_register_result.rc != 0 and "duplicate key error" not in ue_register_result.stdout and "duplicate key error" not in ue_register_result.stderr
-  
-#TODO: Run some tests?
+
 
 #TODO: NAT (future)?
