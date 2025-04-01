@@ -219,9 +219,14 @@
         method: GET
         headers:
           Content-Type: "application/json"
-        status_code: 200
+        status_code: [200, 502, 503, 504]
         validate_certs: no
+        timeout: 10
       register: initial_status
+      retries: 3
+      delay: 5
+      until: initial_status.status == 200
+      failed_when: initial_status.status != 200 and initial_status.attempts|default(1) >= 3
       
     - name: "Start UPF if not running"
       ansible.builtin.uri:
