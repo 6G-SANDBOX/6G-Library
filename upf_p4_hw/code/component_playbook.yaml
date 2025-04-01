@@ -188,6 +188,23 @@
         state: reloaded
       become: true
       when: nft_rules_added.changed
+      register: nft_reload
+      failed_when: nft_reload is failed
+
+    # Verify nftables configuration after reload
+    - name: Verify nftables configuration
+      ansible.builtin.shell: nft list ruleset
+      register: nft_list
+      failed_when: false
+      changed_when: false
+      become: true
+      when: nft_reload is changed
+
+    # Debug nftables ruleset
+    - name: Debug nftables ruleset
+      ansible.builtin.debug:
+        var: nft_list.stdout_lines
+      when: nft_reload is changed
 
 
 - name: "STAGE 3.3: Apply CAC to configure the UPF HW Intel Tofino 2 external component"
