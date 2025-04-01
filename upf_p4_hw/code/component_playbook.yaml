@@ -49,6 +49,8 @@
           - (terraform_outputs.stdout | from_json)[entity_name + '-id'] is defined
         fail_msg: "Missing required terraform outputs"
 
+    # access_vnet_id is used to identify the primary network interface of the Open5GS VM
+    # This interface will be used for both management access and as SMF PFCP address
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
@@ -57,7 +59,7 @@
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_upf_p4_hw_open5gs_networks[0] + '-id'] | string }}"
 
-    # NEW TASK: Dynamically set the SMF PFCP address to the VM's tn_vxlan IP
+    # Dynamically set the SMF PFCP address to the VM's tn_vxlan IP
     - name: Set SMF PFCP address to VM's tn_vxlan IP
       ansible.builtin.set_fact:
         one_upf_p4_hw_open5gs_smf_pfcp_addr: "{{ ips[access_vnet_id] }}"
@@ -76,7 +78,6 @@
         ansible_user: "jenkins"
 
     # While not used by the Jenkins, we included the configuration of a .ssh/config per TN in the Jenkins VM for debugging purposes.
-    # If the configuration created doesn't fit your component, feel free to create another task file in your components cac/01_pre directory
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
 
