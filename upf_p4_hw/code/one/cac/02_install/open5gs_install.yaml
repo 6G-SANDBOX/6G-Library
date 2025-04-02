@@ -66,38 +66,17 @@
 - name: Verify Open5GS services are running
   become: true
   become_user: jenkins
-  command: docker ps --format {% raw %}'{{.Names}} - {{.Status}}'{% endraw %}
+  shell: docker ps | grep -E "(mongo|amf|ausf|bsf|nrf|nssf|pcf|smf|udm|udr|webui)" | grep "Up"
   register: docker_status
   changed_when: false
   failed_when: >
-    'mongo - Up' not in docker_status.stdout or
-    'amf - Up' not in docker_status.stdout or
-    'ausf - Up' not in docker_status.stdout or
-    'bsf - Up' not in docker_status.stdout or
-    'nrf - Up' not in docker_status.stdout or
-    'nssf - Up' not in docker_status.stdout or
-    'pcf - Up' not in docker_status.stdout or
-    'smf - Up' not in docker_status.stdout or
-    'udm - Up' not in docker_status.stdout or
-    'udr - Up' not in docker_status.stdout or
-    'webui - Up' not in docker_status.stdout
+    docker_status.rc != 0 or
+    docker_status.stdout_lines | length < 11
     
 - name: Verify specific Open5GS container health
   become: true
   become_user: jenkins
-  command: "docker inspect -f {% raw %}'{{.State.Running}}'{% endraw %} {{ item }}"
-  loop:
-    - mongo
-    - amf
-    - smf
-    - nrf
-    - ausf
-    - udm
-    - udr
-    - pcf
-    - nssf
-    - bsf
-    - webui
+  shell: docker ps -q --filter "name=mongo|amf|smf|nrf|ausf|udm|udr|pcf|nssf|bsf|webui" | xargs docker inspect -f {% raw %}'{{.State.Running}}'{% endraw %} 2>/dev/null || echo "false"
   register: container_status
   failed_when: "'true' not in container_status.stdout"
 
