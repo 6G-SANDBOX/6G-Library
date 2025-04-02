@@ -66,7 +66,7 @@
 - name: Verify Open5GS services are running
   become: true
   become_user: jenkins
-  command: docker ps --format '{{.Names}} - {{.Status}}'"
+  command: docker ps --format '{{.Names}} - {{.Status}}'
   register: docker_status
   changed_when: false
   failed_when: >
