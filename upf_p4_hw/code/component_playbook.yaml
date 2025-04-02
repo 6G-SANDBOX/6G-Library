@@ -245,10 +245,10 @@
       register: start_result
       when: not initial_status.json.upf_running
 
-    # Wait for 20 seconds after starting
-    - name: "Wait for 20 seconds"
+    # Wait for 25 seconds after starting
+    - name: "Wait for 25 seconds"
       ansible.builtin.pause:
-        seconds: 20
+        seconds: 25
       when: not initial_status.json.upf_running
 
     # Check final status
