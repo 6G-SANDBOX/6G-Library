@@ -22,7 +22,9 @@ metadata:
     Default gateway of this network will be the tn_bastion, which is also the main VPN entrypoint to the Trial Network.
     Deploying tn_init instead is the recommended approach, as it serves as a wrapper of both tn_vxlan and tn_bastion.
   hypervisors: ["one"]
-
+  depends_on:
+    mandatory:
+    any_of:
 
 ####################################
 ## Site-specific variables

@@ -20,6 +20,11 @@ metadata:
     It also contains OpenTAP, InfluxDB and Grafana services installed.
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM"]
+  depends_on:
+    mandatory:
+    any_of:
+      - vnet
+      - tn_vxlan
 
 
 ####################################

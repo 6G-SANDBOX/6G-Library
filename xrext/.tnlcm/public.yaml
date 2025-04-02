@@ -26,7 +26,11 @@ metadata:
           confusing the experimenter.
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_XRext"]
-
+  depends_on:
+    mandatory:
+    any_of:
+      - tn_vxlan
+      - vnet
 
 ####################################
 ## Site-specific variables

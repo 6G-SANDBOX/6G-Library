@@ -21,7 +21,10 @@ metadata:
 
     NOTE: Currently tsn is only available in the site "uma"
   hypervisors: ["one"]
-
+  depends_on:
+    mandatory:
+      - tn_init
+    any_of:
 
 ####################################
 ## Site-specific variables

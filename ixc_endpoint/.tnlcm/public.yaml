@@ -23,7 +23,11 @@ metadata:
     IxChariot Performance Endpoints act as controlled traffic sources and receivers, simulating real-world applications like web browsing, video streaming, or file transfers to evaluate how a network handles different traffic types.
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/ixc_endpoint"]
-
+  depends_on:
+    mandatory:
+    any_of:
+      - tn_vxlan
+      - vnet
 
 ####################################
 ## Site-specific variables

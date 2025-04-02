@@ -21,7 +21,11 @@ metadata:
     The KS8500 Runner allows accessing local on premises resources while running a test campaign being scheduled from the KS8500 backend
   hypervisors: ["one"]
   appliances: ["https://marketplace.opennebula.io/appliance/d74a5f80-20bd-013d-0e49-7875a4a4f528"]
-
+  depends_on:
+    mandatory:
+    any_of:
+      - tn_vxlan
+      - vnet
 
 ####################################
 ## Site-specific variables

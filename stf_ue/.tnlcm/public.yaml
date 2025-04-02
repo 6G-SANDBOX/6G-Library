@@ -23,7 +23,9 @@ metadata:
     **NOTE**: Currently this component is only available in the site "uma".
   hypervisors: ["one"]
   destroy_script: true
-
+  depends_on: #TODO: Need to check
+    mandatory:
+    any_of:
 
 ####################################
 ## Site-specific variables

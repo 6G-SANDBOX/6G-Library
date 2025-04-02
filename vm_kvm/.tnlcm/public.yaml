@@ -27,7 +27,11 @@ metadata:
     - **very_small**: 2 GiB of memory, 1 vCPU and 10GiB of storage
   hypervisors: ["one"]
   appliances: ["https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05"]
-
+  depends_on:
+    mandatory:
+    any_of:
+      - tn_vxlan
+      - vnet
 
 ####################################
 ## Site-specific variables

@@ -29,7 +29,10 @@ metadata:
     Deploying tn_init instead is the recommended approach, as it serves as a wrapper of both tn_vxlan and tn_bastion.
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_bastion"]
-
+  depends_on:
+    mandatory:
+      - tn_vxlan
+    any_of:
 
 ####################################
 ## Site-specific variables

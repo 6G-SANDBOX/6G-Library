@@ -25,7 +25,11 @@ metadata:
     After booting, the agent register itself with the LoadCore Middleware server.
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent"]
-
+  depends_on:
+    mandatory:
+    any_of:
+      - tn_vxlan
+      - vnet
 
 ####################################
 ## Site-specific variables

@@ -32,7 +32,12 @@ metadata:
       UE-related variables not provided by the experimenter can be autocompleted using their respective gNB equivalent variables. 
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_UERANSIM"]
-
+  depends_on:
+    mandatory:
+      - tn_init
+      - vnet
+    any_of:
+      #TODO: Check the ueransim ue section
 
 ####################################
 ## Site-specific variables

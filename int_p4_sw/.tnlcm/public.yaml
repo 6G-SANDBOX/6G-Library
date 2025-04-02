@@ -23,7 +23,11 @@ metadata:
     requirements.  
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_Collector_INT"]
-
+  depends_on:
+    mandatory:
+      - tn_vxlan
+      - vnet #TODO: Check if this is correct
+    any_of:
 
 ####################################
 ## Site-specific variables
