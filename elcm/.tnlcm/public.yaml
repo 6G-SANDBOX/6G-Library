@@ -16,8 +16,13 @@ metadata:
     - Almudena Díaz Zayas <adz@uma.es>
   short_description: Deploy a virtual machine with the ELCM backend and frontend.
   long_description: |
-    Ubuntu 22.04 LTS virtual machine with the ELCM installed.
-    It also contains OpenTAP, InfluxDB and Grafana services installed.
+    Ubuntu 22.04 LTS virtual machine with ELCM installed.
+    
+    ELCM (Experiment Lifecycle Management) is a system designed to manage the complete lifecycle of experiments in research and development environments. It provides a REST API backend built with Python and a web-based frontend also developed in Python. 
+
+    The experiments executed through ELCM allow storing collected metrics in an InfluxDB database, enabling efficient data storage and retrieval for further analysis. 
+
+    This virtual machine also includes OpenTAP, InfluxDB, and Grafana services, facilitating experiment automation, data collection, and real-time visualization.
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM"]
 
