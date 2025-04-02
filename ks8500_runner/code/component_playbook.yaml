@@ -219,11 +219,14 @@
   hosts: bastion
   gather_facts: false
   tasks:
+   - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+      
     - name: Write firewall exception for the Loadcore Middleware
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
         fw_exceptions:
-          - "{{ site_available_components.ks8500_runner.loadcore_middleware_ip }}"
+          - "{{ loadcore_middleware_ip }}"
           
 - name: "STAGE 5: Publish execution results"
   hosts: localhost
