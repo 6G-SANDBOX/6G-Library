@@ -66,7 +66,7 @@
 - name: Verify Open5GS services are running
   become: true
   become_user: jenkins
-  command: docker ps --format '{{.Names}} - {{.Status}}'
+  command: docker ps --format {% raw %}'{{.Names}} - {{.Status}}'{% endraw %}
   register: docker_status
   changed_when: false
   failed_when: >
@@ -85,7 +85,7 @@
 - name: Verify specific Open5GS container health
   become: true
   become_user: jenkins
-  command: "docker inspect -f '{{.State.Running}}' {{ item }}"
+  command: "docker inspect -f {% raw %}'{{.State.Running}}'{% endraw %} {{ item }}"
   loop:
     - mongo
     - amf
