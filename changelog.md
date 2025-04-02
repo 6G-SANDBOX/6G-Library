@@ -1,7 +1,8 @@
 # Changelog
 
 ## [unreleased]
-
+### Added
+- Component `open5gs_vm` new parameter `one_open5gs_vm_install_webui` to install the WEB ui
 
 ## [v0.5.0]
 ### Added

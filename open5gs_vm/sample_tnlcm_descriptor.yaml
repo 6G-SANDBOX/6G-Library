@@ -50,3 +50,4 @@ trial_network:
       # one_open5gs_vm_s_nssai_sst: 1              # Default value
       # one_open5gs_vm_s_nssai_sd: "000001"        # Default value
       # one_open5gs_vm_use_nightly: false          # Default value
+      one_open5gs_vm_install_webui: true
