@@ -140,8 +140,8 @@
 
 
     - name: Install Open5GS WebUI
-      when: false        # Previosly variable install_webui
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/install_webui.yml"
+      when: one_open5gs_vm_install_webui is defined and one_open5gs_vm_install_webui
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/install_webui.yaml"
 
     - name: Copy open5gs-dbctl
       ansible.builtin.copy:
