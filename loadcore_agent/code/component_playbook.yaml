@@ -70,7 +70,7 @@
         # ansible_host: "{{ ips[access_vnet_id] }}"
         ansible_host: "{{ created_vm.instances[0].networks[0].ip }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
-        ansible_user: jenkins
+        ansible_user: "jenkins"
 
     - name: Add tn_bastion to Ansible Inventory
       ansible.builtin.add_host:
