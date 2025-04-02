@@ -153,6 +153,11 @@ input:
     type: bool
     default_value: false
     required_when: false
+  one_open5gs_vm_install_webui:
+    description: Install the WEB-UI of Open5GS. Note that this increases the deployment time.
+    type: bool
+    default_value: false
+    required_when: false
 
 ####################################
 ## Generated terraform outputs
