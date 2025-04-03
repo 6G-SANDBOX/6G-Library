@@ -74,23 +74,6 @@
             ) | trim
           }}
 
-
-    # # For some weird reason, idempotency with this tool gives rc=255, but syntax errors give rc=0...
-    # - name: Resize the disk reserved for Longhorn in the storage VMs
-    #   ansible.builtin.shell: >
-    #     /usr/local/bin/onevm
-    #     disk-resize {{ id }} 0 10G
-    #     --user {{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}
-    #     --password {{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}
-    #     --endpoint {{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}
-    #   register: disk_resize
-    #   failed_when: >
-    #     (disk_resize.rc !=  0 and 'must be larger' not in disk_resize.stderr) or
-    #     ('not found' in disk_resize.stderr)
-    #   changed_when:
-    #     - disk_resize.rc == 0
-    #     - "'not found' not in disk_resize.stderr"
-
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "loadcore_agent"
@@ -105,7 +88,7 @@
         ansible_user: "jenkins"
 
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
 
     - name: Add new VM to an SSH config file ment to be usable by the experimenter
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
