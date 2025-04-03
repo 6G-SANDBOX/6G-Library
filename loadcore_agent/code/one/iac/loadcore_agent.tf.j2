@@ -15,16 +15,18 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
   }
 
-{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
+  # Ignore changes in the disk argument due to limitations in the OpenNebula Terraform provider (#598)
+  lifecycle {
+    ignore_changes = [disk]
+  }
   disk {
     image_id = {{ site_available_components.loadcore_agent.image_id }}
     size     = {{ one_loadcore_agent_disk }}
     target   = "vda"
     driver   = "qcow2"
-  } #}
+  }
 
-{# {% for network in one_loadcore_agent_networks %}     Verify each vnet is only deployed once via terraform due to a Terraform OpenNebula Provider's limitation    #}
-{% for network in one_loadcore_agent_networks | unique %}
+{% for network in one_loadcore_agent_networks %}
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
@@ -41,5 +43,5 @@ output "{{ entity_name }}-id" {
 
 output "{{ entity_name }}-ips" {
   description = "OpenNebula VM Network Assignments"
-  value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
+  value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip... }
 }
