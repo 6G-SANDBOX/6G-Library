@@ -14,6 +14,7 @@
 metadata:
   maintainers:
     - Almudena Díaz Zayas <adz@uma.es>
+    - Carlos Andreo López <c.andreo@uma.es>
   short_description: Deploy a virtual machine with the ELCM backend and frontend.
   long_description: |
     Ubuntu 22.04 LTS virtual machine with ELCM installed.
