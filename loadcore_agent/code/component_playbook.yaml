@@ -77,7 +77,7 @@
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "loadcore_agent"
-        ansible_host: "{{ ips[access_vnet_id] }}"
+        ansible_host: "{{ ips[access_vnet_id][0] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
 
@@ -172,7 +172,7 @@
           {{
             'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
             '&domain=' ~ domain_name ~
-            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ ips[access_vnet_id] | trim
+            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ ips[access_vnet_id][0] | trim
           }}
         method: POST
         body_format: json
