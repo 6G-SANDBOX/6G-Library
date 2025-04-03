@@ -17,7 +17,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     ONEAPP_INFLUXDB_PASSWORD = "{{ one_influxdb_password }}"
     ONEAPP_INFLUXDB_ORG =      "{{ one_influxdb_org }}"
     ONEAPP_INFLUXDB_BUCKET =   "{{ one_influxdb_bucket }}"
-    ONEAPP_INFLUXDB_TOKEN =  "{{ one_influxdb_token }}"
+    ONEAPP_INFLUXDB_TOKEN =    "{{ one_influxdb_token }}"
   }
 
 {# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider

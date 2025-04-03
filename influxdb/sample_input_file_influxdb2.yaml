@@ -6,9 +6,9 @@
 #one_influxdb_networks: 
 #  - tn_vxlan
 
-one_influxdb_version: "1.7.6"
+one_influxdb_version: "2.7.11"
 # one_influxdb_user: "admin"
 # one_influxdb_password: "adminadmin"
-# one_influxdb_org: "dummyorg"
+one_influxdb_org: "dummyorg"
 # one_influxdb_bucket: "dummybucket"
-# one_influxdb_token: "dummydummytoken"
+one_influxdb_token: "dummydummytoken"

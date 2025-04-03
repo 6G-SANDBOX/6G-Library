@@ -14,9 +14,9 @@
 metadata:
   maintainers:
     - Carlos Andreo López <c.andreo@uma.es>
-  short_description: Deploy a virtual machine with InfluxDB v2.7.11
+  short_description: Deploy a virtual machine with InfluxDB v1 or v2 installed
   long_description: |
-    Ubuntu 22.04 LTS virtual machine with InfluxDB v2.7.11 installed. 
+    Ubuntu 22.04 LTS virtual machine with InfluxDB v1 or v2 installed. 
     
     InfluxDB is a time-series database designed to handle large volumes of event and metric data. It is ideal for applications that require high performance in data writes, such as infrastructure monitoring, log analysis, or IoT sensor metrics. In this project, InfluxDB is used to store and query time-based data, enabling trend analysis, alerting, and real-time visualization. Its ability to efficiently manage large amounts of data and integration with various visualization tools like Grafana make InfluxDB an excellent solution for such applications.
   hypervisors: ["one"]
@@ -35,16 +35,16 @@ site_variables:
 ## Input variables
 ####################################
 input:
-  one_influxdb_networks:
-    description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
-    type: "list[tn_vxlan or vnet]"
-    default_value: ["tn_vxlan"]
-    required_when: false
+  one_influxdb_version:
+    description: InfluxDB version to be installed. Format: X.X.X. Example: 2.7.11
+    type: str
+    default_value: "2.7.11"
+    required_when: true
   one_influxdb_user:
     description: Username used to login into the InfluxDB
     type: str
     default_value: "admin"
-    required_when: false
+    required_when: true
   one_influxdb_password:
     description: Password used to login into the InfluxDB
     type: str
@@ -56,15 +56,15 @@ input:
     default_value: "dummyorg"
     required_when: false
   one_influxdb_bucket:
-    description: Bucket name
+    description: Bucket name. For InfluxDB v1, it is the name of the database
     type: str
     default_value: "dummybucket"
-    required_when: false
+    required_when: true
   one_influxdb_token:
-    description: Token used to login into the InfluxDB
+    description: Token used to login into the InfluxDB. Required if InfluxDB v2 is selected
     type: str
     default_value: "dummydummytoken"
-    required_when: true
+    required_when: false
 
 
 ####################################
