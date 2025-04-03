@@ -1,9 +1,9 @@
 # THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
 
 one_cu_k8s_target: "oneKE-cluster"
+one_cu_open5gs_target: "open5gs_k8s-core"
 #one_cu_k8s_open5gs: "open5gs_k8s-core" #it might be needed if amf, upf ips are taken form open5gs_k8s output
 one_cu_k8s_amf_n2_ip: "10.21.12.200"
 one_cu_k8s_upf_n3_ip: "10.21.12.201"
 one_cu_k8s_ip: "10.21.12.203"
-one_ric_k8s_ip: "10.21.12.202"
 dockerhub_token: "XXX"

@@ -43,7 +43,7 @@ trial_network:
   ric_k8s-demo:
     type: "ric_k8s"
     name: "demo"
-    dependencias:
+    dependencies:
     - “oneKE-cluster”      # optional, if its already after the open5gs_k8s, but good for clarity
     - "open5gs_k8s-core"
     input:
@@ -64,8 +64,8 @@ trial_network:
       - "open5gs_k8s-core"   # optional, if its already after the ric_k8s, but good for clarity
     input:
       one_cu_k8s_target: "oneKE-cluster"
+      one_cu_open5gs_target: "open5gs_k8s-core"
       one_cu_k8s_amf_n2_ip: "10.21.12.200"
       one_cu_k8s_upf_n3_ip: "10.21.12.201"
       one_cu_k8s_ip: "10.21.12.203"
-      one_ric_k8s_ip: "10.21.12.202"
       dockerhub_token: "XXX"

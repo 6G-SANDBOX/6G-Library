@@ -24,6 +24,7 @@
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         node_ips: "{{ (terraform_outputs.stdout | from_json)[one_cu_k8s_target + '-node_ips'] }}"
+        open5gs_metadata_dict: "{{ (terraform_outputs.stdout | from_json)[one_cu_open5gs_target + '-metadata'] }}"
         domain_name: >-
           {{
             (
@@ -63,7 +64,6 @@
       set_fact:
         worker_interface: "{{ ansible_facts['ansible_interfaces'][1] }}"
 
-
 - name: "STAGE 3: Apply IaC to deploy the component"
   hosts: "master_0"
   gather_facts: false
@@ -71,10 +71,11 @@
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Authenticate in dockerhub
-      script: "{{ workspace }}/{{ component_type }}/code/any/cac/scripts/set_authentication.sh"
-      environment:
-        DOCKERHUB_TOKEN: "{{ dockerhub_token }}"
+    - name: Authenticate in dockerhub to access helm charts
+      ansible.builtin.command: "helm registry login registry-1.docker.io -u smecina -p {{ dockerhub_token }}"
+
+    - name: Authenticate in dockerhub to access docker images
+      ansible.builtin.command: "kubectl create secret docker-registry regcred --docker-username=smecina --docker-password={{ dockerhub_token }} -n {{ helm_release_name }} --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=240s"
 
     - name: Helm install
       vars:

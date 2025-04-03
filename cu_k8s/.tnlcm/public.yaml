@@ -41,6 +41,10 @@ input:
     description: Name of a previously deployed `oneKE` component, where the the CU Helm Chart will be applied. E.g. `oneKE-my_cluster`.
     type: "oneKE"
     required_when: true
+  one_cu_open5gs_target:
+    description: Name of a previously deployed `open5gs` component, which will be connected to the CU. E.g. `open5gs_k8s-my-core`.
+    type: "str"
+    required_when: true
   one_cu_k8s_amf_n2_ip:
     description: |
       IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
@@ -58,12 +62,6 @@ input:
       The IP address of a cu_k8s
     type: str
     default_value: "10.21.12.203"
-    required_when: false  
-  one_ric_k8s_ip:
-    description: |
-      The IP address of a ric_k8s
-    type: str
-    default_value: "10.21.12.202"
     required_when: false  
   dockerhub_token:
     description: |

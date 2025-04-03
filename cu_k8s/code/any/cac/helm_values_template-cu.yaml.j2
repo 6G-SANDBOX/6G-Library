@@ -4,8 +4,8 @@ image:
 deployment_name: sandbox
 networking:
   bh:
-    open5gs_CP_IP: "{{ one_cu_k8s_amf_n2_ip | string }}"
-    open5gs_UP_IP: "{{ one_cu_k8s_upf_n3_ip | string }}"
+    open5gs_CP_IP: "{{ open5gs_metadata_dict.amf_ip | string }}"
+    open5gs_UP_IP: "{{ open5gs_metadata_dict.upf_ip | string }}"
   mh:
     CU_IP: "{{ one_cu_k8s_ip | string }}"
     DU_IP: "{{ site_available_components.iswireless_radio.f1_ip }}"
