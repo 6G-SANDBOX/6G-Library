@@ -219,7 +219,7 @@
   hosts: bastion
   gather_facts: false
   tasks:
-   - name: Load enviromental variables from different sources
+    - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
       
     - name: Write firewall exception for the Loadcore Middleware
