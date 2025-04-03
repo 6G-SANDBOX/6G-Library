@@ -1,0 +1,21 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_influxdb_cpu: 2
+one_influxdb_memory: 2048
+one_influxdb_disk: 3072
+one_influxdb_networks: 
+  - tn_vxlan
+
+one_influxdb_user: "admin"
+one_influxdb_password: "adminadmin"
+one_influxdb_org: "dummyorg"
+one_influxdb_bucket: "dummybucket"
+one_influxdb_token: "dummydummytoken"

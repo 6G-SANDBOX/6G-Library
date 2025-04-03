@@ -1,0 +1,28 @@
+# {{ tn_id }}-{{ entity_name }}
+
+The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
+
+## Important information:
+
+- **OpenNebula VM ID**: `{{ id }}`
+- **VM memory**: `{{ one_influxdb_memory}} MiB`
+- **VM VCPUs**: `{{ one_influxdb_cpu }}`
+- **VM available storage**: `7 GiB`
+- **VM network interfaces**:
+  ```json
+  {{ ips }}
+  ```
+
+## InfluxDB v2
+
+InfluxDB v2 is available on port 8086.
+
+[http://{{ domain_name }}:8086](http://{{ domain_name }}:8086)
+
+Information to access to InfluxDB v2 dashboard:
+
+- **Username**: `{{ one_influxdb_user }}`
+- **Password**: `{{ one_influxdb_password }}`
+- **Organization**: `{{ one_influxdb_org }}`
+- **Bucket**: `{{ one_influxdb_bucket }}`
+- **Token**: `{{ one_influxdb_token }}`

@@ -1,0 +1,13 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+#one_influxdb_cpu: 2
+#one_influxdb_memory: 2048
+#one_influxdb_disk: 3072
+#one_influxdb_networks: 
+#  - tn_vxlan
+
+# one_influxdb_user: "admin"
+one_influxdb_password: "adminadmin"
+# one_influxdb_org: "dummyorg"
+# one_influxdb_bucket: "dummybucket"
+one_influxdb_token: "dummydummytoken"
