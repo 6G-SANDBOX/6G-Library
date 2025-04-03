@@ -1,0 +1,32 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment of nwdaf_sa`
+## and their default value.
+## Some of them are modifiable through input variables (to check which)
+##
+######################################################
+
+# one_open5gs_k8s_amf_ip: "10.21.12.200"
+# one_open5gs_k8s_upf_ip: "10.21.12.201"
+# one_open5gs_k8s_ue_count: 20
+# one_open5gs_k8s_tac: 200
+# one_open5gs_k8s_mcc: "001"
+# one_open5gs_k8s_mnc: "01"
+# one_open5gs_k8s_msin: "0000000001"
+# one_open5gs_k8s_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"
+# one_open5gs_k8s_opc: "E8ED289DEBA952E4283B54E88E6183CA"
+# one_open5gs_k8s_apn: "internet"
+# one_open5gs_k8s_s_nssai_sst: 1
+# one_open5gs_k8s_s_nssai_sd: "000001"
+
+one_nwdaf_sa_REDIS_HOST: "redis-service-master"
+one_nwdaf_sa_REDIS_PORT: "6379"
+one_nwdaf_sa_CELERY_BROKER_URL: "redis://redis-service-master:6379/0"
+one_nwdaf_sa_CELERY_RESULT_BACKEND: "redis://redis-service-master:6379/0"
+one_nwdaf_sa_LOCALAPI: "http://localhost:3000"
+one_nwdaf_sa_PROMETHEUS_URL: "http://localhost:9090"
+one_nwdaf_sa_NWDAF_LOCALAPI_URL: "http://localhost:3000"
+one_nwdaf_sa_LOCALAPI_SERVICE_ENDPOINT: "http://localapi-service:3000/subscriptions/callback/actual"
+one_nwdaf_sa_METRICS_AGGREGATOR_SERVICE_ENDPOINT: "http://metrics-aggregator-service:8000/collect"

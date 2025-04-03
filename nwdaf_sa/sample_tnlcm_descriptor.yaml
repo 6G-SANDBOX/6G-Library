@@ -1,0 +1,39 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  vnet-internal:
+    type: "vnet"
+    name: "internal"
+    dependencies:
+      - "tn_init"
+    input: {}
+  oneKE-cluster:
+    type: "oneKE"
+    name: "cluster"
+    dependencies:
+      - "tn_init"
+      - "vnet-internal"
+    input:
+      one_oneKE_external_vnet: "tn_vxlan"
+      one_oneKE_internal_vnet: "vnet-internal"
+      # one_oneKE_cni_plugin: "canal"  # Default value
+      # one_oneKE_metallb: true        # Default value
+      one_oneKE_metallb_range: "10.21.12.200-10.21.12.240"
+  nwdaf_sa_k8s-core:
+    type: "nwdaf_sa_k8s"
+    name: "core"
+    dependencies:
+      - "oneKE-cluster"
+    input:
+      one_nwdaf_sa_target: "oneKE-cluster"
+      one_nwdaf_sa_REDIS_HOST: "redis-service-master"
+      one_nwdaf_sa_REDIS_PORT: "6379"
+      one_nwdaf_sa_CELERY_BROKER_URL: "redis://redis-service-master:6379/0"
+      one_nwdaf_sa_CELERY_RESULT_BACKEND: "redis://redis-service-master:6379/0"
+      one_nwdaf_sa_LOCALAPI: "http://localhost:3000"
+      one_nwdaf_sa_PROMETHEUS_URL: "http://localhost:9090"
+      one_nwdaf_sa_NWDAF_LOCALAPI_URL: "http://localhost:3000"
+      one_nwdaf_sa_LOCALAPI_SERVICE_ENDPOINT: "http://localapi-service:3000/subscriptions/callback/actual"
+      one_nwdaf_sa_METRICS_AGGREGATOR_SERVICE_ENDPOINT: "http://metrics-aggregator-service:8000/collect"
