@@ -8,7 +8,8 @@
 ### Changed
 - updated content of ks8500_runner sample_tnlcm_descriptor.yaml
 - update ks8500_runner component_playbook.yaml with task to increase VM disc size
-- update ks8500_runner component_playbook.yaml with task to install additional packages   
+- update ks8500_runner component_playbook.yaml with task to install additional packages
+- update component_playbook.yaml with tasks to add firewall exceptions  
 - *.tnlcm/public.yaml* files normalized between components
 - Component `open5gs_k8s` upgrades its software from `v2.7.0` to `v2.7.2`. Component upgraded to version `unreleased`.
 - New input variables for `int_p4_sw` and `upf_p4_sw`. Components upgraded to version `unreleased`.
