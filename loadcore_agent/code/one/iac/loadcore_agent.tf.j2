@@ -13,6 +13,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     SET_HOSTNAME =   "$NAME"
     USERNAME =       "jenkins"
     SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
+    START_SCRIPT_BASE64 = "IyEvYmluL2Jhc2gKZ3Jvd3BhcnQgL2Rldi92ZGEgMQpyZXNpemUyZnMgL2Rldi92ZGEx"
   }
 
   # Ignore changes in the disk argument due to limitations in the OpenNebula Terraform provider (#598)
