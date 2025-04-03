@@ -4,19 +4,19 @@
     src: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_values_template.yaml.j2"
     dest: "/root/{{ helm_release_name }}-values.yaml"
 
-- name: Deploy Open5Gs helm
+- name: Deploy NWDAF StreamAnalyzer helm
   kubernetes.core.helm:
     kubeconfig: /etc/rancher/rke2/rke2.yaml
     name: "{{ helm_release_name }}"
-    chart_ref: oci://registry-1.docker.io/gradiantcharts/open5gs
-    chart_version: 2.2.6
+    chart_ref: oci://registry-1.docker.io/lamdaleon/helm
+    chart_version: 0.1.0
     namespace: "{{ helm_release_name }}"
     create_namespace: true
     values_files:
     - "/root/{{ helm_release_name }}-values.yaml"
 
 - name: Wait until all pods are Running
-  ansible.builtin.command: "kubectl wait pod --all --for=condition=Ready -n {{ helm_release_name }} --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=240s"
+  ansible.builtin.command: "kubectl wait pod --all --for=condition=Ready -n {{ helm_release_name }} --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=600s"
 
 # ### Ideal ansible method, but not working. I guess it expects a list with the deployment names.
 # - name: Wait till all Pods are Running
