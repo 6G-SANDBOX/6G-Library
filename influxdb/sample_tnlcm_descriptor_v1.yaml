@@ -3,13 +3,12 @@ trial_network:
     type: "tn_init"
     dependencies: []
     input: {}
-  influxdb-v2:
+  influxdb-v1:
     type: "influxdb"
-    name: "v2"
+    name: "v1"
     dependencies: ["tn_init"]
     input:
+      one_influxdb_version: "1.7.6"
       one_influxdb_user: "admin"
       one_influxdb_password: "adminadmin"
-      one_influxdb_org: "testing"
       one_influxdb_bucket: "testing"
-      one_influxdb_token: "default-token-testing"

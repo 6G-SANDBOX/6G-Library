@@ -1,0 +1,16 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  influxdb-v2:
+    type: "influxdb"
+    name: "v2"
+    dependencies: ["tn_init"]
+    input:
+      one_influxdb_version: "2.7.11"
+      one_influxdb_user: "admin"
+      one_influxdb_password: "adminadmin"
+      one_influxdb_org: "testing"
+      one_influxdb_bucket: "testing"
+      one_influxdb_token: "default-token-testing"
