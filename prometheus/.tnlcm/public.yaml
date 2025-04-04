@@ -1,0 +1,49 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Carlos Andreo López <c.andreo@uma.es>
+  short_description: Deploy a virtual machine with Prometheus installed
+  description: |
+    Ubuntu 22.04 LTS virtual machine with Prometheus installed. 
+
+    Prometheus is an open-source systems monitoring and alerting toolkit originally built at SoundCloud. It is designed for reliability and scalability, allowing users to collect and store metrics as time series data, providing powerful querying capabilities and a flexible alerting system. Prometheus is widely used for monitoring cloud-native applications, microservices and containerized environments, making it a popular choice in the DevOps community.
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_prometheus"]
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the Prometheus VM template to use in your OpenNebula environment
+  image_id: ID of the Prometheus VM image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
+####################################
+input:
+  one_prometheus_version:
+    description: Prometheus version to be installed. Format: X.X.X. Example: 2.53.4
+    type: str
+    default_value: "2.53.4"
+    required_when: true
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"

@@ -1,0 +1,20 @@
+# {{ tn_id }}-{{ entity_name }}
+
+The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
+
+## Important information:
+
+- **OpenNebula VM ID**: `{{ id }}`
+- **VM memory**: `{{ one_prometheus_memory}} MiB`
+- **VM VCPUs**: `{{ one_prometheus_cpu }}`
+- **VM available storage**: `7 GiB`
+- **VM network interfaces**:
+  ```json
+  {{ ips }}
+  ```
+
+## Prometheus v{{ one_prometheus_version }}
+
+Prometheus is available on port 9090.
+
+[http://{{ domain_name }}:9090](http://{{ domain_name }}:9090)

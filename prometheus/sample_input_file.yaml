@@ -1,0 +1,9 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+#one_prometheus_cpu: 2
+#one_prometheus_memory: 2048
+#one_prometheus_disk: 3072
+#one_prometheus_networks: 
+#  - tn_vxlan
+
+one_prometheus_version: "2.54.3"

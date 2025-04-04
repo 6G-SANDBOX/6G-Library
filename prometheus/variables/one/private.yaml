@@ -1,0 +1,17 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_prometheus_cpu: 2
+one_prometheus_memory: 2048
+one_prometheus_disk: 3072
+one_prometheus_networks: 
+  - tn_vxlan
+
+# one_prometheus_version: "2.53.4"
