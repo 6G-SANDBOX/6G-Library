@@ -21,3 +21,4 @@ one_ks8500runner_networks:
 ks8500runner_backend_url: https://test-automation.pw.keysight.com
 ks8500runner_registration_token: none
 ks8500runner_name: OpenNebulaDefault
+ks8500runner_special_action: none

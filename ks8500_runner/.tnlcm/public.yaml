@@ -22,14 +22,14 @@ metadata:
   hypervisors: ["one"]
   appliances: ["https://marketplace.opennebula.io/appliance/d74a5f80-20bd-013d-0e49-7875a4a4f528"]
 
-
 ####################################
 ## Site-specific variables
 ####################################
 site_variables:
+  loadcore_middleware_ip: IP address of the loadcore middleware in your site
+  ixchariot_middleware_ip: IP address of the IxChariot middleware in your site
   template_id: ID of the Alpine Linux 3.20 VM template to use in your OpenNebula environment
   image_id: ID of the Alpine Linux 3.20 VM image to use in your OpenNebula environment
-
 
 ####################################
 ## Input variables

@@ -36,15 +36,40 @@
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ks8500runner_networks[0] + '-id'] | string }}"
 
+    # For some weird reason, idempotency with this tool gives rc=255, but syntax errors give rc=0...
+    - name: Resize the disk reserved for Longhorn in the storage VMs
+      ansible.builtin.shell: >
+        /usr/local/bin/onevm
+        disk-resize {{ id }} 0 30G
+        --user {{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}
+        --password {{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}
+        --endpoint {{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}
+      register: disk_resize
+      failed_when: >
+        (disk_resize.rc !=  0 and 'must be larger' not in disk_resize.stderr) or
+        ('not found' in disk_resize.stderr)
+      changed_when:
+        - disk_resize.rc == 0
+        - "'not found' not in disk_resize.stderr"
+        
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "ks8500runner"
         ansible_host: "{{ ips[access_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
+        
+    - name: Add tn_bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
+        ansible_user: "jenkins"
 
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
+      
+    - name: Add new VM to an SSH config file ment to be usable by the experimenter
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
 - name: "STAGE 3: Apply CAC to prepare the component"
   vars:
@@ -75,7 +100,21 @@
       loop:
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
-
+      
+    # Install additional packages
+    - name: Install additional required packages
+      become: true
+      ansible.builtin.package:
+        name:
+          - py3-pip
+          - py3-requests
+          - docker
+          - docker-cli-buildx
+          - docker-compose
+          - openrc
+          - docker-cli-compose
+        state: present
+      
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
     - name: Verify connectivity
@@ -176,8 +215,20 @@
         ks8500runner_registration_info: "{{ docker_container_output.container.Output }}"
       when: docker_container_output.container.Output is defined
 
-
-- name: "STAGE 4: Publish execution results"
+- name: "STAGE 4: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+      
+    - name: Write firewall exception for the Loadcore Middleware
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        fw_exceptions:
+          - "{{ site_available_components.ks8500_runner.loadcore_middleware_ip }}" 
+          - "{{ site_available_components.ks8500_runner.ixchariot_middleware_ip }}"
+- name: "STAGE 5: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local
