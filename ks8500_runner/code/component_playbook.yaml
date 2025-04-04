@@ -226,8 +226,8 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
         fw_exceptions:
-          - "{{ site_available_components.ks8500_runner.loadcore_middleware_ip }}"
-          
+          - "{{ site_available_components.ks8500_runner.loadcore_middleware_ip }}" 
+          - "{{ site_available_components.ks8500_runner.ixchariot_middleware_ip }}"
 - name: "STAGE 5: Publish execution results"
   hosts: localhost
   gather_facts: false
