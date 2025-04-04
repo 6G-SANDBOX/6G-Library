@@ -1,0 +1,25 @@
+# {{ tn_id }}-{{ entity_name }}
+
+The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
+
+## Important information:
+
+- **OpenNebula VM ID**: `{{ id }}`
+- **VM memory**: `{{ one_grafana_memory}} MiB`
+- **VM VCPUs**: `{{ one_grafana_cpu }}`
+- **VM available storage**: `7 GiB`
+- **VM network interfaces**:
+  ```json
+  {{ ips }}
+  ```
+
+## Grafana v{{ one_grafana_version }}
+
+Grafana is available on port 3000.
+
+[http://{{ domain_name }}:3000](http://{{ domain_name }}:3000)
+
+Information to access to Grafana dashboard:
+
+- **Username**: `admin`
+- **Password**: `{{ one_grafana_password }}`

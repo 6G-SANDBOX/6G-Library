@@ -1,0 +1,18 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_grafana_cpu: 2
+one_grafana_memory: 2048
+one_grafana_disk: 3072
+one_grafana_networks: 
+  - tn_vxlan
+
+# one_grafana_version: "11.6.0"
+one_grafana_password: "adminadmin"

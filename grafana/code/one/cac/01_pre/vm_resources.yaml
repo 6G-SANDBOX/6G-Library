@@ -1,0 +1,10 @@
+---
+- name: "Set VM Resources needed for component"
+  ansible.builtin.set_fact:
+    one_grafana_cpu: "{{ one_grafana_cpu }}"
+    one_grafana_memory: "{{ one_grafana_memory }}"
+    one_grafana_disk: "{{ one_grafana_disk }}"
+
+- name: Overwrite again with explicit values from the input file
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/{{ component_type }}/variables/input_file.yaml"

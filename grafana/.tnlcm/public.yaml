@@ -1,0 +1,55 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Carlos Andreo López <c.andreo@uma.es>
+  short_description: Deploy a virtual machine with Grafana
+  long_description: |
+    Ubuntu 22.04 LTS virtual machine with Grafana installed. 
+    
+    Grafana is an open-source analytics and monitoring platform that allows users to visualize and analyze data from various sources in real-time. It provides a powerful and flexible interface for creating interactive dashboards, enabling users to monitor metrics, logs, and other data in a visually appealing way. Grafana supports a wide range of data sources, including time-series databases like InfluxDB, Prometheus, and Elasticsearch, making it an ideal choice for infrastructure monitoring, application performance management, and business intelligence.
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_grafana"]
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the Grafana VM template to use in your OpenNebula environment
+  image_id: ID of the Grafana VM image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
+####################################
+input:
+  one_grafana_version:
+    description: Grafana version to be installed. Format: X.X.X. Example: 11.6.0
+    type: str
+    default_value: "11.6.0"
+    required_when: true
+  one_grafana_password:
+    description: Password used to login into the Grafana. Required to be at least 8 characters long
+    type: str
+    default_value: "adminadmin"
+    required_when: false
+
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
