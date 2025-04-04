@@ -38,3 +38,20 @@ InfluxDB is available on port 8086.
 - **Bucket**: `{{ one_influxdb_bucket }}`
 - **Token**: `{{ one_influxdb_token }}`
 {% endif %}
+
+## Grafana v{{ one_grafana_version }}
+
+Grafana is available on port 3000.
+
+[http://{{ domain_name }}:3000](http://{{ domain_name }}:3000)
+
+Information to access to Grafana dashboard:
+
+- **Username**: `admin`
+- **Password**: `{{ one_grafana_password }}`
+
+## Prometheus v{{ one_prometheus_version }}
+
+Prometheus is available on port 9090.
+
+[http://{{ domain_name }}:9090](http://{{ domain_name }}:9090)

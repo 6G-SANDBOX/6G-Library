@@ -1,0 +1,25 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_monitoring_cpu: 2
+one_monitoring_memory: 2048
+one_monitoring_disk: 3072
+one_monitoring_networks: 
+  - tn_vxlan
+
+# one_influxdb_version: "2.7.11"
+one_influxdb_user: "admin"
+one_influxdb_password: "adminadmin"
+# one_influxdb_org: "dummyorg"
+one_influxdb_bucket: "dummybucket"
+# one_influxdb_token: "dummydummytoken"
+# one_grafana_version: "11.6.0"
+one_grafana_password: "adminadmin"
+# one_prometheus_version: "2.53.4"

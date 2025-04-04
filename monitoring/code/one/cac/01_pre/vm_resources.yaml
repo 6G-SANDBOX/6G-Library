@@ -1,0 +1,10 @@
+---
+- name: "Set VM Resources needed for component"
+  ansible.builtin.set_fact:
+    one_monitoring_cpu: "{{ one_monitoring_cpu }}"
+    one_monitoring_memory: "{{ one_monitoring_memory }}"
+    one_monitoring_disk: "{{ one_monitoring_disk }}"
+
+- name: Overwrite again with explicit values from the input file
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/{{ component_type }}/variables/input_file.yaml"

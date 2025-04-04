@@ -1,0 +1,92 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Carlos Andreo López <c.andreo@uma.es>
+  short_description: Deploy a virtual machine with InfluxDB v1 or v2, Grafana and Prometheus
+  long_description: |
+    Ubuntu 22.04 LTS virtual machine with InfluxDB v1 or v2, Grafana and Prometheus installed. 
+    
+    InfluxDB is a time-series database designed to handle large volumes of event and metric data. It is ideal for applications that require high performance in data writes, such as infrastructure monitoring, log analysis, or IoT sensor metrics. In this project, InfluxDB is used to store and query time-based data, enabling trend analysis, alerting, and real-time visualization. Its ability to efficiently manage large amounts of data and integration with various visualization tools like Grafana make InfluxDB an excellent solution for such applications.
+    Grafana is an open-source analytics and monitoring platform that allows users to visualize and analyze data from various sources in real-time. It provides a powerful and flexible interface for creating interactive dashboards, enabling users to monitor metrics, logs, and other data in a visually appealing way. Grafana supports a wide range of data sources, including time-series databases like InfluxDB, Prometheus, and Elasticsearch, making it an ideal choice for infrastructure monitoring, application performance management, and business intelligence.
+    Prometheus is an open-source monitoring and alerting toolkit designed for reliability and scalability. It collects metrics from configured targets at specified intervals, evaluates rule expressions, and can trigger alerts if certain conditions are met. Prometheus is particularly well-suited for dynamic cloud environments and microservices architectures, making it a popular choice for modern application monitoring.
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_monitoring"]
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the monitoring VM template to use in your OpenNebula environment
+  image_id: ID of the monitoring VM image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
+####################################
+input:
+  one_influxdb_version:
+    description: InfluxDB version to be installed. Format: X.X.X. Example: 2.7.11
+    type: str
+    default_value: "2.7.11"
+    required_when: true
+  one_influxdb_user:
+    description: Username used to login into the InfluxDB
+    type: str
+    default_value: "admin"
+    required_when: false
+  one_influxdb_password:
+    description: Password used to login into the InfluxDB
+    type: str
+    default_value: "adminadmin"
+    required_when: false
+  one_influxdb_org:
+    description: Organization name. Required if InfluxDB v2 is selected
+    type: str
+    default_value: "dummyorg"
+    required_when: false
+  one_influxdb_bucket:
+    description: Bucket name. For InfluxDB v1, it is the name of the database
+    type: str
+    default_value: "dummybucket"
+    required_when: false
+  one_influxdb_token:
+    description: Token used to login into the InfluxDB. Required if InfluxDB v2 is selected
+    type: str
+    default_value: "dummydummytoken"
+    required_when: false
+  one_grafana_version:
+    description: Grafana version to be installed. Format: X.X.X. Example: 11.6.0
+    type: str
+    default_value: "11.6.0"
+    required_when: true
+  one_grafana_password:
+    description: Password used to login into the Grafana. Required to be at least 8 characters long
+    type: str
+    default_value: "adminadmin"
+    required_when: false
+  one_prometheus_version:
+    description: Prometheus version to be installed. Format: X.X.X. Example: 2.53.4
+    type: str
+    default_value: "2.53.4"
+    required_when: true
+
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
