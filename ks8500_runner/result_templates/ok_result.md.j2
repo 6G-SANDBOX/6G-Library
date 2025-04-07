@@ -15,3 +15,12 @@ Important information about the deployment
  ```
 {{ hostvars['ks8500runner']['ks8500runner_registration_info'] }}
  ```
+ * **KS8500 Web UI **: 
+  The runner named, {{ hostvars['ks8500runner']['ks8500runner_name']}} is shown on https://test-automation.pw.keysight.com
+
+* **Middle Ware information**: 
+ ```
+{{  hostvars.localhost.site_available_components.ks8500_runner.loadcore_middleware_ip }}
+{{  hostvars.localhost.site_available_components.ks8500_runner.ixchariot_middleware_ip }}
+ ```
+
