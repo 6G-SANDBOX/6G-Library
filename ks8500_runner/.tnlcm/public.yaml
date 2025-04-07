@@ -18,9 +18,13 @@ metadata:
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   short_description: Deploys a VM with KS8500 Runner
   long_description: |
-    The KS8500 Runner allows accessing local on premises resources while running a test campaign being scheduled from the KS8500 backend, |
-    which has Web UI interface (https://test-automation.pw.keysight.com). To deploy a runner in a TN, it is required that the users have already |
-    got a registration token, which can achieved from the Web UI interface.
+    The KS8500 Runner allows accessing local on premises resources while running a test campaign being scheduled from the KS8500 backend. |
+    To deploy a runner in a TN, it is required that the users have already got a registration token, which can achieved from the Web UI interface, (https://test-automation.pw.keysight.com).|
+    In order to access KS8500 Web UI interface, the users need to be registered in one of the realms below|
+    6GSB-Malaga, 6GSB-Berlin, 6GSB-Athen and 6GSB-Finland. To register, the users can simply send an email to the.dao@keysight.com or filip.ivanovic@keysight.com |
+    and indicate which reals the users want to become a member of. |
+    Once a runner is deployed, the users can access the Web UI interface to manage test plans, test campaign 
+  
   hypervisors: ["one"]
   appliances: ["https://marketplace.opennebula.io/appliance/d74a5f80-20bd-013d-0e49-7875a4a4f528"]
 
