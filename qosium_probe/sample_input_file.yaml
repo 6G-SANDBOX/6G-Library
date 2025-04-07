@@ -3,8 +3,12 @@ trial_network:
     type: "tn_init"
     dependencies: []
     input: {}
-  qosium_probe:
+  qosium_probe-vm:
     type: "qosium_probe"
     name: "vm"
     dependencies:
       - "tn_init"
+    input:
+      one_vm_kvm_size: "small"
+      one_vm_kvm_networks:
+        - "tn_vxlan"
