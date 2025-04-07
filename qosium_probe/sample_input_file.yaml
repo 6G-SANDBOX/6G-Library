@@ -1,4 +1,3 @@
-# Substitutes doc/create_component.yaml file
 trial_network:
   tn_init:
     type: "tn_init"
