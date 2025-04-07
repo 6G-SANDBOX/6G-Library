@@ -1,8 +1,13 @@
 # Changelog
 
 ## [unreleased]
+
+## [v0.5.1]
 ### Added
-- Component `open5gs_vm` new parameter `one_open5gs_vm_install_webui` to install the WEB ui
+- New input variable `one_open5gs_vm_install_webui` in `open5gs_vm`, enabling the installation of the webUI.
+### Fixed
+- Component `loadcore_agent` now correctly works with both the hugepages appliance, and the "light" one.
+- Component is now also deployable by only using Terraform, without the ansible workaround. For more details check the component's changelog.
 
 ## [v0.5.0]
 ### Added
@@ -149,7 +154,8 @@ Initial set of components is:
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.5.0...unreleased
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.5.1...unreleased
+[v0.5.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.3.0
