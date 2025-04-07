@@ -25,6 +25,7 @@ metadata:
   destroy_script: true
   depends_on: #TODO: Need to check
     mandatory:
+      - nokia_radio
     any_of:
 
 ####################################

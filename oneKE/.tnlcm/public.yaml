@@ -30,9 +30,8 @@ metadata:
     - "https://marketplace.mobilesandbox.cloud:9443/appliance/OneKE_1.31a_service"
   depends_on:
     mandatory:
-    any_of:
-      - tn_vxlan
       - vnet
+    any_of:
 
 ####################################
 ## Site-specific variables
