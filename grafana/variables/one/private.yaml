@@ -15,4 +15,4 @@ one_grafana_networks:
   - tn_vxlan
 
 # one_grafana_version: "11.6.0"
-one_grafana_password: "adminadmin"
+one_grafana_admin_password: "adminadmin"

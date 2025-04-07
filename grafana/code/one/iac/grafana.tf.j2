@@ -14,7 +14,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     USERNAME =       "jenkins"
     SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
     ONEAPP_GRAFANA_VERSION =   "{{ one_grafana_version }}"
-    ONEAPP_GRAFANA_PASSWORD =  "{{ one_grafana_password }}"
+    ONEAPP_GRAFANA_ADMIN_PASSWORD =  "{{ one_grafana_admin_password }}"
   }
 
 {# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider

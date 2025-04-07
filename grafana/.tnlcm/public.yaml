@@ -40,7 +40,7 @@ input:
     type: str
     default_value: "11.6.0"
     required_when: true
-  one_grafana_password:
+  one_grafana_admin_password:
     description: Password used to login into the Grafana. Required to be at least 8 characters long
     type: str
     default_value: "adminadmin"
