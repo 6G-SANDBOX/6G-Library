@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/runtime:8.0-alpine AS prod
 
 ARG OPENTAPVERSION=9.27.1
-ARG RUNNERVERSION=1.13.0
+ARG RUNNERVERSION=1.14.0
 ENV OPENTAP_RUNNER_HealthEndpoint=true
 EXPOSE 20111
 
@@ -34,7 +34,6 @@ RUN chmod a+x /opt/tap/tap
 RUN apk update && apk add --no-cache python3 py3-pip tshark libcap
 
 USER $APP_UID
-
 COPY preferences /home/app/.config/wireshark/preferences
 
 ENTRYPOINT "tap" "runner" "start" "-v"
