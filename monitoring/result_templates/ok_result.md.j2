@@ -5,7 +5,7 @@ The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
 ## Important information:
 
 - **OpenNebula VM ID**: `{{ id }}`
-- **VM memory**: `{{ one_monitoring_memory}} MiB`
+- **VM memory**: `{{ one_monitoring_memory }} MiB`
 - **VM VCPUs**: `{{ one_monitoring_cpu }}`
 - **VM available storage**: `7 GiB`
 - **VM network interfaces**:
@@ -16,21 +16,15 @@ The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
 ## InfluxDB v{{ one_influxdb_version }} information:
 
 {% if one_influxdb_version.startswith("1.") %}
-- The authentication method is different from InfluxDB 2.x.
-- The database name is required instead of an organization and bucket.
-
 InfluxDB is available on port 8086.
 
 - **Username**: `{{ one_influxdb_user }}`
 - **Password**: `{{ one_influxdb_password }}`
 - **Database**: `{{ one_influxdb_database }}`
 {% else %}
-
 InfluxDB is available on port 8086.
 
 [http://{{ domain_name }}:8086](http://{{ domain_name }}:8086)
-
-- You need an **organization**, a **bucket** and an **authentication token**.
 
 - **Username**: `{{ one_influxdb_user }}`
 - **Password**: `{{ one_influxdb_password }}`
