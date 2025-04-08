@@ -46,7 +46,7 @@ input:
     default_value: "admin"
     required_when: false
   one_influxdb_password:
-    description: Password used to login into the InfluxDB
+    description: Password used to login into the InfluxDB. Required to be at least 8 characters long
     type: str
     default_value: "adminadmin"
     required_when: false
