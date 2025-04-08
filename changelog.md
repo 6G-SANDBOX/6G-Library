@@ -3,9 +3,14 @@
 ## [unreleased]
 
 ### Added
-- Component `open5gs_vm` new parameter `one_open5gs_vm_install_webui` to install the WEB ui
-### changed:
-- Component 'ks8500_runner' are updated with tasks to add firewwall exceptions for `loadcore` and `ixchariot` middlewares
+- Component `open5gs_vm` new parameter `one_open5gs_vm_install_webui` to install the WEB ui.
+- New component `influxdb` to store time series data.
+- New component `grafana` to visualize time series data.
+- New component `prometheus` to scrape time series data.
+- New component `monitoring` to deploy InfluxDB, Grafana and Prometheus stack together.
+
+### Changed
+- Component `ks8500_runner` are updated with tasks to add firewwall exceptions for `loadcore` and `ixchariot` middlewares.
 
 ## [v0.5.0]
 ### Added
