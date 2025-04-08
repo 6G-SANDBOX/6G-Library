@@ -1,8 +1,11 @@
 # Changelog
 
 ## [unreleased]
+
 ### Added
 - Component `open5gs_vm` new parameter `one_open5gs_vm_install_webui` to install the WEB ui
+### changed:
+- Component 'ks8500_runner' are updated with tasks to add firewwall exceptions for `loadcore` and `ixchariot` middlewares
 
 ## [v0.5.0]
 ### Added
@@ -20,6 +23,7 @@
 - Component `int_p4_sw` requires new variables in sites repository. For more details check the component's changelog.
 ### Deprecated
 - All 'gNB' components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`) no longer require a 'proxy' variable.
+
 ### Fixed
 - TN_IDs can now correctly set DNS records when they have _ and mixed mayor/minorcase characters.
 - Storage nodes of `oneKE` can now be resized from the deployment itself.
@@ -27,7 +31,6 @@
 - Component `vm_kvm` change param `required_when` to false in field `one_vm_kvm_size` and add default value to private yaml.
 - Add firewall exception for the `loadcore_agent` middleware  (#112).
 - Hardware RAN components (`berlin_ran`, `iswireless_radio` and `nokia_radio`) are now correctly exposed to the Trial Network by adding a NATting exception into the `tn_bastion`.
-
 
 ## [v0.4.0]
 ### Added
