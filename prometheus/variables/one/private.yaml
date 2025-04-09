@@ -14,4 +14,4 @@ one_prometheus_disk: 3072
 one_prometheus_networks: 
   - tn_vxlan
 
-# one_prometheus_version: "2.53.4"
+one_prometheus_version: "2.53.4"
