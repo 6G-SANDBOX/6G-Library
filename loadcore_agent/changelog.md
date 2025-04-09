@@ -5,8 +5,12 @@
 - The image of the deployed VMs can now be resized. Default's size is 10GiB.
 - VM is now also included in tnuser's ssh config file.
 - VM gets registered in the `tn_bastion`'s DNS server with an A record.
+- New site_variables: `base_appliance` and `hugepages_appliance`, with image and template IDs of the corresponding appliances.
+- New input variable `one_loadcore_agent_hugepages` to switch between the 2 possible appliances.
 ### Changed
 - Augmented default memory size to 18 GiB in order to support the hugepages appliance.
+### Deprecated
+- Temporary support for site_variables `template_id` and `image_id`, until sites definitelly migrate to the new ones.
 ### Fixed
 - Component `loadcore_agent` now correctly works with both the hugepages appliance, and the "light" one.
 - Component is now completelly deployable by only using Terraform, removing the previous ansible workaround.

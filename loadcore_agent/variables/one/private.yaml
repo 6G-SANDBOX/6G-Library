@@ -9,9 +9,13 @@
 ######################################################
 
 one_loadcore_agent_cpu: 4
-one_loadcore_agent_memory: 18432   # Increased to 18 GiB
+one_loadcore_agent_memory:
+  base_appliance: 8192
+  hugepages_appliance: 18432   # Increased to 18 GiB, to fit the 16 1G hugepages
 one_loadcore_agent_disk: 10240
 one_loadcore_agent_networks: 
   - tn_vxlan
+
+one_loadcore_agent_hugepages: false
 
 one_loadcore_agent_ixia: true

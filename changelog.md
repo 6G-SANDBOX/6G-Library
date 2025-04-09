@@ -5,6 +5,7 @@
 ## [v0.5.1]
 ### Added
 - New input variable `one_open5gs_vm_install_webui` in `open5gs_vm`, enabling the installation of the webUI.
+- New input variable `one_loadcore_agent_hugepages` and site variable schema in `loadcore_agent`, to switch between the 2 possible appliances.
 ### Fixed
 - Component `loadcore_agent` now correctly works with both the hugepages appliance, and the "light" one.
 - Component is now also deployable by only using Terraform, without the ansible workaround. For more details check the component's changelog.
