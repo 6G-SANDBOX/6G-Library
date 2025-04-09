@@ -49,10 +49,10 @@
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Authenticate in dockerhub
-      script: "{{ workspace }}/{{ component_type }}/code/any/cac/scripts/set_authentication.sh"
-      environment:
-        DOCKERHUB_TOKEN: "{{ dockerhub_token }}"
+    - name: Authenticate in DockerHub and create secret
+      ansible.builtin.shell: |
+        helm registry login registry-1.docker.io -u smecina -p {{ dockerhub_token }} && \
+        kubectl create secret docker-registry regcred --docker-username=smecina --docker-password={{ dockerhub_token }} -n {{ helm_release_name }} --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=240s
 
     - name: Helm install
       vars:

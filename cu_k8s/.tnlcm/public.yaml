@@ -45,18 +45,6 @@ input:
     description: Name of a previously deployed `open5gs` component, which will be connected to the CU. E.g. `open5gs_k8s-my-core`.
     type: "str"
     required_when: true
-  one_cu_k8s_amf_n2_ip:
-    description: |
-      IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
-    type: str
-    default_value: "10.21.12.200"
-    required_when: false
-  one_cu_k8s_upf_n3_ip:
-    description: |
-      IPv4 Address of the Core User Plane Function (UPF) in the 5G core network.
-    type: str
-    default_value: "10.21.12.201"
-    required_when: false
   one_cu_k8s_ip:
     description: |
       The IP address of a cu_k8s
