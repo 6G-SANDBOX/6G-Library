@@ -17,7 +17,7 @@ metadata:
   maintainers:
     - Esa Piri <esa.piri@kaitotek.com>
     - Jarmo Prokkola <jarmo.prokkola@kaitotek.com>
-	- Saad Hassan <Saad.Hassan@oulu.fi>
+    - Saad Hassan <Saad.Hassan@oulu.fi>
   # One-sentence-long description.
   short_description: Qosium Probe measurement agent for passive QoS/QoE measurement.
   # Description that can span multiple lines.
@@ -25,7 +25,7 @@ metadata:
     Kaitotek's Qosium is a passive QoS/QoE measurement solution. The solution consists of multiple software components,
     each with a dedicated role in measurement. The main entity is Qosium Probe, a measurement agent, which conducts the measurement.
     Qosium Probes do nothin alone but needs a controller software (Qosium Scope, Qosium Scopemon, or your own).
-    Read more at www.kaitotek.com/resources/documentation   
+    Read more at www.kaitotek.com/resources/documentation
   # Unordered list of compatible virtualization platforms for the component. Currently only OpenNebula (one) is available
   hypervisors: [one]
   # (OPTIONAL, currently unused) true in special components that include an additional playbook with the required steps to undeplo it. You probably don't need it
