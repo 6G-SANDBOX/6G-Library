@@ -17,7 +17,7 @@
       {{ one_loadcore_agent_hugepages | bool | ternary(
           site_available_components.loadcore_agent.hugepages_appliance.image_id | default(site_available_components.loadcore_agent.image_id),
           site_available_components.loadcore_agent.base_appliance.image_id | default(site_available_components.loadcore_agent.image_id)
-      ) }}"
+      ) }}
 
 
 - name: Overwrite again with explicit values from the input file
