@@ -20,8 +20,7 @@ metadata:
     - Abhishek Bakshi <abhishek.bakshi@keysight.com>
   short_description: Keysight LoadCore Agent
   long_description: |
-    A vm machine with Keysight LoadCore Agent ready to play.
-    With the variable "one_loadcore_middleware_ip", you need to specify the IP address where the LoadCore Middleware is listening.
+    Deploy a VM with Keysight's LoadCore Agent ready to play.
     After booting, the agent register itself with the LoadCore Middleware server.
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent"]
@@ -32,8 +31,15 @@ metadata:
 ####################################
 site_variables:
   loadcore_middleware_ip: IP address of the loadcore middleware in your site
-  template_id: ID of the LoadCore Agent Test Tool VM template to use in your OpenNebula environment
-  image_id: ID of the LoaLoadCore Agent Test TooldCore VM image to use in your OpenNebula environment
+  template_id: (DEPRECATED) ID of the LoadCore Agent Test Tool VM template to use in your OpenNebula environment.
+  image_id: (DEPRECATED) ID of the LoaLoadCore Agent Test Tool VM image to use in your OpenNebula environment.
+  base_appliance:
+    template_id: ID of the 'LoadCore Agent Test Tool' VM template to use in your OpenNebula environment
+    image_id: ID of the 'LoadCore Agent Test Tool' VM image to use in your OpenNebula environment
+  hugepages_appliance:
+    template_id: ID of the 'LoadCore Agent Test Tool + hugepages' VM template to use in your OpenNebula environment
+    image_id: ID of the 'LoadCore Agent Test Tool + hugepages' VM image to use in your OpenNebula environment
+    
 
 
 ####################################
@@ -44,6 +50,12 @@ input:
     description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
+    required_when: false
+  one_loadcore_agent_hugepages:
+    description: |
+      Whether the component should be deployed with 16 1G hugepages or not. False by default.
+    type: bool
+    default_value: false
     required_when: false
 
 

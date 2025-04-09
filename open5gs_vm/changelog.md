@@ -3,6 +3,11 @@
 ### Added
 - New parameter `one_open5gs_vm_install_webui` to install the WEB ui
 
+## v0.5.1
+### Added
+- New input variable `one_open5gs_vm_install_webui` in `open5gs_vm`, enabling the installation of the webUI.
+
+
 ## v0.5.0
 ### Added
 - Component is now responsible to expose its AMF and UPF interfaces, by adding rules and firewall exceptions to `tn_bastion`.
