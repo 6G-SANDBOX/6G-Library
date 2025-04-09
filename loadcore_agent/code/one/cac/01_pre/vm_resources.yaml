@@ -1,7 +1,7 @@
 ---
 - name: "Set variables for the terraform manifest according to the selected appliance"
   ansible.builtin.set_fact:
-    one_vm_kvm_memory: >
+    one_memory: >
       {{
         one_loadcore_agent_hugepages | bool | ternary(
           one_loadcore_agent_memory.hugepages_appliance,
