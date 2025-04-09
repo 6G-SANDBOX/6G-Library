@@ -39,7 +39,7 @@ input:
     description: Grafana version to be installed. Format: X.X.X. Example: 11.6.0
     type: str
     default_value: "11.6.0"
-    required_when: true
+    required_when: false
   one_grafana_admin_password:
     description: Password used to login into the Grafana. Required to be at least 8 characters long
     type: str

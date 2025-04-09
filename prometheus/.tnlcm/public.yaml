@@ -39,7 +39,7 @@ input:
     description: Prometheus version to be installed. Format: X.X.X. Example: 2.53.4
     type: str
     default_value: "2.53.4"
-    required_when: true
+    required_when: false
 
 ####################################
 ## Generated terraform outputs
