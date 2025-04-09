@@ -1,0 +1,108 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+############################################################################################################
+## Component metadata
+#  Gives the TNLCM some general information about the component.
+############################################################################################################
+metadata:
+  # Unordered list of active component mantainers
+  maintainers:
+    - Esa Piri <esa.piri@kaitotek.com>
+    - Jarmo Prokkola <jarmo.prokkola@kaitotek.com>
+	- Saad Hassan <Saad.Hassan@oulu.fi>
+  # One-sentence-long description.
+  short_description: Qosium Probe measurement agent for passive QoS/QoE measurement.
+  # Description that can span multiple lines.
+  long_description: |
+    Kaitotek's Qosium is a passive QoS/QoE measurement solution. The solution consists of multiple software components,
+    each with a dedicated role in measurement. The main entity is Qosium Probe, a measurement agent, which conducts the measurement.
+    Qosium Probes do nothin alone but needs a controller software (Qosium Scope, Qosium Scopemon, or your own).
+    Read more at www.kaitotek.com/resources/documentation   
+  # Unordered list of compatible virtualization platforms for the component. Currently only OpenNebula (one) is available
+  hypervisors: [one]
+  # (OPTIONAL, currently unused) true in special components that include an additional playbook with the required steps to undeplo it. You probably don't need it
+  #destroy_script: false    
+  # (OPTIONAL, currently unused) true in certain components that require the TNLCM to perform an accounting on how many instances of this component are deployed in a site, and for how long. Quantity and duration are instructed inside the sites repository
+  #resource_manager: false
+  # Optional. Marketplace link to the appliance VM template/image used by this component. Appliance should be already downloaded and documented in "site_variables" to be able to use this component.
+  #appliance: <link>
+
+
+############################################################################################################
+## Site-specific variables
+#  Variables read from your site's encripted file in the 6G-Sandbox-Sites repository.
+#  TNLCM checks that the variables are defined, and errors if attempting to deploy the component without them
+#  Each variable has a short description of what it does for informational purposes
+############################################################################################################
+site_variables:
+  template_id: Short description of what this variable represents.
+
+
+############################################################################################################
+## Input variables
+#  Describes the variables shown in the TNLCM to be filled by the experimenter and included in a TN descriptor. 
+#  Most variables just serve to overwrite a private/default value, but others (mainly mandatory ones) serve to define dependencies between previoiusly deployed componentes.
+#  Each variable can contain the following fields:
+#    - description; A general description of the variable shown in the TNLCM Frontend. "" by default
+#    - type: Expected python built-in data type https://www.w3schools.com/python/python_datatypes.asp, but it can also be a component name. "str" by default
+#    - default_value: In optional variables, the value existing in privates.yaml that the variable can overwrite. "" by default.
+#                     Text here only has documentational value, if your default variable has complex logic you can just add a description (like in the tn_bastion) 
+#    - choices: List of possible input values. [] by default
+#    - required_when: Condition to satisfy to make the variable mandatory to fill by the experimenter. Values can be a simple true/false, or a boolean condition https://www.w3schools.com/python/python_booleans.asp
+#                     Conditions can include the value of other input variables of the same comopnent. false by default
+############################################################################################################
+input:
+  one_vm_kvm_networks:
+    description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
+    required_when: false
+  one_vm_kvm_size:
+    description: |
+      Select one type of instance according to your hardware requirements
+      - extra_large: 32 GiB of memory, 8 vCPU and 100GiB of storage
+      - large: 16 GiB of memory, 4 vCPU and 50GiB of storage
+      - medium: 8 GiB of memory, 4 vCPU and 25GiB of storage
+      - small: 4 GiB of memory, 2 vCPU and 15GiB of storage
+      - very_small: 2 GiB of memory, 1 vCPU and 10GiB of storage
+    type: str
+    default_value: "small"
+    choices:
+      - "extra_large"
+      - "large"
+      - "medium"
+      - "small"
+      - "very_small"
+    required_when: false
+  qosium_probe_service_id:
+    description: A unique identifier number for the Qosium Probe
+    type: int
+    default_value: 10
+    #choices: []
+    required_when: false
+  ntp_server_address:
+    description: |
+      A local NTP server address. If not set, uses the default pool.ntp.org
+    type: str
+    default_value: "pool.ntp.org"
+    #choices: []
+    required_when: false
+
+############################################################################################################
+## Generated terraform outputs
+#  Unknown before the deployment, they are stored in the S3 Object Storage, and available to use by future components
+#  Each variable has a short description of what it does for informational purposes
+#   __entity_name__ refers to the name of the component inside the TN. Actual terraform output uses dashes which are a forbidden character for ansible variables.
+#  e.g. if a components name is vm_kvm-myubuntu, its ID saved as a terraform output will be "vm_kvm_myubuntu-id"
+############################################################################################################
+terraform_outputs:
+  __entity_name__id: "Variable tied to a specific deployment of this component."
+  tn_ssh_public_key: "Variable with a global name. Generated by a component that can only be deployed once per TN, such as tn_init"
