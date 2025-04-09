@@ -6,7 +6,7 @@ Current versions:
 
 > [!NOTE]  
 > The VM needs a CPU architecture with the vmx instructions set.
-> In Opennebula, selecting a non-default architecture for the worker templates might be needed.
+> In Opennebula, site admin should select a non-default architecture for the VM template, or use host-passthrough.
 
 This VM supports separated networks for N2 and N3 but will fallback to use the n2 network for n3 if executed with only 2 networks.
 If the VM is deployed with only one network then this mgmt network will be used for n2 and n3.

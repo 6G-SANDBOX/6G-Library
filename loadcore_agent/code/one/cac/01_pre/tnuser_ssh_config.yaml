@@ -1,0 +1,16 @@
+---
+### Module ssh_config has limited options and doesnt allow to specify identity files that doesn't exist
+- name: Append new component's name and IP into a .ssh/config.d/ file
+  ansible.builtin.blockinfile:
+    path: "{{ workspace }}/misc-{{ tn_id }}-ssh_config"
+    block: |
+      Host {{ tn_id }}-{{ entity_name }}
+          HostName "{{ ips[access_vnet_id][0] | default('ERROR_ASSIGNING_IP', true) }}"
+          User tnuser
+          IdentityFile ~/.ssh/misc-{{ tn_id }}-id_ed25519
+          StrictHostKeyChecking no
+          UserKnownHostsFile /dev/null
+          LogLevel QUIET
+    marker: "# {mark} {{ tn_id }}-{{ entity_name }} CONFIG"
+    create: true
+  register: tnuser_ssh_config
