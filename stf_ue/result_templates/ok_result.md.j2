@@ -12,9 +12,12 @@ The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
 
 ### Important information:
 
-You can access the web Portal from [http://{{ site_available_components.stf_ue.origin }}:7100](http://{{ site_available_components.stf_ue.origin }}:7100)
+You can now access device {{ site_available_components.stf_ue.device }} from {{ start_time }} to {{ stop_time }}
+
+You can access the STF web Portal from [http://{{ site_available_components.stf_ue.origin }}:7100](http://{{ site_available_components.stf_ue.origin }}:7100)
 Credentials to login are:
 - user: `tnuser`
 - mail: `{{ site_available_components.stf_ue.user_mail }}`
 
-You can now access device {{ site_available_components.stf_ue.device }} from {{ start_time }} to {{ stop_time }}
+WARNING: The STF webUI is outside this Trial Network. While routing to its endpoint is enabled, you may still need to edit your Wireguard Client file to be able to reach it.
+Please add to the AllowedIPs section of your Wireguard Client configuration the IP address of the STF webUI server: `{{ site_available_components.stf_ue.origin}}`.

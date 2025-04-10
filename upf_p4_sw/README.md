@@ -6,12 +6,60 @@ UPF-P4 SW is a software-based implementation of the 5G UPF, a critical network f
 
 By employing a Next Generation Software Defined Networking (NG-SDN) approach, UPF-P4 SW allows programming of both the control plane and the data plane, providing complete control and flexibility over network packet processing. This results in a UPF module that is efficient, entirely flexible, and real-time controllable.
 
+## 🔧 Architecture Overview
+The UPF-P4 SW component consists of three main parts:
+1. **Data Plane**: P4-based packet processing pipeline running on BMv2 with Stratum as the data plane operating system
+2. **Control Plane**: Python-based controller for UPF management
+3. **5G Core**: Open5GS Release 16 components for network control
+
+Key interactions include:
+- P4Runtime between controller and data plane
+- PFCP protocol between SMF and UPF
+- GTP tunneling for user traffic
+
 ## ✨ Key Features
 
 * **P4-based Data Plane:** The UPF's data plane logic is defined using the P4 language, providing fine-grained control over packet processing and forwarding. This allows users to add, modify, or remove algorithms, protocols, and functions in a completely customizable manner.
 * **BMv2 Integration:** The P4 program is compiled and executed on the BMv2 software switch, enabling packet processing within a virtualized environment and facilitating rapid development and testing.
 * **Open5GS Control Plane Integration:** The UPF interacts seamlessly with the Open5GS control plane to receive configuration and policy updates, ensuring full compliance with 3GPP technical specifications and integration with the 5G core network.
 * **Trial Network Deployment:** Specifically designed for deployment within 5G trial networks, such as the Málaga platform for the 6G-SANDBOX project, providing a flexible and scalable solution for testing and evaluating 5G user plane functionality.
+
+## 📦 Component Versioning
+The UPF-P4 SW component uses three different versioning schemes:
+
+### Individual Services Versions
+The component uses specific versions for its core services:
+
+1. **Data Plane (BMv2-Stratum)**
+   - Version format: `ubuntu{version}-stratum-bmv2_{version}`
+   - Current version: `ubuntu18-stratum-bmv2_0.0.1`
+   - Used for specific Ubuntu + Stratum-BMv2 combinations
+
+2. **Control Plane (UPF Controller)**
+   - Version format: `{major}.{minor}.{patch}`
+   - Current version: `2.0.0`
+   - Follows semantic versioning for controller updates (It also includes the P4 data plane)
+   - New features in version 2.0.0:
+     - Enhanced ARP handling for improved neighbor discovery
+     - Improved logging functionality for the control plane
+     - Refactored testing framework
+     - Better overall stability and error handling
+     - Improved routing table with UDP destination port support
+  
+3. **Open5GS Control Plane**
+   - Version format: `{major}.{minor}.{patch}`
+   - Current version: `2.5.6`
+   - Includes all core network functions (AMF, SMF, etc.)
+   - Compatible with 3GPP Release 16 specifications
+
+### Component Version
+The overall UPF-P4 SW component in 6G-Library uses its own version:
+- Format: `v{major}.{minor}.{patch}`
+- Current version: `v0.5.0`
+- Documented in [CHANGELOG.md](./CHANGELOG.md)
+
+> [!NOTE]
+> The component version may differ from individual service versions, as it represents the integration state within 6G-Library rather than individual service development.
 
 ## 📝 Configuration
 The UPF-P4 software component's configuration is managed through a set of files and directories located at `/home/jenkins/config`. This directory contains all the necessary configuration files to set up and customize the behavior of the UPF-P4 data plane and its integration with the Open5GS control plane.
@@ -41,12 +89,7 @@ Here's a detailed overview of the configuration directory and its contents:
     - **UE IP Pool**:
       - Defines the range of IP addresses to be assigned to User Equipments (UEs).
 
-#### 2. `/home/jenkins/config/freeDiameter/`
-
-- **Description**: Contains configuration files and keys for freeDiameter, which is used by Open5GS for Diameter protocol operations.
-- **Note**: **Do not modify**.
-
-#### 3. `/home/jenkins/config/open5gs/`
+#### 2. `/home/jenkins/config/open5gs/`
 
 - **Description**: Houses individual YAML configuration files for each Open5GS network function.
 - **Key Files**:
@@ -61,7 +104,7 @@ Here's a detailed overview of the configuration directory and its contents:
   - Subscriber data management
   - Inter-component communication settings
 
-#### 4. `/home/jenkins/config/register_subscriber.sh`
+#### 3. `/home/jenkins/config/register_subscriber.sh`
 
 - **Description**: A shell script used to register new UEs (User Equipments) into the Open5GS core network.
 - **Usage**:
@@ -69,7 +112,7 @@ Here's a detailed overview of the configuration directory and its contents:
   - Allows specifying parameters such as IMSI, authentication keys, and subscriber profiles.
 - **Instructions**: For detailed steps on registering new UEs, please refer to the [Registering New User Equipments](#registering-new-user-equipments) section.
 
-#### 5. `/home/jenkins/config/stratum-upf/`
+#### 4. `/home/jenkins/config/stratum-upf/`
 
 - **Description**: Contains configuration files necessary for the P4 data plane component of the UPF.
 - **Key Files**:
@@ -134,13 +177,11 @@ After making changes to the configuration files, it's essential to restart the s
 
    - Check that all the necessary services are up and running.
 
-
 ### Important Considerations
 - **Consistency Across Files**:
 
   - Ensure that any IP addresses, ports, and interface names are consistently updated across all relevant configuration files to prevent misconfigurations.
-  - For example, if you change the `n4` interface IP address in `config.yaml`, ensure that the corresponding settings in Open5GS configuration files are also updated if necessary.
-
+  - For example, if you change the `n4` interface IP address in `controller-upf/config.yaml`, ensure that the corresponding settings in Open5GS configuration files are also updated if necessary.
 
 ### Registering new user equipments
 By default, the SIM <MCC|MNC|MSIN> is automatically registered with the <Key>, <OPC>, <APN> and <SLICE> configured in the component input parameters.
@@ -166,13 +207,13 @@ To add new UEs to the network, you need to register them in the Open5GS core net
     gradiant/open5gs-dbctl:0.10.3 "open5gs-dbctl add_ue_with_slice MCC|MNC|MSIN> <Key> <OPC> <APN> <S_NSSAI_SST> <S_NSSAI_SD>"
   ```
 
-  2. **Run the register_subscriber.sh script**:
+  3. **Run the register_subscriber.sh script**:
 
   ```bash
   ./register_subscriber.sh
   ```
 
-## 📋 Logs
+## 📋 Logs and Monitoring
 ### Accessing Component Logs
 To access the logs of any container within the UPF-P4 component, you need to:
 
@@ -206,7 +247,83 @@ By default, the `upf-dn-bmv2-stratum` service runs in normal mode. To enable deb
 > [!NOTE]
 > Running in debug mode will provide more detailed logs but impact performance. Use this mode only when necessary for troubleshooting.
 
+## 🔍 Troubleshooting
+### Common Issues
+1. **UE Registration Fails**
+   - Verify PLMN configuration matches between AMF and UE
+   - Check authentication parameters in Open5GS
+   - Validate network slice configuration
 
-TODO: Explain how to do NAT (in other VMs)
+2. **GTP Tunnel Setup Issues**
+   - Verify N3 interface configuration
+   - Check TEID allocation in SMF logs
+   - Monitor P4 table entries for tunnel rules
+
+3. **Data Plane Connectivity Problems**
+   - Validate P4 pipeline configuration
+   - Check interface mappings in chassis config
+   - Monitor packet counters for drops
+
+### Configuring NAT in Other VMs
+To enable Internet access for UEs through the UPF-P4 component, you may need to configure Network Address Translation (NAT) on a separate VM. This section explains how to set up NAT functionality on another virtual machine that communicates with the UPF VM.
+
+#### Prerequisites
+- UPF-P4 VM with the component properly deployed
+- A second VM (referred to as "NAT VM") with connectivity to both the UPF VM and external networks
+- Root/sudo access on both VMs
+
+#### Step 1: Configure the UPF VM
+Enable Proxy ARP on the interface that connects to the NAT VM:
+
+```bash
+# Replace eth2 with the actual interface connecting to the NAT VM
+sudo sysctl -w net.ipv4.conf.eth2.proxy_arp=1
+
+# Make the change permanent
+echo "net.ipv4.conf.eth2.proxy_arp=1" | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+```
+This allows the UPF VM to respond to ARP requests for IPs that it doesn't actually have configured on its interfaces, which is necessary for the NAT setup.
+
+#### Step 2: Configure the NAT VM (VM2)
+1. **Enable IP forwarding**
+```bash
+sudo sysctl -w net.ipv4.ip_forward=1
+
+# To make this permanent, add to /etc/sysctl.conf:
+echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+```
+
+2. **Configure NAT with iptables**
+```bash
+# Replace 10.45.0.0/24 with your actual UE IP pool
+# Replace eth1 with your external-facing interface
+sudo iptables -t nat -A POSTROUTING -s 10.45.0.0/24 -o eth1 -j MASQUERADE
+
+# For a more restrictive rule that excludes specific interfaces:
+# sudo iptables -t nat -A POSTROUTING -s 10.45.0.0/24 ! -o eth2 -j MASQUERADE
+# This would apply NAT to all traffic from the UE pool except that going through eth2
+```
+
+3. **Add a route for UE traffic (if necessary)**
+
+If the interfaces connecting the UPF VM and NAT VM use IP addresses outside the UE pool range, add a route on the NAT VM to ensure return traffic is properly directed:
+
+```bash
+# Replace 10.45.0.0/24 with your UE IP pool
+# Replace eth1 with the interface connected to the UPF VM
+sudo ip route add 10.45.0.0/24 dev eth1
+
+# To make this route persistent, add it to /etc/network/interfaces or equivalent
+```
+
+
+## 📚 References
+- [P4 Language Specification](https://p4.org/p4-spec/p4-16/docs/P4-16-spec.html)
+- [Open5GS Documentation](https://open5gs.org/open5gs/docs/)
+- [BMv2 Github Repository](https://github.com/p4lang/behavioral-model)
+- [3GPP TS 23.501](https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=3144)
+- [Stratum SDN Switch OS](https://github.com/stratum/stratum)
 
 ![upf_p4_sw](https://github.com/6G-SANDBOX/6G-Library/blob/assets/upf_p4_sw/upf_p4_sw.png)

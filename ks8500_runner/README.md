@@ -2,4 +2,6 @@
 
 The KS8500 Runner can be deployed to allow accessing local ressources such as instrument control interfaces during test executions scheduled from the cloud based KS8500 SaaS
 
-This is the initial version of the automation scripts. Basic deployment and registration with the KS8500 backend has been tested in uma. Verifying actual usage of the Runner is TBD
+KS8500 Runner does not require any additional license. The users have to be a member of one of the reals to deploy a runner in a TN, 
+6GSB-Malaga, 6GSB-Berlin, 6GSB-Athen or 6GSB-Finland. Currently, the runner provides access to Loadcore MW and IxChariot MW deployed in a site.
+
