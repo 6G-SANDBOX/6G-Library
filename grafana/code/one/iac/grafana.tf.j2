@@ -44,3 +44,12 @@ output "{{ entity_name }}-ips" {
   description = "OpenNebula VM Network Assignments"
   value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
 }
+
+output "{{ entity_name }}-configuration" {
+  description = "Grafana configuration"
+  value = {
+    user           = "admin"
+    admin_password = {{ one_grafana_admin_password | to_json }}
+    port           = 3000
+  }
+}
