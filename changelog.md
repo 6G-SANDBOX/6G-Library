@@ -2,7 +2,6 @@
 
 ## [unreleased]
 ### Added
-- Component `open5gs_vm` new parameter `one_open5gs_vm_install_webui` to install the WEB ui.
 - New component `influxdb` to store time series data.
 - New component `grafana` to visualize time series data.
 - New component `prometheus` to scrape time series data.
