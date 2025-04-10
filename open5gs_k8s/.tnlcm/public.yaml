@@ -22,9 +22,7 @@ metadata:
     More info in the official documentation: https://open5gs.org/open5gs/docs/
   hypervisors: ["one"]
   depends_on:
-    mandatory:
-      - oneKE
-    any_of:
+    - oneKE
 
 ####################################
 ## Site-specific variables

@@ -25,10 +25,7 @@ metadata:
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/opensand"]
   depends_on:
-    mandatory:
-    any_of:
-      - tn_vxlan
-      - vnet
+    - vnet
 
 ####################################
 ## Site-specific variables

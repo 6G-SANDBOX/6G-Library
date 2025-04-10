@@ -33,11 +33,10 @@ metadata:
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_UERANSIM"]
   depends_on:
-    mandatory:
-      - tn_init
-      - vnet
-    any_of:
-      #TODO: Check the ueransim ue section
+    gnb:
+      - [open5gs_vm, open5gs_k8s, open5gcore_vm, upf_p4_sw]
+    ue:
+      - [nokia_radio, berlin_ran, iswireless_radio, ueransim]
 
 ####################################
 ## Site-specific variables

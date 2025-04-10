@@ -32,12 +32,7 @@ metadata:
   destroy_script: true
   resource_manager: true
   depends_on:
-    mandatory:
-    any_of:
-      - open5gs_k8s
-      - open5gs_vm
-      - open5gcore_vm
-      - upf_p4_sw #TODO: Check if this is correct
+    - [open5gs_vm, open5gs_k8s, open5gcore_vm, upf_p4_sw]
 
 ####################################
 ## Site-specific variables

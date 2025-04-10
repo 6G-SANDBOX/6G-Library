@@ -30,9 +30,7 @@ metadata:
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_bastion"]
   depends_on:
-    mandatory:
-      - tn_vxlan
-    any_of:
+    - tn_vxlan
 
 ####################################
 ## Site-specific variables

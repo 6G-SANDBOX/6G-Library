@@ -24,10 +24,7 @@ metadata:
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/ixc_endpoint"]
   depends_on:
-    mandatory:
-    any_of:
-      - tn_vxlan
-      - vnet
+    - tn_init
 
 ####################################
 ## Site-specific variables

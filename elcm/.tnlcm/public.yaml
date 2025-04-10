@@ -22,9 +22,9 @@ metadata:
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM"]
   depends_on:
     mandatory:
+    - tn_init
     any_of:
-      - vnet
-      - tn_vxlan
+
 
 
 ####################################

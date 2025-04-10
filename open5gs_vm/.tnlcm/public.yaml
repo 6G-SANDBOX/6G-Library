@@ -28,9 +28,7 @@ metadata:
   hypervisors: ["one"]
   appliances: ["https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05"]
   depends_on:
-    mandatory:
-      - vnet
-    any_of:
+    - vnet
 
 ####################################
 ## Site-specific variables

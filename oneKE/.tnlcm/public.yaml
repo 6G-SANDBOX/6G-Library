@@ -29,9 +29,7 @@ metadata:
     - "https://marketplace.mobilesandbox.cloud:9443/appliance/OneKE_1.31_service"
     - "https://marketplace.mobilesandbox.cloud:9443/appliance/OneKE_1.31a_service"
   depends_on:
-    mandatory:
-      - vnet
-    any_of:
+    - vnet
 
 ####################################
 ## Site-specific variables
