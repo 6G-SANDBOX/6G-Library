@@ -1,16 +1,24 @@
 # Changelog
 
 ## [unreleased]
-
 ### Added
 - Component `open5gs_vm` new parameter `one_open5gs_vm_install_webui` to install the WEB ui.
 - New component `influxdb` to store time series data.
 - New component `grafana` to visualize time series data.
 - New component `prometheus` to scrape time series data.
 - New component `monitoring` to deploy InfluxDB, Grafana and Prometheus stack together.
+### Fixed
+- Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
 
-### Changed
-- Component `ks8500_runner` are updated with tasks to add firewwall exceptions for `loadcore` and `ixchariot` middlewares.
+
+## [v0.5.1]
+### Added
+- New input variable `one_open5gs_vm_install_webui` in `open5gs_vm`, enabling the installation of the webUI.
+- New input variable `one_loadcore_agent_hugepages` and site variable schema in `loadcore_agent`, to switch between the 2 possible appliances.
+### Fixed
+- Component `loadcore_agent` now correctly works with both the hugepages appliance, and the "light" one.
+- Component is now also deployable by only using Terraform, without the ansible workaround. For more details check the component's changelog.
+
 
 ## [v0.5.0]
 ### Added
@@ -157,7 +165,8 @@ Initial set of components is:
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.5.0...unreleased
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.5.1...unreleased
+[v0.5.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.3.0...v0.4.0
 [v0.3.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.3.0
