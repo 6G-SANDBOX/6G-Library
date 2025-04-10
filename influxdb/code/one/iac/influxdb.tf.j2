@@ -48,3 +48,15 @@ output "{{ entity_name }}-ips" {
   description = "OpenNebula VM Network Assignments"
   value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
 }
+
+output "{{ entity_name }}-configuration" {
+  description = "InfluxDB configuration"
+  value = {
+    user = {{ one_influxdb_user }}
+    password = {{ one_influxdb_password }}
+    org = {{ one_influxdb_org }}
+    bucket = {{ one_influxdb_bucket }}
+    token = {{ one_influxdb_token }}
+    port = 8086
+  }
+}
