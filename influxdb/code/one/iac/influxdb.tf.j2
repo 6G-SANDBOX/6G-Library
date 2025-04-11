@@ -51,12 +51,19 @@ output "{{ entity_name }}-ips" {
 
 output "{{ entity_name }}-configuration" {
   description = "InfluxDB configuration"
-  value = {
-    user     = {{ one_influxdb_user | to_json }}
-    password = {{ one_influxdb_password | to_json }}
-    org      = {{ one_influxdb_org | to_json }}
-    bucket   = {{ one_influxdb_bucket | to_json }}
-    token    = {{ one_influxdb_token | to_json }}
-    port     = 8086
+  value = startswith({{ one_influxdb_version }}, "2") ? {
+    version  = "{{ one_influxdb_version }}"
+    user     = "{{ one_influxdb_user }}"
+    password = "{{ one_influxdb_password }}"
+    org      = "{{ one_influxdb_org }}"
+    bucket   = "{{ one_influxdb_bucket }}"
+    token    = "{{ one_influxdb_token }}"
+    port     = "8086"
+  } : {
+    version  = "{{ one_influxdb_version }}"
+    user     = "{{ one_influxdb_user }}"
+    password = "{{ one_influxdb_password }}"
+    bucket   = "{{ one_influxdb_bucket }}"
+    port     = "8086"
   }
 }
