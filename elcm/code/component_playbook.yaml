@@ -1,5 +1,5 @@
 ---
-- name: "STAGE 1: Apply IaC to deploy the component"
+- name: "STAGE 1: Prepare to access a previous target component"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -13,15 +13,6 @@
     - name: Overwrite defaults with correct values
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/vm_resources.yaml"
 
-    - name: Terraform apply
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
-
-
-- name: "STAGE 2: Prepare to access the component"
-  hosts: localhost
-  gather_facts: false
-  connection: local
-  tasks:
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
       args:
@@ -62,6 +53,20 @@
             ) | trim
           }}
 
+
+- name: "STAGE 2: Apply IaC to deploy the component"
+  hosts: "master_0"
+  gather_facts: false
+  tasks:
+    - name: Terraform apply
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
+
+- name: "STAGE 3: Prepare to access the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "elcm"
@@ -73,7 +78,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
 
 
-- name: "STAGE 3: Apply CaC to prepare the component"
+- name: "STAGE 4: Apply CaC to prepare the component"
   hosts: "elcm"
   gather_facts: false
   tasks:
