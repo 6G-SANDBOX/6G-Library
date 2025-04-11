@@ -9,7 +9,7 @@
 
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
-
+    
     - name: Overwrite defaults with correct values
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/vm_resources.yaml"
 
@@ -52,11 +52,12 @@
               site_domain
             ) | trim
           }}
-
-
+      
+  
 - name: "STAGE 2: Apply IaC to deploy the component"
-  hosts: "master_0"
+  hosts: localhost
   gather_facts: false
+  connection: local
   tasks:
     - name: Terraform apply
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
@@ -113,7 +114,7 @@
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
 
-- name: "STAGE 4: Publish execution results"
+- name: "STAGE 5: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local
