@@ -36,7 +36,7 @@ site_variables:
 ####################################
 input:
   one_grafana_version:
-    description: Grafana version to be installed. Format: X.X.X. Example: 11.6.0
+    description: "Grafana version to be installed. Format: X.X.X. Example: 11.6.0"
     type: str
     default_value: "11.6.0"
     required_when: false
