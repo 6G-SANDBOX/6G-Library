@@ -51,7 +51,7 @@ output "{{ entity_name }}-ips" {
 
 output "{{ entity_name }}-configuration" {
   description = "InfluxDB configuration"
-  value = startswith({{ one_influxdb_version }}, "2") ? {
+  value = startswith("{{ one_influxdb_version }}", "2") ? {
     version  = "{{ one_influxdb_version }}"
     user     = "{{ one_influxdb_user }}"
     password = "{{ one_influxdb_password }}"
