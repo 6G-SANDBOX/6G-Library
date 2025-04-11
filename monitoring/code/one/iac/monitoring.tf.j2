@@ -51,3 +51,35 @@ output "{{ entity_name }}-ips" {
   description = "OpenNebula VM Network Assignments"
   value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
 }
+
+output "{{ entity_name }}-configuration" {
+  description = "InfluxDB configuration"
+  value = startswith("{{ one_influxdb_version }}", "2") ? {
+    version  = "{{ one_influxdb_version }}"
+    user     = "{{ one_influxdb_user }}"
+    password = "{{ one_influxdb_password }}"
+    org      = "{{ one_influxdb_org }}"
+    bucket   = "{{ one_influxdb_bucket }}"
+    token    = "{{ one_influxdb_token }}"
+    host     = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
+    port     = "8086"
+  } : {
+    version  = "{{ one_influxdb_version }}"
+    user     = "{{ one_influxdb_user }}"
+    password = "{{ one_influxdb_password }}"
+    bucket   = "{{ one_influxdb_bucket }}"
+    host     = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
+    port     = "8086"
+  }
+}
+
+output "{{ entity_name }}-configuration" {
+  description = "Grafana configuration"
+  value = {
+    version        = "{{ one_grafana_version }}"
+    user           = "admin"
+    admin_password = "{{ one_grafana_admin_password }}"
+    host           = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
+    port           = 3000
+  }
+}
