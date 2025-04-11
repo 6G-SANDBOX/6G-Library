@@ -51,7 +51,7 @@ input:
     default_value: true
     required_when: true
   one_elcm_influxdb:
-    description: Name of the InfluxDB service used to store the metrics
+    description: Name of the InfluxDB component used to store the metrics
     type: influxdb
     required_when: true
   one_elcm_grafana_enable:
@@ -60,7 +60,7 @@ input:
     default_value: true
     required_when: true
   one_elcm_grafana:
-    description: Name of the Grafana service used to visualize the metrics
+    description: Name of the Grafana component used to visualize the metrics
     type: grafana
     required_when: true
 
