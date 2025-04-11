@@ -46,7 +46,7 @@ input:
     default_value: true
     required_when: true
   one_elcm_influxdb_enable:
-    description: Enable the InfluxDB service
+    description: Enable support for external InfluxDB
     type: bool
     default_value: true
     required_when: true
@@ -55,7 +55,7 @@ input:
     type: influxdb
     required_when: true
   one_elcm_grafana_enable:
-    description: Enable the Grafana service
+    description: Enable support for external Grafana
     type: bool
     default_value: true
     required_when: true
