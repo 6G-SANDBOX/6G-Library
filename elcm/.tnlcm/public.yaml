@@ -14,10 +14,16 @@
 metadata:
   maintainers:
     - Almudena Díaz Zayas <adz@uma.es>
+    - Carlos Andreo López <c.andreo@uma.es>
   short_description: Deploy a virtual machine with the ELCM backend and frontend.
   long_description: |
-    Ubuntu 22.04 LTS virtual machine with the ELCM installed.
-    It also contains OpenTAP, InfluxDB and Grafana services installed.
+    Ubuntu 22.04 LTS virtual machine with ELCM installed.
+    
+    ELCM (Experiment Lifecycle Management) is a system designed to manage the complete lifecycle of experiments in research and development environments. It provides a REST API backend built with Python and a web-based frontend also developed in Python.
+
+    The experiments executed through ELCM allow storing collected metrics in an InfluxDB database, enabling efficient data storage and retrieval for further analysis.
+
+    The ELCM component supports linking Grafana and InfluxDB components or directly using the Monitoring component that includes Grafana, InfluxDB and Prometheus in a virtual machine.
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM"]
 
@@ -34,31 +40,14 @@ site_variables:
 ## Input variables
 ####################################
 input:
-  one_elcm_influxdb_user:
-    description: Username used to login into the InfluxDB
-    type: str
-    default_value: "admin"
-    required_when: false
-  one_elcm_influxdb_password:
-    description: Password used to login into the InfluxDB
-    type: str
-    default_value: "adminadmin"
-    required_when: false
-  one_elcm_influxdb_org:
-    description: Organization name
-    type: str
-    default_value: "elcmorg"
-    required_when: false
-  one_elcm_influxdb_bucket:
-    description: Bucket name
-    type: str
-    default_value: "elcmbucket"
-    required_when: false
-  one_elcm_grafana_password:
-    description: Password used to login into the Grafana
-    type: str
-    default_value: "adminadmin"
-    required_when: false
+  one_elcm_influxdb:
+    description: Name of the InfluxDB component used to store the metrics
+    type: "influxdb or monitoring"
+    required_when: true
+  one_elcm_grafana:
+    description: Name of the Grafana component used to visualize the metrics
+    type: "grafana or monitoring"
+    required_when: true
 
 
 ####################################

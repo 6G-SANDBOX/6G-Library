@@ -71,7 +71,7 @@ input:
       Name of a previously deployed 'open5gs' component (`open5gs_k8s`, `open5gs_vm`, `upf_p4_sw` or `open5gcore_vm`).
       In *gnb* mode, defines the 5G SA core the gNB will try to connect to.
       This variable enables the autocompletion of all gNB-related variables from the selected component's configuration.
-    type: "open5gs_k8s or open5gs_vm or upf_p4_sw or open5gcore_vm"
+    type: "open5gs_vm or open5gs_k8s or open5gcore_vm or upf_p4_sw"
     default_value: null
     required_when: false
   one_ueransim_gnb_amf_n2_ip:

@@ -50,7 +50,7 @@ site_variables:
 input:
   any_nokia_radio_linked_5gcore:
     description: Name of a previosly deployed Open5GS 5G Core
-    type: "open5gs_k8s or open5gs_vm or open5gcore_vm or upf_p4_sw"
+    type: "open5gs_vm or open5gs_k8s or open5gcore_vm or upf_p4_sw"
     required_when: true
   any_nokia_radio_start_time:
     description: |

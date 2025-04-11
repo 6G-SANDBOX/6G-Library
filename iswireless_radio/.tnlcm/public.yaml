@@ -49,7 +49,7 @@ site_variables:
 input:
   any_iswireless_radio_linked_5gcore:
     description: Name of the oneKE cluster to route ISWIRELESS traffic.
-    type: "open5gs_k8s or open5gs_vm or open5gcore_vm or upf_p4_sw"
+    type: "open5gs_vm or open5gs_k8s or open5gcore_vm or upf_p4_sw"
     required_when: true
   any_iswireless_radio_start_time:
     description: |

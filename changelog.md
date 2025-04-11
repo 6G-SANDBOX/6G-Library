@@ -1,6 +1,13 @@
 # Changelog
 
 ## [unreleased]
+### Added
+- New component `influxdb` to store time series data.
+- New component `grafana` to visualize time series data.
+- New component `prometheus` to scrape time series data.
+- New component `monitoring` to deploy InfluxDB, Grafana and Prometheus stack together.
+### Changed
+- Component `elcm` now can use external influxdb and grafana instances.
 ### Fixed
 - Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
 
@@ -12,6 +19,7 @@
 ### Fixed
 - Component `loadcore_agent` now correctly works with both the hugepages appliance, and the "light" one.
 - Component is now also deployable by only using Terraform, without the ansible workaround. For more details check the component's changelog.
+
 
 ## [v0.5.0]
 ### Added
