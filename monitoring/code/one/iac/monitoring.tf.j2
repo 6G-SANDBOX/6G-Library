@@ -63,6 +63,11 @@ output "{{ entity_name }}-configuration" {
     one_influxdb_token    = "{{ one_influxdb_token }}"
     one_influxdb_host     = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
     one_influxdb_port     = "8086"
+    one_grafana_version        = "{{ one_grafana_version }}"
+    one_grafana_user           = "admin"
+    one_grafana_admin_password = "{{ one_grafana_admin_password }}"
+    one_grafana_host           = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
+    one_grafana_port           = 3000
   } : {
     one_influxdb_version  = "{{ one_influxdb_version }}"
     one_influxdb_user     = "{{ one_influxdb_user }}"
@@ -70,10 +75,10 @@ output "{{ entity_name }}-configuration" {
     one_influxdb_bucket   = "{{ one_influxdb_bucket }}"
     one_influxdb_host     = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
     one_influxdb_port     = "8086"
+    one_grafana_version        = "{{ one_grafana_version }}"
+    one_grafana_user           = "admin"
+    one_grafana_admin_password = "{{ one_grafana_admin_password }}"
+    one_grafana_host           = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
+    one_grafana_port           = 3000
   }
-  one_grafana_version        = "{{ one_grafana_version }}"
-  one_grafana_user           = "admin"
-  one_grafana_admin_password = "{{ one_grafana_admin_password }}"
-  one_grafana_host           = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
-  one_grafana_port           = 3000
 }
