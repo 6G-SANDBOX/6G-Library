@@ -54,7 +54,7 @@ input:
     description: Name of the InfluxDB service used to store the metrics
     type: influxdb
     required_when: true
-  one_elcm_influxdb_enable:
+  one_elcm_grafana_enable:
     description: Enable the Grafana service
     type: bool
     default_value: true
