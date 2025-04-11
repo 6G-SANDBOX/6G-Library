@@ -40,11 +40,6 @@ site_variables:
 ## Input variables
 ####################################
 input:
-  one_elcm_portal_enable:
-    description: Enable the ELCM portal
-    type: bool
-    default_value: true
-    required_when: true
   one_elcm_influxdb:
     description: Name of the InfluxDB component used to store the metrics
     type: influxdb or monitoring

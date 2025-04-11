@@ -28,6 +28,5 @@ trial_network:
       - "influxdb-v2"
       - "grafana-v11"
     input:
-      one_elcm_portal_enable: true
       one_elcm_influxdb: "influxdb-v2"
       one_elcm_grafana: "grafana-v11"
