@@ -38,7 +38,7 @@ site_variables:
 ####################################
 input:
   one_influxdb_version:
-    description: InfluxDB version to be installed. Format: X.X.X. Example: 2.7.11
+    description: "InfluxDB version to be installed. Format: X.X.X. Example: 2.7.11"
     type: str
     default_value: "2.7.11"
     required_when: false
@@ -68,7 +68,7 @@ input:
     default_value: "dummydummytoken"
     required_when: false
   one_grafana_version:
-    description: Grafana version to be installed. Format: X.X.X. Example: 11.6.0
+    description: "Grafana version to be installed. Format: X.X.X. Example: 11.6.0"
     type: str
     default_value: "11.6.0"
     required_when: false
@@ -78,7 +78,7 @@ input:
     default_value: "adminadmin"
     required_when: false
   one_prometheus_version:
-    description: Prometheus version to be installed. Format: X.X.X. Example: 2.53.4
+    description: "Prometheus version to be installed. Format: X.X.X. Example: 2.53.4"
     type: str
     default_value: "2.53.4"
     required_when: false
