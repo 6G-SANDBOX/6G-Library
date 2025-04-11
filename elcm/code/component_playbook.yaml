@@ -24,7 +24,7 @@
 
     - name: Set basic Terraform outputs
       ansible.builtin.set_fact:
-        monitoring_configuration: "{{ (terraform_outputs.stdout | from_json)[one_elcm_monitoring + '-configuration'] | default({}) }}"
+        monitoring_configuration: "{{ (terraform_outputs.stdout | from_json)[(one_elcm_monitoring | default('none')) + '-configuration'] | default({}) }}"
         influxdb_configuration: "{{ (terraform_outputs.stdout | from_json)[one_elcm_influxdb + '-configuration'] }}"
         grafana_configuration: "{{ (terraform_outputs.stdout | from_json)[one_elcm_grafana + '-configuration'] }}"
 
