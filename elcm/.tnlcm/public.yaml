@@ -42,16 +42,12 @@ site_variables:
 input:
   one_elcm_influxdb:
     description: Name of the InfluxDB component used to store the metrics
-    type: influxdb
-    required_when: false
+    type: "influxdb or monitoring"
+    required_when: true
   one_elcm_grafana:
     description: Name of the Grafana component used to visualize the metrics
-    type: grafana
-    required_when: false
-  one_elcm_monitoring:
-    description: Name of the Monitoring component used to monitor the metrics
-    type: monitoring
-    required_when: false
+    type: "grafana or monitoring"
+    required_when: true
 
 
 ####################################

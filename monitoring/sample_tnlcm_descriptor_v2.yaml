@@ -15,5 +15,5 @@ trial_network:
       one_influxdb_bucket: "testing"
       one_influxdb_token: "default-token-testing"
       one_grafana_version: "11.6.0"
-      one_grafana_admin_password: "adminadmin"
+      one_grafana_password: "adminadmin"
       one_prometheus_version: "2.54.3"

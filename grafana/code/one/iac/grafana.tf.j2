@@ -14,7 +14,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     USERNAME =       "jenkins"
     SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
     ONEAPP_GRAFANA_VERSION =   "{{ one_grafana_version }}"
-    ONEAPP_GRAFANA_ADMIN_PASSWORD =  "{{ one_grafana_admin_password }}"
+    ONEAPP_GRAFANA_ADMIN_PASSWORD =  "{{ one_grafana_password }}"
   }
 
 {# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
@@ -45,13 +45,13 @@ output "{{ entity_name }}-ips" {
   value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
 }
 
-output "{{ entity_name }}-configuration" {
+output "{{ entity_name }}-grafana_conf" {
   description = "Grafana configuration"
   value = {
-    one_grafana_version        = "{{ one_grafana_version }}"
-    one_grafana_user           = "admin"
-    one_grafana_admin_password = "{{ one_grafana_admin_password }}"
-    one_grafana_host           = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
-    one_grafana_port           = 3000
+    version        = "{{ one_grafana_version | default('') }}"
+    user           = "admin"
+    password       = "{{ one_grafana_password | default('') }}"
+    host           = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
+    port           = 3000
   }
 }

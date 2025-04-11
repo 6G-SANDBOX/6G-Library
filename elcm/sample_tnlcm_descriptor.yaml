@@ -20,7 +20,7 @@ trial_network:
     dependencies: ["tn_init"]
     input:
       one_grafana_version: "11.6.0"
-      one_grafana_admin_password: "adminadmin"
+      one_grafana_password: "adminadmin"
   elcm-exp:
     type: "elcm"
     name: "exp"

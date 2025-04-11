@@ -9,9 +9,6 @@
 
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
-    
-    - name: Overwrite defaults with correct values
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/vm_resources.yaml"
 
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
@@ -24,25 +21,10 @@
 
     - name: Set basic Terraform outputs
       ansible.builtin.set_fact:
-        monitoring_configuration: "{{ (terraform_outputs.stdout | from_json)[(one_elcm_monitoring | default('none')) + '-configuration'] | default({}) }}"
-        influxdb_configuration: "{{ (terraform_outputs.stdout | from_json)[(one_elcm_influxdb | default('none')) + '-configuration'] | default({}) }}"
-        grafana_configuration: "{{ (terraform_outputs.stdout | from_json)[(one_elcm_grafana | default('none')) + '-configuration'] | default({}) }}"
+        influxdb_configuration: "{{ (terraform_outputs.stdout | from_json)[(one_elcm_influxdb | default('none')) + '-influx_conf'] | default({}) }}"
+        grafana_configuration: "{{ (terraform_outputs.stdout | from_json)[(one_elcm_grafana | default('none')) + '-grafana_conf'] | default({}) }}"
 
-    - name: Set dependent Terraform outputs
-      ansible.builtin.set_fact:
-        influxdb_ip: "{{ (monitoring_configuration.one_influxdb_host | default(influxdb_configuration.one_influxdb_host)) }}"
-        influxdb_port: "{{ (monitoring_configuration.one_influxdb_port | default(influxdb_configuration.one_influxdb_port)) }}"
-        influxdb_user: "{{ (monitoring_configuration.one_influxdb_user | default(influxdb_configuration.one_influxdb_user)) }}"
-        influxdb_password: "{{ (monitoring_configuration.one_influxdb_password | default(influxdb_configuration.one_influxdb_password)) }}"
-        influxdb_bucket: "{{ (monitoring_configuration.one_influxdb_bucket | default(influxdb_configuration.one_influxdb_bucket)) }}"
-        influxdb_org: "{{ (monitoring_configuration.one_influxdb_org | default(influxdb_configuration.one_influxdb_org)) }}"
-        influxdb_token: "{{ (monitoring_configuration.one_influxdb_token | default(influxdb_configuration.one_influxdb_token)) }}"
-        grafana_ip: "{{ (monitoring_configuration.one_grafana_host | default(grafana_configuration.one_grafana_host)) }}"
-        grafana_port: "{{ (monitoring_configuration.one_grafana_port | default(grafana_configuration.one_grafana_port)) }}"
-        grafana_user: "{{ (monitoring_configuration.one_grafana_user | default(grafana_configuration.one_grafana_user)) }}"
-        grafana_admin_password: "{{ (monitoring_configuration.one_grafana_admin_password | default(grafana_configuration.one_grafana_admin_password)) }}"
-        
-  
+
 - name: "STAGE 2: Apply IaC to deploy the component"
   hosts: localhost
   gather_facts: false
@@ -50,7 +32,7 @@
   tasks:
     - name: Terraform apply
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
-    
+
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
       args:

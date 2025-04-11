@@ -15,7 +15,7 @@ trial_network:
       one_influxdb_bucket: "testing"
       one_influxdb_token: "default-token-testing"
       one_grafana_version: "11.6.0"
-      one_grafana_admin_password: "adminadmin"
+      one_grafana_password: "adminadmin"
       one_prometheus_version: "2.54.3"
   elcm-exp:
     type: "elcm"
@@ -23,4 +23,5 @@ trial_network:
     dependencies:
       - "monitoring-test"
     input:
-      one_elcm_monitoring: "monitoring-test"
+      one_elcm_influxdb: "monitoring-test"
+      one_elcm_grafana: "monitoring-test"

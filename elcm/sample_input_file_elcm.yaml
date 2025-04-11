@@ -5,3 +5,6 @@
 #one_elcm_disk: 3072
 #one_elcm_networks: 
 #  - tn_vxlan
+
+one_elcm_influxdb: "influxdb-mymetrics"
+one_elcm_grafana: "grafana-mydashboard"
