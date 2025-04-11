@@ -24,10 +24,10 @@
 
     - name: Debug variables importantes
       ansible.builtin.debug:
-      msg: |
-        one_elcm_influxdb: {{ one_elcm_influxdb }}
-        terraform_outputs: {{ terraform_outputs.stdout | from_json }}
-        influxdb_id: {{ (terraform_outputs.stdout | from_json)[one_elcm_influxdb + '-id'] }}
+        msg: |
+          one_elcm_influxdb: {{ one_elcm_influxdb }}
+          terraform_outputs: {{ terraform_outputs.stdout | from_json }}
+          influxdb_id: {{ (terraform_outputs.stdout | from_json)[one_elcm_influxdb + '-id'] }}
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
