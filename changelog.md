@@ -6,6 +6,8 @@
 - New component `grafana` to visualize time series data.
 - New component `prometheus` to scrape time series data.
 - New component `monitoring` to deploy InfluxDB, Grafana and Prometheus stack together.
+### Changed
+- Component `elcm` now can use external influxdb and grafana instances.
 ### Fixed
 - Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
 
