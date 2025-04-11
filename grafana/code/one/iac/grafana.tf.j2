@@ -48,10 +48,10 @@ output "{{ entity_name }}-ips" {
 output "{{ entity_name }}-configuration" {
   description = "Grafana configuration"
   value = {
-    version        = "{{ one_grafana_version }}"
-    user           = "admin"
-    admin_password = "{{ one_grafana_admin_password }}"
-    host           = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
-    port           = 3000
+    one_grafana_version        = "{{ one_grafana_version }}"
+    one_grafana_user           = "admin"
+    one_grafana_admin_password = "{{ one_grafana_admin_password }}"
+    one_grafana_host           = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
+    one_grafana_port           = 3000
   }
 }

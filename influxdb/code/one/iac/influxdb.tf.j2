@@ -52,20 +52,20 @@ output "{{ entity_name }}-ips" {
 output "{{ entity_name }}-configuration" {
   description = "InfluxDB configuration"
   value = startswith("{{ one_influxdb_version }}", "2") ? {
-    version  = "{{ one_influxdb_version }}"
-    user     = "{{ one_influxdb_user }}"
-    password = "{{ one_influxdb_password }}"
-    org      = "{{ one_influxdb_org }}"
-    bucket   = "{{ one_influxdb_bucket }}"
-    token    = "{{ one_influxdb_token }}"
-    host     = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
-    port     = "8086"
+    one_influxdb_version  = "{{ one_influxdb_version }}"
+    one_influxdb_user     = "{{ one_influxdb_user }}"
+    one_influxdb_password = "{{ one_influxdb_password }}"
+    one_influxdb_org      = "{{ one_influxdb_org }}"
+    one_influxdb_bucket   = "{{ one_influxdb_bucket }}"
+    one_influxdb_token    = "{{ one_influxdb_token }}"
+    one_influxdb_host     = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
+    one_influxdb_port     = "8086"
   } : {
-    version  = "{{ one_influxdb_version }}"
-    user     = "{{ one_influxdb_user }}"
-    password = "{{ one_influxdb_password }}"
-    bucket   = "{{ one_influxdb_bucket }}"
-    host     = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
-    port     = "8086"
+    one_influxdb_version  = "{{ one_influxdb_version }}"
+    one_influxdb_user     = "{{ one_influxdb_user }}"
+    one_influxdb_password = "{{ one_influxdb_password }}"
+    one_influxdb_bucket   = "{{ one_influxdb_bucket }}"
+    one_influxdb_host     = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
+    one_influxdb_port     = "8086"
   }
 }
