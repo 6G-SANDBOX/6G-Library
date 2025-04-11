@@ -34,9 +34,9 @@
         influxdb_port: "{{ influxdb_configuration.port }}"
         grafana_ip: "{{ (terraform_outputs.stdout | from_json)[one_elcm_grafana + '-ips'] }}"
         grafana_configuration: "{{ (terraform_outputs.stdout | from_json)[one_elcm_grafana + '-configuration'] }}"
-        grafana_user: "{{ influxdb_configuration.user }}"
-        grafana_admin_password: "{{ influxdb_configuration.admin_password }}"
-        grafana_port: "{{ influxdb_configuration.port }}"
+        grafana_user: "{{ grafana_configuration.user }}"
+        grafana_admin_password: "{{ grafana_configuration.admin_password }}"
+        grafana_port: "{{ grafana_configuration.port }}"
       
   
 - name: "STAGE 2: Apply IaC to deploy the component"
