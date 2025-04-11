@@ -39,6 +39,19 @@
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_elcm_networks[0] + '-id'] | string }}"
+        influxdb_ip: "{{ (terraform_outputs.stdout | from_json)[one_elcm_influxdb + '-ips'] }}"
+        influxdb_configuration: "{{ (terraform_outputs.stdout | from_json)[one_elcm_influxdb + '-configuration'] }}"
+        influxdb_user: "{{ influxdb_configuration.user }}"
+        influxdb_password: "{{ influxdb_configuration.password }}"
+        influxdb_bucket: "{{ influxdb_configuration.bucket }}"
+        influxdb_org: "{{ influxdb_configuration.org }}"
+        influxdb_token: "{{ influxdb_configuration.token }}"
+        influxdb_port: "{{ influxdb_configuration.port }}"
+        grafana_ip: "{{ (terraform_outputs.stdout | from_json)[one_elcm_grafana + '-ips'] }}"
+        grafana_configuration: "{{ (terraform_outputs.stdout | from_json)[one_elcm_grafana + '-configuration'] }}"
+        grafana_user: "{{ influxdb_configuration.user }}"
+        grafana_admin_password: "{{ influxdb_configuration.admin_password }}"
+        grafana_port: "{{ influxdb_configuration.port }}"
         domain_name: >-
           {{
             (

@@ -3,13 +3,33 @@ trial_network:
     type: "tn_init"
     dependencies: []
     input: {}
+  influxdb-v2:
+    type: "influxdb"
+    name: "v2"
+    dependencies: ["tn_init"]
+    input:
+      one_influxdb_version: "2.7.11"
+      one_influxdb_user: "admin"
+      one_influxdb_password: "adminadmin"
+      one_influxdb_org: "testing"
+      one_influxdb_bucket: "testing"
+      one_influxdb_token: "default-token-testing"
+  grafana-v11:
+    type: "grafana"
+    name: "v11"
+    dependencies: ["tn_init"]
+    input:
+      one_grafana_version: "11.6.0"
+      one_grafana_admin_password: "adminadmin"
   elcm-exp:
     type: "elcm"
     name: "exp"
-    dependencies: ["tn_init"]
+    dependencies:
+      - "influxdb-v2"
+      - "grafana-v11"
     input:
-      one_elcm_influxdb_user: "admin"
-      one_elcm_influxdb_password: "adminadmin"
-      one_elcm_influxdb_org: "elcmorg"
-      one_elcm_influxdb_bucket: "elcmbucket"
-      one_elcm_grafana_password: "adminadmin"
+      one_elcm_portal_enable: true
+      oneapp_elcm_influxdb_enable: true
+      one_elcm_influxdb: "influxdb-v2"
+      oneapp_elcm_grafana_enable: true
+      one_elcm_grafana: "grafana-v11"
