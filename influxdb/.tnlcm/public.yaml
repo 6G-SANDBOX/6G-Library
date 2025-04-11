@@ -54,7 +54,7 @@ input:
     description: Organization name. Required if InfluxDB v2 is selected
     type: str
     default_value: "dummyorg"
-    required_when: false # TODO: required if influxdb v2
+    required_when: false
   one_influxdb_bucket:
     description: Bucket name. For InfluxDB v1, it is the name of the database
     type: str
@@ -64,7 +64,7 @@ input:
     description: Token used to login into the InfluxDB. Required if InfluxDB v2 is selected
     type: str
     default_value: "dummydummytoken"
-    required_when: false # TODO: required if influxdb v2
+    required_when: false
 
 
 ####################################
