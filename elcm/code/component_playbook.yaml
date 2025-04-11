@@ -24,24 +24,23 @@
 
     - name: Set basic Terraform outputs
       ansible.builtin.set_fact:
-        influxdb_id: "{{ (terraform_outputs.stdout | from_json)[one_elcm_influxdb + '-id'] }}"
-        grafana_id: "{{ (terraform_outputs.stdout | from_json)[one_elcm_grafana + '-id'] }}"
         influxdb_configuration: "{{ (terraform_outputs.stdout | from_json)[one_elcm_influxdb + '-configuration'] }}"
         grafana_configuration: "{{ (terraform_outputs.stdout | from_json)[one_elcm_grafana + '-configuration'] }}"
 
     - name: Set dependent Terraform outputs
       ansible.builtin.set_fact:
-        influxdb_ip: "{{ (terraform_outputs.stdout | from_json)[one_elcm_influxdb + '-ips'][influxdb_id] }}"
-        grafana_ip: "{{ (terraform_outputs.stdout | from_json)[one_elcm_grafana + '-ips'][grafana_id] }}"
+        influxdb_ip: "{{ influxdb_configuration.host }}"
+        influxdb_port: "{{ influxdb_configuration.port }}"
         influxdb_user: "{{ influxdb_configuration.user }}"
         influxdb_password: "{{ influxdb_configuration.password }}"
         influxdb_bucket: "{{ influxdb_configuration.bucket }}"
         influxdb_org: "{{ influxdb_configuration.org }}"
         influxdb_token: "{{ influxdb_configuration.token }}"
-        influxdb_port: "{{ influxdb_configuration.port }}"
+        grafana_ip: "{{ grafana_configuration.host }}"
+        grafana_port: "{{ grafana_configuration.port }}"
         grafana_user: "{{ grafana_configuration.user }}"
         grafana_admin_password: "{{ grafana_configuration.admin_password }}"
-        grafana_port: "{{ grafana_configuration.port }}"
+        
   
 - name: "STAGE 2: Apply IaC to deploy the component"
   hosts: localhost
