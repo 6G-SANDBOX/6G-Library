@@ -50,7 +50,8 @@ output "{{ entity_name }}-configuration" {
   value = {
     version        = "{{ one_grafana_version }}"
     user           = "admin"
-    admin_password = {{ one_grafana_admin_password | to_json }}
+    admin_password = "{{ one_grafana_admin_password }}"
+    host           = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
     port           = 3000
   }
 }
