@@ -90,5 +90,19 @@ input:
 terraform_outputs:
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
-  __entity_name__configuration: "Dictionary of VM configuration. Generated from Terraform Manifest"
+  __entity_name__grafana_conf: # Dictionay of Grafana configuration. Generated from Terraform Manifest
+    version: input.one_grafana_version
+    user: "admin"
+    password: input.one_grafana_version
+    host: "First IP address of the VM. Generally the one in the tn_vxlan network"
+    port: 3000
+  __entity_name__influx_conf: # Dictionay of InfluxDB configuration. Generated from Terraform Manifest
+    version: input.one_influxdb_version
+    user: input.one_influxdb_user
+    password: input.one_influxdb_password
+    org: input.one_influxdb_org
+    bucket: input.one_influxdb_bucket
+    token: input.one_influxdb_token
+    host: "First IP address of the VM. Generally the one in the tn_vxlan network"
+    port: 8086
   

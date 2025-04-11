@@ -59,6 +59,6 @@ output "{{ entity_name }}-influx_conf" {
     bucket   = "{{ one_influxdb_bucket | default('') }}"
     token    = "{{ one_influxdb_token | default('') }}"
     host     = opennebula_virtual_machine.{{ entity_name }}.nic[0].computed_ip
-    port     = "8086"
+    port     = 8086
   }
 }
