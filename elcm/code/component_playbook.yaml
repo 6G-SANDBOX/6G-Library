@@ -24,22 +24,23 @@
 
     - name: Set basic Terraform outputs
       ansible.builtin.set_fact:
+        monitoring_configuration: "{{ (terraform_outputs.stdout | from_json)[one_elcm_monitoring + '-configuration'] | default({}) }}"
         influxdb_configuration: "{{ (terraform_outputs.stdout | from_json)[one_elcm_influxdb + '-configuration'] }}"
         grafana_configuration: "{{ (terraform_outputs.stdout | from_json)[one_elcm_grafana + '-configuration'] }}"
 
     - name: Set dependent Terraform outputs
       ansible.builtin.set_fact:
-        influxdb_ip: "{{ influxdb_configuration.host }}"
-        influxdb_port: "{{ influxdb_configuration.port }}"
-        influxdb_user: "{{ influxdb_configuration.user }}"
-        influxdb_password: "{{ influxdb_configuration.password }}"
-        influxdb_bucket: "{{ influxdb_configuration.bucket }}"
-        influxdb_org: "{{ influxdb_configuration.org }}"
-        influxdb_token: "{{ influxdb_configuration.token }}"
-        grafana_ip: "{{ grafana_configuration.host }}"
-        grafana_port: "{{ grafana_configuration.port }}"
-        grafana_user: "{{ grafana_configuration.user }}"
-        grafana_admin_password: "{{ grafana_configuration.admin_password }}"
+        influxdb_ip: "{{ (monitoring_configuration.one_influxdb_host | default(influxdb_configuration.one_influxdb_host)) }}"
+        influxdb_port: "{{ (monitoring_configuration.one_influxdb_port | default(influxdb_configuration.one_influxdb_port)) }}"
+        influxdb_user: "{{ (monitoring_configuration.one_influxdb_user | default(influxdb_configuration.one_influxdb_user)) }}"
+        influxdb_password: "{{ (monitoring_configuration.one_influxdb_password | default(influxdb_configuration.one_influxdb_password)) }}"
+        influxdb_bucket: "{{ (monitoring_configuration.one_influxdb_bucket | default(influxdb_configuration.one_influxdb_bucket)) }}"
+        influxdb_org: "{{ (monitoring_configuration.one_influxdb_org | default(influxdb_configuration.one_influxdb_org)) }}"
+        influxdb_token: "{{ (monitoring_configuration.one_influxdb_token | default(influxdb_configuration.one_influxdb_token)) }}"
+        grafana_ip: "{{ (monitoring_configuration.one_grafana_host | default(grafana_configuration.one_grafana_host)) }}"
+        grafana_port: "{{ (monitoring_configuration.one_grafana_port | default(grafana_configuration.one_grafana_port)) }}"
+        grafana_user: "{{ (monitoring_configuration.one_grafana_user | default(grafana_configuration.one_grafana_user)) }}"
+        grafana_admin_password: "{{ (monitoring_configuration.one_grafana_admin_password | default(grafana_configuration.one_grafana_admin_password)) }}"
         
   
 - name: "STAGE 2: Apply IaC to deploy the component"
