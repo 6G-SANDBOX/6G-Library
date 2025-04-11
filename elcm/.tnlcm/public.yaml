@@ -23,7 +23,7 @@ metadata:
 
     The experiments executed through ELCM allow storing collected metrics in an InfluxDB database, enabling efficient data storage and retrieval for further analysis.
 
-    This virtual machine also linked with OpenTAP, InfluxDB and Grafana services, facilitating experiment automation, data collection and real-time visualization.
+    The ELCM component supports linking Grafana and InfluxDB components or directly using the Monitoring component that includes Grafana, InfluxDB and Prometheus in a virtual machine.
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM"]
 
