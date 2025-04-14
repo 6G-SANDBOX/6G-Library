@@ -41,8 +41,8 @@ metadata:
 ## Site-specific variables
 ####################################
 site_variables:
-  cp_ip: 172.31.44.0/252 #ericsson Control Plane IP address
-  up_ip: 172.31.43.0/252 #ericsson User Plane IP address
+  cp_ip: 172.25.11.200 #172.31.44.0/252 #ericsson Control Plane IP address
+  up_ip: 172.25.13.200 #172.31.43.0/252 #ericsson User Plane IP address
 
 
 ####################################

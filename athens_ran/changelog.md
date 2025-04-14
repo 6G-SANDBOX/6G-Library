@@ -2,7 +2,7 @@
 
 ## unreleased
 ### Added
- - [ ]
+ - [ CP and UP address altered on the public.yaml to reflect actual infrastructure ]
  
 ### Changed
  - updated code for Erricson RAN to correctly communicate with TN via RouteManager component
