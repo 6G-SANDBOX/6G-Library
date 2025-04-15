@@ -62,7 +62,7 @@ input:
     default_value: Current time and date
     required_when: false
 
-  any_ericsson_radio_duration:
+  any_athens_ran_duration:
     description: Time in seconds for the ericsson reservation
     type: int
     default_value: 3600
