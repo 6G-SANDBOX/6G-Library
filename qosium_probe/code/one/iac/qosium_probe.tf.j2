@@ -22,7 +22,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     driver   = "qcow2"
   } #}
 
-{% for network in one_qosium_probe_networks %}
+{% for network in one_vm_kvm_networks %}
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
