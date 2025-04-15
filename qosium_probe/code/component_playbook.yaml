@@ -76,7 +76,7 @@
         # ID of the newly created VM in OpenNebula
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         # ID of the first VNet used in this VM. It must be reachable to the Jenkins VM
-        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_dummy_component_networks[0] + '-id'] | string }}"
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string }}"
 
     # Inclusion of a task file to to still do preliminatory tasks out of the main playbook
     - name: Fetch cluster node IPs
