@@ -78,11 +78,6 @@
         # ID of the first VNet used in this VM. It must be reachable to the Jenkins VM
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_vm_kvm_networks[0] + '-id'] | string }}"
 
-    # Inclusion of a task file to to still do preliminatory tasks out of the main playbook
-    - name: Fetch cluster node IPs
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/node_ip.yaml"
-      loop: "{{ cluster_roles | dict2items }}"
-
     # Include the deployed component/s as Inventory host/s.
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
