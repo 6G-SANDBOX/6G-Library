@@ -159,6 +159,22 @@
 #            name: QosiumProbe
 #            state: restarted
 
+#    - name: Configure NTP server in chrony.conf
+#      become: yes
+#      lineinfile:
+#        path: /etc/chrony/chrony.conf
+#        regexp: '^pool\s+.*'
+#        line: "server {{ ntp_server_address }} minpoll 1 maxpoll 1 burst iburst"
+#        state: present
+#      when: ntp_server_address != “pool.ntp.org”
+
+#    - name: Restart chronyd service
+#      become: yes
+#      service:
+#        name: chrony
+#        state: restarted
+#      when: ntp_server_address  != “pool.ntp.org”
+
 
     # Example of inclued task files common to all hypervisors, like helm charts, or bash/python/ruby sripts.
     #- name: Helm install
