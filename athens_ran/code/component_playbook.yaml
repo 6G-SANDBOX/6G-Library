@@ -61,6 +61,15 @@
         - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
       when: open5gs_metadata['proxy'] is defined and open5gs_metadata['proxy'] != ''
 
+    - name: Submit routes in tn_bastion for network connectivity
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ bastion_ip }}"
+        token: "{{ tn_routemanager_token }}"
+      loop:
+        - { to: "192.168.199.0/24", via: "{{ site_routemanager.api_endpoint }}" }  # Route to Open5GS network
+        - { to: "172.25.0.0/16", via: "{{ site_routemanager.api_endpoint }}" }     # Route to Ericsson RAN network
+
 
 - name: "STAGE 2: Prepare access to tn_bastion to allow access to the STF webUI"
   hosts: localhost
@@ -85,6 +94,10 @@
       vars:
         fw_exceptions:
           - "{{ site_routemanager.api_endpoint }}"
+          - "192.168.199.0/24"  # Open5GS network
+          - "172.25.0.0/16"     # Ericsson RAN network
+          - "{{ site_available_components.ericsson_radio.cp_ip }}"
+          - "{{ site_available_components.ericsson_radio.up_ip }}"
 
 
 - name: "STAGE 4: Publish execution results"
