@@ -9,6 +9,12 @@
     src: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_values_template-portainer.yaml.j2"
     dest: "/root/{{ helm_release_name }}-values-portainer.yaml"
 
+- name: Authenticate in DockerHub and create secret
+  ansible.builtin.shell: |
+    helm registry login registry-1.docker.io -u smecina -p {{ dockerhub_token }} && \
+    kubectl create ns {{ helm_release_name }} --kubeconfig /etc/rancher/rke2/rke2.yaml
+    kubectl create secret docker-registry regcred --docker-username=smecina --docker-password={{ dockerhub_token }} -n {{ helm_release_name }} --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=240s
+
 - name: Deploy RIC helm
   kubernetes.core.helm:
     kubeconfig: /etc/rancher/rke2/rke2.yaml
