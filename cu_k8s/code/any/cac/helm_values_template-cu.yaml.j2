@@ -10,4 +10,4 @@ networking:
     CU_IP: "{{ one_cu_k8s_ip | string }}"
     DU_IP: "{{ site_available_components.iswireless_radio.f1_ip }}"
     prefix: 24
-    interface: "{{ worker_interface | string }}"
+    interface: "eth0"

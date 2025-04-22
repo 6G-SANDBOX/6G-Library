@@ -3,7 +3,7 @@ image:
   tag: 2.3.0-52fd48fd-develop-b153
 networking:
   ric_net:
-    interface: "{{ worker_interface | string }}"
+    interface: "eth0"
     RIC_IP: "{{ one_ric_k8s_ip | string }}"
     prefix: 24
 quota1: "{{ one_ric_k8s_quota1 | string }}"

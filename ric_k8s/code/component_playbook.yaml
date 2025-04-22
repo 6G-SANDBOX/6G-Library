@@ -48,13 +48,13 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
         ansible_user: "root"
 
-- name: "STAGE 2: Gather worker node interface information"
-  hosts: worker_0
-  become: yes
-  tasks:
-    - name: Save the interface name into an dedicated Ansible variable
-      set_fact:
-        worker_interface: "{{ ansible_facts['ansible_interfaces'][1] }}"
+# - name: "STAGE 2: Gather worker node interface information"
+#   hosts: worker_0
+#   become: yes
+#   tasks:
+#     - name: Save the interface name into an dedicated Ansible variable
+#       set_fact:
+#         worker_interface: "{{ ansible_facts['ansible_interfaces'][1] }}"
 
 
 - name: "STAGE 2: Apply IaC to deploy the component"
