@@ -42,7 +42,6 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
         ansible_user: "root"
 
-# Check if worker_0 is appropiate variable
     - name: Add the oneKE worker to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "worker_0"
@@ -54,12 +53,6 @@
   hosts: worker_0
   become: yes
   tasks:
-    # - name: Execute the script to get the second network interface
-    #   shell: "{{ workspace }}/{{ component_type }}/code/any/cac/scripts/set_authentication.sh"
-    #   register: result
-    # - name: Save the interface name into an Ansible variable
-    #   set_fact:
-    #     worker_interface: "{{ result.stdout }}"
     - name: Save the interface name into an dedicated Ansible variable
       set_fact:
         worker_interface: "{{ ansible_facts['ansible_interfaces'][1] }}"
