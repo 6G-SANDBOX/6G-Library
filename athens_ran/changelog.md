@@ -8,6 +8,7 @@
  - updated code for Erricson RAN to correctly communicate with TN via RouteManager component
  - updated one_vnet_first_ip to 10.10.10.1
  - changed playbook, added route Open5Gs --> Bastion
+ - removed changes in playbook, added route Open5Gs --> Bastion
 
 ## v0.5.0
 ### Added
