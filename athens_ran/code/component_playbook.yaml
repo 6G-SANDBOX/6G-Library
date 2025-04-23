@@ -67,7 +67,8 @@
         endpoint: "{{ site_routemanager.api_endpoint }}"
         token: "{{ site_routemanager.token }}"
       loop:
-        - { to: "0.0.0.0/0", via: "{{ bastion_ip }}" }  # Default route through Bastion
+        - { to: "{{ site_available_components.ericsson_radio.cp_ip }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ site_available_components.ericsson_radio.up_ip }}", via: "{{ bastion_ip }}" }
 
 
 - name: "STAGE 2: Prepare access to tn_bastion to allow access to the STF webUI"
