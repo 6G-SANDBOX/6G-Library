@@ -1,8 +1,4 @@
 ---
-- name: Debug the open5gs_metadata_dict
-  debug:
-    var: hostvars['localhost'].open5gs_metadata_dict
-
 - name: Render helm values template
   ansible.builtin.template:
     src: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_values_template-cu.yaml.j2"

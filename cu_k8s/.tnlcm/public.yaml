@@ -56,6 +56,21 @@ input:
       Token required to authenticate to dockerhub
     type: str
     required_when: false
+  one_cu_open5gs_amf_ip:
+    description: |
+      IP or service name of the core amf
+    type: str
+    required_when: false
+  one_cu_open5gs_upf_ip:
+    description: |
+      IP or service name of the core upf
+    type: str
+    required_when: false
+  one_cu_ric_ip:
+    description: |
+      IP or service name of the ric
+    type: str
+    required_when: false
 
 ####################################
 ## Generated terraform outputs

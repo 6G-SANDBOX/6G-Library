@@ -62,4 +62,7 @@ trial_network:
       one_cu_k8s_target: "oneKE-cluster"
       one_cu_open5gs_target: "open5gs_k8s-core"
       one_cu_k8s_ip: "10.21.12.203"
+      one_cu_open5gs_amf_ip: "open5gsk8s-core-amf-ngap.open5gsk8s-core.svc.cluster.local"
+      one_cu_open5gs_upf_ip: "open5gsk8s-core-upf-gtpu.open5gsk8s-core.svc.cluster.local"
+      one_cu_ric_ip: "e2-service.rick8s-demo.svc.cluster.local"
       dockerhub_token: "XXX"
