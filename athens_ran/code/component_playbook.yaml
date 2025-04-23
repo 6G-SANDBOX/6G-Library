@@ -61,6 +61,14 @@
         - { to: "{{ open5gs_metadata['upf_ip'] }}", via: "{{ open5gs_metadata['proxy'] }}" }
       when: open5gs_metadata['proxy'] is defined and open5gs_metadata['proxy'] != ''
 
+    - name: Submit routes in route-manager-api from Open5GS to Ericsson RAN
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ site_routemanager.api_endpoint }}"
+        token: "{{ site_routemanager.token }}"
+      loop:
+        - { to: "0.0.0.0/0", via: "{{ bastion_ip }}" }  # Default route through Bastion
+
 
 - name: "STAGE 2: Prepare access to tn_bastion to allow access to the STF webUI"
   hosts: localhost
