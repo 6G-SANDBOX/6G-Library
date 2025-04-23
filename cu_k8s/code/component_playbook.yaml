@@ -34,6 +34,9 @@
               site_domain
             ) | trim
           }}
+    - name: Debug the open5gs_metadata_dict
+      debug:
+        var: open5gs_metadata_dict
 
     - name: Add the oneKE master to Ansible Inventory
       ansible.builtin.add_host:
