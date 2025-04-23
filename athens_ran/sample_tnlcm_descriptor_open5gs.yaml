@@ -12,7 +12,7 @@ trial_network:
     name: "n2"
     dependencies: []
     input:
-      one_vnet_first_ip: "10.10.11.1"
+      one_vnet_first_ip: "10.10.10.1"
       one_vnet_netmask: 24
       one_vnet_address_size: 254
       one_vnet_mtu: 1450
