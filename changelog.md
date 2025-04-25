@@ -6,6 +6,7 @@
 - New component `grafana` to visualize time series data.
 - New component `prometheus` to scrape time series data.
 - New component `monitoring` to deploy InfluxDB, Grafana and Prometheus stack together.
+- New component `mongodb` to store time series data.
 ### Changed
 - Component `elcm` now can use external influxdb and grafana instances.
 ### Fixed
