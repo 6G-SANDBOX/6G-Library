@@ -1,0 +1,17 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  mongodb-v8:
+    type: "mongodb"
+    name: "v8"
+    dependencies:
+      - "tn_init"
+    input:
+      one_mongodb_version: "8.0.8"
+      one_mongodb_user: "admin"
+      one_mongodb_password: "adminadmin"
+      one_mongodb_database: "dummydb"
+      one_mongo_express_user: "admin"
+      one_mongo_express_password: "adminadmin"
