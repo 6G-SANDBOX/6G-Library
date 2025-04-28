@@ -191,12 +191,11 @@
             'dn_n6_ip': '{{ one_upf_p4_sw_controller_dn_ipv4_n6 }}',
             'ue_subnet': '{{ one_upf_p4_sw_ue_pool }}'
           }
-
     - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-metadata"
+          - key: "{{ entity_name }}-5gcore_metadata"
             value: "{{ upf_p4_sw_metadata_dict }}"
 
     - name: Publish execution results to TNLCM and S3 object storage

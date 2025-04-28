@@ -140,7 +140,8 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__metadata:
+  __entity_name__component_type: "ocf"
+  __entity_name__ocf_metadata:
     oneKE: input.ocf_one_oneKE
     repo: input.ocf_any_repo
     branch: input.ocf_any_branch

@@ -135,8 +135,7 @@
           ansible.builtin.set_fact:
             gnb_metadata_dict: >-
               {
-                'run_gnb':        '{{ one_ueransim_run_gnb }}',
-                'linked_open5gs': '{{ one_ueransim_gnb_linked_5gcore | default('None') }}',
+                'linked_5gcore': '{{ one_ueransim_gnb_linked_5gcore | default('None') }}',
                 'amf_n2_ip': '{{ one_ueransim_gnb_amf_n2_ip }}',
                 'tac':  '{{ one_ueransim_gnb_tac }}',
                 'mcc':  '{{ one_ueransim_gnb_mcc }}',
@@ -147,6 +146,7 @@
                 'apn':  '{{ one_ueransim_gnb_apn }}',
                 'sst':  '{{ one_ueransim_gnb_slices_sst }}',
                 'sd':   '{{ one_ueransim_gnb_slices_sd }}'
+                'run_gnb':        '{{ one_ueransim_run_gnb }}',
               }
         - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
@@ -162,7 +162,6 @@
           ansible.builtin.set_fact:
             ue_metadata_dict: >-
               {
-                'run_ue':        '{{ one_ueransim_run_ue }}',
                 'linked_gnb':    '{{ one_ueransim_ue_linked_gnb | default('None') }}',
                 'gnbsearchlist': '{{ ips[access_vnet_id] if one_ueransim_ue_gnbsearchlist == 'localhost' else one_ueransim_ue_gnbsearchlist | join(',') }}',
                 'mcc':  '{{ one_ueransim_ue_mcc }}',
@@ -173,6 +172,7 @@
                 'apn':  '{{ one_ueransim_ue_session_apn }}',
                 'sst':  '{{ one_ueransim_ue_session_sst }}',
                 'sd':   '{{ one_ueransim_ue_session_sd }}'
+                'run_ue':        '{{ one_ueransim_run_ue }}',
               }
         - name: Set custom terraform outputs for future components
           ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"

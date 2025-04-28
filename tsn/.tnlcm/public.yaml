@@ -41,4 +41,4 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  # None
+  __entity_name__component_type: "tsn"

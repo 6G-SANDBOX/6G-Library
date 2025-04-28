@@ -148,7 +148,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-metadata"
+          - key: "{{ entity_name }}-int_p4_sw_metadata"
             value: "{{ int_p4_sw_metadata_json_escaped }}"
 
     - name: Publish execution results to TNLCM

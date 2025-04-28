@@ -30,7 +30,7 @@ metadata:
     - `amf_n2_ip`: "10.10.12.200"
     - `upf_n3_ip`: "10.10.12.201"
     NOTE: Currently this component is only available in the site "uma".
-  hypervisors: ["one"]
+  hypervisors: ["any"]
   destroy_script: true
   resource_manager: true
 
@@ -69,4 +69,6 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__open5gs: input.any_iswireless_radio_linked_5gcore
+  __entity_name__component_type: "iswireless_radio"
+  __entity_name__gnb_metadata:
+    linked_5gcore: input.any_iswireless_radio_linked_5gcore

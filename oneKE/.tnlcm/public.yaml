@@ -141,11 +141,12 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
+  __entity_name__component_type: "oneKE"
   __entity_name__id: "Service ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__roles: "Array with service roles information. Generated from Terraform Manifest"
   __entity_name__node_ids: "Dictionary of VM IDs in OpenNebula: key='VM name', value='the VM ID'"
   __entity_name__node_ips: "Dictionary of VM addresses: key='VM name', value='the VM main address'"
-  __entity_name__metadata:
+  __entity_name__oneKE_metadata:
     external_vnet: input.one_oneKE_external_vnet
     internal_vnet: input.one_oneKE_internal_vnet
     version: input.one_oneKE_version

@@ -68,5 +68,6 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
+  __entity_name__component_type: "vnet"
   __entity_name__id: "VNet ID in Opennebula. Generated from Terraform Manifest"
   __entity_name__net: "Subnet of the VNet in CIDR format"

@@ -16,19 +16,18 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  short_description: Enables routing temporarily between Nokia Airscale and a previously deployed 5G Core.
+    - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
+  short_description: Attach an existing physical gNB with a previously deployed 5G Core component for a limited period of time.
   long_description: |
+    This component allows the experimenter to temporarily integrate physical RAN equipment with a 5G core component inside the Trial Network.
+    In order to handle the reservation of limited resources for multiple users, connections are limited to a single time slot of 
+    TODO
+    
+
     Component to integrate the Nokia Airscale physical equipment with a 5G core already deployed inside the Trial Network.
     It is done by enabling the necessary routing path for a limited time duration using a [6G-Sandbox route-manager-api](https://marketplace.mobilesandbox.cloud:9443/appliance/service_routemanager) VM expected to be already deployed in the site.
-    WARNING: This component may only work if the configurations for the related 5G Core and UE are set as follows:
-    - `mcc`: "214" 
-    - `mnc`: "702"
-    - `apn`: "internet"
-    - `tac`: 1
-    - `s_nssai_sst`: 1
-    - `s_nssai_sd`: "000009"
-    - `amf_n2_ip`: "10.10.12.200"
-    - `upf_n3_ip`: "10.10.12.201"
+    WARNING: This component may only work if the configurations for the related 5G Core and UE are correctly configured beforehand?
+
     NOTE: Aditional routing configuration that is not dependent on the Trial Network may also need to be done beforehand.
     NOTE: Currently this component is only available in the site "uma".
   hypervisors: ["any"]
@@ -39,37 +38,36 @@ metadata:
 ####################################
 ## Site-specific variables
 ####################################
-site_variables:
-  cp_ip: "Nokia Airscale Control Plane IP address."
-  up_ip: "Nokia Airscale User Plane IP address. NOTE: In our case it is the route-manager-API IP address in the Nokia Airscale VLAN."
 
+# List of IP addresses or subnetworks that will be routed from the Trial Network through the 
+# These IPs can include things such as the Control/User Plane IPs of the gNB
+site_variables: []     
 
 ####################################
 ## Input variables
 ####################################
 input:
-  any_nokia_radio_linked_5gcore:
-    description: Name of a previosly deployed Open5GS 5G Core
+  any_hw_gNB_linked_5gcore:
+    description: Name of a valid 5G Core component inside the same Trial Network. The gNB will attach to its AMF.
     type: "open5gs_k8s or open5gs_vm or open5gcore_vm or upf_p4_sw"
     required_when: true
-  any_nokia_radio_start_time:
-    description: |
-      Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
-      If unspecified, value takes current time and date.
-    type: str
-    default_value: Current time and date
-    required_when: false
-  any_nokia_radio_duration:
-    description: Time in seconds for the Nokia Airsale reservation
-    type: int
-    default_value: 3600
-    required_when: false
+  any_hw_gNB_cp:
+  # any_hw_gNB_start_time:
+  #   description: |
+  #     Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
+  #     If undefined, the reservation start time will take the current time and date.
+  #   type: str
+  #   default_value: "Current time and date"
+  #   required_when: false
+  # any_hw_gNB_duration:
+  #   description: Time in seconds for the gNB reservation starting from `any_hw_gNB_start_time`. 3 hours by default.
+  #   type: int
+  #   default_value: 10800
+  #   required_when: false
 
 
 ####################################
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__component_type: "nokia_radio"
-  __entity_name__gnb_metadata:
-    linked_5gcore: input.any_nokia_radio_linked_5gcore
+  __entity_name__linked_5gcore: input.any_hw_gNB_linked_5gcore

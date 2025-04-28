@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Changed
+- Output `gnb_metadata.linked_open5gs` renamed to `gnb_metadata.linked_5gcore`.
+
 ## v0.5.0
 ### Added
 - New variable `one_ueransim_mode` allowing to switch the behabiour of the component between gNB, UE or both, and relegating `run_gnb` and `run_ue` variables into simply enabling the serfice or not.

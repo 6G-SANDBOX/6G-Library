@@ -23,7 +23,7 @@
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
-        open5gs_metadata: "{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_5gcore + '-metadata'] }}"
+        core_metadata: "{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_5gcore + '-5gcore_metadata'] }}"
 
     - name: Set start of lease time and date with RFC 3339 section 5.6 format
       ansible.builtin.set_fact:
@@ -39,8 +39,8 @@
         endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
         token: "{{ site_iswireless_routemanager.token }}"
       loop:
-        - { to: "{{ open5gs_metadata['amf_n2_ip'] }}", via: "{{ bastion_ip }}" }
-        - { to: "{{ open5gs_metadata['upf_n3_ip'] }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ core_metadata['amf_n2_ip'] }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ core_metadata['upf_n3_ip'] }}", via: "{{ bastion_ip }}" }
 
     - name: Submit routes in tn_bastion from the Trial Network to the ISWIRELESS Radio
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
@@ -81,12 +81,18 @@
   gather_facts: false
   connection: local
   tasks:
+    - name: Define gnb_metadata dictionary
+      ansible.builtin.set_fact:
+        gnb_metadata_dict: >-
+          {
+            'linked_5gcore': '{{ any_iswireless_radio_linked_5gcore | default('None') }}',
+          }
     - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-open5gs"
-            value: "{{ any_iswireless_radio_linked_5gcore }}"
+          - key: "{{ entity_name }}-gnb_metadata"
+            value: "{{ gnb_metadata_dict }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
