@@ -1,13 +1,21 @@
+title: "Sample TNLCM descriptor for Nokia Radio"
+description: "Nokia Radio with Open5GCore VM"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   vnet-n2:
     type: "vnet"
     name: "n2"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_vnet_first_ip: "10.10.12.1"     # Default is 10.21.12.1
       # one_vnet_netmask: 24              # Default value
@@ -16,7 +24,8 @@ trial_network:
     type: "open5gs_vm"
     name: "core"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-n2"
     input:
       one_open5gs_vm_external_vnet: "tn_vxlan"
@@ -36,11 +45,13 @@ trial_network:
       # one_open5gs_vm_apn: "internet"     # Default value
       # one_open5gs_vm_s_nssai_sst: 1      # Default value
       one_open5gs_vm_s_nssai_sd: "000009"  # Default value is "000001"
-  
   nokia_radio-RAN:
     type: "nokia_radio"
     name: "RAN"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
+      - "vnet-n2"
       - "open5gs_vm-core"
     input:
       any_nokia_radio_linked_5gcore: "open5gs_vm-core"

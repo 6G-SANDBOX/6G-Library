@@ -1,13 +1,21 @@
+title: "Sample TNLCM descriptor for vm_kvm"
+description: "Create a VM with Ubuntu 22.04"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   vm_kvm-ubuntu22_04:
     type: "vm_kvm"
     name: "ubuntu22_04"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_vm_kvm_size: "small" # extra_large, large, medium, small, very_small
       one_vm_kvm_networks:

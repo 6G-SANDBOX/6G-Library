@@ -1,10 +1,19 @@
+title: "Sample TNLCM descriptor for XREXT"
+description: "XREXT to store and visualize data obtained from an experiment"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   xrext-nokia:
     type: "xrext"
     name: "nokia"
-    dependencies: ["tn_init"]
+    dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
     input: {}

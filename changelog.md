@@ -5,9 +5,10 @@
 - New component `influxdb` to store time series data.
 - New component `grafana` to visualize time series data.
 - New component `prometheus` to scrape time series data.
-- New component `monitoring` to deploy InfluxDB, Grafana and Prometheus stack together.
+- All descriptor files have two new optional fields which are `title` and `description` used by the TNLCM frontend.
 ### Changed
 - Component `elcm` now can use external influxdb and grafana instances.
+- All descriptor files use the `tn_vxlan` and `tn_bastion` components instead of `tn_init`.
 ### Fixed
 - Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
 

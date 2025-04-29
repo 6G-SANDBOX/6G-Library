@@ -1,12 +1,21 @@
+title: "Sample TNLCM descriptor for InfluxDB v2"
+description: "Influxdb v2 to store the data"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   influxdb-v2:
     type: "influxdb"
     name: "v2"
-    dependencies: ["tn_init"]
+    dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_influxdb_version: "2.7.11"
       one_influxdb_user: "admin"

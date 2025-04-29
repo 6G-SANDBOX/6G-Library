@@ -23,7 +23,7 @@ metadata:
 
     The experiments executed through ELCM allow storing collected metrics in an InfluxDB database, enabling efficient data storage and retrieval for further analysis.
 
-    The ELCM component supports linking Grafana and InfluxDB components or directly using the Monitoring component that includes Grafana, InfluxDB and Prometheus in a virtual machine.
+    The ELCM component supports linking Grafana and InfluxDB components in a virtual machine.
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM"]
 
@@ -42,11 +42,11 @@ site_variables:
 input:
   one_elcm_influxdb:
     description: Name of the InfluxDB component used to store the metrics
-    type: "influxdb or monitoring"
+    type: "influxdb"
     required_when: true
   one_elcm_grafana:
     description: Name of the Grafana component used to visualize the metrics
-    type: "grafana or monitoring"
+    type: "grafana"
     required_when: true
 
 

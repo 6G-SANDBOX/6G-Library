@@ -1,13 +1,21 @@
+title: "Sample TNLCM descriptor for oneKE"
+description: "K8S with metallb and longhorn configured"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   vnet-internal:
     type: "vnet"
     name: "internal"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       # one_vnet_first_ip: "10.21.12.1"   # Default value
       # one_vnet_netmask: 24              # Default value
@@ -16,7 +24,8 @@ trial_network:
     type: "oneKE"
     name: "cluster"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-internal"
     input:
       one_oneKE_external_vnet: "tn_vxlan"

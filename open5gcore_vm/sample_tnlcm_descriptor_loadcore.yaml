@@ -1,18 +1,25 @@
-# Result: pass
 # Platform: BERLIN
+title: "Sample TNLCM descriptor for Open5GCore VM"
+description: "Open5GCore VM with LoadCore Agents"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
     input:
       one_vxlan_gw: "192.168.197.1"
       one_vxlan_first_ip: "192.168.197.1"
       one_vxlan_address_size: 254
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
+    input: {}
   vnet-n2:
     type: "vnet"
     name: "n2"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_vnet_first_ip: "10.10.10.2"
       one_vnet_address_size: 253
@@ -21,7 +28,8 @@ trial_network:
   #   type: "vnet"
   #   name: "n3"
   #   dependencies:
-  #     - "tn_init"
+  #     - "tn_vxlan"
+  #     - "tn_bastion"
   #   input:
   #     one_vnet_first_ip: "10.10.11.1"
   #     one_vnet_netmask: "255.255.255.0"
@@ -31,7 +39,8 @@ trial_network:
     type: "open5gcore_vm"
     name: "core"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-n2"
       # - "vnet-n3"
     input:
@@ -59,8 +68,10 @@ trial_network:
     type: "loadcore_agent"
     name: "dn"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-n2"
+      - "open5gcore_vm-core"
     input:
       one_loadcore_agent_networks:
         - "tn_vxlan"
@@ -69,8 +80,10 @@ trial_network:
     type: "loadcore_agent"
     name: "gnb"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-n2"
+      - "open5gcore_vm-core"
     input:
       one_loadcore_agent_networks:
         - "tn_vxlan"

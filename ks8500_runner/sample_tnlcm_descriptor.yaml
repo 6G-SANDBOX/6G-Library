@@ -1,13 +1,21 @@
+title: "Sample TNLCM descriptor for KS8500 Runner"
+description: "KS8500 Runner for run experiments"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   ks8500_runner-6gsb:
     type: "ks8500_runner"
     name: "6gsb" 
     dependencies:
-      - "tn_init"    
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       ks8500runner_name: "6gsb-<your site name>"
       ks8500runner_registration_token: "<Put your registration token here>"

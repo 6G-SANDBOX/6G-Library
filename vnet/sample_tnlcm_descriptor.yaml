@@ -1,13 +1,21 @@
+title: "Sample TNLCM descriptor for VNET"
+description: "Create a VNET with a gateway and DNS"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   vnet-anothernet:
     type: "vnet"
     name: "anothernet"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_vnet_gw: "10.20.30.5"
       one_vnet_dns: "1.1.1.1 1.0.0.1"

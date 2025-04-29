@@ -1,13 +1,21 @@
+title: "Sample TNLCM descriptor for UE"
+description: "Nokia Radio with UE"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   vnet-internal:
     type: "vnet"
     name: "internal"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_vnet_first_ip: "10.10.12.1"     # Default is 10.21.12.1
       # one_vnet_netmask: 24              # Default value
@@ -16,6 +24,8 @@ trial_network:
     type: "oneKE"
     name: "cluster"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-internal"
     input:
       one_oneKE_external_vnet: "tn_vxlan"
@@ -32,6 +42,9 @@ trial_network:
     type: "open5gs_k8s"
     name: "core"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
+      - "vnet-internal"
       - "oneKE-cluster"
     input:
       one_open5gs_k8s_target: "oneKE-cluster"
@@ -51,6 +64,10 @@ trial_network:
     type: "nokia_radio"
     name: "RAN"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
+      - "vnet-internal"
+      - "oneKE-cluster"
       - "open5gs_k8s-core"
     input:
       any_nokia_radio_linked_5gcore: "open5gs_k8s-core"
@@ -59,6 +76,11 @@ trial_network:
     type: "stf_ue"
     name: "movil"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
+      - "vnet-internal"
+      - "oneKE-cluster"
+      - "open5gs_k8s-core"
       - "nokia_radio-RAN"
     input: 
       any_stf_ue_duration: 10800                    # Default is 3600 seconds

@@ -1,13 +1,19 @@
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   vnet-n1_n3:
     type: "vnet"
     name: "n1_n3"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_vnet_first_ip: "10.11.3.1"
       # one_vnet_netmask: 24              # Default value
@@ -17,7 +23,8 @@ trial_network:
     type: "vnet"
     name: "n6"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_vnet_first_ip: "10.11.6.1"
       # one_vnet_netmask: 24              # Default value
@@ -27,7 +34,8 @@ trial_network:
     type: "upf_p4_sw"
     name: "upf"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-n1_n3"
       - "vnet-n6"
     input:
@@ -54,7 +62,8 @@ trial_network:
     type: "ueransim"
     name: "gnb"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-n1_n3"
       - "upf_p4_sw-upf"
     input:
@@ -71,12 +80,12 @@ trial_network:
       # one_ueransim_gnb_mnc: "01"                # Default value + autocompleted from upf_p4_sw-upf
       # one_ueransim_gnb_slices_sst: 1            # Default value + autocompleted from upf_p4_sw-upf
       # one_ueransim_gnb_slices_sd: "000001"      # Default value + autocompleted from upf_p4_sw-upf
-
   ueransim-ue:
     type: "ueransim"
     name: "ue"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
       - "upf_p4_sw-upf"
       - "ueransim-gnb"
     input:
@@ -95,12 +104,12 @@ trial_network:
       # one_ueransim_ue_session_apn: "internet"                   # Default value + autocompleted from ueransim-gnb
       # one_ueransim_ue_session_sst: 1                            # Default value + autocompleted from ueransim-gnb
       # one_ueransim_ue_session_sd: "000001"                      # Default value + autocompleted from ueransim-gnb
-
   vm_kvm-pdn:
     type: "vm_kvm"
     name: "pdn"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
       - "upf_p4_sw-upf"
     input:
       one_vm_kvm_size: "small" # extra_large, large, medium, small, very_small

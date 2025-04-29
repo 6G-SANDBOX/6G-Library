@@ -1,3 +1,5 @@
+title: "Sample TNLCM descriptor for vxlan"
+description: "Simple descriptor for create a vxlan"
 trial_network:
   tn_vxlan:
     type: "tn_vxlan"

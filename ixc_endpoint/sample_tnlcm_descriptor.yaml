@@ -1,13 +1,21 @@
+title: "Sample TNLCM descriptor for IXC Endpoint"
+description: "IXC Endpoint for testing"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   ixc_endpoint-first:
     type: "ixc_endpoint"
     name: "first"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_ixc_endpoint_rs: "10.11.31.98"
       # one_ixc_endpoint_networks:
