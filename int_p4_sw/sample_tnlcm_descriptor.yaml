@@ -13,6 +13,7 @@ trial_network:
     type: "vnet"
     name: "1"
     dependencies:
+      - "tn_vxlan"
       - "tn_bastion"
     input:
       one_vnet_first_ip: "10.11.1.1"
@@ -23,6 +24,7 @@ trial_network:
     type: "vnet"
     name: "2"
     dependencies:
+      - "tn_vxlan"
       - "tn_bastion"
     input:
       one_vnet_first_ip: "10.11.2.1"
@@ -33,6 +35,7 @@ trial_network:
     type: "vnet"
     name: "3"
     dependencies:
+      - "tn_vxlan"
       - "tn_bastion"
     input:
       one_vnet_first_ip: "10.11.3.1"
@@ -43,6 +46,7 @@ trial_network:
     type: "vnet"
     name: "4"
     dependencies:
+      - "tn_vxlan"
       - "tn_bastion"
     input:
       one_vnet_first_ip: "10.11.4.1"
@@ -53,6 +57,7 @@ trial_network:
     type: "vnet"
     name: "collector"
     dependencies:
+      - "tn_vxlan"
       - "tn_bastion"
     input:
       one_vnet_first_ip: "10.11.5.1"
@@ -63,6 +68,8 @@ trial_network:
     type: "vm_kvm"
     name: "generator"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-1"
     input:
       one_vm_kvm_size: "small"
@@ -73,6 +80,7 @@ trial_network:
     type: "int_p4_sw"
     name: "int"
     dependencies:
+      - "tn_vxlan"
       - "tn_bastion"
       - "vnet-1"
       - "vnet-2"
@@ -171,6 +179,7 @@ trial_network:
     type: "vm_kvm"
     name: "external"
     dependencies:
+      - "tn_vxlan"
       - "tn_bastion"
       - "int_p4_sw-int"
       - "vnet-4"

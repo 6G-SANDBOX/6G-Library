@@ -16,7 +16,7 @@ trial_network:
     dependencies:
       - "tn_vxlan"
       - "tn_bastion"
-    input:
+    input: {}
       # one_vnet_first_ip: "10.21.12.1"   # Default value
       # one_vnet_netmask: 24              # Default value
       # one_vnet_address_size: 100        # Default value
