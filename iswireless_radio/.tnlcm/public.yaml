@@ -18,11 +18,12 @@ metadata:
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
   short_description: Enables the capability of using ISWIRELESS Radio in a Trial Network.
   long_description: |
+    TODO: Say more about how this component has virtualized RAN components blah blah.
     This component enables the integration of ISWIRELESS physical equipment located at UMA with a 5G core deployed in the Trial Network.
     It is done by enabling the necessary routing path through the use of the element called ‘Route Manager’ (already deployed in the site). 
     The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
-    - `mcc`: "001" 
-    - `mnc`: "01"
+    - `mcc`: "999" 
+    - `mnc`: "71"
     - `apn`: "internet"
     - `tac`: 1
     - `s_nssai_sst`: 1
@@ -39,18 +40,37 @@ metadata:
 ## Site-specific variables
 ####################################
 site_variables:
-  cp_ip: ISWIRELESS Control Plane IP address
-  up_ip: ISWIRELESS User Plane IP address
+  cu_ip: IP address of the CU when not running in RU-DU mode.
+  du_ip: IP address of the DU when running in RU-DU mode.
+  portainer_url: "URL of the Portainer instance managing the CU & DU containers. E.g. 'http://10.20.30.40:9000'"
+  portainer_token: "Valid API token for authentication as a user with administrative rights."
+  portainer_environment: "Portainer environment ID where the CU & DU containers are. E.g. '1'"
+  cu_container_name: "Name of the CU container in Portainer. E.g. 'cu'"
+  du_cu_container_name: "Name of the DU container for non RU-DU mode in Portainer. E.g. 'du'"
+  du_container_name: "Name of the DU container for RU-DU mode in Portainer. E.g. 'ru-du'"
 
 
 ####################################
 ## Input variables
 ####################################
 input:
+  any_iswireless_radio_ru_du:
+    description: Set the IS-WIRELESS gNB into RU-DU mode, requiring a separate virtualized CU component.
+    type: bool
+    default_value: false
+    required_when: false
   any_iswireless_radio_linked_5gcore:
-    description: Name of the oneKE cluster to route ISWIRELESS traffic.
+    description: |
+      Name of a previosly deployed 5G Core component inside the same Trial Network. The gNB will try to connect to its AMF.
+      Ignored in *RU-DU* mode, required otherwise.
     type: "open5gs_k8s or open5gs_vm or open5gcore_vm or upf_p4_sw"
-    required_when: true
+    required_when: any_iswireless_radio_ru_du is false
+  any_iswireless_radio_linked_cu:
+    description: |
+      Name of a previously deployed `cu_k8s` component inside the same Trial Network.
+      Required in *RU-DU* mode, ignore otherwise.
+    type: cu_k8s
+    required_when: any_iswireless_radio_ru_du is true
   any_iswireless_radio_start_time:
     description: |
       Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
@@ -59,9 +79,9 @@ input:
     default_value: Current time and date
     required_when: false
   any_iswireless_radio_duration:
-    description: Time in seconds for the ISWIRELESS reservation
+    description: Time in seconds for the ISWIRELESS reservation. 3 hours by default
     type: int
-    default_value: 3600
+    default_value: 10800
     required_when: false
 
 

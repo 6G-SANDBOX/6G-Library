@@ -2,7 +2,13 @@
 
 ## Unreleased
 ### Changed
+- Enhanced variable autocompletion, now allowing integrations with ANY 5G Core/gNB component.
+- Variable `one_ueransim_gnb_linked_5gcore` is once again mandatory when running in mode **gnb** or **both**.
 - Output `gnb_metadata.linked_open5gs` renamed to `gnb_metadata.linked_5gcore`.
+### Deprecated
+- Variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` are now working as private variables, but will be removed in the future.
+- Most gNB-related variables have been hidden. UE and RAN variables autocompletion directly from the linked_5gcore values is the main aproach.
+
 
 ## v0.5.0
 ### Added
@@ -11,7 +17,7 @@
 ### Changed
 - UERANSIM appliance version upgraded its software to version `v3.2.7`.
 - Variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` are now boolean and false by default.
-- Variables `one_ueransim_gnb_linked_open5gs` and `one_ueransim_gnb_linked_gnb` are now optional. First one renamed to `one_ueransim_gnb_linked_5gcore`.
+- Variables `one_ueransim_gnb_linked_open5gs` and `one_ueransim_ue_linked_gnb` are now optional. First one renamed to `one_ueransim_gnb_linked_5gcore`.
 - Variable `one_ueransim_ue_op` renamed to `one_ueransim_ue_opc`.
 - Changed reference to 5GCore variable from `amf_ip` to `amf_n2_ip`.
 ### Deprecated
@@ -22,24 +28,20 @@
 ### Fixed
 - Variable `one_ueransim_gnbsearchlist` correctly sets is IP in BOTH mode, and can take the special value 'locahost' which will be internally transformed into the VMs first IP.
 
-
 ## v0.4.0
 ### Changed
 - Input variable `one_ueransim_gnb_linked_open5gs` now supports `upf_p4_sw` and `open5gs_vm` and `open5gcore_vm` as component types.
 ### Fixed
 - Variable `gnbSearchList` of the ueransim-UE now uses the correct ip address of the componnet when in BOTH mode (Temporary change until the appliance fixes it)
 
-
 ## v0.3.0
 ### Fixed
 - Fixed image visualization in README.md and ok_result.md
-
 
 ## v0.2.0
 ### Changed
 - Component follows the new architecture.
 - Updated README.md
-
 
 ## v0.1.0
 ### Added

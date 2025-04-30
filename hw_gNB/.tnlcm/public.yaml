@@ -48,7 +48,7 @@ site_variables: []
 ####################################
 input:
   any_hw_gNB_linked_5gcore:
-    description: Name of a valid 5G Core component inside the same Trial Network. The gNB will attach to its AMF.
+    description: Name of a previosly deployed 5G Core component inside the same Trial Network. The gNB will try to connect to its AMF.
     type: "open5gs_k8s or open5gs_vm or open5gcore_vm or upf_p4_sw"
     required_when: true
   any_hw_gNB_cp:
@@ -71,3 +71,4 @@ input:
 ####################################
 terraform_outputs:
   __entity_name__linked_5gcore: input.any_hw_gNB_linked_5gcore
+e

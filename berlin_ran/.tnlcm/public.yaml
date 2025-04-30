@@ -44,8 +44,8 @@ site_variables:
 ## Input variables
 ####################################
 input:
-  any_berlin_ran_linked_5gcore:
-    description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
+  any_berlin_ran_linked_5gcore: 
+    description: Name of a previosly deployed 5G Core component inside the same Trial Network. The gNB will try to connect to its AMF.
     type: "open5gs_k8s or open5gs_vm or open5gcore_vm or upf_p4_sw"
     required_when: true
   any_berlin_ran_start_time:

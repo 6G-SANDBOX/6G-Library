@@ -60,76 +60,75 @@ input:
     required_when: false
 
   # gNB-related variables
-  one_ueransim_run_gnb: 
-    description: |
-      In *gnb* mode, start and enable systemd service `ueransim-gnb.service` at boot.
-    type: bool
-    default_value: "True if `one_ueransim_mode` is set to 'gnb' or `both`. False otherwise."
-    required_when: false
+  # one_ueransim_run_gnb: 
+  #   description: |
+  #     In *gnb* mode, start and enable systemd service `ueransim-gnb.service` at boot time.
+  #   type: bool
+  #   default_value: "True if `one_ueransim_mode` is set to 'gnb' or `both`. False otherwise."
+  #   required_when: false
   one_ueransim_gnb_linked_5gcore:
     description: |
-      Name of a previously deployed 'open5gs' component (`open5gs_k8s`, `open5gs_vm`, `upf_p4_sw` or `open5gcore_vm`).
-      In *gnb* mode, defines the 5G SA core the gNB will try to connect to.
-      This variable enables the autocompletion of all gNB-related variables from the selected component's configuration.
+      Name of a previosly deployed 5G Core component inside the same Trial Network.
+      In *gnb* mode, this variable enables the autocompletion of all gNB-related variables from the selected component's configuration.
     type: "open5gs_k8s or open5gs_vm or upf_p4_sw or open5gcore_vm"
     default_value: null
-    required_when: false
-  one_ueransim_gnb_amf_n2_ip:
-    description: |
-      In *gnb* mode, IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
-      AMF port is currently hardcoded to always be 38412.
-      Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
-    type: str
-    default_value: "10.21.12.200"
-    required_when: false
-  one_ueransim_gnb_tac:
-    description: In *gnb* mode, Tracking Area Code (TAC) of the PLMN. Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
-    type: int
-    default_value: 200
-    required_when: false
-  one_ueransim_gnb_mcc:
-    description: |
-      In *gnb* mode, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
-      Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
-    type: str
-    default_value: "001"
-    required_when: false
-  one_ueransim_gnb_mnc:
-    description: |
-      In *gnb* mode, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
-      Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
-    type: str
-    default_value: "01"
-    required_when: false
-  one_ueransim_gnb_slices_sst:
-    description: |
-      In *gnb* mode, Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI).
-      Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
-    type: int
-    default_value: 1
-    required_when: false
-  one_ueransim_gnb_slices_sd:
-    description: |
-      In *gnb* mode, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
-      Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
-    type: str
-    default_value: "000001"
-    required_when: false
+    required_when: "one_ueransim_mode in ['gnb', 'mode']"
+  # one_ueransim_gnb_amf_n2_ip:
+  #   description: |
+  #     In *gnb* mode, IPv4 address of the Access and Mobility Management Function (AMF) in the 5G core network.
+  #     AMF port is currently hardcoded to always be 38412.
+  #     Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
+  #   type: str
+  #   default_value: "10.21.12.200"
+  #   required_when: false
+  # one_ueransim_gnb_tac:
+  #   description: In *gnb* mode, Tracking Area Code (TAC) of the PLMN. Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
+  #   type: int
+  #   default_value: 200
+  #   required_when: false
+  # one_ueransim_gnb_mcc:
+  #   description: |
+  #     In *gnb* mode, Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes.
+  #     Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
+  #   type: str
+  #   default_value: "001"
+  #   required_when: false
+  # one_ueransim_gnb_mnc:
+  #   description: |
+  #     In *gnb* mode, Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes.
+  #     Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
+  #   type: str
+  #   default_value: "01"
+  #   required_when: false
+  # one_ueransim_gnb_slices_sst:
+  #   description: |
+  #     In *gnb* mode, Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI).
+  #     Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
+  #   type: int
+  #   default_value: 1
+  #   required_when: false
+  # one_ueransim_gnb_slices_sd:
+  #   description: |
+  #     In *gnb* mode, Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
+  #     Autocompletes itself if `one_ueransim_gnb_linked_5gcore` is defined.
+  #   type: str
+  #   default_value: "000001"
+  #   required_when: false
 
   # UE-related variables
-  one_ueransim_run_ue: 
-    description: |
-      In *ue* mode, start and enable systemd service `ueransim-ue.service` at boot.
-    type: bool
-    default_value: "True if `one_ueransim_mode` is set to 'ue' or `both`. False otherwise."
-    required_when: false
+  # one_ueransim_run_ue: 
+  #   description: |
+  #     In *ue* mode, start and enable systemd service `ueransim-ue.service` at boot time.
+  #   type: bool
+  #   default_value: "True if `one_ueransim_mode` is set to 'ue' or `both`. False otherwise."
+  #   required_when: false
   one_ueransim_ue_linked_gnb:
     description: |
-      Name of a previously deployed `ueransim` component in *gnb* mode.
-      In *ue* mode, defines the gNB/RAN the User Equipment will try to connect to.
-      In *both* mode, it will use by default the same component's gNB.
-      This variable enables the autocompletion of all gNB-related variables from the selected component's configuration.
-    type: "ueransim"
+      Name of a previously deployed `gNB` component inside the same Trial Network.
+      In *ue* and *both* modes, this variable enables the autocompletion of all UE-related variables from the selected component's configuration.
+      In *both* mode particulary, if undefined, this variable will use this component's gNB-related variables for autocompletion
+      Valid components include physical radios like `berlin_ran` or `nokia_radio`; and previous `ueransim` components in *gnb* or *both* mode.
+    type: "berlin_ran or hw_gNB or iswireless_radio or nokia_radio or ueransim"
     default_value: null
     required_when: false
   one_ueransim_ue_gnbsearchlist:
@@ -233,26 +232,26 @@ terraform_outputs:
   __entity_name__mode: input.one_ueransim_mode
   __entity_name__gnb_metadata:
     linked_5gcore: input.one_ueransim_gnb_linked_5gcore
-    amf_n2_ip: input.one_ueransim_gnb_amf_n2_ip           # Debatable
-    tac: input.one_ueransim_gnb_tac                       # Debatable
-    mcc: input.one_ueransim_gnb_mcc                       # Debatable
-    mnc: input.one_ueransim_gnb_mnc                       # Debatable
-    msin: "Inferred from 'linked_5gcore', or generated by padding mcc and mnc in order to form a valid SUPI in IMSI format"  # Debatable
-    key: "Inferred from 'linked_5gcore', or set to None"  # Debatable
-    opc: "Inferred from 'linked_5gcore', or set to None"  # Debatable
-    apn: "Inferred from 'linked_5gcore', or set to None"  # Debatable
-    sst: input.one_ueransim_gnb_slices_sst                # Debatable
-    sd: input.one_ueransim_gnb_slices_sd                  # Debatable
+    # amf_n2_ip: input.one_ueransim_gnb_amf_n2_ip           # Debatable
+    # tac: input.one_ueransim_gnb_tac                       # Debatable
+    # mcc: input.one_ueransim_gnb_mcc                       # Debatable
+    # mnc: input.one_ueransim_gnb_mnc                       # Debatable
+    # msin: "Inferred from 'linked_5gcore', or generated by padding mcc and mnc in order to form a valid SUPI in IMSI format"  # Debatable
+    # key: "Inferred from 'linked_5gcore', or set to None"  # Debatable
+    # opc: "Inferred from 'linked_5gcore', or set to None"  # Debatable
+    # apn: "Inferred from 'linked_5gcore', or set to None"  # Debatable
+    # sst: input.one_ueransim_gnb_slices_sst                # Debatable
+    # sd: input.one_ueransim_gnb_slices_sd                  # Debatable
     run_gnb: input.one_ueransim_run_gnb                   # Debatable
   __entity_name__ue_metadata:
     linked_gnb: input.one_ueransim_ue_linked_gnb
-    gnbsearchlist: input.one_ueransim_ue_gnbsearchlist
-    mcc: input.one_ueransim_ue_mcc
-    mnc: input.one_ueransim_ue_mnc
-    msin: input.one_ueransim_ue_msin
-    key: input.one_ueransim_ue_key
-    opc: input.one_ueransim_ue_opc
-    apn: input.one_ueransim_ue_session_apn
-    sst: input.one_ueransim_ue_session_sst
-    sd:  input.one_ueransim_ue_session_sd
-    run_ue: input.one_ueransim_run_ue
+    gnbsearchlist: input.one_ueransim_ue_gnbsearchlist    # Debatable
+    mcc: input.one_ueransim_ue_mcc                        # Debatable
+    mnc: input.one_ueransim_ue_mnc                        # Debatable
+    msin: input.one_ueransim_ue_msin                      # Debatable
+    key: input.one_ueransim_ue_key                        # Debatable
+    opc: input.one_ueransim_ue_opc                        # Debatable
+    apn: input.one_ueransim_ue_session_apn                # Debatable
+    sst: input.one_ueransim_ue_session_sst                # Debatable
+    sd:  input.one_ueransim_ue_session_sd                 # Debatable
+    run_ue: input.one_ueransim_run_ue                     # Debatable
