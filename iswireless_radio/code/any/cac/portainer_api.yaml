@@ -6,259 +6,88 @@
         site_available_components.iswireless_radio.portainer_url
         ~ '/api/endpoints/'
         ~ site_available_components.iswireless_radio.portainer_environment
-        ~ '/docker/containers/json?filters='
-        ~ ({'name': [item]} | to_json | urlencode)
+        ~ '/docker/containers/json?all?filters='
+        ~ ({'name': [item.container_name]} | to_json | urlencode)
       }}
     method: GET
     status_code: [200]
     headers:
       X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"
-  register: container
+  register: previous_container
 
-- name: Get container ID
+- name: Get previous container ID
   ansible.builtin.set_fact:
-    container_id: "{{ (container.json | default([]) | first).Id | default(None) }}"
+    previous_container_id: "{{ (previous_container.json | default([]) | first).Id | default(None) }}"
 
 - name: Destroy container if it exists
-    - name: STOP a container
+  when: previous_container_id is not none
+  block:
+    - name: STOP container
       ansible.builtin.uri:
         url: >-
           {{
-            site_available_components.iswireless_radio.portainer_url ~ '/api/endpoints/' ~ site_available_components.iswireless_radio.portainer_environment ~ '/docker/containers/' ~ item ~ '/stop'
+            site_available_components.iswireless_radio.portainer_url
+            ~ '/api/endpoints/'
+            ~ site_available_components.iswireless_radio.portainer_environment
+            ~ '/docker/containers/'
+            ~ previous_container_id
+            ~ '/stop'
           }}
         method: POST
         status_code: [204]
-      headers:
-        X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"
+        headers:
+          X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"
 
-    - name: REMOVE a container
+    - name: REMOVE container
       ansible.builtin.uri:
         url: >-
           {{
-            site_available_components.iswireless_radio.portainer_url ~ '/api/endpoints/' ~ site_available_components.iswireless_radio.portainer_environment ~ '/docker/containers/' ~ item
+            site_available_components.iswireless_radio.portainer_url
+            ~ '/api/endpoints/'
+            ~ site_available_components.iswireless_radio.portainer_environment
+            ~ '/docker/containers/'
+            ~ previous_container_id
           }}
         method: DELETE
         status_code: [204]
-      headers:
-        X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"
+        headers:
+          X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"
 
 
-- name: CREATE a container
+- name: CREATE container
   ansible.builtin.uri:
     url: >-
       {{
-        site_available_components.iswireless_radio.portainer_url ~ '/api/endpoints/1/docker/containers/create'
+        site_available_components.iswireless_radio.portainer_url
+        ~ '/api/endpoints/'
+        ~ site_available_components.iswireless_radio.portainer_environment
+        ~ '/docker/containers/create?name='
+        ~ item.container_name
       }}
     method: POST
-    headers:
-      Authorization: "Bearer {{ portainer_token }}"
     body_format: json
-    body:
-      # Image: "{{ item }}"
-      # HostConfig:
-      #   RestartPolicy:
-      #     Name: always
-      #   PortBindings:
-      #     "8080/tcp":
-      #       - HostPort: "8080"
-      # NetworkingConfig:
-      #   EndpointsConfig:
-      #     portainer_network:
-      #       IPAMConfig:
-      #         IPv4Address:
+    body: "{{ item.container_config | to_json }}"
     status_code: [201]
-  register: created_container
+    headers:
+      X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"
+  register: new_container
 
-# Devuelve algo tipo
-# {
+- name: Get new container ID
+  ansible.builtin.set_fact:
+    new_container_id: "{{ (new_container.json.Id }}"
 
-#     "Id": "ede54ee1afda366ab42f824e8a5ffd195155d853ceaec74a927f249ea270c743",
-#     "Warnings": [ ]
-
-# }
-
-- name: START a container
+- name: START container
   ansible.builtin.uri:
     url: >-
       {{
-        site_available_components.iswireless_radio.portainer_url ~ '/api/endpoints/1/docker/containers/' ~ created_container ~ '/start'
+        site_available_components.iswireless_radio.portainer_url
+        ~ '/api/endpoints/'
+        ~ site_available_components.iswireless_radio.portainer_environment
+        ~ '/docker/containers/'
+        ~ new_container_id
+        ~ '/start'
       }}
     method: POST
     status_code: [204]
-
-# https://docs.docker.com/reference/api/engine/version/v1.47/#tag/Container/operation/ContainerCreate
-# {
-#   "Hostname": "",
-#   "Domainname": "",
-#   "User": "",
-#   "AttachStdin": false,
-#   "AttachStdout": true,
-#   "AttachStderr": true,
-#   "Tty": false,
-#   "OpenStdin": false,
-#   "StdinOnce": false,
-#   "Env": [
-#     "FOO=bar",
-#     "BAZ=quux"
-#   ],
-#   "Cmd": [
-#     "date"
-#   ],
-#   "Entrypoint": "",
-#   "Image": "ubuntu",
-#   "Labels": {
-#     "com.example.vendor": "Acme",
-#     "com.example.license": "GPL",
-#     "com.example.version": "1.0"
-#   },
-#   "Volumes": {
-#     "/volumes/data": {}
-#   },
-#   "WorkingDir": "",
-#   "NetworkDisabled": false,
-#   "MacAddress": "12:34:56:78:9a:bc",
-#   "ExposedPorts": {
-#     "22/tcp": {}
-#   },
-#   "StopSignal": "SIGTERM",
-#   "StopTimeout": 10,
-#   "HostConfig": {
-#     "Binds": [
-#       "/tmp:/tmp"
-#     ],
-#     "Links": [
-#       "redis3:redis"
-#     ],
-#     "Memory": 0,
-#     "MemorySwap": 0,
-#     "MemoryReservation": 0,
-#     "NanoCpus": 500000,
-#     "CpuPercent": 80,
-#     "CpuShares": 512,
-#     "CpuPeriod": 100000,
-#     "CpuRealtimePeriod": 1000000,
-#     "CpuRealtimeRuntime": 10000,
-#     "CpuQuota": 50000,
-#     "CpusetCpus": "0,1",
-#     "CpusetMems": "0,1",
-#     "MaximumIOps": 0,
-#     "MaximumIOBps": 0,
-#     "BlkioWeight": 300,
-#     "BlkioWeightDevice": [
-#       {}
-#     ],
-#     "BlkioDeviceReadBps": [
-#       {}
-#     ],
-#     "BlkioDeviceReadIOps": [
-#       {}
-#     ],
-#     "BlkioDeviceWriteBps": [
-#       {}
-#     ],
-#     "BlkioDeviceWriteIOps": [
-#       {}
-#     ],
-#     "DeviceRequests": [
-#       {
-#         "Driver": "nvidia",
-#         "Count": -1,
-#         "DeviceIDs\"": [
-#           "0",
-#           "1",
-#           "GPU-fef8089b-4820-abfc-e83e-94318197576e"
-#         ],
-#         "Capabilities": [
-#           [
-#             "gpu",
-#             "nvidia",
-#             "compute"
-#           ]
-#         ],
-#         "Options": {
-#           "property1": "string",
-#           "property2": "string"
-#         }
-#       }
-#     ],
-#     "MemorySwappiness": 60,
-#     "OomKillDisable": false,
-#     "OomScoreAdj": 500,
-#     "PidMode": "",
-#     "PidsLimit": 0,
-#     "PortBindings": {
-#       "22/tcp": [
-#         {
-#           "HostPort": "11022"
-#         }
-#       ]
-#     },
-#     "PublishAllPorts": false,
-#     "Privileged": false,
-#     "ReadonlyRootfs": false,
-#     "Dns": [
-#       "8.8.8.8"
-#     ],
-#     "DnsOptions": [
-#       ""
-#     ],
-#     "DnsSearch": [
-#       ""
-#     ],
-#     "VolumesFrom": [
-#       "parent",
-#       "other:ro"
-#     ],
-#     "CapAdd": [
-#       "NET_ADMIN"
-#     ],
-#     "CapDrop": [
-#       "MKNOD"
-#     ],
-#     "GroupAdd": [
-#       "newgroup"
-#     ],
-#     "RestartPolicy": {
-#       "Name": "",
-#       "MaximumRetryCount": 0
-#     },
-#     "AutoRemove": true,
-#     "NetworkMode": "bridge",
-#     "Devices": [],
-#     "Ulimits": [
-#       {}
-#     ],
-#     "LogConfig": {
-#       "Type": "json-file",
-#       "Config": {}
-#     },
-#     "SecurityOpt": [],
-#     "StorageOpt": {},
-#     "CgroupParent": "",
-#     "VolumeDriver": "",
-#     "ShmSize": 67108864
-#   },
-#   "NetworkingConfig": {
-#     "EndpointsConfig": {
-#       "isolated_nw": {
-#         "IPAMConfig": {
-#           "IPv4Address": "172.20.30.33",
-#           "IPv6Address": "2001:db8:abcd::3033",
-#           "LinkLocalIPs": [
-#             "169.254.34.68",
-#             "fe80::3468"
-#           ]
-#         },
-#         "Links": [
-#           "container_1",
-#           "container_2"
-#         ],
-#         "Aliases": [
-#           "server_x",
-#           "server_y"
-#         ]
-#       },
-#       "database_nw": {}
-#     }
-#   }
-# }
+    headers:
+      X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"

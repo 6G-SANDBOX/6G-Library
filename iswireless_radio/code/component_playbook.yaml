@@ -97,14 +97,23 @@
       when: not any_iswireless_radio_ru_du
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/portainer_api.yaml"
       loop:
-        - "{{ site_available_components.iswireless_radio.cu_container_name }}"
-        - "{{ site_available_components.iswireless_radio.du_cu_container_name }}"
+        - {
+            container_name: "{{ site_available_components.iswireless_radio.cu_container_name }}",
+            container_config: "{{ cu_container_config }}"
+          }
+        - {
+            container_name: "{{ site_available_components.iswireless_radio.du_cu_container_name }}",
+            container_config: "{{ du_cu_container_config }}"
+          }
     
     - name: STOP, REMOVE, CREATE and START a container for the RU-DU scenario
       when: any_iswireless_radio_ru_du
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/portainer_api.yaml"
       loop:
-        - "{{ site_available_components.iswireless_radio.du_container_name }}"
+        - {
+            container_name: "{{ site_available_components.iswireless_radio.du_container_name }}",
+            container_config: "{{ du_container_config }}"
+          }
 
     - name: Add the bastion to Ansible Inventory
       ansible.builtin.add_host:

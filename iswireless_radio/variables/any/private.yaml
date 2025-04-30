@@ -13,3 +13,129 @@ any_iswireless_radio_ru_du: false
 # any_iswireless_radio_linked_cu: null
 # any_iswireless_radio_start_time: "2025-05-30T09:12:00+00:00"
 any_iswireless_radio_duration: 10800
+
+### https://docs.docker.com/reference/api/engine/version/v1.47/#tag/Container/operation/ContainerCreate
+cu_container_config:
+  Image: iswirelesspoland/isw-sdran_5g_cu:1.15.1-d1c115bc7-b48
+  Entrypoint:
+    - /home/iswireless/isw_run.sh
+    - Release
+  Env:
+    - PROJECT_NAME=ran_cu
+    - STACK_TYPE=5g
+    - UNIT_TYPE=CU
+    - CU_IP=ran_cu
+    - DU_IP=ran_du
+    - RU_IP=10.10.1.100
+    - CONFIG=F1_tdd_7ds2u_100mhz_30kscs_MIMO2x2
+    - MONITOR_ENABLE=YES
+    - HANG_ENABLE=YES
+    - RAN_core_cp_ip=10.182.32.141
+    - RAN_core_up_ip=10.11.64.141
+    - RAN_gnb_id=00E0001
+    - RAN_ric_port=1234
+    - RAN_mcc_val=999
+    - RAN_mnc_val=71
+    - RAN_ue_context_pool_size=20
+    - RAN_neighborhood={"pci":88,"global_id":"0x00F00","mcc":1,"mnc":1,"mnc_eu":1,"tac":1}
+    - RAN_ric_enable=true
+    - RAN_ssb_arfcn=653664
+    - RAN_band_indicator=77
+    - RAN_enb_id=00E0001
+    - RAN_preambleReceivedTargetPower=-60
+    - RAN_pointa_arfcn_dl=653390
+    - RAN_product_id_cu=0f677f84-3a62-49f1-97a8-c72f8ef4fd06
+    - RAN_fingerprint_cu=ISW:CU:SANDBOX:650:1
+    - RAN_fingerprint_du=ISW:DU:SANDBOX:650:1
+    - RAN_alpha=7
+    - RAN_offsetToPointA=2
+    - RAN_gscn=8058
+    - RAN_ss_PBCH_BlockPower=4
+    - RAN_tx_power=4
+    - RAN_p0_nominal=-80
+    - L1H_otherLayerKeepaliveTimer_ms=30
+    - L1H_fronthaulStreamingDelay_us=7000
+    - L1H_targetRecvDelay_us=1479
+    - L1H_maxNumDlFronthaulPrbs=144
+    - L1H_maxNumPuschLayers=1
+    - L1H_timingOffsetThreshold_nsec=10000
+    - L1H_bbuFronthaulServerAddr="10.10.1.10",
+    - L1H_maxNumPdschLayers=2
+    - L1H_rruFronthaulClientPort=44000
+    - ISW_CPU_CORES_RAN=12,14,16,18,20
+    - ISW_SPLIT_LOGS=yes
+    - ISW_CPU_CORES_PHY=2,4,6,8,10
+    - ISW_SPLIT_LOGS_DELETE_OLDER=3
+    - ISW_GLOBAL_LOG_LEVEL=EMERG
+    - PHY_LIC=A676-E357-54C7-CEC4-FC19-A19F-D539-1153
+    - RAN_cu_ip=ran_cu
+    - RAN_product_id_du=7d3c02c0-c497-49c0-9c20-841ac5d5570f
+    - RAN_eci=00E00
+    - RAN_p0_NominalWithGrant=-85
+    - SDRAN_DEBUG=0
+    - L1H_maxPuschModOrder=6
+    - RAN_license_id_du=3c938b44-bb78-4774-abed-f73a17801746
+    - RAN_du_ip=ran_du
+    - RAN_config_idx=6
+    - RAN_root_sequence_idx=10
+    - L1H_bbuFronthaulServerMode=1
+    - ISW_SPLIT_LOGS_MEGABYTES=1024
+    - RAN_ric_ue_kpm=true
+    - L1H_prachDecodeMode=2
+    - RAN_ric_ip=e2sctp
+    - RAN_license_key_cu=3DC117-DAEEF7-65A8C3-10D0DE-224B72-V3
+    - L1H_rruFronthaulClientAddr="10.10.1.100"
+    - RAN_license_id_cu=264be46a-f835-4f54-80b5-e29c25553c90
+    - RAN_license_key_du=325773-B5AF67-4919A4-FB05B0-2DA8EF-V3
+    - RAN_k_ssb=10
+    - RAN_pointa_arfcn_ul=653390
+    - RAN_pci_val=55
+    - RAN_p_max=33
+    - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    - DEBIAN_FRONTEND=noninteractive
+  Healthcheck:
+    Interval: 25000000000
+    Retries: 3
+    Test:
+      - CMD-SHELL
+      - health_check
+    Timeout: 15000000000
+  Hostname: ran_cu
+  WorkingDir: /home/iswireless
+  User: iswireless
+  Tty: false
+  AttachStderr: true
+  AttachStdin: false
+  AttachStdout: true
+  HostConfig:
+    CapAdd:
+      - NET_ADMIN
+      - SYS_NICE
+      - SYS_RAWIO
+      - SYS_RESOURCE
+      - IPC_LOCK
+    Binds:
+      - /home/iswireless/deployment_CUDU_ran650_sandboxcore_100MHz_UMA_core/coredumps_cu:/opt/is-wireless/coredumps:rw
+      - /home/iswireless/deployment_CUDU_ran650_sandboxcore_100MHz_UMA_core/logs:/opt/is-wireless/log2:rw
+    RestartPolicy:
+      Name: always
+      MaximumRetryCount: 0
+    LogConfig:
+      Type: json-file
+      Config:
+        env: os
+        labels: CU
+        max-file: '3'
+        max-size: 100m
+    NetworkMode: core-net
+  NetworkingConfig:
+    EndpointsConfig:
+      core-net:
+        IPAMConfig:
+          IPv4Address: 10.182.32.111
+      mh-net:
+        IPAMConfig:
+          IPv4Address: 172.27.1.2
+
+du_cu_container_config: Same
+du_container_config: Same
