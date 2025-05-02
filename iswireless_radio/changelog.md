@@ -1,6 +1,10 @@
 # Changelog
 
 ## Unreleased
+### Added
+- New input variables `any_iswireless_radio_ru_du` allowing to switch between the previous *gNB* behavious, and **RU-DU** mode, which connects to a virtualized CU instead of a 5G Core
+- New input variables `any_iswireless_radio_linked_5gcore` and `any_iswireless_radio_linked_cu`, required only in each mode, and ignored in the other,
+- New site variables to be defined by the site administrator.
 ### Changed
 - Output `linked_open5gs` moved to `gnb_metadata.linked_5gcore`.
 
