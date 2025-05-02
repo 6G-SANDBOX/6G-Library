@@ -68,7 +68,7 @@
   block:
     - name: Validate the provided gNB for autocompletion
       vars:
-        valid_component_types: ['berlin_ran', 'hw_gNB', 'iswireless_radio', 'nokia_radio', 'ueransim']
+        valid_component_types: ['berlin_ran', 'custom_gNB', 'iswireless_radio', 'nokia_radio', 'ueransim']
       ansible.builtin.assert:
         that:
           - one_ueransim_ue_linked_gnb is defined

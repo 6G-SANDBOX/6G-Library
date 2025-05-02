@@ -128,7 +128,7 @@ input:
       In *ue* and *both* modes, this variable enables the autocompletion of all UE-related variables from the selected component's configuration.
       In *both* mode particulary, if undefined, this variable will use this component's gNB-related variables for autocompletion
       Valid components include physical radios like `berlin_ran` or `nokia_radio`; and previous `ueransim` components in *gnb* or *both* mode.
-    type: "berlin_ran or hw_gNB or iswireless_radio or nokia_radio or ueransim"
+    type: "berlin_ran or custom_gNB or iswireless_radio or nokia_radio or ueransim"
     default_value: null
     required_when: false
   one_ueransim_ue_gnbsearchlist:
