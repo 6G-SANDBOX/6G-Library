@@ -43,10 +43,12 @@
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_open5gcore_vm_external_vnet + '-id'] }}"
         domain_name: >-
           {{
-            ((component_type | regex_replace('_', '') | lower) ~ '-' ~
-            (custom_name | regex_replace('_', '') | lower) ~ '.' ~
-            (tn_id | lower) ~ '.' ~
-            (site_domain | lower)) | trim
+            (
+              (component_type  | regex_replace('_', '') | lower) ~ '-' ~
+              (custom_name     | regex_replace('_', '') | lower) ~ '.' ~
+              (tn_id           | regex_replace('_', '') | lower) ~ '.' ~
+              site_domain
+            ) | trim
           }}
         n2_vnet_id: >-
           {{
@@ -196,23 +198,22 @@
             'amf_n2_ip': '{{ one_open5gcore_vm_amf_n2_ip }}',
             'upf_n3_ip': '{{ one_open5gcore_vm_upf_n3_ip }}',
             'ue_count': '{{ one_open5gcore_vm_ue_count }}',
+            'tac': '{{ one_open5gcore_vm_tac }}',
             'mcc': '{{ one_open5gcore_vm_mcc }}',
             'mnc': '{{ one_open5gcore_vm_mnc }}',
             'msin': '{{ one_open5gcore_vm_msin }}',
             'key': '{{ one_open5gcore_vm_key }}',
             'opc': '{{ one_open5gcore_vm_opc }}',
             'apn': '{{ one_open5gcore_vm_apn }}',
-            'tac': '{{ one_open5gcore_vm_tac }}',
-            's_nssai_sd': '{{ one_open5gcore_vm_s_nssai_sd }}',
             's_nssai_sst': '{{ one_open5gcore_vm_s_nssai_sst }}',
+            's_nssai_sd': '{{ one_open5gcore_vm_s_nssai_sd }}',
             'upf_xdp': '{{ one_open5gcore_vm_upf_xdp }}'
           }
-
     - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-metadata"
+          - key: "{{ entity_name }}-5gcore_metadata"
             value: "{{ open5gcore_metadata_dict }}"
 
     - name: Publish execution results to TNLCM
