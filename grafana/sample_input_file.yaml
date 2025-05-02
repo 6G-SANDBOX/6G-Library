@@ -1,0 +1,10 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+#one_grafana_cpu: 2
+#one_grafana_memory: 2048
+#one_grafana_disk: 3072
+#one_grafana_networks: 
+#  - tn_vxlan
+
+one_grafana_version: "11.6.0"
+# one_grafana_password: "adminadmin"

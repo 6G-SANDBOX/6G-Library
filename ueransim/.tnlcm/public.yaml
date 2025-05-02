@@ -68,9 +68,9 @@ input:
   #   required_when: false
   one_ueransim_gnb_linked_5gcore:
     description: |
-      Name of a previosly deployed 5G Core component inside the same Trial Network.
-      In *gnb* mode, this variable enables the autocompletion of all gNB-related variables from the selected component's configuration.
-    type: "open5gs_k8s or open5gs_vm or upf_p4_sw or open5gcore_vm"
+      Name of a previously deployed 5G Core component inside the same Trial Network.
+      In *gnb* and *both* modes, this variable is mandatory, and enables the autocompletion of all gNB-related variables from the selected component's configuration.
+    type: "open5gs_vm or open5gs_k8s or upf_p4_sw or open5gcore_vm"
     default_value: null
     required_when: "one_ueransim_mode in ['gnb', 'mode']"
   # one_ueransim_gnb_amf_n2_ip:

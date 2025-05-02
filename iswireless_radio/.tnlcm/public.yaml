@@ -61,9 +61,9 @@ input:
     required_when: false
   any_iswireless_radio_linked_5gcore:
     description: |
-      Name of a previosly deployed 5G Core component inside the same Trial Network. The gNB will try to connect to its AMF.
+      Name of a previously deployed 5G Core component inside the same Trial Network. The gNB will try to connect to its AMF.
       Ignored in *RU-DU* mode, required otherwise.
-    type: "open5gs_k8s or open5gs_vm or open5gcore_vm or upf_p4_sw"
+    type: "open5gs_vm or open5gs_k8s or open5gcore_vm or upf_p4_sw"
     required_when: any_iswireless_radio_ru_du is false
   any_iswireless_radio_linked_cu:
     description: |
