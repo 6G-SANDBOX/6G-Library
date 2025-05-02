@@ -242,7 +242,6 @@ terraform_outputs:
     # apn: "Inferred from 'linked_5gcore', or set to None"  # Debatable
     # sst: input.one_ueransim_gnb_slices_sst                # Debatable
     # sd: input.one_ueransim_gnb_slices_sd                  # Debatable
-    run_gnb: input.one_ueransim_run_gnb                   # Debatable
   __entity_name__ue_metadata:
     linked_gnb: input.one_ueransim_ue_linked_gnb
     gnbsearchlist: input.one_ueransim_ue_gnbsearchlist    # Debatable
@@ -254,4 +253,3 @@ terraform_outputs:
     apn: input.one_ueransim_ue_session_apn                # Debatable
     sst: input.one_ueransim_ue_session_sst                # Debatable
     sd:  input.one_ueransim_ue_session_sd                 # Debatable
-    run_ue: input.one_ueransim_run_ue                     # Debatable
