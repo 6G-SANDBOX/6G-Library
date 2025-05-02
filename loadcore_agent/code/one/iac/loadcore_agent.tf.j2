@@ -2,29 +2,32 @@
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
-  template_id = {{ site_available_components.loadcore_agent.template_id }}
+  template_id = {{ template_id }}
   cpu         = {{ one_loadcore_agent_cpu }}
   vcpu        = {{ one_loadcore_agent_cpu }}
-  memory      = {{ one_loadcore_agent_memory }}
+  memory      = {{ one_memory }}
 
   context = {
-    NETWORK = "YES"
-    NETCFG_TYPE: "interfaces"
-    SET_HOSTNAME = "$NAME"
-    USERNAME = "jenkins"
-    SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
+    NETWORK =        "YES"
+    NETCFG_TYPE =    "interfaces"
+    SET_HOSTNAME =   "$NAME"
+    USERNAME =       "jenkins"
+    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
+    START_SCRIPT_BASE64 = "IyEvYmluL2Jhc2gKZ3Jvd3BhcnQgL2Rldi92ZGEgMQpyZXNpemUyZnMgL2Rldi92ZGEx"
   }
 
-{# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
+  # Ignore changes in the disk argument due to limitations in the OpenNebula Terraform provider (#598)
+  lifecycle {
+    ignore_changes = [disk]
+  }
   disk {
-    image_id = {{ site_available_components.loadcore_agent.image_id }}
+    image_id = {{ image_id }}
     size     = {{ one_loadcore_agent_disk }}
     target   = "vda"
     driver   = "qcow2"
-  } #}
+  }
 
-{# {% for network in one_loadcore_agent_networks %}     Verify each vnet is only deployed once via terraform due to a Terraform OpenNebula Provider's limitation    #}
-{% for network in one_loadcore_agent_networks | unique %}
+{% for network in one_loadcore_agent_networks %}
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
@@ -41,5 +44,5 @@ output "{{ entity_name }}-id" {
 
 output "{{ entity_name }}-ips" {
   description = "OpenNebula VM Network Assignments"
-  value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip }
+  value = { for nic in opennebula_virtual_machine.{{ entity_name }}.nic[*] : nic.network_id => nic.computed_ip... }
 }

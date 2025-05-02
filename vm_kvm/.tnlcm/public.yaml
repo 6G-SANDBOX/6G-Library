@@ -61,7 +61,7 @@ input:
       - "medium"
       - "small"
       - "very_small"
-    required_when: true
+    required_when: false
 
 
 ####################################

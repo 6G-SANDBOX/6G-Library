@@ -1,17 +1,20 @@
 # Changelog
+
 ## v1.13.0
-### Added
-- updated K8500 runner version 1.30.0
-- updated OpenTap framework version 9.27.1
+### Changed
+- Software updated to version `1.30.0`.
+- OpenTap framework updated to version `9.27.1`.
+
+
 ## v1.11.4.0
 ### Added
 - Python and pip for plugins that use python venv
 - Tshark for plugins that use it for data decoding
-
 ### Changed
-- Updated to latest stable OpenTap
-- Docker mount of opentap-images to give visibility on host and stability on restart
-- Version number is now the 3 runner verion digits plus a fourth digit to denote one Component changes
+- Software updated to version `v1.11.4.0`.
+- OpenTap framework updated to latest stable version.
+- Docker mount of opentap-images to give visibility on host and stability on restart.
+- Version number is now the 3 runner verion digits plus a fourth digit to denote one Component changes.
 
 ## v0.3.0
 ### Added

@@ -1,0 +1,25 @@
+---
+- name: "Set variables for the terraform manifest according to the selected appliance"
+  ansible.builtin.set_fact:
+    one_memory: >
+      {{
+        one_loadcore_agent_hugepages | bool | ternary(
+          one_loadcore_agent_memory.hugepages_appliance,
+          one_loadcore_agent_memory.base_appliance
+      ) }}
+    template_id: >-
+      {{
+        one_loadcore_agent_hugepages | bool | ternary(
+          site_available_components.loadcore_agent.hugepages_appliance.template_id | default(site_available_components.loadcore_agent.template_id),
+          site_available_components.loadcore_agent.base_appliance.template_id | default(site_available_components.loadcore_agent.template_id)
+      ) }}
+    image_id: >-
+      {{ one_loadcore_agent_hugepages | bool | ternary(
+          site_available_components.loadcore_agent.hugepages_appliance.image_id | default(site_available_components.loadcore_agent.image_id),
+          site_available_components.loadcore_agent.base_appliance.image_id | default(site_available_components.loadcore_agent.image_id)
+      ) }}
+
+
+- name: Overwrite again with explicit values from the input file
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/{{ component_type }}/variables/input_file.yaml"

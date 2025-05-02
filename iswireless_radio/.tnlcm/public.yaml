@@ -27,8 +27,8 @@ metadata:
     - `tac`: 1
     - `s_nssai_sst`: 1
     - `s_nssai_sd`: "000009"
-    - `amf_ip`: "10.10.12.200"
-    - `upf_ip`: "10.10.12.201"
+    - `amf_n2_ip`: "10.10.12.200"
+    - `upf_n3_ip`: "10.10.12.201"
     NOTE: Currently this component is only available in the site "uma".
   hypervisors: ["one"]
   destroy_script: true
@@ -47,9 +47,9 @@ site_variables:
 ## Input variables
 ####################################
 input:
-  one_iswireless_radio_open5gs:
+  any_iswireless_radio_linked_5gcore:
     description: Name of the oneKE cluster to route ISWIRELESS traffic.
-    type: "open5gs_vm or open5gs_k8s"
+    type: "open5gs_k8s or open5gs_vm or open5gcore_vm or upf_p4_sw"
     required_when: true
   any_iswireless_radio_start_time:
     description: |
@@ -69,4 +69,4 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__open5gs: input.one_iswireless_radio_open5gs
+  __entity_name__open5gs: input.any_iswireless_radio_linked_5gcore

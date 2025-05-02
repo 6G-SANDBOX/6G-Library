@@ -25,34 +25,13 @@ metadata:
     - `tac`: 122
     - `s_nssai_sst`: 1
     - `s_nssai_sd`: null
-    - `amf_ip`: "10.10.11.200"
-    - `upf_ip`: "10.10.11.201"
+    - `amf_n2_ip`: "10.10.11.200"
+    - `upf_n3_ip`: "10.10.11.201"
     NOTE: Currently this component is only available in the site "fokus".
   hypervisors: ["one"]
   destroy_script: true
   resource_manager: true
 
-####################################
-## Component input
-####################################
-
-input:
-  any_berlin_ran_duration:
-    description: Time in seconds for the RAN equipment reservation
-    type: int
-    default_value: 3600
-    required_when: false
-  any_berlin_ran_linked_open5g:
-    description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
-    type: open5gs_k8s or open5gs_vm or open5gcore_vm
-    required_when: false
-  any_berlin_ran_start_time:
-    description: |
-      Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
-      If unspecified, value takes current time and date.
-    type: str
-    default_value: Current time and date
-    required_when: false
 
 ####################################
 ## Site-specific variables
@@ -60,8 +39,31 @@ input:
 site_variables:
   subnet: Subnet used for the RAN N2 and N3 interfaces.
 
+
+####################################
+## Input variables
+####################################
+input:
+  any_berlin_ran_linked_5gcore:
+    description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
+    type: "open5gs_k8s or open5gs_vm or open5gcore_vm or upf_p4_sw"
+    required_when: true
+  any_berlin_ran_start_time:
+    description: |
+      Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
+      If unspecified, value takes current time and date.
+    type: str
+    default_value: Current time and date
+    required_when: false
+  any_berlin_ran_duration:
+    description: Time in seconds for the RAN equipment reservation
+    type: int
+    default_value: 3600
+    required_when: false
+
+
 ####################################
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__open5gs: input.any_berlin_ran_linked_open5g
+  __entity_name__open5gs: input.any_berlin_ran_linked_5gcore

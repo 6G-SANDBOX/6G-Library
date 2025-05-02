@@ -42,7 +42,7 @@ input:
   one_elcm_influxdb_password:
     description: Password used to login into the InfluxDB
     type: str
-    default_value: "admin"
+    default_value: "adminadmin"
     required_when: false
   one_elcm_influxdb_org:
     description: Organization name
@@ -57,7 +57,7 @@ input:
   one_elcm_grafana_password:
     description: Password used to login into the Grafana
     type: str
-    default_value: "admin"
+    default_value: "adminadmin"
     required_when: false
 
 
