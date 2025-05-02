@@ -71,6 +71,7 @@
     - name: Add new VM to an SSH config file ment to be usable by the experimenter
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
+
 - name: "STAGE 3: Apply CAC to prepare the component"
   vars:
     ks8500runner_mounts:
@@ -215,6 +216,7 @@
         ks8500runner_registration_info: "{{ docker_container_output.container.Output }}"
       when: docker_container_output.container.Output is defined
 
+
 - name: "STAGE 4: Access tn_bastion to set firewall exceptions"
   hosts: bastion
   gather_facts: false
@@ -227,7 +229,8 @@
       vars:
         fw_exceptions:
           - "{{ site_available_components.ks8500_runner.loadcore_middleware_ip }}"
-      #  - "{{ site_available_components.ks8500_runner.ixchariot_middleware_ip }}"
+
+
 - name: "STAGE 5: Publish execution results"
   hosts: localhost
   gather_facts: false
