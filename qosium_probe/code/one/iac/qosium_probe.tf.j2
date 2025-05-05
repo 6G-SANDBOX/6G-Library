@@ -10,7 +10,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   context = {
     NETWORK = "YES"
     SET_HOSTNAME = "$NAME"
-    #NETCFG_TYPE = "interfaces"
+    NETCFG_TYPE = "interfaces"
     USERNAME = "jenkins"
   }
 
