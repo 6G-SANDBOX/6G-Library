@@ -64,13 +64,13 @@ input:
       Name of a previously deployed 5G Core component inside the same Trial Network. The gNB will try to connect to its AMF.
       Ignored in *RU-DU* mode, required otherwise.
     type: "open5gs_vm or open5gs_k8s or open5gcore_vm or upf_p4_sw"
-    required_when: any_iswireless_radio_ru_du is false
+    required_when: any_iswireless_radio_ru_du == false
   any_iswireless_radio_linked_cu:
     description: |
       Name of a previously deployed `cu_k8s` component inside the same Trial Network.
       Required in *RU-DU* mode, ignore otherwise.
     type: cu_k8s
-    required_when: any_iswireless_radio_ru_du is true
+    required_when: any_iswireless_radio_ru_du == true
   any_iswireless_radio_start_time:
     description: |
       Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
