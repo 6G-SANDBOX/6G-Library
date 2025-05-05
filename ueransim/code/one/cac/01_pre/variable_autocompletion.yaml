@@ -70,7 +70,7 @@
     - name: If a a UERANSIM gNB is provided, validate its mode
       when: (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-component_type'] == 'ueransim'
       ansible.builtin.assert:
-        that: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-mode']) in ['gnb', 'both'] }}"
+        that: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-mode'] in ['gnb', 'both'] }}"
         fail_msg: "The provided UERANSIM: {{ one_ueransim_ue_linked_gnb }} is not in a gNB-enabled mode."
 
     - name: Convert the linked terraform output of the 5G core of the linked gNB into a metadata dictionary
