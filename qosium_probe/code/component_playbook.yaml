@@ -187,44 +187,5 @@
   gather_facts: false
   connection: local
   tasks:
-    # You can publish files to the MINIO S3 Storage. By convention, please use misc-{{ entity_name }} as prefix
-    # misc- files should be intended to be shared with the experimenter. They are PUBLIC
-    - name: Upload file to S3 object storage
-      amazon.aws.s3_object:
-        endpoint_url: "{{ site_s3_server.endpoint }}"
-        mode: put
-        access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
-        secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
-        bucket: "{{ site_s3_server.bucket }}"
-        object: "{{ tn_id }}/misc-{{ entity_name }}-something.yaml"
-        content_base64: "{{ encoded_variable }}"
-        encrypt: false
-        validate_certs: false
-
-    # Common task to create custom terraform outputs with information of interest for future component deployments.
-    # Variables here may or may NOT be intended to be seen by the experimenters. They remain PRIVATE
-    - name: Set custom terraform outputs for future components
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
-      vars:
-        custom_outputs:
-          - key: "{{ entity_name }}-node_ids"
-            value: "{{ node_ids }}"
-          - key: "{{ entity_name }}-node_ips"
-            value: "{{ node_ips }}"
-
-    # Necessary in most if not all components. Publishes the deployment information in the following order:
-    # 1. Post the new terraform manifests to MINIO S3 Storage
-    # 2. Generate markdown OK file with information about the component
-    # 3. Post the markdown OK file to the MINIO S3 Storage
-    # 4. Send a JSON OK notification to the TNLCM. JSON message also includes the markdown content.
-    # Dictionary output should include the same variables as the markdown file, but in an indexable way for the TNLCM
-    # Both the markdown and the variables sent to the TNLCM are intended to be shared with the experimenter. They are PUBLIC
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
-      vars:
-        output:
-          id: "{{ id | b64encode }}"
-          node_ids: "{{ node_ids | b64encode }}"
-          node_ips: "{{ node_ips | b64encode }}"
-          kubeconfig: "{{ kubeconfig }}"  # if it's already encoded
-          skooner_token: "{{ hostvars[entity_name + '-master_0']['skooner_token']['stdout'] | b64encode }}"
