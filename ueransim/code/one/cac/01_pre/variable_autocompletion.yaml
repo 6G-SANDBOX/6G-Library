@@ -75,7 +75,7 @@
 
     - name: Convert the linked terraform output of the 5G core of the linked gNB into a metadata dictionary
       vars:
-        gnb_linked_core: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_metadata']['linked_5gcore'] }}"
+        gnb_linked_core: "{{ ((terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_metadata'] | from_yaml)['linked_5gcore'] }}"
       ansible.builtin.set_fact:
         core_metadata: "{{ (terraform_outputs.stdout | from_json)[gnb_linked_core + '-5gcore_metadata'] }}"
 
