@@ -18,7 +18,6 @@ trial_network:
     type: "open5gs_vm"
     name: "core"
     dependencies:
-      - "tn_init"
       - "vnet-n2"
     input:
       one_open5gs_vm_external_vnet: "tn_vxlan"
