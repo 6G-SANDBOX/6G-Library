@@ -2,11 +2,11 @@
 
 ## [unreleased]
 ### Added
+- New component `prometheus` to scrape time series data.
 - New component `influxdb` to store time series data.
 - New component `grafana` to visualize time series data.
-- New component `prometheus` to scrape time series data.
 - New component `monitoring` to deploy InfluxDB, Grafana and Prometheus stack together.
-- New component `custom_gNB`.
+- New component `custom_gNB` to integrate user-provided gNBs with 5G Cores inside TNs
 - New `component_type` terraform output added to all components.
 ### Changed
 - Modified terraform outputs for all 5G Core components (`open5gcore_vm`, `open5gs_k8s`, `open5gs_vm` and `upf_p4_sw`).
