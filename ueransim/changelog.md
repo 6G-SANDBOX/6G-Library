@@ -2,12 +2,11 @@
 
 ## Unreleased
 ### Changed
-- Enhanced variable autocompletion, now allowing integrations with ANY 5G Core/gNB component.
-- Variable `one_ueransim_gnb_linked_5gcore` is once again mandatory when running in mode **gnb** or **both**.
+- Enhanced variable autocompletion, now allowing integrations with ANY 5G Core/gNB component
+- In UE mode autocompletion metadata is done directly from the linked_5gcore component of the provided linked_gnb.
 - Output `gnb_metadata.linked_open5gs` renamed to `gnb_metadata.linked_5gcore`.
 ### Deprecated
 - Variables `one_ueransim_run_gnb` and `one_ueransim_run_ue` are now working as private variables, but will be removed in the future.
-- Most gNB-related variables have been hidden. UE and RAN variables autocompletion directly from the linked_5gcore values is the main aproach.
 
 
 ## v0.5.0

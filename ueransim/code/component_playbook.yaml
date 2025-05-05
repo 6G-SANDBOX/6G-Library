@@ -135,7 +135,7 @@
           ansible.builtin.set_fact:
             gnb_metadata_dict: >-
               {
-                'linked_5gcore': '{{ one_ueransim_gnb_linked_5gcore }}'
+                'linked_5gcore': '{{ one_ueransim_gnb_linked_5gcore | default('None') }}'
               }
             # gnb_metadata_dict: >-
             #   {
@@ -144,10 +144,6 @@
             #     'tac':   '{{ one_ueransim_gnb_tac }}',
             #     'mcc':   '{{ one_ueransim_gnb_mcc }}',
             #     'mnc':   '{{ one_ueransim_gnb_mnc }}',
-            #     'msin':  '{{ one_ueransim_gnb_msin }}',
-            #     'key':   '{{ one_ueransim_gnb_key }}',
-            #     'opc':   '{{ one_ueransim_gnb_opc }}',
-            #     'apn':   '{{ one_ueransim_gnb_apn }}',
             #     'sst':   '{{ one_ueransim_gnb_slices_sst }}',
             #     'sd':    '{{ one_ueransim_gnb_slices_sd }}'
             #   }

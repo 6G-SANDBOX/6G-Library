@@ -14,75 +14,66 @@
     one_ueransim_run_ue: "{{ one_ueransim_mode in ['ue', 'both'] }}"
 
 - name: Autocompletion tasks for UERANSIM as gNB
-  when: one_ueransim_mode in ['gnb', 'both']
+  when:
+    - one_ueransim_mode in ['gnb', 'both']
+    - (one_ueransim_gnb_linked_5gcore | default('') | length > 0)
   block:
     - name: Validate the provided 5G core for autocompletion
       vars:
         valid_component_types: ['open5gcore_vm', 'open5gs_k8s', 'open5gs_vm', 'upf_p4_sw']
       ansible.builtin.assert:
         that:
-          - one_ueransim_gnb_linked_5gcore is defined
-          - one_ueransim_gnb_linked_5gcore | length > 0
           - (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_5gcore + '-component_type'] in valid_component_types
         fail_msg: "The 5G core: {{ one_ueransim_gnb_linked_5gcore }} is undefined or invalid for variable autocompletion."
 
-    - name: Convert 5G core terraform outputs to a dictionary
+    - name: Convert the 5G core terraform outputs into a metadata dictionary
       ansible.builtin.set_fact:
         core_metadata: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_gnb_linked_5gcore + '-5gcore_metadata'] }}"
 
     - name: Autocomplete gNB-related variables
       ansible.builtin.set_fact:
-        one_ueransim_gnb_amf_n2_ip: "{{ core_metadata.amf_n2_ip }}"
-        one_ueransim_gnb_tac: "{{ core_metadata.tac }}"
-        one_ueransim_gnb_mcc: "{{ core_metadata.mcc }}"
-        one_ueransim_gnb_mnc: "{{ core_metadata.mnc }}"
-        # one_ueransim_gnb_msin: "{{ core_metadata.msin | default('None') }}"  # Not used by the gNB, but required for UE autocompletion
-        # one_ueransim_gnb_key: "{{ core_metadata.key  | default('None') }}"   # Not used by the gNB, but required for UE autocompletion
-        # one_ueransim_gnb_opc: "{{ core_metadata.opc  | default('None') }}"   # Not used by the gNB, but required for UE autocompletion
-        # one_ueransim_gnb_apn: "{{ core_metadata.apn  | default('None') }}"   # Not used by the gNB, but required for UE autocompletion
-        one_ueransim_gnb_slices_sst: "{{ core_metadata.s_nssai_sst }}"
-        one_ueransim_gnb_slices_sd: "{{ core_metadata.s_nssai_sd }}"
+        one_ueransim_gnb_amf_n2_ip: "{{ core_metadata.amf_n2_ip | default(omit) }}"
+        one_ueransim_gnb_tac: "{{ core_metadata.tac | default(omit) }}"
+        one_ueransim_gnb_mcc: "{{ core_metadata.mcc | default(omit) }}"
+        one_ueransim_gnb_mnc: "{{ core_metadata.mnc | default(omit) }}"
+        one_ueransim_gnb_slices_sst: "{{ core_metadata.s_nssai_sst | default(omit) }}"
+        one_ueransim_gnb_slices_sd: "{{ core_metadata.s_nssai_sd | default(omit) }}"
+
+    - name: Only in mode **both**, aditionally autocomplete UE-related variables with the linked 5G core metadata
+      when:
+        - one_ueransim_mode == 'both'
+      ansible.builtin.set_fact:
+        one_ueransim_ue_gnbsearchlist: "localhost"
+        one_ueransim_ue_mcc: "{{ core_metadata.mcc | default(omit) }}"
+        one_ueransim_ue_mnc: "{{ core_metadata.mnc | default(omit) }}"
+        one_ueransim_ue_msin: "{{ core_metadata.msin | default(omit) }}"
+        one_ueransim_ue_key: "{{ core_metadata.key | default(omit) }}"
+        one_ueransim_ue_opc: "{{ core_metadata.opc | default(omit) }}"
+        one_ueransim_ue_session_apn: "{{ core_metadata.apn | default(omit) }}"
+        one_ueransim_ue_session_sst: "{{ core_metadata.s_nssai_sst | default(omit) }}"
+        one_ueransim_ue_session_sd: "{{ core_metadata.s_nssai_sd | default(omit) }}"
 
 
-  # Outside the previous block to support rogue users that may specify mode 'both' without a linked_5gcore, while only providing input for the gNB variables.
-# - name: Autocompletion tasks for UERANSIM as UE with internal gNB
-#   when:
-#     - one_ueransim_mode in 'both'
-#   block:
-#     - name: Autocomplete UE-related variables with the internal gNB
-#       ansible.builtin.set_fact:
-#         one_ueransim_ue_linked_gnb: "{{ entity_name }}"
-#         one_ueransim_ue_gnbsearchlist: 'localhost'
-#         one_ueransim_ue_mcc: "{{ one_ueransim_gnb_mcc }}"
-#         one_ueransim_ue_mnc: "{{ one_ueransim_gnb_mnc }}"
-#         one_ueransim_ue_msin: "{{ one_ueransim_gnb_msin | default(omit) }}"
-#         one_ueransim_ue_key: "{{ one_ueransim_gnb_key | default(omit) }}"
-#         one_ueransim_ue_opc: "{{ one_ueransim_gnb_opc | default(omit) }}"
-#         one_ueransim_ue_session_apn: "{{ one_ueransim_gnb_apn | default(omit) }}"
-#         one_ueransim_ue_session_sst: "{{ one_ueransim_gnb_slices_sst }}"
-#         one_ueransim_ue_session_sd: "{{ one_ueransim_gnb_slices_sd }}"
-
-
+  # Including both here makes little sense, but someone might want to let the UE ignore the internal gNB and use another one
 - name: Autocompletion tasks for UERANSIM as UE with external gNB
-  when: one_ueransim_mode in ['ue', 'both']
+  when:
+    - one_ueransim_mode in ['ue', 'both']
+    - (one_ueransim_ue_linked_gnb | default('') | length > 0)
   block:
     - name: Validate the provided gNB for autocompletion
       vars:
         valid_component_types: ['berlin_ran', 'custom_gNB', 'iswireless_radio', 'nokia_radio', 'ueransim']
       ansible.builtin.assert:
         that:
-          - one_ueransim_ue_linked_gnb is defined
-          - one_ueransim_ue_linked_gnb | length > 0
           - (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-component_type'] in valid_component_types
         fail_msg: "The gNB: {{ one_ueransim_ue_linked_gnb }} is undefined or invalid for variable autocompletion."
     - name: If a a UERANSIM gNB is provided, validate its mode
       when: (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-component_type'] == 'ueransim'
       ansible.builtin.assert:
-        that: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-mode']) in ['both', 'gnb'] }}"
+        that: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-mode']) in ['gnb', 'both'] }}"
         fail_msg: "The provided UERANSIM: {{ one_ueransim_ue_linked_gnb }} is not in a gNB-enabled mode."
 
-
-    - name: Convert 5G core terraform outputs to a dictionary
+    - name: Convert the linked terraform output of the 5G core of the linked gNB into a metadata dictionary
       vars:
         gnb_linked_core: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-gnb_metadata']['linked_5gcore'] }}"
       ansible.builtin.set_fact:
@@ -96,16 +87,23 @@
 
     - name: Autocomplete UE-related variables
       ansible.builtin.set_fact:
-        one_ueransim_ue_gnbsearchlist: "{{ (gnb_ips | default({})).get(access_vnet_id, 'localhost') }}"
-        one_ueransim_ue_mcc: "{{ core_metadata.mcc }}"
-        one_ueransim_ue_mnc: "{{ core_metadata.mnc }}"
-        one_ueransim_ue_msin: "{{ core_metadata.msin }}"
-        one_ueransim_ue_key: "{{ core_metadata.key }}"
-        one_ueransim_ue_opc: "{{ core_metadata.opc }}"
-        one_ueransim_ue_session_apn: "{{ core_metadata.apn }}"
-        one_ueransim_ue_session_sst: "{{ core_metadata.s_nssai_sst }}"
-        one_ueransim_ue_session_sd: "{{ core_metadata.s_nssai_sd }}"
+        one_ueransim_ue_gnbsearchlist: "{{ (gnb_ips | default({})).get(access_vnet_id) | default(omit) }}"
+        one_ueransim_ue_mcc: "{{ core_metadata.mcc | default(omit) }}"
+        one_ueransim_ue_mnc: "{{ core_metadata.mnc | default(omit) }}"
+        one_ueransim_ue_msin: "{{ core_metadata.msin | default(omit) }}"
+        one_ueransim_ue_key: "{{ core_metadata.key | default(omit) }}"
+        one_ueransim_ue_opc: "{{ core_metadata.opc | default(omit) }}"
+        one_ueransim_ue_session_apn: "{{ core_metadata.apn | default(omit) }}"
+        one_ueransim_ue_session_sst: "{{ core_metadata.s_nssai_sst | default(omit) }}"
+        one_ueransim_ue_session_sd: "{{ core_metadata.s_nssai_sd | default(omit) }}"
 
+
+- name: "In mode **both**, set variable 'one_ueransim_ue_linked_gnb' as itself when variable is left undefined"
+  when:
+    - one_ueransim_mode == 'both'
+    - (one_ueransim_ue_linked_gnb | default('') | length == 0)
+  ansible.builtin.set_fact:
+    one_ueransim_ue_linked_gnb: "{{ entity_name }}"
 
 - name: Overwrite autocompleted values again with explicit values from the input file
   ansible.builtin.include_vars:
