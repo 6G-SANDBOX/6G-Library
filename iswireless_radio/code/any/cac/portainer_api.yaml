@@ -1,0 +1,93 @@
+---
+- name: GET container
+  ansible.builtin.uri:
+    url: >-
+      {{
+        site_available_components.iswireless_radio.portainer_url
+        ~ '/api/endpoints/'
+        ~ site_available_components.iswireless_radio.portainer_environment
+        ~ '/docker/containers/json?all?filters='
+        ~ ({'name': [item.container_name]} | to_json | urlencode)
+      }}
+    method: GET
+    status_code: [200]
+    headers:
+      X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"
+  register: previous_container
+
+- name: Get previous container ID
+  ansible.builtin.set_fact:
+    previous_container_id: "{{ (previous_container.json | default([]) | first).Id | default(None) }}"
+
+- name: Destroy container if it exists
+  when: previous_container_id is not none
+  block:
+    - name: STOP container
+      ansible.builtin.uri:
+        url: >-
+          {{
+            site_available_components.iswireless_radio.portainer_url
+            ~ '/api/endpoints/'
+            ~ site_available_components.iswireless_radio.portainer_environment
+            ~ '/docker/containers/'
+            ~ previous_container_id
+            ~ '/stop'
+          }}
+        method: POST
+        status_code: [204]
+        headers:
+          X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"
+
+    - name: REMOVE container
+      ansible.builtin.uri:
+        url: >-
+          {{
+            site_available_components.iswireless_radio.portainer_url
+            ~ '/api/endpoints/'
+            ~ site_available_components.iswireless_radio.portainer_environment
+            ~ '/docker/containers/'
+            ~ previous_container_id
+          }}
+        method: DELETE
+        status_code: [204]
+        headers:
+          X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"
+
+
+- name: CREATE container
+  ansible.builtin.uri:
+    url: >-
+      {{
+        site_available_components.iswireless_radio.portainer_url
+        ~ '/api/endpoints/'
+        ~ site_available_components.iswireless_radio.portainer_environment
+        ~ '/docker/containers/create?name='
+        ~ item.container_name
+      }}
+    method: POST
+    body_format: json
+    body: "{{ item.container_config | to_json }}"
+    status_code: [201]
+    headers:
+      X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"
+  register: new_container
+
+- name: Get new container ID
+  ansible.builtin.set_fact:
+    new_container_id: "{{ (new_container.json.Id }}"
+
+- name: START container
+  ansible.builtin.uri:
+    url: >-
+      {{
+        site_available_components.iswireless_radio.portainer_url
+        ~ '/api/endpoints/'
+        ~ site_available_components.iswireless_radio.portainer_environment
+        ~ '/docker/containers/'
+        ~ new_container_id
+        ~ '/start'
+      }}
+    method: POST
+    status_code: [204]
+    headers:
+      X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"

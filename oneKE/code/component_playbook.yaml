@@ -214,7 +214,7 @@
             value: "{{ node_ids }}"
           - key: "{{ entity_name }}-node_ips"
             value: "{{ node_ips }}"
-          - key: "{{ entity_name }}-metadata"
+          - key: "{{ entity_name }}-oneKE_metadata"
             value: "{{ oneke_metadata_dict }}"
 
     - name: Set DNS record for the component
