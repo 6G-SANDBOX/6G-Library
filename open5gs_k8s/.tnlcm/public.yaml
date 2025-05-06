@@ -116,7 +116,8 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__metadata:
+  __entity_name__component_type: "open5gs_k8s"
+  __entity_name__5gcore_metadata:
     amf_n2_ip: input.one_open5gs_k8s_amf_n2_ip
     upf_n3_ip: input.one_open5gs_k8s_upf_n3_ip
     ue_count: input.one_open5gs_k8s_ue_count
@@ -129,4 +130,4 @@ terraform_outputs:
     apn: input.one_open5gs_k8s_apn
     s_nssai_sst: input.one_open5gs_k8s_s_nssai_sd
     s_nssai_sd: input.one_open5gs_k8s_s_nssai_sst
-    oneke: input.one_open5gs_k8s_target
+    oneke: input.one_open5gs_k8s_target             # Debatable

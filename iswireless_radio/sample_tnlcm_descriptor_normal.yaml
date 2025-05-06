@@ -66,5 +66,7 @@ trial_network:
       - "oneKE-cluster"
       - "open5gs_k8s-core"
     input:
+      # any_iswireless_radio_ru_du: false                           # Default value
       any_iswireless_radio_linked_5gcore: "open5gs_k8s-core"
-      any_iswireless_radio_duration: 7200
+      any_iswireless_radio_start_time: "2025-05-30T09:12:00+00:00"  # Default value takes current time and date
+      any_iswireless_radio_duration: 7200                           # Default value is 10800, 3 hours

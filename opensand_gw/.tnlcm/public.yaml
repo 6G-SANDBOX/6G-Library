@@ -49,6 +49,7 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
+  __entity_name__component_type: "opensand_gw"
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
   

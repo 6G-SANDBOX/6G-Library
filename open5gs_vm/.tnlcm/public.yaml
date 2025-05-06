@@ -163,9 +163,10 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
+  __entity_name__component_type: "open5gs_vm"
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
-  __entity_name__metadata:
+  __entity_name__5gcore_metadata:
     amf_n2_ip: input.one_open5gs_vm_amf_n2_ip
     upf_n3_ip: input.one_open5gs_vm_upf_n3_ip
     ue_count: input.one_open5gs_vm_ue_count
@@ -178,5 +179,5 @@ terraform_outputs:
     apn: input.one_open5gs_vm_apn
     s_nssai_sst: input.one_open5gs_vm_s_nssai_sd
     s_nssai_sd: input.one_open5gs_vm_s_nssai_sst
-    ue_subnet: input.one_open5gs_vm_ue_subnet
-    nightly: input.one_open5gs_vm_use_nightly
+    ue_subnet: input.one_open5gs_vm_ue_subnet           # Debatable
+    nightly: input.one_open5gs_vm_use_nightly           # Debatable

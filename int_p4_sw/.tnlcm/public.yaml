@@ -173,5 +173,11 @@ input:
 ####################################
 ## Generated terraform outputs
 ####################################
-terraform_outputs: # TODO: Complete the output section
-  metadata: Metadata dictionary
+terraform_outputs:
+  __entity_name__component_type: "int_p4_sw"
+  __entity_name__int_p4_sw_metadata:
+    switch_ips:   # TODO
+    switch_ids:   # TODO
+    collector_ip: # TODO
+    collector_id: # TODO
+    bastion_ip:   # TODO
