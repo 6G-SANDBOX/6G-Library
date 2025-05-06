@@ -57,9 +57,14 @@
             start_time: "{{ current_timestamp }}"
             stop_time: "{{ ending_timestamp }}"
             core_metadata: "{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_5gcore + '-5gcore_metadata'] }}"
+            # TODO: Hardcoded vnet component name. Please remove this line after component testing
+            _vnet_internal_net: "{{ (terraform_outputs.stdout | from_json)['vnet-internal-net'] }}"
           loop:
-            - { to: "{{ core_metadata['amf_n2_ip'] }}", via: "{{ bastion_ip }}" }
-            # - { to: "{{ core_metadata['upf_n3_ip'] }}", via: "{{ bastion_ip }}" }  # Confirm if UPF is truly necessary
+            # TODO: Hardcoded vnet component name. Please remove this line after component testing
+            - { to: "{{ _vnet_internal_net }}", via: "{{ bastion_ip }}" }
+            # TODO: Desirable final routes. Uncomment themm when everything is tested
+            # - { to: "{{ core_metadata['amf_n2_ip'] }}", via: "{{ bastion_ip }}" }
+            # - { to: "{{ core_metadata['upf_n3_ip'] }}", via: "{{ bastion_ip }}" }
 
     - name: Tasks for iswireless_radio in RU-DU mode, with a CU component
       when: any_iswireless_radio_ru_du
@@ -83,7 +88,8 @@
             token: "{{ site_iswireless_routemanager.token }}"
             start_time: "{{ current_timestamp }}"
             stop_time: "{{ ending_timestamp }}"
-            cu_ip: "{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_cu + '-cu_ip'] }}"  # TODO: Ensure this output is defined in cu_k8s. NO DICTIONARY
+            # TODO: Ensure this output is defined in cu_k8s. NO DICTIONARY
+            cu_ip: "{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_cu + '-cu_ip'] }}"
           loop:
             - { to: "{{ cu_ip }}", via: "{{ bastion_ip }}" }
 
@@ -97,23 +103,14 @@
       when: not any_iswireless_radio_ru_du
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/portainer_api.yaml"
       loop:
-        - {
-            container_name: "{{ site_available_components.iswireless_radio.cu_container_name }}",
-            container_config: "{{ cu_container_config }}"
-          }
-        - {
-            container_name: "{{ site_available_components.iswireless_radio.du_cu_container_name }}",
-            container_config: "{{ du_cu_container_config }}"
-          }
-    
+        - "{{ site_available_components.iswireless_radio.cu_container_name }}"
+        - "{{ site_available_components.iswireless_radio.du_cu_container_name }}"
+
     - name: STOP, REMOVE, CREATE and START a container for the RU-DU scenario
       when: any_iswireless_radio_ru_du
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/portainer_api.yaml"
       loop:
-        - {
-            container_name: "{{ site_available_components.iswireless_radio.du_container_name }}",
-            container_config: "{{ du_container_config }}"
-          }
+      - "{{ site_available_components.iswireless_radio.du_container_name }}"
 
     - name: Add the bastion to Ansible Inventory
       ansible.builtin.add_host:
@@ -122,6 +119,9 @@
         ansible_user: "jenkins"
 
 
+
+# TODO: All 5G Core components already add firewall exceptions themselves (nftables_add.yaml)
+# TODO: cu_k8s and cu_k8s should also add the exceptions they need for their IPs in the bastion
 - name: "STAGE 3: Access tn_bastion to set firewall exceptions"
   hosts: bastion
   gather_facts: false
@@ -135,9 +135,9 @@
       vars:
         fw_exceptions:
           - "{{ site_iswireless_routemanager.api_endpoint }}"
-          - "{{ site_available_components.nokia_radio.cu_ip }}"
+          - "{{ site_available_components.iswireless_radio.cu_ip }}"
         nat_exceptions:
-          - "{{ site_available_components.nokia_radio.cu_ip }}"
+          - "{{ site_available_components.iswireless_radio.cu_ip }}"
 
     - name: Write firewall exception for the route-manager-api and the DU of your site
       when: any_iswireless_radio_ru_du
@@ -145,9 +145,9 @@
       vars:
         fw_exceptions:
           - "{{ site_iswireless_routemanager.api_endpoint }}"
-          - "{{ site_available_components.nokia_radio.du_ip }}"
+          - "{{ site_available_components.iswireless_radio.du_ip }}"
         nat_exceptions:
-          - "{{ site_available_components.nokia_radio.du_ip }}"
+          - "{{ site_available_components.iswireless_radio.du_ip }}"
 
 
 - name: "STAGE 4: Publish execution results"
