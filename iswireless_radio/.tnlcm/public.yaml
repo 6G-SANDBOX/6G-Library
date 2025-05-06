@@ -48,7 +48,7 @@ site_variables:
   cu_container_name: "Name of the CU container in Portainer. E.g. 'cu'"
   du_cu_container_name: "Name of the DU container for non RU-DU mode in Portainer. E.g. 'du'"
   du_container_name: "Name of the DU container for RU-DU mode in Portainer. E.g. 'ru-du'"
-
+  # The name of the container_name variables is debatable.
 
 ####################################
 ## Input variables
