@@ -1,8 +1,23 @@
 # Changelog
 
 ## [unreleased]
+### Added
+- New component `prometheus` to scrape time series data.
+- New component `influxdb` to store time series data.
+- New component `grafana` to visualize time series data.
+- New component `monitoring` to deploy InfluxDB, Grafana and Prometheus stack together.
+- New component `custom_gNB` to integrate user-provided gNBs with 5G Cores inside TNs
+- New `component_type` terraform output added to all components.
+### Changed
+- Modified terraform outputs for all 5G Core components (`open5gcore_vm`, `open5gs_k8s`, `open5gs_vm` and `upf_p4_sw`).
+- Modified terraform outputs for all gNB components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`).
+- Enhanced variable autocompletion on `ueransim`, gathering all UE-related metadata directly from the gNB's linked 5G Core
+- Component `elcm` now can use external influxdb and grafana instances.
+- Component `iswireless_radio` now supports **DU-RU** mode, connecting to a virtualized CU instead of a 5G core.
 ### Fixed
 - Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
+### Deprecated
+- Multiple redundant variables removed from `ueransim`. **ue** mode now autocompletes its variables directly from the 5G core used by the *gNB*.
 
 
 ## [v0.5.1]
@@ -12,6 +27,7 @@
 ### Fixed
 - Component `loadcore_agent` now correctly works with both the hugepages appliance, and the "light" one.
 - Component is now also deployable by only using Terraform, without the ansible workaround. For more details check the component's changelog.
+
 
 ## [v0.5.0]
 ### Added

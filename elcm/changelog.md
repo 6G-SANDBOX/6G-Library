@@ -1,11 +1,14 @@
 # Changelog
 
+## unreleased
+### Changed
+- Adapted to accept external influxdb and grafana.
+
 ## v3.7.1
 ### Added
 - Migrate influxdb from `v1.7.6` to `v2.7.11`.
 - Migrate grafana from `v5.4` to `v11.5.1`.
 - Component now registers a DNS record in `tn_bastion`'s DNS server
-
 ### Fixed
 - Result template `ok_result.md.j2` with links to backend, frontend, grafana and influxdb.
 

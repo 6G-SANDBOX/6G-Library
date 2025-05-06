@@ -31,7 +31,7 @@ metadata:
     - `upf_n3_ip`: "10.10.12.201"
     NOTE: Aditional routing configuration that is not dependent on the Trial Network may also need to be done beforehand.
     NOTE: Currently this component is only available in the site "uma".
-  hypervisors: ["one"]
+  hypervisors: ["any"]
   destroy_script: true
   resource_manager: true
 
@@ -49,8 +49,8 @@ site_variables:
 ####################################
 input:
   any_nokia_radio_linked_5gcore:
-    description: Name of a previosly deployed Open5GS 5G Core
-    type: "open5gs_k8s or open5gs_vm or open5gcore_vm or upf_p4_sw"
+    description: Name of a previously deployed 5G Core component inside the same Trial Network. The gNB will try to connect to its AMF.
+    type: "open5gs_vm or open5gs_k8s or open5gcore_vm or upf_p4_sw"
     required_when: true
   any_nokia_radio_start_time:
     description: |
@@ -70,4 +70,6 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__open5gs: input.any_nokia_radio_linked_5gcore
+  __entity_name__component_type: "nokia_radio"
+  __entity_name__gnb_metadata:
+    linked_5gcore: input.any_nokia_radio_linked_5gcore

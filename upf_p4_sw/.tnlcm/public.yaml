@@ -123,9 +123,10 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
+  __entity_name__component_type: "upf_p4_sw"
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
-  __entity_name__metadata:
+  __entity_name__5gcore_metadata:
     amf_n2_ip: input.one_upf_p4_sw_open5gs_amf_ngap_addr 
     upf_n3_ip: input.one_upf_p4_sw_controller_upf_ipv4_n3
     ue_count: '1'
@@ -138,7 +139,7 @@ terraform_outputs:
     apn: input.one_upf_p4_sw_open5gs_control_apn
     s_nssai_sst: input.one_upf_p4_sw_open5gs_control_s_nssai_sst
     s_nssai_sd: input.one_upf_p4_sw_open5gs_control_s_nssai_sd
-    upf_n6_ip: input.one_upf_p4_sw_controller_upf_ipv4_n6
-    enb_n3_ip: input.one_upf_p4_sw_controller_enb_ipv4_n3
-    dn_n6_ip: input.one_upf_p4_sw_controller_dn_ipv4_n6
-    ue_subnet: input.one_upf_p4_sw_ue_pool
+    upf_n6_ip: input.one_upf_p4_sw_controller_upf_ipv4_n6       # Debatable
+    enb_n3_ip: input.one_upf_p4_sw_controller_enb_ipv4_n3       # Debatable
+    dn_n6_ip: input.one_upf_p4_sw_controller_dn_ipv4_n6         # Debatable
+    ue_subnet: input.one_upf_p4_sw_ue_pool                      # Debatable
