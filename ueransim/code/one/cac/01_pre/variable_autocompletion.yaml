@@ -60,14 +60,7 @@
     - one_ueransim_mode in ['ue', 'both']
     - (one_ueransim_ue_linked_gnb | default('') | length > 0)
   block:
-    - name: Validate the provided gNB for autocompletion
-      vars:
-        valid_component_types: ['berlin_ran', 'custom_gNB', 'iswireless_radio', 'nokia_radio', 'ueransim']
-      ansible.builtin.assert:
-        that:
-          - (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-component_type'] in valid_component_types
-        fail_msg: "The gNB: {{ one_ueransim_ue_linked_gnb }} is undefined or invalid for variable autocompletion."
-    - name: If a a UERANSIM gNB is provided, validate its mode
+    - name: Validate the provided UERANSIM gNB for autocompletion
       when: (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-component_type'] == 'ueransim'
       ansible.builtin.assert:
         that: "{{ (terraform_outputs.stdout | from_json)[one_ueransim_ue_linked_gnb + '-mode'] in ['gnb', 'both'] }}"
