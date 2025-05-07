@@ -36,9 +36,9 @@ site_variables:
 ####################################
 input:
   one_mongodb_version:
-    description: "MongoDB version to be installed. Format: X.X.X. Example: 8.0.8"
+    description: "MongoDB version to be installed. Format: X.X. Example: 8.0"
     type: str
-    default_value: "8.0.8"
+    default_value: "8.0"
     required_when: false
   one_mongodb_user:
     description: "Username used to login into the MongoDB"
