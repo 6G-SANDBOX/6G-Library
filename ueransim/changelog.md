@@ -2,7 +2,7 @@
 
 ## Unreleased
 ### Changed
-- Enhanced variable autocompletion, now allowing integrations with ANY 5G Core/gNB component
+- Enhanced variable autocompletion, now allowing integrations with ANY 5G Core component
 - In UE mode autocompletion metadata is done directly from the linked_5gcore component of the provided linked_gnb.
 - Output `gnb_metadata.linked_open5gs` renamed to `gnb_metadata.linked_5gcore`.
 ### Deprecated

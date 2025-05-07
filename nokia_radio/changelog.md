@@ -3,6 +3,7 @@
 ## Unreleased
 ### Changed
 - Output `linked_open5gs` moved to `gnb_metadata.linked_5gcore`.
+- Changed site variables `cp_ip` and `up_ip` to `n2_ip` and `n3_ip` respectively.
 
 
 ## v0.5.0

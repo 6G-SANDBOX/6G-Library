@@ -7,13 +7,18 @@
         ~ '/api/endpoints/'
         ~ site_available_components.iswireless_radio.portainer_environment
         ~ '/docker/containers/json?all?filters='
-        ~ ({'name': [item.container_name]} | to_json | urlencode)
+        ~ ({'name': [item]} | to_json | urlencode)
       }}
     method: GET
     status_code: [200]
     headers:
       X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"
   register: previous_container
+
+# TODO: This will show the content of variable "previous_component" in Jenkins. Remove this task when you finish troubleshooting the component
+- name: Debug container
+  ansible.builtin.debug:
+    var: previous_container
 
 - name: Get previous container ID
   ansible.builtin.set_fact:
@@ -62,11 +67,11 @@
         ~ '/api/endpoints/'
         ~ site_available_components.iswireless_radio.portainer_environment
         ~ '/docker/containers/create?name='
-        ~ item.container_name
+        ~ item
       }}
     method: POST
     body_format: json
-    body: "{{ item.container_config | to_json }}"
+    body: "{{ previous_container.container_config | to_json }}"      # TODO: This will fail. Ensure the correct config is sent to recreate the container
     status_code: [201]
     headers:
       X-API-Key: "{{ site_available_components.iswireless_radio.portainer_token }}"
