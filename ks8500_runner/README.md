@@ -67,8 +67,8 @@ image_id: ID of the Alpine Linux 3.20 VM image to use in your OpenNebula environ
   required_when: false
 
 ## Generate terraform output
-__entity_name__component_type: "ks8500_runner"
-__entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
-__entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
-__entity_name__registration_info: A string with information about the runner registration
+- __entity_name__component_type: "ks8500_runner"
+- __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+- __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
+- __entity_name__registration_info: A string with information about the runner registration
 
