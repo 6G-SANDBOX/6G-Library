@@ -48,8 +48,8 @@
         endpoint: "{{ bastion_ip }}"
         token: "{{ tn_routemanager_token }}"
       loop:
-        - { to: "{{ site_available_components.nokia_radio.cp_ip }}", via: "{{ site_routemanager.api_endpoint }}" }
-        - { to: "{{ site_available_components.nokia_radio.up_ip }}", via: "{{ site_routemanager.api_endpoint }}" }
+        - { to: "{{ site_available_components.nokia_radio.n2_ip }}", via: "{{ site_routemanager.api_endpoint }}" }
+        - { to: "{{ site_available_components.nokia_radio.n3_ip }}", via: "{{ site_routemanager.api_endpoint }}" }
 
 
 - name: "STAGE 2: Prepare access to tn_bastion to allow access to the route-manager-api"
@@ -75,9 +75,9 @@
       vars:
         fw_exceptions:
           # - "{{ site_routemanager.api_endpoint }}"
-          - "{{ site_available_components.nokia_radio.cp_ip }}"
+          - "{{ site_available_components.nokia_radio.n2_ip }}"
         nat_exceptions:
-          - "{{ site_available_components.nokia_radio.cp_ip }}"
+          - "{{ site_available_components.nokia_radio.n2_ip }}"
 
 
 - name: "STAGE 4: Publish execution results"

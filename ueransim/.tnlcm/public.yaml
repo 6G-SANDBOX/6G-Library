@@ -121,11 +121,11 @@ input:
   # UE-related variables
   one_ueransim_ue_linked_gnb:
     description: |
-      Name of a previously deployed external "gNB" component inside the same Trial Network.
+      Name of a previously deployed external software "gNB" component inside the same Trial Network.
       In *ue* and *both* modes, this variable enables the autocompletion of all UE-related variables from the selected component's configuration.
       In *both* mode particulary, this variable is only used if the UE shouldn't use the internal gNB. Leave undefined otherwise.
-      Valid components include physical radios like `berlin_ran` or `nokia_radio`; and previous `ueransim` components in *gnb* or *both* mode.
-    type: "berlin_ran or custom_gNB or iswireless_radio or nokia_radio or ueransim"
+      The only valid component of this kind is another UERANSIM in *gnb* or *both* mode. Mode is validated at deployment time.
+    type: "ueransim"
     default_value: null
     required_when: false
   one_ueransim_ue_gnbsearchlist:

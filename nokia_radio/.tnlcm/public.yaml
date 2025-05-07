@@ -40,8 +40,8 @@ metadata:
 ## Site-specific variables
 ####################################
 site_variables:
-  cp_ip: "Nokia Airscale Control Plane IP address."
-  up_ip: "Nokia Airscale User Plane IP address. NOTE: In our case it is the route-manager-API IP address in the Nokia Airscale VLAN."
+  n2_ip: "IP address of Nokia Airscale in the Control Plane N2 interface. It will try to connect to the AMF of the 5G Core specified in `any_nokia_radio_linked_5gcore`."
+  n3_ip: "IP address of Nokia Airscale in the User Plane N3 interface. It will try to connect to the UPF of the 5G Core specified in `any_nokia_radio_linked_5gcore`."
 
 
 ####################################
