@@ -14,7 +14,7 @@ one_mongodb_disk: 3072
 one_mongodb_networks: 
   - tn_vxlan
 
-one_mongodb_version: "8.0.8"
+one_mongodb_version: "8.0"
 one_mongodb_user: "admin"
 one_mongodb_password: "adminadmin"
 one_mongodb_database: "dummydb"

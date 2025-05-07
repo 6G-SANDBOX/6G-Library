@@ -1,15 +1,22 @@
+title: "Sample TNLCM descriptor for MongoDB"
+description: "Sample TNLCM descriptor for MongoDB"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
     input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
   mongodb-v8:
     type: "mongodb"
     name: "v8"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
-      one_mongodb_version: "8.0.8"
+      one_mongodb_version: "8.0"
       one_mongodb_user: "admin"
       one_mongodb_password: "adminadmin"
       one_mongodb_database: "dummydb"
