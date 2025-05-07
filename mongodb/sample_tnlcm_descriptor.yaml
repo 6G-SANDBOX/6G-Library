@@ -9,6 +9,7 @@ trial_network:
     type: "tn_bastion"
     dependencies:
       - "tn_vxlan"
+    input: {}
   mongodb-v8:
     type: "mongodb"
     name: "v8"
