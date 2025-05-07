@@ -19,9 +19,10 @@ and indicate which reals the users want to become a member of. Once a runner is 
 
 ## Hypervisors: 
 OpenNeBula (one)
-appliances: ["https://marketplace.opennebula.io/appliance/d74a5f80-20bd-013d-0e49-7875a4a4f528"]
+
 ## Depends_on:
 - tn_init
+
 ## Tags:
 - KS8500 Runner
 - 
