@@ -60,7 +60,7 @@ image_id: ID of the Alpine Linux 3.20 VM image to use in your OpenNebula environ
 - ks8500runner_special_action:
   - description: Select sepcial action
     A valid input would be [none (No special action taken), delete_runner_data (Deletes the runner data to trigger a new registration attempt.
-    this may be useful if the runner has been accidentally deleted in the KS8500 backend)]
+    This may be useful if the runner has been accidentally deleted in the KS8500 backend)]
   - type: str
   - choices: ["none", "delete_runner_data"]
   default_value: "none"
