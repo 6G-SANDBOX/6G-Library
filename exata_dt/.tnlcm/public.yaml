@@ -27,8 +27,6 @@ metadata:
 ####################################
 site_variables:
   exata_licensing_server_ip: IP address of the EXata licensing server in your site.
-  # template_id: ID of the 'LoadCore Agent Test Tool' VM template to use in your OpenNebula environment
-  # image_id: ID of the 'LoadCore Agent Test Tool' VM image to use in your OpenNebula environment
 
 ####################################
 ## Input variables
