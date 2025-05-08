@@ -1,0 +1,37 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  vnet-n2:
+    type: "vnet"
+    name: "n2"
+    dependencies: 
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.10.10.1"
+      one_vnet_netmask: 24
+      one_vnet_address_size: 254
+      # one_vnet_gw: null   # there is no gateway in this network
+      # one_vnet_dns: null  # there is no DNS in this network
+  # vnet-n3:
+  #   type: "vnet"
+  #   name: "n3"
+  #   dependencies:
+  #     - "tn_init"
+  #   input:
+  #     one_vnet_first_ip: "10.10.11.1"
+  #     one_vnet_netmask: 24
+  #     one_vnet_address_size: 254
+  #     # one_vnet_gw: null   # there is no gateway in this network
+  #     # one_vnet_dns: null  # there is no DNS in this network
+  # loadcore_agent-dn:
+  #   type: "loadcore_agent"
+  #   name: "dn"
+  #   dependencies:
+  #     - "vnet-n2"
+  #   input:
+  #     one_loadcore_agent_networks:
+  #       - "tn_vxlan"
+  #       - "vnet-n2"
+  #     one_loadcore_agent_hugepages: true

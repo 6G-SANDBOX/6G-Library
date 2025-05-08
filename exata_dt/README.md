@@ -1,16 +1,9 @@
-# loadcore_agent
+# exata_dt
 
-Deploy a VM with Keysight's LoadCore Agent ready to play.
-After booting, the agent is automatically registered to the LoadCore Middleware server.
+Deploy a VM with Keysight's EXata. The latter allows Experimenters to include EXata DTs as part of a Trial Network, in turn enabling the programmatic retrieval of insights and predictions about the twinned live network.
 
-This component requires a working Loadcore Middleware exposed to the Trial Networks in the site. The Middleware IP address can be provided in the 6G-Sandbox-Sites repository branch of the site.
-To set this applinace in your site, please first download either the [base appliance](https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent) or the one with [hugepages](https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent_hugepages). The hugepages appliance is heavier but provides better support for DPDK.
+This component requires a working EXata licensing server exposed to the Trial Networks in the site. The licensing server IP address can be provided in the 6G-Sandbox-Sites repository branch of the site.
 
+### Sample Trial Network using exata_dt
 
-### Sample Trial Network using loadcore_agent with an open5gs_k8s 5G Core
-
-![loadcore_open5gs_k8s](https://github.com/6G-SANDBOX/6G-Library/blob/assets/loadcore/loadcore_open5gs_k8s.png)
-
-### Sample Trial Network using loadcore_agent with an open5gs_vm 5G Core
-
-![loadcore_open5gs_vm](https://github.com/6G-SANDBOX/6G-Library/blob/assets/loadcore/loadcore_open5gs_vm.png)
+[sample_tnlcm_descriptor_exata_dt](sample_tnlcm_descriptor_exata_dt.yaml)

@@ -5,7 +5,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   template_id = {{ template_id }}
   cpu         = {{ one_exata_dt_cpu }}
   vcpu        = {{ one_exata_dt_cpu }}
-  memory      = {{ one_memory }}
+  memory      = {{ one_exata_dt_memory }}
 
   context = {
     NETWORK =        "YES"

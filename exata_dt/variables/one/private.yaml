@@ -9,8 +9,7 @@
 ######################################################
 
 one_exata_dt_cpu: 6
-one_exata_dt_memory:
-  base_appliance: 8192
-one_exata_dt_disk: 10240
+one_exata_dt_memory: 8192
+one_exata_dt_disk: 42950
 one_exata_dt_networks: 
   - tn_vxlan
