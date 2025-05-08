@@ -8,19 +8,19 @@
 ##
 ######################################################
 
-one_vm_kvm_cpu: 4
-one_vm_kvm_memory: 8192
-one_vm_kvm_disk: 25600
-one_vm_kvm_networks: 
+one_qosium_probe_vm_cpu: 4
+one_qosium_probe_vm_memory: 8192
+one_qosium_probe_vm_disk: 25600
+one_qosium_probe_vm_networks: 
   - tn_vxlan
 
-one_vm_kvm_size: "small"
+one_qosium_probe_vm_size: "small"
 
-qosium_probe_service_id: 10
-ntp_server_address: "pool.ntp.org"
+one_qosium_probe_service_id: 10
+one_qosium_probe_ntp_server_address: "pool.ntp.org"
 
 
-one_vm_kvm_resources:
+one_qosium_probe_vm_resources:
   extra_large:
     cpu: 8
     memory: 32768

@@ -9,9 +9,9 @@ trial_network:
     dependencies:
       - "tn_init"
     input:
-      one_vm_kvm_size: "small"
-      one_vm_kvm_networks:
+      one_qosium_probe_vm_size: "small"
+      one_qosium_probe_vm_networks:
         - "tn_vxlan"
-      qosium_probe_service_id: 10
-      ntp_server_address: "pool.ntp.org"
+      one_qosium_probe_service_id: 1
+      one_qosium_probe_ntp_server_address: "pool.ntp.org"
 
