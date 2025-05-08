@@ -1,0 +1,57 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Matteo Pagin <matteo.pagin@keysight.com>
+  short_description: EXata DT appliance for KVM
+  long_description: |
+    Appliance with preinstalled EXata DT as a Docker image.
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/EXata"]
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  exata_licensing_server_ip: IP address of the EXata licensing server in your site.
+  base_appliance:
+    # TODO: Needed?
+    # template_id: ID of the 'LoadCore Agent Test Tool' VM template to use in your OpenNebula environment
+    # image_id: ID of the 'LoadCore Agent Test Tool' VM image to use in your OpenNebula environment
+  hugepages_appliance:
+    # TODO: Needed?
+    # template_id: ID of the 'LoadCore Agent Test Tool + hugepages' VM template to use in your OpenNebula environment
+    # image_id: ID of the 'LoadCore Agent Test Tool + hugepages' VM image to use in your OpenNebula environment
+    
+
+
+####################################
+## Input variables
+####################################
+input:
+  one_loadcore_agent_networks:
+    description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
+    required_when: false
+
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
