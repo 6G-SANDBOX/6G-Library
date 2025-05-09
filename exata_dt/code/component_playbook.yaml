@@ -51,7 +51,7 @@
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "EXata"
+        hostname: "exata_dt"
         ansible_host: "{{ ips[access_vnet_id][0] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
         ansible_user: "jenkins"
@@ -62,16 +62,15 @@
         ansible_host: "{{ bastion_ip }}"
         ansible_user: "jenkins"
 
-    # TODO: Copy if not there already
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
-      ansible.builtin.include_tasks: "{{ workspace }}/EXata/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/exata_dt/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
 
     - name: Add new VM to an SSH config file ment to be usable by the experimenter
-      ansible.builtin.include_tasks: "{{ workspace }}/EXata/code/{{ site_hypervisor }}/cac/01_pre/tnuser_ssh_config.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/exata_dt/code/{{ site_hypervisor }}/cac/01_pre/tnuser_ssh_config.yaml"
 
 
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "EXata"
+  hosts: "exata_dt"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
