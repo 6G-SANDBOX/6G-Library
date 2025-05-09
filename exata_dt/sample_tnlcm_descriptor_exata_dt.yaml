@@ -34,4 +34,4 @@ trial_network:
   #     one_loadcore_agent_networks:
   #       - "tn_vxlan"
   #       - "vnet-n2"
-  #     one_loadcore_agent_hugepages: true
+

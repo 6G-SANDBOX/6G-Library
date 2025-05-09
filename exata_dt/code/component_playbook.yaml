@@ -62,6 +62,7 @@
         ansible_host: "{{ bastion_ip }}"
         ansible_user: "jenkins"
 
+    # TODO: Copy if not there already
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/EXata/code/{{ site_hypervisor }}/cac/01_pre/jenkins_ssh_config.yaml"
 
@@ -90,14 +91,7 @@
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
 
-    #TODO: Customize this?
-    - name: Create new user for experimenter access
-      become: true
-      ansible.builtin.user:
-        name: tnuser
-        shell: /bin/bash
-        groups: sudo
-        password: ''
+    # User "tnuser" is already created as part of the appliance creation steps
     - name: Set TN ssh key as authorized in new user
       become: true
       ansible.posix.authorized_key:
@@ -106,15 +100,6 @@
         key: "{{ item }}"
       loop:
         - "{{ hostvars['localhost'].get('tn_ssh_public_key', '') }}"
-
-    #TODO: Remove this?
-    # - name: Remove user ixia
-    #   ansible.builtin.user:
-    #     name: ixia
-    #     state: absent
-    #     remove: true
-    #   become: true
-    #   when: not hostvars['localhost'].get('one_loadcore_agent_ixia', false)
 
     # - name: Execute bash script to register the Agent with the Middleware
     #   ansible.builtin.shell: |
@@ -127,16 +112,16 @@
     #   become: true
     #   changed_when: false
 
-#TODO: Customize this to allow access to the licensing server
-# - name: "STAGE 4: Access tn_bastion to set firewall exceptions"
-#   hosts: bastion
-#   gather_facts: false
-#   tasks:
-#     - name: Write firewall exception for the Loadcore Middleware
-#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
-#       vars:
-#         fw_exceptions:
-#           - "{{ hostvars.localhost.site_available_components.loadcore_agent.loadcore_middleware_ip | default('') }}"
+# Whitelist the EXata licensing server in the bastion
+- name: "STAGE 4: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
+  gather_facts: false
+  tasks:
+    - name: Write firewall exception for the EXata licensing server
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        fw_exceptions:
+          - "{{ hostvars.localhost.site_available_components.exata_dt.exata_licensing_server_ip | default('') }}"
 
 
 - name: "STAGE 5: Publish execution results"

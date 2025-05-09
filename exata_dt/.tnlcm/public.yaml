@@ -15,9 +15,13 @@ metadata:
   maintainers:
     - Matteo Pagin <matteo.pagin@keysight.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  short_description: EXata DT appliance for KVM
+  short_description: EXata Digital Twin appliance for KVM
   long_description: |
-    Appliance with preinstalled EXata DT as a Docker image.
+    Appliance featuring Keysight's EXata. The latter allows Experimenters to include EXata Digital Twins as part of a Trial Network, in turn enabling the programmatic retrieval of insights and predictions about the twinned live network.
+    This component requires a working EXata licensing server exposed to the Trial Networks in the site. The licensing server IP address can be provided in the 6G-Sandbox-Sites repository branch of the site.
+    The component has been implemented as a Docker Compose stack comprising two services: one hosting an instance of EXata, and the other hosting an instance of the official MariaDB service.
+    The interaction of Experimenters and/or the reminder of the Trial Network with the DT component takes place via northbound APIs exposed by a custom Python FastAPI webserver. The latter accepts HTTP requests and translates them into commands to the EXata and MariaDB Docker services.
+
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/EXata"]
 
