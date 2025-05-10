@@ -7,7 +7,7 @@
 ## Some of them are modifiable through input variables
 ##
 ######################################################
-
+any_iswireless_radio_ru_du: true
 one_cu_k8s_target: "oneKE-cluster"
 one_cu_open5gs_target: "open5gs_k8s-core"
 #one_cu_k8s_open5gs: "open5gs_k8s-core" #it might be needed if amf, upf ips are taken form open5gs_k8s output

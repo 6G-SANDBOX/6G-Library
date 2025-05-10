@@ -37,6 +37,11 @@ site_variables:
 ## Input variables
 ####################################
 input:
+  any_iswireless_radio_ru_du:
+    description: Set the IS-WIRELESS gNB into RU-DU mode, requiring a separate virtualized CU component.
+    type: bool
+    default_value: true
+    required_when: false
   one_cu_k8s_target:
     description: Name of a previously deployed `oneKE` component, where the the CU Helm Chart will be applied. E.g. `oneKE-my_cluster`.
     type: "oneKE"

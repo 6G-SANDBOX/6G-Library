@@ -53,6 +53,7 @@ trial_network:
       one_ric_k8s_slice_id1: "1"
       one_ric_k8s_slice_id2: "2"
       one_ric_k8s_flip_period: "5"
+      any_iswireless_radio_ru_du: true
   cu_k8s-demo:
     type: "cu_k8s"
     name: "demo"
@@ -66,3 +67,4 @@ trial_network:
       one_cu_open5gs_upf_ip: "open5gsk8s-core-upf-gtpu.open5gsk8s-core.svc.cluster.local"
       one_cu_ric_ip: "e2-service.rick8s-demo.svc.cluster.local"
       dockerhub_token: "XXX"
+      any_iswireless_radio_ru_du: true

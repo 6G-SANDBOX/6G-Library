@@ -7,3 +7,4 @@ one_cu_open5gs_upf_ip: "open5gsk8s-core-upf-gtpu.open5gsk8s-core.svc.cluster.loc
 one_cu_ric_ip: "e2-service.rick8s-demo.svc.cluster.local"
 one_cu_k8s_ip: "10.21.12.203"
 dockerhub_token: "XXX"
+any_iswireless_radio_ru_du: true
