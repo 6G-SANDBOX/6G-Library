@@ -32,6 +32,14 @@ metadata:
     NOTE: Aditional routing configuration that is not dependent on the Trial Network may also need to be done beforehand.
     NOTE: Currently this component is only available in the site "uma".
   hypervisors: ["any"]
+  depends_on:
+    - "tn_bastion"
+    - [open5gs_vm, open5gs_k8s, open5gcore_vm, upf_p4_sw]
+  tags:
+    - "Nokia"
+    - "gNB"
+    - "radio"
+    - "route manager"
   destroy_script: true
   resource_manager: true
 

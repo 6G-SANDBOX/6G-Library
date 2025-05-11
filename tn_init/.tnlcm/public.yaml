@@ -29,6 +29,11 @@ metadata:
     - VPN Server
     Internally this component works as a wrapper of both components within the same ansible playook.
   hypervisors: ["one"]
+  tags:
+    - init
+    - bastion
+    - vxlan
+    - trial network
 
 
 ####################################

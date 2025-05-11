@@ -19,3 +19,18 @@ The configuration exposed by this component should be synchronized with the 5G c
 > Currently this component is only available in the site "uma".
 
 ![nokia_radio](https://github.com/6G-SANDBOX/6G-Library/blob/assets/nokia_radio/nokia_radio.png)
+
+## 🔧 Deployment Details
+
+- Hypervisor: `any`
+- No appliance is deployed: this component configures routing paths via an existing [route-manager-api](https://marketplace.mobilesandbox.cloud:9443/appliance/service_routemanager) service.
+- Requires the `tn_bastion` component to be deployed beforehand for access.
+- Requires the `service_routemanager` component to be deployed and running in the site.
+
+## 📥 Input Variables
+
+| Variable                      | Description                                                                                                            | Type        | Required |
+|------------------------------|------------------------------------------------------------------------------------------------------------------------|-------------|----------|
+| `any_nokia_radio_linked_5gcore` | Name of the previously deployed 5G Core component inside the Trial Network. The gNB will try to connect to its AMF.   | str (component name) | Required |
+| `any_nokia_radio_start_time`     | Time and date from which the routing is enabled, in RFC 3339 format (e.g., `2024-11-08T09:12:00+00:00`). Defaults to current time. | str         | Optional |
+| `any_nokia_radio_duration`       | Duration of the Nokia Airscale reservation in seconds. Default: `3600` (1 hour).                                      | int         | Optional |

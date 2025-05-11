@@ -87,3 +87,28 @@ The access time for the device is set to 1h by default, but can be modified
 * Simple REST [API](doc/API.md)
 
 ![stf_ue](https://github.com/6G-SANDBOX/6G-Library/blob/assets/stf_ue/stf_ue.png)
+
+## 🔧 Deployment Details
+
+- Hypervisor: `any`.
+- No VM or appliance is deployed.
+- Device is accessed via a remote STF instance already configured in the site.
+- Requires the `nokia_radio` component to be deployed beforehand.
+
+## 📥 Input Variables
+
+| Variable              | Description                                                                                      | Type   | Required |
+|----------------------|--------------------------------------------------------------------------------------------------|--------|----------|
+| `any_stf_ue_start_time` | RFC 3339 timestamp from which the UE is reserved. E.g. `'2024-11-08T09:12:00+00:00'`               | str    | Optional |
+| `any_stf_ue_duration`   | Duration of the UE reservation in seconds. Default is `3600` (1 hour).                           | int    | Optional |
+
+## 🧩 Site-Specific Variables
+
+These values must be defined in your site configuration:
+
+| Variable             | Description                                             |
+|----------------------|---------------------------------------------------------|
+| `origin`             | Full URL of the STF web portal                          |
+| `administrator_token`| Token to authenticate as administrator in STF API      |
+| `device`             | Device ID to assign to the `tnuser`                    |
+| `user_mail`          | Email address of the `tnuser`                          |

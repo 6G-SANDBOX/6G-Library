@@ -23,6 +23,14 @@ metadata:
     **NOTE**: Currently this component is only available in the site "uma".
   hypervisors: ["any"]
   destroy_script: true
+  depends_on:
+    - "tn_bastion"
+    - "nokia_radio"
+  tags:
+    - "test farm"
+    - "nokia radio"
+    - "gNB"
+    - "stf_ue"
 
 
 ####################################

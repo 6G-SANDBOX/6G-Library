@@ -27,6 +27,13 @@ metadata:
     - **very_small**: 2 GiB of memory, 1 vCPU and 10GiB of storage
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_openFgs"]
+  depends_on:
+    - "tn_bastion"
+    - "[vnet, tn_bastion]"
+  tags:
+    - 5G Core
+    - open5gs
+    - Standalone
 
 
 ####################################

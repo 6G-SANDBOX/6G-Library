@@ -32,7 +32,15 @@ metadata:
       UE-related variables not provided by the experimenter can be autocompleted using their respective gNB equivalent variables. 
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_UERANSIM"]
-
+  depends_on:
+    - "tn_bastion"
+    - "[tn_vxlan, vnet]"
+    - "[open5gs_vm, open5gs_k8s,  open5gcore_vm, upf_p4_sw] if any_iswireless_radio_ru_du == false"
+  tags:
+    - ueransim
+    - gNB
+    - UE
+    - 5G
 
 ####################################
 ## Site-specific variables

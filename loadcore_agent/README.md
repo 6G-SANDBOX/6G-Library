@@ -14,3 +14,17 @@ To set this applinace in your site, please first download either the [base appli
 ### Sample Trial Network using loadcore_agent with an open5gs_vm 5G Core
 
 ![loadcore_open5gs_vm](https://github.com/6G-SANDBOX/6G-Library/blob/assets/loadcore/loadcore_open5gs_vm.png)
+
+## 🔧 Deployment Details
+
+- Hypervisor: `OpenNebula`
+- Appliance: [LoadCore Agent Appliance](https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent)
+- Requires the `tn_bastion` component to be deployed beforehand for SSH access.
+- Requires a working **LoadCore Middleware** exposed to the Trial Network in the site.
+
+## 📥 Input Variables
+
+| Variable                   | Description                                                                                     | Type        | Required |
+|---------------------------|-------------------------------------------------------------------------------------------------|-------------|----------|
+| `one_loadcore_agent_networks` | Ordered list of Virtual Network names the VM will be part of. First one used for initial access. Default: `["tn_vxlan"]`. | list[str]   | Optional |
+| `one_loadcore_agent_hugepages` | Whether to deploy the VM with 16x1GB hugepages for DPDK optimization. Default: `false`.        | bool        | Optional |
