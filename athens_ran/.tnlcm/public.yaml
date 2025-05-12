@@ -22,7 +22,7 @@ metadata:
     open5Gs is a commercial 5G core deployed by COSMOTE and its internal components are not exposed to the experimenter. This component will only
     configure the routing path between the Trial Network and the Erricson RAN.
     It is done by enabling the necessary routing path through the use of the element called ‘Route Manager’ (already deployed in the site). 
-    The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
+    The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction with the Erricson RAN.
     - `mcc`: "001"
     - `mnc`: "01"
     - `apn`: "internet"
@@ -33,8 +33,14 @@ metadata:
     - `upf_ip`: "10.10.10.201"
     NOTE: Currently this component is only available in the site "athens".
   hypervisors: ["one"]
-  destroy_script: true
-  resource_manager: true
+  depends_on: 
+    - tn_init
+    - open5gs_vm-core
+  tags: # Tags to classify/identify the component. The tags are used to understand the different ways the user could called the component.
+    - Erricson RAN
+    - 5G Core
+    - Physical Equipment
+    - Athens Site
 
 
 ####################################
@@ -51,7 +57,7 @@ site_variables:
 input:
   one_ericsson_radio_open5gs:
     description: Name of a previosly deployed Open5GS 5G Core
-    type: "open5gs_vm or open5gs_k8s"
+    type: "open5gs_vm"
     required_when: true
 
   any_ericsson_radio_start_time:
