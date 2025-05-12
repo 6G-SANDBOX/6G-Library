@@ -88,27 +88,72 @@ The access time for the device is set to 1h by default, but can be modified
 
 ![stf_ue](https://github.com/6G-SANDBOX/6G-Library/blob/assets/stf_ue/stf_ue.png)
 
-## 🔧 Deployment Details
+## Maintainers
 
-- Hypervisor: `any`.
-- No VM or appliance is deployed.
-- Device is accessed via a remote STF instance already configured in the site.
-- Requires the `nokia_radio` component to be deployed beforehand.
+- Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+- Javier Jimenez <ja.jimenez@uma.es>
 
-## 📥 Input Variables
+## Short Description
 
-| Variable              | Description                                                                                      | Type   | Required |
-|----------------------|--------------------------------------------------------------------------------------------------|--------|----------|
-| `any_stf_ue_start_time` | RFC 3339 timestamp from which the UE is reserved. E.g. `'2024-11-08T09:12:00+00:00'`               | str    | Optional |
-| `any_stf_ue_duration`   | Duration of the UE reservation in seconds. Default is `3600` (1 hour).                           | int    | Optional |
+Enables the use of a physical UE via STF for a limited duration.
 
-## 🧩 Site-Specific Variables
+## Long Description
 
-These values must be defined in your site configuration:
+The **STF_UE** 6G-Library component enables temporary access to a physical UE (smartphone) through a web-based STF (Smartphone Test Farm) interface.  
+This mobile device includes a pre-inserted SIM and connects to the physical `nokia_radio` gNB.  
+The reservation is time-limited, by default to 1 hour, but this duration can be customized through input variables.
 
-| Variable             | Description                                             |
-|----------------------|---------------------------------------------------------|
-| `origin`             | Full URL of the STF web portal                          |
-| `administrator_token`| Token to authenticate as administrator in STF API      |
-| `device`             | Device ID to assign to the `tnuser`                    |
-| `user_mail`          | Email address of the `tnuser`                          |
+> ⚠️ **NOTE**: This component is currently only available at the **uma** site.
+
+## Hypervisors
+
+- any
+
+## Depends on
+
+- tn_bastion  
+- nokia_radio
+
+## Tags
+
+- test farm  
+- nokia radio  
+- gNB  
+- stf_ue
+
+---
+
+## Site-specific variables
+
+Variables read from the site's encrypted file in the 6G-Sandbox-Sites repository.  
+TNLCM checks that the variables are defined, and errors if attempting to deploy the component without them.  
+Each variable has a short description of what it does for informational purposes.
+
+| Variable               | Description                                                                                 |
+|------------------------|---------------------------------------------------------------------------------------------|
+| `origin`               | Full URL of the STF web portal                                                              |
+| `administrator_token` | API token to authenticate as administrator in the STF API                                   |
+| `device`               | Mobile device ID to assign to the `tnuser`                                                  |
+| `user_mail`            | Email address for `tnuser` used in STF                                                      |
+
+---
+
+## Input variables
+
+Describes the variables shown in the TNLCM to be filled by the experimenter and included in a TN descriptor.  
+Most variables just serve to overwrite a private/default value, but others (mainly mandatory ones) serve to define dependencies between previously deployed components.
+
+| Variable                | Description                                                                                                   | Type | Default Value         | Choices | Required When |
+|-------------------------|---------------------------------------------------------------------------------------------------------------|------|------------------------|---------|----------------|
+| `any_stf_ue_start_time` | Time and date from which the UE is reserved (RFC 3339 format). Defaults to current time if unspecified        | str  | Current time and date  | -       | false          |
+| `any_stf_ue_duration`   | Duration of the UE reservation in seconds                                                                     | int  | 3600                   | -       | false          |
+
+---
+
+## Generated terraform outputs
+
+Unknown before the deployment, they are stored in the S3 Object Storage, and available to use by future components.  
+Each variable has a short description of what it does for informational purposes.  
+
+
+- `stf_ue-component_type`: `"stf_ue"`

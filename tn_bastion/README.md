@@ -7,38 +7,74 @@ It manages external access to the TN and hosts various networking services as de
 
 ![tn_bastion](https://github.com/6G-SANDBOX/6G-Library/blob/assets/tn_bastion/tn_bastion.png)
 
-## 🛠️ Features
+## Maintainers
 
-This bastion VM includes several critical networking services:
+- Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+- Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
+- Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
 
-- Public network masquerading (NAT)
-- DNS server
-- VPN server (Wireguard)
-- SSH jump server for TN access
-- [Planned] DHCP server
-- [Planned] NTP server
-- [Planned] Port forwarding
+## Short Description
 
-## 🧩 Deployment Details
+Main bridge VM to access the Trial Network. Deploying tn_init instead is the recommended approach.
 
-- Hypervisor: `OpenNebula`
-- Appliance: [tn_bastion appliance](https://marketplace.mobilesandbox.cloud:9443/appliance/service_bastion)
-- Should be deployed before most other Trial Network components
+## Long Description
 
-## 📥 Input Variables
+Bootstrap VM of any Trial Network.  
+It manages external access to the TN and hosts various networking services such as:
 
-| Variable                      | Description                                                                 | Type | Default | Required |
-|------------------------------|-----------------------------------------------------------------------------|------|---------|----------|
-| `one_bastion_vpn_clients`    | Number of VPN client configurations to generate (Wireguard)                 | int  | 1       | No       |
-| `one_bastion_vpn_allowedips` | Comma-separated subnets clients will route to through VPN                   | str  | TN subnet (e.g., `tn_vxlan`) | No       |
+- DHCP server (not yet)  
+- NTP server (not yet)  
+- Public network masquerading  
+- Port forwarding (not yet)  
+- DNS server  
+- VPN Server  
 
-## 📤 Terraform Outputs
+Deploying `tn_init` instead is the recommended approach, as it serves as a wrapper of both `tn_vxlan` and `tn_bastion`.
 
-| Output Name                 | Description                                                |
-|----------------------------|------------------------------------------------------------|
-| `__tn_bastion__id`         | OpenNebula VM ID                                           |
-| `__tn_bastion__ips`        | Dictionary of assigned IP addresses                        |
-| `tn_dns_token`             | Token for authenticating to the internal DNS service       |
-| `tn_routemanager_token`    | Token for accessing the Route Manager API                  |
-| `tn_ssh_public_key`        | SSH public key to inject into TN VMs for access by `tnuser`|
+## Hypervisors
 
+- one
+
+## Depends on
+
+*(none)*
+
+## Tags
+
+- bastion
+- access
+- ssh
+- dns
+- vpn
+- trial network
+
+## Site-specific variables
+
+Variables read from the site's encrypted file in the 6G-Sandbox-Sites repository.  
+TNLCM checks that the variables are defined, and errors if attempting to deploy the component without them.  
+Each variable has a short description of what it does for informational purposes.
+
+| Variable     | Description                                                                 |
+|--------------|-----------------------------------------------------------------------------|
+| template_id  | ID of the BASTION VM template to use in your OpenNebula environment         |
+| image_id     | ID of the BASTION VM image to use in your OpenNebula environment            |
+
+## Input variables
+
+Describes the variables shown in the TNLCM to be filled by the experimenter and included in a TN descriptor.
+
+| Variable                     | Description                                                                                                  | Type | Default                        | Choices | Required When |
+|-----------------------------|--------------------------------------------------------------------------------------------------------------|------|--------------------------------|---------|----------------|
+| one_bastion_vpn_clients     | For the Wireguard VPN, the number of client configurations to generate.                                     | int  | 1                              | -       | false          |
+| one_bastion_vpn_allowedips  | Comma-separated list of subnets that client configurations will route to the bastion (e.g., tn_vxlan subnet).| str  | "The subnet of tn_vxlan"         | -       | false          |
+
+## Generated terraform outputs
+
+Unknown before the deployment, they are stored in the S3 Object Storage, and available to use by future components.  
+Each variable has a short description of what it does for informational purposes.  
+
+- `__tn_bastion__id`: "VM ID in OpenNebula. Generated from Terraform Manifest"
+- `__tn_bastion__ips`: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
+- `tn_dns_token`: "Token to authenticate to the tn_bastion DNS Server"
+- `tn_routemanager_token`: "Bearer token to authenticate to the tn_bastion route-manager-api"
+- `tn_ssh_public_key`: "SSH public key to include in TN Virtual Machines for login with user tnuser"

@@ -40,38 +40,76 @@ Through variable "one_open5gs_vm_size", five different types of instances can be
 > The storage is currently fixed to the size defined in the VM template due to a bug in OpenNebulas Teraform provider. (6 GB in Berlin)
 
 
-## 🚀 Deployment Details
+## Maintainers
 
-- **Hypervisor**: `OpenNebula`
-- **OS**: Ubuntu 22.04 LTS
-- **Pre-installed**:
-  - Open5GS v2.7.2
-  - MongoDB
-- **Appliance**: [Open5GS Service Appliance](https://marketplace.mobilesandbox.cloud:9443/appliance/service_openFgs)
+- Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
+- Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
 
----
+## Short Description
 
-## 📥 Input Variables
+Deploys a Open5GS as a standalone Virtual Machine
 
-| Variable                       | Description                                                                                         | Type                    | Required |
-|--------------------------------|-----------------------------------------------------------------------------------------------------|-------------------------|----------|
-| `one_open5gs_vm_external_vnet` | Virtual Network for VM management. Default: `tn_vxlan`                                              | `tn_vxlan or vnet`      | No       |
-| `one_open5gs_vm_internal_vnet` | List of up to two VNets for N2 and N3 traffic.                                                     | `list[tn_vxlan or vnet]`| No       |
-| `one_open5gs_vm_size`          | VM hardware profile. See instance types below.                                                     | `str`                   | Yes      |
-| `one_open5gs_vm_amf_n2_ip`     | IP address of AMF (N2 interface).                                                                  | `str`                   | No       |
-| `one_open5gs_vm_upf_n3_ip`     | IP address of UPF (N3 interface).                                                                  | `str`                   | No       |
-| `one_open5gs_vm_ue_count`      | Number of UEs to be provisioned.                                                                   | `int`                   | No       |
-| `one_open5gs_vm_tac`           | Tracking Area Code (TAC).                                                                          | `int`                   | No       |
-| `one_open5gs_vm_mcc`           | Mobile Country Code. Must be 3 digits in quotes.                                                    | `str`                   | No       |
-| `one_open5gs_vm_mnc`           | Mobile Network Code. Must be 2–3 digits in quotes.                                                  | `str`                   | No       |
-| `one_open5gs_vm_msin`          | Mobile Subscriber ID Number. Fills out the IMSI.                                                    | `str`                   | No       |
-| `one_open5gs_vm_key`           | Subscription Key (UE authentication).                                                              | `str`                   | No       |
-| `one_open5gs_vm_opc`           | Operator Code (UE authentication).                                                                 | `str`                   | No       |
-| `one_open5gs_vm_apn`           | APN to be assigned to the UE.                                                                      | `str`                   | No       |
-| `one_open5gs_vm_s_nssai_sst`   | S-NSSAI Slice/Service Type.                                                                        | `int`                   | No       |
-| `one_open5gs_vm_s_nssai_sd`    | S-NSSAI Slice Differentiator. Minimum length: 6.                                                    | `str`                   | No       |
-| `one_open5gs_vm_ue_subnet`     | Subnet used by UEs. Independent of Trial Network VNets.                                            | `str`                   | No       |
-| `one_open5gs_vm_use_nightly`   | Use nightly Open5GS build (unstable, for testing).                                                  | `bool`                  | No       |
-| `one_open5gs_vm_install_webui` | Whether to install the Open5GS WebUI (increases deployment time).                                  | `bool`                  | No       |
+## Long Description
 
----
+Deploys a Open5GS over a general-purpose Virtual Machine based on Ubuntu 22.04 LTS.  
+The automation installs Open5GS version 2.7.2 and MongoDB on it.  
+Through variable `one_open5gs_vm_size`, five different types of instances can be deployed:
+
+- **extra_large**: 32 GiB of memory, 8 vCPU and 100GiB of storage  
+- **large**: 16 GiB of memory, 4 vCPU and 50GiB of storage  
+- **medium**: 8 GiB of memory, 4 vCPU and 25GiB of storage  
+- **small**: 4 GiB of memory, 2 vCPU and 15GiB of storage  
+- **very_small**: 2 GiB of memory, 1 vCPU and 10GiB of storage  
+
+## Hypervisors
+
+- one
+
+## Depends on
+
+- tn_bastion
+- [vnet, tn_bastion]
+
+## Tags
+
+- 5G Core
+- open5gs
+- Standalone
+
+## Site-specific variables
+
+| Variable | Description |
+|----------|-------------|
+| `template_id` | ID of the Open5GS VM template to use in your OpenNebula environment |
+| `image_id` | ID of the Open5GS VM image to use in your OpenNebula environment |
+
+## Input variables
+
+| Variable | Description | Type | Default | Choices | Required When |
+|----------|-------------|------|---------|---------|----------------|
+| one_open5gs_vm_external_vnet | Virtual Network name asigned to the VM for management purposes. | tn_vxlan or vnet | tn_vxlan | - | false |
+| one_open5gs_vm_internal_vnet | Optional list of 1 or 2 vnets used for interfaces N2 (AMF) and N3 (UPF) respectivelly. | list[tn_vxlan or vnet] | null | - | false |
+| one_open5gs_vm_size | Select one type of instance according to your hardware requirements. | str | - | extra_large, large, medium, small, very_small | true |
+| one_open5gs_vm_amf_n2_ip | IPv4 address of the AMF in the 5G core network. | str | 10.21.12.200 | - | false |
+| one_open5gs_vm_upf_n3_ip | IPv4 address of the UPF in the 5G core network. | str | 10.21.12.201 | - | false |
+| one_open5gs_vm_ue_count | Number of UEs to be provisioned. | int | 20 | - | false |
+| one_open5gs_vm_tac | Tracking Area Code (TAC) | int | 200 | - | false |
+| one_open5gs_vm_mcc | Mobile Country Code (MCC) | str | "001" | - | false |
+| one_open5gs_vm_mnc | Mobile Network Code (MNC) | str | "01" | - | false |
+| one_open5gs_vm_msin | Mobile Subscriber Identification Number (MSIN) | str | "0000000001" | - | false |
+| one_open5gs_vm_key | Permanent Subscription Key of each UE. | str | 465B5CE8B199B49FAA5F0A2EE238A6BC | - | false |
+| one_open5gs_vm_opc | Operator Code (OP or OPC) of each UE. | str | E8ED289DEBA952E4283B54E88E6183CA | - | false |
+| one_open5gs_vm_apn | APN of the initial PDU session. | str | internet | - | false |
+| one_open5gs_vm_s_nssai_sst | SST of the S-NSSAI | int | 1 | - | false |
+| one_open5gs_vm_s_nssai_sd | SD of the S-NSSAI | str | 000001 | - | false |
+| one_open5gs_vm_ue_subnet | Subnet to be used by the UEs. | str | 10.45.0.0/16 | - | false |
+| one_open5gs_vm_use_nightly | Install the Nightly version of Open5GS | bool | false | - | false |
+| one_open5gs_vm_install_webui | Install the Open5GS Web UI | bool | false | - | false |
+
+## Generated terraform outputs
+
+Unknown before the deployment, they are stored in the S3 Object Storage, and available to use by future components.  
+Each variable has a short description of what it does for informational purposes.  
+
+- `open5gs_vm-id`: "Variable tied to a specific deployment of this component."
+- `tn_ssh_public_key`: "Variable with a global name. Generated by a component that can only be deployed once per TN, such as tn_init"

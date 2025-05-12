@@ -62,35 +62,13 @@ These values must be present in the site's encrypted variables file:
 Describes the variables shown in the TNLCM to be filled by the experimenter and included in a TN descriptor.  
 Most variables just serve to overwrite a private/default value, but others (mainly mandatory ones) serve to define dependencies between previously deployed components.
 
-#### Variables
-
-- **any_iswireless_radio_ru_du**
-  - **description**: Enables RU-DU mode, where the DU runs standalone and a virtualized CU component must be separately deployed.
-  - **type**: `bool`
-  - **default_value**: `false`
-  - **required_when**: `false`
-
-- **any_iswireless_radio_linked_5gcore**
-  - **description**: Reference to a previously deployed 5G Core component. The gNB connects to its AMF. Ignored if RU-DU mode is enabled.
-  - **type**: `open5gs_vm or open5gs_k8s or open5gcore_vm or upf_p4_sw`
-  - **required_when**: `any_iswireless_radio_ru_du == false`
-
-- **any_iswireless_radio_linked_cu**
-  - **description**: Reference to a deployed CU component (`cu_k8s`). Only required when RU-DU mode is enabled.
-  - **type**: `cu_k8s`
-  - **required_when**: `any_iswireless_radio_ru_du == true`
-
-- **any_iswireless_radio_start_time**
-  - **description**: Time and date from which the route is enabled, in RFC 3339 format (e.g., `2024-11-08T09:12:00+00:00`). Defaults to current time.
-  - **type**: `str`
-  - **default_value**: Current time and date
-  - **required_when**: `false`
-
-- **any_iswireless_radio_duration**
-  - **description**: Time in seconds for the ISWIRELESS reservation. Default is 10800 (3 hours).
-  - **type**: `int`
-  - **default_value**: `10800`
-  - **required_when**: `false`
+| Variable                              | Description                                                                                                                                                  | Type                                                             | Default Value           | Choices | Required When                            |
+|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|-------------------------|---------|-------------------------------------------|
+| `any_iswireless_radio_ru_du`         | Enables RU-DU mode, where the DU runs standalone and a virtualized CU must be deployed separately                                                           | `bool`                                                           | `false`                 | -       | `false`                                   |
+| `any_iswireless_radio_linked_5gcore` | Reference to a previously deployed 5G Core component. Ignored in RU-DU mode                                                                                  | `open5gs_vm or open5gs_k8s or open5gcore_vm or upf_p4_sw`       | -                       | -       | `any_iswireless_radio_ru_du == false`     |
+| `any_iswireless_radio_linked_cu`     | Reference to a deployed `cu_k8s` component. Required in RU-DU mode                                                                                           | `cu_k8s`                                                         | -                       | -       | `any_iswireless_radio_ru_du == true`      |
+| `any_iswireless_radio_start_time`    | Time and date from which the route is enabled, in RFC 3339 format. Defaults to current time if unspecified                                                  | `str`                                                            | Current time and date   | -       | `false`                                   |
+| `any_iswireless_radio_duration`      | Time in seconds for the ISWIRELESS reservation                                                                                                               | `int`                                                            | `10800`                 | -       | `false`                                   |
 
 ---
 
@@ -99,11 +77,10 @@ Most variables just serve to overwrite a private/default value, but others (main
 Unknown before deployment; these outputs are stored in the S3 Object Storage and are available for use by future components.
 
 Each output has a short description of what it does.  
-`__entity_name__` refers to the internal component name inside the TN. In Terraform, underscores are used instead of dashes.
 
-- **`__entity_name__component_type`**  
+- **`iswireless_radio-<custom_name>-component_type`**  
   `"iswireless_radio"` — identifies the type of component
 
-- **`__entity_name__gnb_metadata`**  
+- **`iswireless_radio-<custom_name>-gnb_metadata`**  
   Metadata including:
   - `linked_5gcore`: The selected 5G Core component, if any
