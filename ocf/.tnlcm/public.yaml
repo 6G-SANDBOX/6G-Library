@@ -21,12 +21,10 @@ metadata:
     More info in the official documentation: https://ocf.etsi.org/documentation/latest/
   hypervisors: ["one"]
   depends_on:
-    - "tn_bastion"
     - "oneKE"
   tags:
-    - "OpenCAPIF"
-    - "ETSI"
-    - "API exposure"
+    - "Helm Chart"
+    - "networking"
 
 
 ####################################

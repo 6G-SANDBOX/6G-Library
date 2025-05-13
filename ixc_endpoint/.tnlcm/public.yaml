@@ -24,12 +24,12 @@ metadata:
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/ixc_endpoint"]
   depends_on:
-    - "tn_bastion"
+    - tn_bastion
   tags:
-  - "IxChariot"
-  - "traffic generator"
-  - "performance testing"
-  - "network testing"
+    - "VM"
+    - "appliance"
+    - "benchmarking"
+    - "testing"
 
 
 ####################################

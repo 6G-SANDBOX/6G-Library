@@ -35,11 +35,11 @@ metadata:
   depends_on:
     - "tn_bastion"
     - "[open5gs_vm, open5gs_k8s,  open5gcore_vm, upf_p4_sw] if any_iswireless_radio_ru_du == false"
+    - "cu_k8s if any_iswireless_radio_ru_du == true"
   tags:
-    - "radio"
+    - "route_manager"
+    - "resource_manager"
     - "gNB"
-    - "IS-WIRELESS"
-    - "route manager"
   destroy_script: true
   resource_manager: true
 

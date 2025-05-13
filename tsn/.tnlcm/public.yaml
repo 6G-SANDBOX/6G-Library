@@ -21,6 +21,9 @@ metadata:
 
     NOTE: Currently tsn is only available in the site "uma"
   hypervisors: ["any"]
+  depends_on: []
+  tags:
+    - "tn_bastion"
 
 
 ####################################

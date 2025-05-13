@@ -25,14 +25,12 @@ metadata:
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent"]
   depends_on:
-  - "tn_bastion"
+    - tn_bastion
   tags:
-  - "Keysight"
-  - "LoadCore"
-  - "agent"
-  - "traffic generator"
-  - "performance testing"
-  - "network testing"
+    - "VM"
+    - "appliance"
+    - "testing"
+    - "benchmarking"
 
 
 ####################################

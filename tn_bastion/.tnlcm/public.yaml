@@ -22,20 +22,18 @@ metadata:
     It manages external access to the TN and hosts various networking services such as:
     - DHCP server (not yet)
     - NTP server (not yet)
-    - Public network masquerading
+    - Public network masquerading (NAT)
     - Port forwarding (not yet)
     - DNS server
     - VPN Server
     Deploying tn_init instead is the recommended approach, as it serves as a wrapper of both tn_vxlan and tn_bastion.
   hypervisors: ["one"]
-  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_bastion"]
+  depends_on:
+    - tn_vxlan
   tags:
-    - "bastion"
-    - "access"
-    - "ssh"
-    - "dns"
-    - "vpn"
-    - "trial network"
+    - "tn_init"
+    - "appliance"
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_bastion"]
 
 
 ####################################

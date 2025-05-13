@@ -24,11 +24,9 @@ metadata:
   depends_on:
     - "oneKE"
   tags:
-    - open5gs
-    - 5G Core
-    - kubernetes
-    - SA Core
     - Helm Chart
+    - 5G Core
+    - networking
 
 
 ####################################

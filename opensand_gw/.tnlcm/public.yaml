@@ -23,6 +23,12 @@ metadata:
     depending on the Trial Network’s topology (mandatory interconnection with an emulated Satellite entity). 
     Documentation can be found at https://github.com/CNES/opensand  
   hypervisors: ["one"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "appliance"
+    - "NTN"
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/opensand"]
 
 

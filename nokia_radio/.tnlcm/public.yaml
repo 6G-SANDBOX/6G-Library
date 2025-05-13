@@ -33,13 +33,12 @@ metadata:
     NOTE: Currently this component is only available in the site "uma".
   hypervisors: ["any"]
   depends_on:
-    - "tn_bastion"
     - [open5gs_vm, open5gs_k8s, open5gcore_vm, upf_p4_sw]
   tags:
-    - "Nokia"
     - "gNB"
-    - "radio"
-    - "route manager"
+    - "route_manager"
+    - "resource_manager"
+    - "networking"
   destroy_script: true
   resource_manager: true
 

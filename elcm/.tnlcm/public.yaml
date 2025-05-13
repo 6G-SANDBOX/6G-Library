@@ -25,6 +25,13 @@ metadata:
 
     The ELCM component supports linking Grafana and InfluxDB components or directly using the Monitoring component that includes Grafana, InfluxDB and Prometheus in a virtual machine.
   hypervisors: ["one"]
+  depends_on:
+    - [influxdb, monitoring]
+    - [grafana, monitoring]
+  tags:
+    - "VM"
+    - "appliance"
+    - "testing"
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM"]
 
 
