@@ -1,6 +1,6 @@
 # ELCM (Experiment Lifecycle Management)
 
-ELCM is a system designed to manage the complete lifecycle of experiments in research and development environments. Its goal is to streamline the planning, deployment, monitoring, and termination of experiments efficiently and automatically.
+ELCM is a system designed to manage the complete lifecycle of experiments in research and development environments. Its goal is to streamline the planning, deployment, monitoring and termination of experiments efficiently and automatically.
 
 ## Key Features
 

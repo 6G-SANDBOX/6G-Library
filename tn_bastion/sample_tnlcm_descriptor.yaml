@@ -1,3 +1,5 @@
+title: "Sample TNLCM descriptor for bastion"
+descriptor: "Simple VPN bastion with 3 clients"
 trial_network:
   tn_vxlan:
     type: "tn_vxlan"
@@ -5,7 +7,8 @@ trial_network:
     input: {}
   tn_bastion:
     type: "tn_bastion"
-    dependencies: ['tn_vxlan']
+    dependencies:
+      - "tn_vxlan"
     input:
       one_bastion_vpn_clients: 3
       one_bastion_vpn_allowedips: "0.0.0.0/0"

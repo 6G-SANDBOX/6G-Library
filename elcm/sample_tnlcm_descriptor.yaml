@@ -1,12 +1,21 @@
+title: "Sample TNLCM descriptor for ELCM"
+description: "ELCM with InfluxDB and Grafana to store and visualize data obtained from an experiment"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   influxdb-v2:
     type: "influxdb"
     name: "v2"
-    dependencies: ["tn_init"]
+    dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_influxdb_version: "2.7.11"
       one_influxdb_user: "admin"
@@ -17,7 +26,9 @@ trial_network:
   grafana-v11:
     type: "grafana"
     name: "v11"
-    dependencies: ["tn_init"]
+    dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_grafana_version: "11.6.0"
       one_grafana_password: "adminadmin"
@@ -25,6 +36,8 @@ trial_network:
     type: "elcm"
     name: "exp"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
       - "influxdb-v2"
       - "grafana-v11"
     input:

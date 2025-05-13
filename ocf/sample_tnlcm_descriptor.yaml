@@ -1,13 +1,21 @@
+title: "Sample TNLCM descriptor for OCF"
+description: "OCF with K8S for discover APIs"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   vnet-internal:
     type: "vnet"
     name: "internal"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_vnet_first_ip: "10.10.10.1"
       one_vnet_netmask: 24
@@ -17,7 +25,8 @@ trial_network:
     type: "oneKE"
     name: "k8s"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-internal"
     input:
       one_oneKE_internal_vnet: "vnet-internal"
@@ -33,6 +42,9 @@ trial_network:
     type: "ocf"
     name: "openCapif"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
+      - "vnet-internal"
       - "oneKE-k8s"
     input:
       ocf_one_oneKE: "oneKE-k8s"

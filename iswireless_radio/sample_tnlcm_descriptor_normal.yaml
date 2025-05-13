@@ -1,13 +1,21 @@
+title: "Sample TNLCM descriptor for IS-Wireless Radio"
+description: "IS-Wireless Radio with Open5GCore K8S"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   vnet-internal:
     type: "vnet"
     name: "internal"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_vnet_first_ip: "10.10.12.1"
       one_vnet_netmask: 24
@@ -17,6 +25,8 @@ trial_network:
     type: "oneKE"
     name: "cluster"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-internal"
     input:
       one_oneKE_external_vnet: "tn_vxlan"
@@ -28,6 +38,9 @@ trial_network:
     type: "open5gs_k8s"
     name: "core"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
+      - "vnet-internal"
       - "oneKE-cluster"
     input:
       one_open5gs_k8s_target: "oneKE-cluster"
@@ -47,6 +60,10 @@ trial_network:
     type: "iswireless_radio"
     name: "RAN"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
+      - "vnet-internal"
+      - "oneKE-cluster"
       - "open5gs_k8s-core"
     input:
       # any_iswireless_radio_ru_du: false                           # Default value

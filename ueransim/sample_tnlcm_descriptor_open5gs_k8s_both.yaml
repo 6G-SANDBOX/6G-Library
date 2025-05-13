@@ -1,13 +1,21 @@
+title: "Sample TNLCM descriptor for UERANSIM both"
+description: "UERANSIM both with Open5GS in oneKE"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   vnet-internal:
     type: "vnet"
     name: "internal"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input: {}
       # one_vnet_first_ip: "10.21.12.1"   # Default value
       # one_vnet_netmask: 24              # Default value
@@ -16,7 +24,8 @@ trial_network:
     type: "oneKE"
     name: "cluster"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-internal"
     input:
       one_oneKE_external_vnet: "tn_vxlan"
@@ -33,6 +42,9 @@ trial_network:
     type: "open5gs_k8s"
     name: "core"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
+      - "vnet-internal"
       - "oneKE-cluster"
     input:
       one_open5gs_k8s_target: "oneKE-cluster"
@@ -52,7 +64,10 @@ trial_network:
     type: "ueransim"
     name: "both"
     dependencies:
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
+      - "vnet-internal"
+      - "oneKE-cluster"
       - "open5gs_k8s-core"
     input:
       one_ueransim_networks:

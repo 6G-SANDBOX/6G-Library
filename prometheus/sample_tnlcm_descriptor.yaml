@@ -1,11 +1,20 @@
+title: "Sample TNLCM descriptor for prometheus"
+description: "Simple prometheus instance to monitor the network"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   prometheus-v2:
     type: "prometheus"
     name: "v2"
-    dependencies: ["tn_init"]
+    dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_prometheus_version: "2.53.4"

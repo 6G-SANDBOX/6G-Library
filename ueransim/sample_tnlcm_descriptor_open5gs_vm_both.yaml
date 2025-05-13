@@ -1,13 +1,21 @@
+title: "Sample TNLCM descriptor for UERANSIM both"
+description: "UERANSIM both with Open5GS in VM"
 trial_network:
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input: {}
   vnet-n2:
     type: "vnet"
     name: "n2"
     dependencies: 
-      - "tn_init"
+      - "tn_vxlan"
+      - "tn_bastion"
     input:
       one_vnet_first_ip: "10.10.10.1"
       one_vnet_netmask: 24
@@ -18,6 +26,8 @@ trial_network:
     type: "open5gs_vm"
     name: "core"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
       - "vnet-n2"
     input:
       one_open5gs_vm_external_vnet: "tn_vxlan"
@@ -41,6 +51,9 @@ trial_network:
     type: "ueransim"
     name: "both"
     dependencies:
+      - "tn_vxlan"
+      - "tn_bastion"
+      - "vnet-n2"
       - "open5gs_vm-core"
     input:
       one_ueransim_networks:

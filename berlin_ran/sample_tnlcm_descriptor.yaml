@@ -1,14 +1,21 @@
+title: "Sample TNLCM descriptor for Berlin RAN"
+description: "Berlin RAN with Open5GCore VM"
 trial_network:
-
-  tn_init:
-    type: "tn_init"
+  tn_vxlan:
+    type: "tn_vxlan"
     dependencies: []
+    input: {}
+  tn_bastion:
+    type: "tn_bastion"
+    dependencies:
+      - "tn_vxlan"
     input:
       one_bastion_vpn_clients: 3
   vnet-n2:
     type: "vnet"
     name: "n2"
-    dependencies: []
+    dependencies:
+      - "tn_bastion"
     input:
       one_vnet_first_ip: "10.10.11.1"
       one_vnet_netmask: 24
@@ -18,7 +25,6 @@ trial_network:
     type: "open5gcore_vm"
     name: "core"
     dependencies:
-      - "tn_init"
       - "vnet-n2"
     input:
       one_open5gcore_vm_size: "small"
