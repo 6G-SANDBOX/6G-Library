@@ -1,9 +1,15 @@
 # Changelog
 
+## unreleased
+### Added
+- New input variable `one_open5gs_vm_install_webui` to enable the installation of the Web UI.
+### Changed
+- Output dictionary `metadata` renamed to `5gcore_metadata`.
+
+
 ## v0.5.1
 ### Added
 - New input variable `one_open5gs_vm_install_webui` in `open5gs_vm`, enabling the installation of the webUI.
-
 
 ## v0.5.0
 ### Added
@@ -14,7 +20,6 @@
 - Renamed variable `one_open5gs_vm_upf_ip` to `one_open5gs_vm_upf_n3_ip`.
 ### Fixed
  - Remove hardcoded ip (10.45.0.1) from the `ogstun` interface.
-
 
 ## v0.4.0
 ### Added

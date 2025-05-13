@@ -1,0 +1,12 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  grafana-v11:
+    type: "grafana"
+    name: "v11"
+    dependencies: ["tn_init"]
+    input:
+      one_grafana_version: "11.6.0"
+      one_grafana_password: "adminadmin"
