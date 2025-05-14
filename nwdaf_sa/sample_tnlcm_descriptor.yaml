@@ -35,7 +35,7 @@ trial_network:
       # one_oneKE_longhorn: true           # Default value
       # one_oneKE_traefik: false           # Default value
       # one_oneKE_nginx_passthough: false  # Default value
-  nwdafsa-core:
+  nwdaf_sa-core:
     type: "nwdaf_sa"
     name: "core"
     dependencies:
