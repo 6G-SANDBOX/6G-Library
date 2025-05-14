@@ -2,6 +2,7 @@
 
 ## [unreleased]
 ### Added
+- New metadata variables `depends_on` and `tags` now present in the `.tnlcm/public.yaml` file of all components.
 - New component `prometheus` to scrape time series data.
 - New component `influxdb` to store time series data.
 - New component `grafana` to visualize time series data.

@@ -26,6 +26,20 @@ metadata:
     This sample component uses a custom appliance previously installed in your site (Instructions on how to install the component should be in the README.md file)
   # Unordered list of compatible virtualization platforms for the component. Currently only OpenNebula (one) is available
   hypervisors: ["one"]
+  # Unordered list of components that this component depends on. The TNLCM will check that they are deployed before deploying this component.
+  # tn_bastion is just a fallback dependency, as its present in all components. Add it if they are no other requirements
+  # Dependencies usually imply that the component will use some of the outputs of the previous component to autocomplete values
+  # The association of this component to a specific previous one is done through the input variables, which are explained below.
+  depends_on:
+    - tn_bastion
+    # -"[open5gs_vm, open5gs_k8s, open5gcore_vm, upf_p4_sw] if one_ueransim_mode in [gnb,both]"       # Dependency with additional logic
+  # Tags for classification purposes.
+  # Try at least to add one for the deployment type (VM, Helm Chart, OpenNebula Service...), the general requirements (appliance, route_manager, resource_manager) and for its purpose (networking, infrastructure, 5G Core, gNB...)
+  # Tags are not strictly for documentation, but adding "relevant keywords" as tags is also accepted
+  tags:
+    - "VM"
+    - "appliance"
+    - "monitoring"
   # (OPTIONAL, currently unused) true in special components that include an additional playbook with the required steps to undeploy it. You probably don't need it
   #destroy_script: false    
   # (OPTIONAL, currently unused) true in certain components that require the TNLCM to perform an accounting on how many instances of this component are deployed in a site, and for how long. Quantity and duration are instructed inside the sites repository
