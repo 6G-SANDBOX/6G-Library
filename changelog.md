@@ -9,7 +9,7 @@
 - New component `custom_gNB` to integrate user-provided gNBs with 5G Cores inside TNs
 - New `component_type` terraform output added to all components.
 ### Changed
-- Modified public.yaml, README.md and Dockerfile for KS8500_runner. 
+- Upgraded Runner version to 1.14.1 inf Dockerfile for KS8500_runner. 
 - Modified terraform outputs for all 5G Core components (`open5gcore_vm`, `open5gs_k8s`, `open5gs_vm` and `upf_p4_sw`).
 - Modified terraform outputs for all gNB components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`).
 - Component `nokia_radio` renamed the site variables `cp_ip` and `up_ip` to `n2_ip` and `n3_ip` respectively, for coherence with the 5G Core outputs
