@@ -23,7 +23,6 @@ metadata:
     Deploy a VM with Keysight's LoadCore Agent ready to play.
     After booting, the agent register itself with the LoadCore Middleware server.
   hypervisors: ["one"]
-  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent"]
   depends_on:
     - tn_bastion
   tags:
@@ -31,6 +30,7 @@ metadata:
     - "appliance"
     - "testing"
     - "benchmarking"
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent"]
 
 
 ####################################
