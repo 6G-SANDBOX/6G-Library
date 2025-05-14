@@ -22,7 +22,15 @@ metadata:
     The access time for the device is set to 1h by default, but can be modified
     **NOTE**: Currently this component is only available in the site "uma".
   hypervisors: ["any"]
+  depends_on:
+    - nokia_radio
+  tags:
+    - "UE"
+    - "route_manager"
+    - "resource_manager"
+    - "monitoring"
   destroy_script: true
+  resource_manager: true
 
 
 ####################################

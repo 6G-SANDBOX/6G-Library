@@ -20,6 +20,13 @@ metadata:
     It also contains the different Open5GS services that act as the control plane for the 5G core.
     Containerized applications with Docker.
   hypervisors: ["one"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "5G Core"
+    - "appliance"
+    - "networking"
   appliances: ["https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05"]
 
 

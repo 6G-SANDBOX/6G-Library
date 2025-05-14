@@ -31,6 +31,11 @@ metadata:
     NOTE: Aditional routing configuration that is not dependent on the Trial Network may also need to be done beforehand.
     NOTE: Currently this component is only available in the site "uma".
   hypervisors: ["any"]
+  depends_on:
+    - [open5gs_vm, open5gs_k8s, open5gcore_vm, upf_p4_sw]
+  tags:
+    - "gNB"
+    - "networking"
   destroy_script: true
   resource_manager: true
 

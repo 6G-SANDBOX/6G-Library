@@ -25,6 +25,12 @@ metadata:
           image is only intended to be used in [uma] site, so the PARAMS are not included to avoid 
           confusing the experimenter.
   hypervisors: ["one"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "appliance"
+    - "testing"
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_XRext"]
 
 

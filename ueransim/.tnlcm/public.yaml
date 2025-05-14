@@ -32,7 +32,15 @@ metadata:
       UE-related variables not provided by the experimenter can be autocompleted using their respective gNB equivalent variables. 
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_UERANSIM"]
-
+  depends_on:
+    - "[open5gs_vm, open5gs_k8s, open5gcore_vm, upf_p4_sw] if one_ueransim_mode in [gnb,both]"
+    - "ueransim if one_ueransim_mode in [ue,both]"
+  tags:
+    - "VM"
+    - "gNB"
+    - "UE"
+    - "appliance"
+    - "networking"
 
 ####################################
 ## Site-specific variables

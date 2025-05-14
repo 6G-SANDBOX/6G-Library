@@ -20,6 +20,12 @@ metadata:
     
     MongoDB is an open-source NoSQL database that uses a document-oriented data model. It is designed for scalability, flexibility, and high performance. MongoDB stores data in JSON-like documents with dynamic schemas, allowing for easy integration with modern applications.
   hypervisors: ["one"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "appliance"
+    - "monitoring"
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_mongodb"]
 
 
@@ -71,5 +77,6 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
+  __entity_name__component_type: "mongodb"
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
