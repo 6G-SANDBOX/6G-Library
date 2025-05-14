@@ -21,11 +21,7 @@ and indicate which reals the users want to become a member of. Once a runner is 
 OpenNeBula (one)
 
 ## Depends_on:
-- tn_init
-
-## Tags:
-- KS8500 Runner
-- 
+- tn_bastion
 ## Site-specific variables
 site_variables:
 loadcore_middleware_ip: IP address of the loadcore middleware in your site
