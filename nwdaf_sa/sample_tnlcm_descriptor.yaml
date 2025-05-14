@@ -35,7 +35,7 @@ trial_network:
       # one_oneKE_longhorn: true           # Default value
       # one_oneKE_traefik: false           # Default value
       # one_oneKE_nginx_passthough: false  # Default value
-  nwdaf_sa-core:
+  nwdafsa-core:
     type: "nwdaf_sa"
     name: "core"
     dependencies:
@@ -51,4 +51,3 @@ trial_network:
       one_nwdaf_sa_NWDAF_LOCALAPI_URL: "http://localhost:3000"
       one_nwdaf_sa_LOCALAPI_SERVICE_ENDPOINT: "http://localapi-service:3000/subscriptions/callback/actual"
       one_nwdaf_sa_METRICS_AGGREGATOR_SERVICE_ENDPOINT: "http://metrics-aggregator-service:8000/collect"
-
