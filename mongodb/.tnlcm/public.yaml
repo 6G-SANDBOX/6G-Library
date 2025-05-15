@@ -18,7 +18,7 @@ metadata:
   long_description: |
     Ubuntu 22.04 LTS virtual machine with MongoDB installed. 
     
-    MongoDB is an open-source NoSQL database that uses a document-oriented data model. It is designed for scalability, flexibility, and high performance. MongoDB stores data in JSON-like documents with dynamic schemas, allowing for easy integration with modern applications.
+    MongoDB is an open-source NoSQL database that uses a document-oriented data model. It is designed for scalability, flexibility and high performance. MongoDB stores data in JSON-like documents with dynamic schemas, allowing for easy integration with modern applications.
   hypervisors: ["one"]
   depends_on:
     - tn_bastion
