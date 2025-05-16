@@ -63,15 +63,10 @@
         nwdaf_sa_metadata_dict: >-
           {
             'oneKE': '{{ one_nwdaf_sa_target }}',
-            'REDIS_HOST': '{{ one_nwdaf_sa_REDIS_HOST }}',
-            'REDIS_PORT': '{{ one_nwdaf_sa_REDIS_PORT }}',
-            'CELERY_BROKER_URL': '{{ one_nwdaf_sa_CELERY_BROKER_URL }}',
-            'CELERY_RESULT_BACKEND': '{{ one_nwdaf_sa_CELERY_RESULT_BACKEND }}',
-            'LOCALAPI': '{{ one_nwdaf_sa_LOCALAPI }}',
-            'PROMETHEUS_URL': '{{ one_nwdaf_sa_PROMETHEUS_URL }}',
-            'NWDAF_LOCALAPI_URL': '{{ one_nwdaf_sa_NWDAF_LOCALAPI_URL }}',
-            'LOCALAPI_SERVICE_ENDPOINT': '{{ one_nwdaf_sa_LOCALAPI_SERVICE_ENDPOINT }}',
-            'METRICS_AGGREGATOR_SERVICE_ENDPOINT': '{{ one_nwdaf_sa_METRICS_AGGREGATOR_SERVICE_ENDPOINT }}'
+            'prometheus_url': '{{ one_nwdaf_sa_prometheus_url }}',
+            'prometheus_query_instance': '{{ one_nwdaf_sa_prometheus_query_instance }}',
+            'prometheus_query_job': '{{ one_nwdaf_sa_prometheus_query_job }}',
+            'amarisoft_url': '{{ one_nwdaf_sa_amarisoft_url }}
           }
 
     - name: Set custom terraform outputs for future components

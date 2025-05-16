@@ -17,7 +17,7 @@ metadata:
 
   short_description: Deploys the NWDAF_StreamAnalyzer 6G-SANDBOX extension
   long_description: |
-    The **nwdaf_sa** 6G-Library component deploys a NWDAF_StreamAnalyzer extension inside a Kubernetes cluster using the [Helm Chart from oci://registry-1.docker.io/lamdaleon/helm].
+    The **nwdaf_sa** 6G-Library component deploys a NWDAF_StreamAnalyzer extension inside a Kubernetes cluster using the [latest version of Helm Chart from oci://registry-1.docker.io/lamdaleon/helm].
 
   hypervisors: ["one"]
 
@@ -36,64 +36,39 @@ input:
     description: Name of a previously deployed `oneKE` component, where the the NWDAF_StreamAnalyzer Helm Chart will be applied. E.g. `oneKE-my_cluster`.
     type: "oneKE"
     required_when: true
-  one_nwdaf_sa_REDIS_HOST:
-    description: DNS of the Redis service within K8s.
+  one_nwdaf_sa_prometheus_url:
+    description: URL of Prometheus query API with Prometheus being the Open5GS Prometheus service
     type: str
-    default_value: "redis-service-master"
+    default_value: "http://10.220.2.104:9090/api/v1/query"
     required_when: false
-  one_nwdaf_sa_REDIS_PORT:
-    description: Port of the Redis service.
+  one_nwdaf_sa_prometheus_query_instance:
+    description: "IP and Port of Prometheus query instance".
     type: str
-    default_value: "6379"
+    default_value: "smf.open5gs.org:9090"
     required_when: false
-  one_nwdaf_sa_CELERY_BROKER_URL:
-    description: URL of the Celery Broker.
-    type: str
-    default_value: "redis://redis-service-master:6379/0"
-    required_when: false
-  one_nwdaf_sa_CELERY_RESULT_BACKEND:
-    description: URL of the Celery Backend.
+  one_nwdaf_sa_prometheus_query_job:
+    description: "Prometheus query body"
     type: str
     default_value: "redis://redis-service-master:6379/0"
     required_when: false
-  one_nwdaf_sa_LOCALAPI:
-    description: Endpoint of the localapi internal service of NWDAF_StreamAnalyzer.
+  one_nwdaf_sa_amarisoft_url:
+    description: "Amarisoft Web Socket URL"
     type: str
-    default_value: "001"
+    default_value: "ws://10.220.2.10:9000"
     required_when: false
-  one_nwdaf_sa_PROMETHEUS_URL:
-    description: Endpoint of the Prometheus service for the Openn5GC of the 6G-SANDBOX testbed
-    type: str
-    default_value: "http://34.38.207.87:9090/api/v1/query"
-    required_when: false
-  one_nwdaf_sa_NWDAF_LOCALAPI_URL:
-    description: Endpoint of the service holding current and predicted values of gathered metrics"
-    type: str
-    default_value: "http://localhost:3000"
-    required_when: false
-  one_nwdaf_sa_LOCALAPI_SERVICE_ENDPOINT:
-    description: Endpoint of the service that handles the subscriptions to the NWDAF Event Service.
-    type: str
-    default_value: "http://localapi-service:3000/subscriptions/callback/actual"
-    required_when: false
-  one_nwdaf_sa_METRICS_AGGREGATOR_SERVICE_ENDPOINT:
-    description: Endpoint of the service that collects metrics from Open5GS and Amarisoft radio.
-    type: str
-    default_value: "http://metrics-aggregator-service:8000/collect"
-    required_when: false
+
+prometheus_url:
+prometheus_query_instance: "smf.open5gs.org:9090"
+prometheus_query_job: "open5gs-smfd"
+amarisoft_url:
 
 ####################################
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
   __entity_name__metadata:
-    REDIS_HOST: input.one_nwdaf_sa_REDIS_HOST
-    REDIS_PORT: input.one_nwdaf_sa_REDIS_PORT
-    CELERY_BROKER_URL: input.one_nwdaf_sa_CELERY_BROKER_URL
-    CELERY_RESULT_BACKEND: input.one_nwdaf_sa_CELERY_RESULT_BACKEND
-    LOCALAPI: input.one_nwdaf_sa_LOCALAPI
-    PROMETHEUS_URL: input.one_nwdaf_sa_PROMETHEUS_URL
-    NWDAF_LOCALAPI_URL: input.one_nwdaf_sa_NWDAF_LOCALAPI_URL
-    LOCALAPI_SERVICE_ENDPOINT: input.one_nwdaf_sa_LOCALAPI_SERVICE_ENDPOINT
-    METRICS_AGGREGATOR_SERVICE_ENDPOINT: input.one_nwdaf_sa_METRICS_AGGREGATOR_SERVICE_ENDPOINT
+    prometheus_url: input.one_nwdaf_sa_prometheus_url
+    prometheus_query_instance: input.one_nwdaf_sa_prometheus_query_instance
+    prometheus_query_job: input.one_nwdaf_sa_prometheus_query_job
+    amarisoft_url: input.one_nwdaf_sa_amarisoft_url
     oneke: input.one_nwdaf_sa_target

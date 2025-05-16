@@ -1,3 +1,3 @@
 # NWDAF_StreamAnalyzer (nwdaf_sa) for Kubernetes
 
-#todo
+Ready to be onboarded to Demokritos OneKE
