@@ -42,7 +42,7 @@ input:
     default_value: "http://10.220.2.104:9090/api/v1/query"
     required_when: false
   one_nwdaf_sa_prometheus_query_instance:
-    description: "IP and Port of Prometheus query instance".
+    description: "IP and Port of Prometheus query instance"
     type: str
     default_value: "smf.open5gs.org:9090"
     required_when: false
