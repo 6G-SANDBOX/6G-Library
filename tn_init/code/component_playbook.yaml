@@ -128,12 +128,6 @@
         stop_time: "9999-12-31T23:59:59Z"
       loop: "{{ one_bastion_routemanager_add }}"
 
-    - name: Write optional custop exceptions to the netfilter rules (firewall and NAT)
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
-      vars:
-        fw_exceptions: "{{ one_bastion_fw_exceptions }}"
-        nat_exceptions: "{{ one_bastion_fw_exceptions }}"
-
     - name: Upload private ssh key to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
