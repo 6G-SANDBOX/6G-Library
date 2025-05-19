@@ -33,8 +33,8 @@
       {
         'to': item.to,
       }
-      | combine( {'create_at': item.via} if item.via is defined else {} )
-      | combine( {'create_at': item.dev} if item.dev is defined else {} )
+      | combine( {'via': item.via} if item.via is defined else {} )
+      | combine( {'dev': item.dev} if item.dev is defined else {} )
       | combine( {'create_at': start_time} if start_time is defined else {} )
       | combine( {'delete_at': stop_time} if stop_time is defined else {} )
       | to_json }}"
