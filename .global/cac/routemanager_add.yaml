@@ -16,6 +16,10 @@
 #
 ####################################################################################
 
+- name: Display route to be added
+  debug:
+    var: item
+
 - name: "Make a PUT request to a route-manager-api"
   ansible.builtin.uri:
     url: "http://{{ endpoint }}:8172/routes/"
@@ -35,7 +39,7 @@
       | combine( {'delete_at': stop_time} if stop_time is defined else {} )
       | to_json }}"
     return_content: true
-    status_code: [200,201]
+    status_code: [200, 201]
   register: api_response
 
 - name: Display response content
