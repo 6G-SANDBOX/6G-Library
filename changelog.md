@@ -13,10 +13,12 @@
 ### Changed
 - Modified terraform outputs for all 5G Core components (`open5gcore_vm`, `open5gs_k8s`, `open5gs_vm` and `upf_p4_sw`).
 - Modified terraform outputs for all gNB components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`).
+- Components `tn_bastion` and `tn_init` now support the inclusion of additional custom routes, and firewall/NAT exceptions.
 - Component `nokia_radio` renamed the site variables `cp_ip` and `up_ip` to `n2_ip` and `n3_ip` respectively, for coherence with the 5G Core outputs
 - Enhanced variable autocompletion on `ueransim`, gathering all UE-related metadata directly from the gNB's linked 5G Core
 - Component `elcm` now can use external influxdb and grafana instances.
 - Component `iswireless_radio` now supports **DU-RU** mode, connecting to a virtualized CU instead of a 5G core.
+- Common task file `routemanager_add.yaml` now also supports adding routes with key `dev`.
 ### Fixed
 - Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
 ### Deprecated

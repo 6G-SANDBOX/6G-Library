@@ -113,6 +113,21 @@
         tn_bastion_dns_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_TOKEN }}"
         tn_bastion_routemanager_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_ROUTEMANAGER_APITOKEN }}"
 
+    - name: Setup custom routes in the internal route-manager-api of the bastion
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ tn_bastion_ips[site_networks_id.default | string] }}"
+        token: "{{ tn_bastion_routemanager_token }}"
+        start_time: ""
+        stop_time: ""
+      loop: one_bastion_routemanager_add
+
+    - name: Write optional custop exceptions to the netfilter rules (firewall and NAT)
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        fw_exceptions: "{{ one_bastion_fw_exceptions }}"
+        nat_exceptions: "{{ one_bastion_fw_exceptions }}"
+
     - name: Upload private ssh key to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
@@ -124,7 +139,6 @@
         content_base64: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"
         encrypt: false
         validate_certs: false
-
     - name: Upload public ssh key to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
@@ -136,7 +150,6 @@
         content_base64: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
         encrypt: false
         validate_certs: false
-
     - name: Upload wireguard client configs to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
