@@ -17,7 +17,7 @@ If the VM is deployed with only one network then this mgmt network will be used 
 | 2 (eth1)       | N2 (AMF) | used as fallback for N3 if no n3 network specified |
 | 3 (eth2)       | N3 (UPF) | |
 
-## What is Open5GS
+## What is Open5GS
 
 <p align="center">
   <a href="https://open5gs.org/open5gs/docs/">
