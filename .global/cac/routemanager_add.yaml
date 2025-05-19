@@ -17,8 +17,9 @@
 ####################################################################################
 
 - name: Display route to be added
-  debug:
+  ansible.builtin.debug:
     var: item
+  when: debug
 
 - name: "Make a PUT request to a route-manager-api"
   ansible.builtin.uri:
@@ -43,6 +44,6 @@
   register: api_response
 
 - name: Display response content
-  debug:
+  ansible.builtin.debug:
     var: api_response.content
   when: debug

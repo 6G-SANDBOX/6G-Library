@@ -82,8 +82,14 @@
     - name: Add IP addresses to DNS API server
       ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/dnsapi.yaml"
 
-    - name: Import tasks to forbid all unauthorized access to private IPs
+    - name: Import tasks to configure the netfilter rules (firewall and NAT capabilities)
       ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/nftables.yaml"
+
+    - name: Write optional custop exceptions to the netfilter rules (firewall and NAT)
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        fw_exceptions: "{{ one_bastion_fw_exceptions }}"
+        nat_exceptions: "{{ one_bastion_fw_exceptions }}"
 
     - name: Setup wireguard VPN
       ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/wireguard.yaml"
