@@ -32,7 +32,8 @@ metadata:
     - "appliance"
     - "testing"
   appliances: ["https://marketplace.opennebula.io/appliance/d74a5f80-20bd-013d-0e49-7875a4a4f528"]
-
+  depends_on:
+    - tn_bastion
 ####################################
 ## Site-specific variables
 ####################################
