@@ -7,7 +7,7 @@ trial_network:
       one_vxlan_first_ip: "192.168.166.10"     # Default value is "192.168.199.1"
       one_vxlan_address_size: 191              # Default value is 254
       one_bastion_vpn_clients: 3               # Default value is 1
-      one_bastion_vpn_allowedips: "0.0.0.0/0"  # Default value is The subnet of tn_vxlan, 192.168.166.10/24 in this case
+      one_bastion_vpn_allowedips: "0.0.0.0/0"  # Default value is The subnet of tn_vxlan, 192.168.166.0/24 in this case
       one_bastion_routemanager_add:            # Default value is []
         - to: "10.45.54.203"
           via: "192.168.27.12"

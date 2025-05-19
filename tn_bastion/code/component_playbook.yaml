@@ -120,7 +120,7 @@
         token: "{{ tn_bastion_routemanager_token }}"
         start_time: ""
         stop_time: ""
-      loop: one_bastion_routemanager_add
+      loop: "{{ one_bastion_routemanager_add }}"
 
     - name: Write optional custop exceptions to the netfilter rules (firewall and NAT)
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
