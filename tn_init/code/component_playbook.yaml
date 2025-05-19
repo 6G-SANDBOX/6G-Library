@@ -119,7 +119,7 @@
         endpoint: "{{ tn_bastion_ips[site_networks_id.default | string] }}"
         token: "{{ tn_bastion_routemanager_token }}"
         start_time: "{{ lookup('pipe', 'date -u +\"%Y-%m-%dT%H:%M:%SZ\"') }}"
-        stop_time: ""
+        stop_time: "9999-12-31T23:59:59Z"
       loop: "{{ one_bastion_routemanager_add }}"
 
     - name: Write optional custop exceptions to the netfilter rules (firewall and NAT)
