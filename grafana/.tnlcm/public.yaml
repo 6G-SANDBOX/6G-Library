@@ -18,7 +18,7 @@ metadata:
   long_description: |
     Ubuntu 22.04 LTS virtual machine with Grafana installed. 
     
-    Grafana is an open-source analytics and monitoring platform that allows users to visualize and analyze data from various sources in real-time. It provides a powerful and flexible interface for creating interactive dashboards, enabling users to monitor metrics, logs, and other data in a visually appealing way. Grafana supports a wide range of data sources, including time-series databases like InfluxDB, Prometheus, and Elasticsearch, making it an ideal choice for infrastructure monitoring, application performance management, and business intelligence.
+    Grafana is an open-source analytics and monitoring platform that allows users to visualize and analyze data from various sources in real-time. It provides a powerful and flexible interface for creating interactive dashboards, enabling users to monitor metrics, logs, and other data in a visually appealing way. Grafana supports a wide range of data sources, including time-series databases like InfluxDB, Prometheus and Elasticsearch, making it an ideal choice for infrastructure monitoring, application performance management, and business intelligence.
   hypervisors: ["one"]
   depends_on:
     - tn_bastion
