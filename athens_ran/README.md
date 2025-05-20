@@ -22,7 +22,7 @@ This component requires the following prerequisites:
 - A previously deployed "Route Manager" component must be referenced in the input variable "routeManagerRef"
 - The Route Manager appliance must be installed in your site before deploying this component
 
-The Route Manager is a custom appliance that handles the routing configuration between the physical equipment and the 5G core. It manages network paths, traffic routing, and ensures proper connectivity between different network elements. The appliance must be properly configured with the correct network interfaces and routing tables to enable seamless communication between the RAN and core components.
+The Route Manager is a custom appliance, developed as part of the 6G-SANDBOX library, that handles the routing configuration between the physical equipment and the 5G core. It manages network paths, traffic routing, and ensures proper connectivity between different network elements. The appliance must be properly configured with the correct network interfaces and routing tables to enable seamless communication between the RAN and core components.
 
 The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
 
@@ -34,8 +34,6 @@ The configuration exposed by this component should be synchronized with the 5G c
 - `s_nssai_sd`: "000001"
 - `amf_ip`: "10.10.10.200"
 - `upf_ip`: "10.10.10.201"
-
-The Route Manager is a custom appliance that handles the routing configuration between the physical equipment and the 5G core. It manages network paths, traffic routing, and ensures proper connectivity between different network elements. The appliance must be properly configured with the correct network interfaces and routing tables to enable seamless communication between the RAN and core components.
 
 
 ## Hypervisors
