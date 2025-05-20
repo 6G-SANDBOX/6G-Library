@@ -15,7 +15,12 @@ Enables the capability of using physical RAN in a Trial Network (Athens RAN Erri
 ## Long Description
 
 Component to integrate the Erricson physical equipment with 5G cores deployed inside Trial Networks.
-It is done by enabling the necessary routing path through the use of the element called ‘Route Manager’ (already deployed in the site). 
+It is done by enabling the necessary routing path through the use of the element called 'Route Manager' (already deployed in the site). 
+
+This component requires the following prerequisites:
+- A previously deployed "Route Manager" component must be referenced in the input variable "routeManagerRef"
+- The Route Manager appliance must be installed in your site before deploying this component
+
 The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
 
 - `mcc`: "001" 
@@ -26,6 +31,8 @@ The configuration exposed by this component should be synchronized with the 5G c
 - `s_nssai_sd`: "000001"
 - `amf_ip`: "10.10.10.200"
 - `upf_ip`: "10.10.10.201"
+
+The Route Manager is a custom appliance that handles the routing configuration between the physical equipment and the 5G core. It manages network paths, traffic routing, and ensures proper connectivity between different network elements. The appliance must be properly configured with the correct network interfaces and routing tables to enable seamless communication between the RAN and core components.
 
 
 ## Hypervisors
@@ -58,8 +65,8 @@ Variables read from your site's encripted file in the 6G-Sandbox-Sites repositor
 TNLCM checks that the variables are defined, and errors if attempting to deploy the component without them
 Each variable has a short description of what it does for informational purposes
 
-- `cp_ip`: IP address of the Control Plane
-- `up_ip`: IP address of the User Plane
+- `cp_ip`: 172.25.11.200 #IP address of the Control Plane
+- `up_ip`: 172.25.13.200 #IP address of the User Plane
 
 ## Input variables
 

@@ -5,6 +5,7 @@
  - [ CP and UP address altered on the public.yaml to reflect actual infrastructure ]
  
 ### Changed
+ - Further updates on long description of the component in README.md
  - updated code for Erricson RAN to correctly communicate with TN via RouteManager component
  - updated one_vnet_first_ip to 10.10.10.1
  - changed playbook, added route Open5Gs --> Bastion
