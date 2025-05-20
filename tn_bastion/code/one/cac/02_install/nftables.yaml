@@ -31,10 +31,16 @@
   become: true
   ansible.builtin.template:
     src: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/templates/fw_exceptions.nft.j2"
-    dest: "/etc/nftables/fw_exceptions/tn_init.nft"
+    dest: "/etc/nftables/fw_exceptions/bastion_default.nft"
     owner: root
     group: root
     mode: '0644'
+
+- name: Write additional custop exceptions to the netfilter rules (firewall and NAT)
+  ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+  vars:
+    fw_exceptions: "{{ one_bastion_fw_exceptions }}"
+    nat_exceptions: "{{ one_bastion_nat_exceptions }}"
 
 - name: Check nftables syntax
   become: true
