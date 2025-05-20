@@ -14,12 +14,15 @@ Enables the capability of using physical RAN in a Trial Network (Athens RAN Erri
 
 ## Long Description
 
-Component to integrate the Erricson physical equipment with 5G cores deployed inside Trial Networks.
-It is done by enabling the necessary routing path through the use of the element called 'Route Manager' (already deployed in the site). 
+The Ericsson gNB RAN 6G-Library Component is implemented and tested as part of the Athens Platform based on the 6G-SANDBOX TN (Trial Network) component template. This component enables the integration of physical Ericsson RAN equipment (BBU6630, RH4408) installed at the COSMOTE Site with 5G cores deployed inside Trial Networks.
+
+The component's primary purpose is to allow the use of the Ericsson gNB by any dynamically deployed trial network, as scheduled and managed by the Athens TNLCM. This is achieved through the on-demand scheduling of route changes in the RAN Router Manager, overcoming the limitation of legacy RAN configurations that cannot allow dynamic assignment to TNs in real-time.
 
 This component requires the following prerequisites:
 - A previously deployed "Route Manager" component must be referenced in the input variable "routeManagerRef"
 - The Route Manager appliance must be installed in your site before deploying this component
+
+The Route Manager is a custom appliance that handles the routing configuration between the physical equipment and the 5G core. It manages network paths, traffic routing, and ensures proper connectivity between different network elements. The appliance must be properly configured with the correct network interfaces and routing tables to enable seamless communication between the RAN and core components.
 
 The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
 
