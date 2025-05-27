@@ -28,7 +28,8 @@ The configuration exposed by this component should be synchronized with the 5G c
 
 - `mcc`: "001" 
 - `mnc`: "01"
-- `apn`: "internet"
+- `apn`: "default"
+- `imsi`: "001010000000001"
 - `tac`: 200
 - `s_nssai_sst`: 1
 - `s_nssai_sd`: "000001"
