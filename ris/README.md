@@ -1,7 +1,7 @@
 # RIS - Reconfigurable Intelligence Surface
 
 > [!NOTE]  
-> Currently tsn is only available in the site "uma"
+> This component is currently only available in the site "uma"
 
 Reconfigurable Intelligent Surfaces (RIS) corresponds to a planar surface composed of unit-cells, whose properties can be controlled dynamically to 'tune' the incident wireless signals through reflection, refraction, focusing, collimation, modulation or absorption. RIS can be potentially deployed for both indoor and outdoor usage, including offices, airports, shopping centres, lamp posts and advertising billboards, and may take any shape or be integrated onto objects. Its characteristics may also result in low energy consumption, making RIS a sustainable technology solution. RIS can be configured to operate at any part of the radio spectrum, including frequencies from below 6 GHz to THz, and may harness tools from Artificial Intelligence (AI) and Machine Learning (ML) to enable systems operation and optimization.
 
