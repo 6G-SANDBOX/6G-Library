@@ -1,0 +1,137 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  short_description: Configures a RIS exposed from an API.
+  long_description: |
+    Reconfigurable Intelligent Surfaces (RIS) are a new technology that can be used to control the radio environment
+    in a dynamic and goal-oriented way. They consist of a large number of low-cost, low-power, and low-complexity
+    antennas that can be used to manipulate the wireless signals between a transmitter and a receiver. RIS can be
+    deployed in various scenarios, such as indoor and outdoor environments, to enhance the performance of wireless
+    communication systems. They can be used to improve the capacity, coverage, positioning, security, and sustainability
+    of wireless networks, as well as to support new applications and capabilities such as sensing, wireless power transfer,
+    and ambient backscattering.
+
+    As RIS is envisaged to be a new enabling candidate wireless technology for the control of the radio signals 
+    between a transmitter and a receiver in a dynamic and goal-oriented way, turning the wireless environment into a service. 
+    This has motivated a host of potential new use cases targeting at:
+      - the enhancement of various system key-performance-indicators (KPIs), and
+      - the support of new wireless technology applications and capabilities.
+    These include enhancements to the capacity, coverage, positioning, security, and sustainability, as well as the support 
+    of further sensing, wireless power transfer, and ambient backscattering capabilities.
+    The configuration exposed by the RIS is:
+    - ris_ip_address: "Ip address of RIS"
+    - ris_f0: "Frequency (GHz). 26.5GHz – 29.5Ghz"
+    - ris_dist: "Distance (m)"
+    - ris_phi_t: "Incident angle azimuth (degrees 0-360)"
+    - ris_theta_t: "Incident angle polar (degrees 0-90)"
+    - ris_num_phi_r: "Number of azimuth segments (1, num_phi_r * num_theta_r <= 256)"
+    - ris_phi_r_low: "Receiver azimuth low (degrees 0-360)"
+    - ris_phi_r_high: "Receiver azimuth high (degrees 0-360)"
+    - ris_num_theta_r: "Number of polar segments (1, num_phi_r * num_theta_r <= 256)"
+    - ris_theta_r_low: "Receiver polar low (degrees 0-90)"
+    - ris_theta_r_high: "Receiver polar high (degrees 0-90)"
+    - ris_reservation_time: "Time that is reserved to be used (minutes)"
+    Note: Currently this component is only available in the site "uma".
+  hypervisors: ["any"]
+  depends_on: []
+  tags:
+    - "capability"
+    - "resource_manager"
+    - "wireless"
+  destroy_script: true
+  resource_manager: true
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  ip: "IP address of the RIS. It will be used to connect to the RIS and configure it."
+
+
+####################################
+## Input variables
+####################################
+input:
+  any_ris_f0:
+    description: "Frequency (GHz). 26.5GHz - 29.5Ghz"
+    type: "float"
+    default: "28.0"
+    required_when: false
+  any_ris_dist:
+    description: "Distance (m)"
+    type: "float"
+    default: "10.0"
+    required_when: false
+  any_ris_phi_t:
+    description: "Incident angle azimuth (degrees 0-360)"
+    type: "float"
+    default: "0.0"
+    required_when: false
+  any_ris_theta_t:
+    description: "Incident angle polar (degrees 0-90)"
+    type: "float"
+    default: "0.0"
+    required_when: false
+  any_ris_num_phi_r:
+    description: "Number of azimuth segments (num_phi_r * num_theta_r <= 256)"
+    type: "int"
+    default: 1
+    required_when: false
+  any_ris_phi_r_low:
+    description: "Receiver azimuth low (degrees 0-360)"
+    type: "float"
+    default: "0.0"
+    required_when: false
+  any_ris_phi_r_high:
+    description: "Receiver azimuth high (degrees 0-360)"
+    type: "float"
+    default: "360.0"
+    required_when: false
+  any_ris_num_theta_r:
+    description: "Number of polar segments (num_phi_r * num_theta_r <= 256)"
+    type: "int"
+    default: 1
+    required_when: false
+  any_ris_theta_r_low:
+    description: "Receiver polar low (degrees 0-90)"
+    type: "float"
+    default: "0.0"
+    required_when: false
+  any_ris_theta_r_high:
+    description: "Receiver polar high (degrees 0-90)"
+    type: "float"
+    default: "90.0"
+    required_when: false
+
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__component_type: "ris"
+  __entity_name__ip: site_variables.ip
+  __entity_name__f0: input.any_ris_f0
+  __entity_name__dist: input.any_ris_dist
+  __entity_name__phi_t: input.any_ris_phi_t
+  __entity_name__theta_t: input.any_ris_theta_t
+  __entity_name__num_phi_r: input.any_ris_num_phi_r
+  __entity_name__phi_r_low: input.any_ris_phi_r_low
+  __entity_name__phi_r_high: input.any_ris_phi_r_high
+  __entity_name__num_theta_r: input.any_ris_num_theta_r
+  __entity_name__theta_r_low: input.any_ris_theta_r_low
+  __entity_name__theta_r_high: input.any_ris_theta_r_high
