@@ -9,7 +9,7 @@
 
     - name: "Send POST request to a the RIS API"
       ansible.builtin.uri:
-        url: "http://{{ site_available_components }}/api/set_codebook/"
+        url: "http://{{ site_available_components.ris.ip }}/api/set_codebook/"
         method: POST
         headers:
           accept: application/json
