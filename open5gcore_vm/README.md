@@ -53,6 +53,7 @@ Currently only OpenNebula (one) is available
 | `template_id` | ID of the Open5GS VM template to use in your OpenNebula environment |
 | `image_id` | ID of the Open5GS VM image to use in your OpenNebula environment |
 | `license_crt` | contents of the open5gcore license certificate | 
+| `testbed_sim_sql` | Optional: SQL dump with sim card credentials used in the `udm_db` |
 
 ## Input variables
 
