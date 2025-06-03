@@ -100,16 +100,23 @@
       loop:
         - "{{ hostvars['localhost'].get('tn_ssh_public_key', '') }}"
 
-    # - name: Execute bash script to register the Agent with the Middleware
-    #   ansible.builtin.shell: |
-    #     set -o pipefail
-    #     printf "{{ middleware_ip }}\neth0\ny\nn" | /opt/5gc-test-engine/agent-setup.sh
-    #   args:
-    #     executable: /bin/bash
-    #   vars:
-    #     middleware_ip: "{{ hostvars.localhost.site_available_components.loadcore_agent.loadcore_middleware_ip | default('') }}"
-    #   become: true
-    #   changed_when: false
+    # The IP address of the EXata licensing server must be specified in the EXata license file.
+    # This step fetches the IP address of the EXata licensing server from the site variables, and dumps it
+    # into the host VM. Then, the latter is used by the component Docker entrypoint to overwrite the default
+    # EXata license file with the one that includes the IP address of the EXata licensing server.
+    - name: Write the EXata license file taking as input the IP addres of the EXata licensing server
+      ansible.builtin.shell: |
+        set -o pipefail
+        mkdir -p /home/EXata/webserver/exata-webserver-app/license
+        touch /home/EXata/webserver/exata-webserver-app/license/LicenseFile.lic
+        printf "SERVER {{ licensing_server_ip }} ANY\nVENDOR scalable\nUSE_SERVER" > /home/EXata/webserver/exata-webserver-app/license/LicenseFile.lic
+      args:
+        executable: /bin/bash
+      vars:
+        # Retrieve the EXata licensing server IP address for the platform the component is being deployed on
+        licensing_server_ip: "{{ hostvars.localhost.site_available_components.exata_dt.exata_licensing_server_ip | default('') }}"
+      become: true
+      changed_when: false
 
 # Whitelist the EXata licensing server in the bastion
 - name: "STAGE 4: Access tn_bastion to set firewall exceptions"
