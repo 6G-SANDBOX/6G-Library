@@ -82,6 +82,7 @@ Through variable `one_open5gs_vm_size`, five different types of instances can be
 |----------|-------------|
 | `template_id` | ID of the Open5GS VM template to use in your OpenNebula environment |
 | `image_id` | ID of the Open5GS VM image to use in your OpenNebula environment |
+| `testbed_sim` | Optional: contents of a shell script to provision sim card secrets used in the testbed |
 
 ## Input variables
 
