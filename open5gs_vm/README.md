@@ -39,6 +39,7 @@ Through variable "one_open5gs_vm_size", five different types of instances can be
 > [!NOTE] 
 > The storage is currently fixed to the size defined in the VM template due to a bug in OpenNebulas Teraform provider. (6 GB in Berlin)
 
+![loadcore_open5gs_vm](https://github.com/6G-SANDBOX/6G-Library/blob/assets/open5gs_vm/loadcore_open5gs_vm.drawio.png)
 
 ## Maintainers
 

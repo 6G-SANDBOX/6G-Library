@@ -1,6 +1,16 @@
 
 # Open5GCore as a standalone Virtual Machine
 
+The Fraunhofer FOKUS Open5GCore toolkit is the first global practical implementation of the 3GPP 5G core network, supporting the functionalities of 3GPP Releases 17 and 18. Tailored for R&D activities, Open5GCore ensures compatibility with both 5G base stations and user equipment.
+
+Designed to accelerate research and facilitate the transfer of expertise from Fraunhofer FOKUS to users, Open5GCore provides a robust foundation for 5G testbed deployments, trials, pilots, and the advancement of functionalities for future-beyond 5G and 6G standards. It comes with customization to the use case needs, enabling to run a testbed from day one.
+
+Open5GCore implements the new 5G components as standalone, independent of the previous 4G EPC functionality. This approach allows for rapid, focused innovation in 5G technology, enabling practical, hands-on implementation and realistic evaluation and demonstration of novel concepts and applications.
+
+for More information plaeas visit https://www.open5gcore.org/
+
+![loadcore_open5gcore_vm](https://github.com/6G-SANDBOX/6G-Library/blob/assets/open5gcore_vm/loadcore_open5gcore_vm.drawio.png)
+
 ## Maintainers
 
 - Björn Riemer <bjoern.riemer@fokus.fraunhofer.de>
@@ -9,9 +19,7 @@
 
 The **open5gcore_vm** 6G-Library component deploys a 5G Standalone (SA) Core inside an Ubuntu VM all in one with no external dependencies.
 
-Version 9.1.0 of the Open5Gcore is used for this component. 
 
-This Component is only availabe in the Berlin Platform.
 
 ## Long Description
 
@@ -19,13 +27,10 @@ This Componnet represents a VM with the Open5gCore 5G Core network inside custom
 
 The integrated UPF can be configured to utilize Linux XDP/eBPF to accelerate the datapath. 
 
-The Fraunhofer FOKUS Open5GCore toolkit is the first global practical implementation of the 3GPP 5G core network, supporting the functionalities of 3GPP Releases 17 and 18. Tailored for R&D activities, Open5GCore ensures compatibility with both 5G base stations and user equipment.
+Version 9.1.0 of the Open5Gcore is used for this component. 
 
-Designed to accelerate research and facilitate the transfer of expertise from Fraunhofer FOKUS to users, Open5GCore provides a robust foundation for 5G testbed deployments, trials, pilots, and the advancement of functionalities for future-beyond 5G and 6G standards. It comes with customization to the use case needs, enabling to run a testbed from day one.
-
-Open5GCore implements the new 5G components as standalone, independent of the previous 4G EPC functionality. This approach allows for rapid, focused innovation in 5G technology, enabling practical, hands-on implementation and realistic evaluation and demonstration of novel concepts and applications.
-
-for More information plaeas visit https://www.open5gcore.org/
+> [!NOTE] 
+> This Component is only availabe in the Berlin Platform.
 
 ## Hypervisors
 

@@ -18,6 +18,8 @@ WARNING: The configuration exposed by this component should be synchronized with
 > [!NOTE]
 > Aditional routing configuration that is not dependent on the Trial Network may also need to be done beforehand.
 
+![berlin-ran_5Gcore_vm](https://github.com/6G-SANDBOX/6G-Library/blob/assets/berlin_ran/berlin-ran_5Gcore_vm.png)
+
 ## Maintainers
 
 - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
