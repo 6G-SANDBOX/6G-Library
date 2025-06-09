@@ -3,8 +3,21 @@ trial_network:
     type: "tn_init"
     dependencies: []
     input:
-      one_vxlan_netmask: 24
-      one_vxlan_first_ip: "192.168.214.1"
-      one_vxlan_address_size: 254
-      one_bastion_vpn_clients: 3
-      one_bastion_vpn_allowedips: "0.0.0.0/0"
+      # one_vxlan_netmask: 24                  # Default value
+      one_vxlan_first_ip: "192.168.166.10"     # Default value is "192.168.199.1"
+      one_vxlan_address_size: 191              # Default value is 254
+      one_bastion_vpn_clients: 3               # Default value is 1
+      one_bastion_vpn_allowedips: "0.0.0.0/0"  # Default value is The subnet of tn_vxlan, 192.168.166.0/24 in this case
+      one_bastion_routemanager_add:            # Default value is []
+        - to: "10.45.54.203"
+          via: "192.168.166.40"
+        - to: "10.45.6.0/24"
+          dev: "wg0"
+      one_bastion_fw_exceptions:               # Default value is []
+        - "10.45.54.203"
+        - "192.168.166.40"
+        - "10.45.6.0/24"
+        - "192.168.27.13"
+      one_bastion_nat_exceptions:              # Default value is []
+        - "10.12.21.0/24"
+        - "10.11.24.205"
