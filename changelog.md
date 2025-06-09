@@ -8,6 +8,7 @@
 - New component `grafana` to visualize time series data.
 - New component `monitoring` to deploy InfluxDB, Grafana and Prometheus stack together.
 - New component `mongodb` to store time series data.
+- New component `ris` to configure a RIS exposed from an API.
 - New `component_type` terraform output added to all components.
 ### Changed
 - Upgraded Runner version to 1.14.1 inf Dockerfile for KS8500_runner. 

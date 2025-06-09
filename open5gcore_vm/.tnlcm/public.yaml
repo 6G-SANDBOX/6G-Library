@@ -39,6 +39,7 @@ site_variables:
   license_crt: contents of the open5gcore license certificate
   template_id: ID of the Open5gcore VM template to use in your OpenNebula environment
   image_id: ID of the Open5gcore VM image to use in your OpenNebula environment
+  testbed_sim_sql: "Optional: SQL dump with sim card credentials used in the `udm_db`"
 
 
 ####################################

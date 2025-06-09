@@ -14,11 +14,13 @@
 metadata:
   maintainers:
     - Rafael Manuel García Arévalo <rafagarciaa31@uma.es>    
-  short_description: Deploys a virtual machine with the UPF-P4 software module plus Open5GS Release 16 as the control plane.
+  short_description: P4-based User Plane Function (UPF) implementation for 5G networks with integrated Open5GS Release 16 control plane.
   long_description: |
-    Ubuntu 22.04 LTS virtual machine with the UPF-P4 BMV2 software module installed.
-    It also contains the different Open5GS services that act as the control plane for the 5G core.
-    Containerized applications with Docker.
+    The UPF-P4 SW component deploys a P4-based implementation of the 5G User Plane Function (UPF) on an Ubuntu 22.04 LTS virtual machine. This component leverages the P4 programming language to define packet processing behavior, providing complete control and flexibility over network traffic management through a Next Generation Software Defined Networking (NG-SDN) approach.
+    
+    The component consists of three main parts: a P4-based data plane running on BMv2 with Stratum, a Python-based UPF controller, and Open5GS Release 16 components for 5G core network control. All services are containerized using Docker for easy deployment and management.
+    
+    This component requires a previous "tn_bastion" component to be previously deployed and referenced in the networks configuration. The component uses a 'Ubuntu 22.04' appliance that must be previously installed in your OpenNebula site. The component is specifically designed for deployment within 5G trial networks and supports integration with gNodeB and UE components for complete 5G network testing scenarios.
   hypervisors: ["one"]
   depends_on:
     - tn_bastion
