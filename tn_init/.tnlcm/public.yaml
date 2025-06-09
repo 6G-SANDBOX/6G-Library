@@ -31,7 +31,9 @@ metadata:
   hypervisors: ["one"]
   depends_on: []
   tags:
-    - "tn_init"
+    - "bootstrap"
+    - "tn_vxlan"
+    - "tn_bastion"
 
 
 ####################################

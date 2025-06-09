@@ -47,7 +47,8 @@ metadata:
     - ris_reservation_time: "Time that is reserved to be used (minutes)"
     Note: Currently this component is only available in the site "uma".
   hypervisors: ["any"]
-  depends_on: []
+  depends_on:
+    - tn_bastion
   tags:
     - "capability"
     - "resource_manager"
