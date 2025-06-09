@@ -17,7 +17,7 @@ If the VM is deployed with only one network then this mgmt network will be used 
 | 2 (eth1)       | N2 (AMF) | used as fallback for N3 if no n3 network specified |
 | 3 (eth2)       | N3 (UPF) | |
 
-## What is Open5GS
+## What is Open5GS
 
 <p align="center">
   <a href="https://open5gs.org/open5gs/docs/">
@@ -39,6 +39,7 @@ Through variable "one_open5gs_vm_size", five different types of instances can be
 > [!NOTE] 
 > The storage is currently fixed to the size defined in the VM template due to a bug in OpenNebulas Teraform provider. (6 GB in Berlin)
 
+![loadcore_open5gs_vm](https://github.com/6G-SANDBOX/6G-Library/blob/assets/open5gs_vm/loadcore_open5gs_vm.drawio.png)
 
 ## Maintainers
 
@@ -82,6 +83,7 @@ Through variable `one_open5gs_vm_size`, five different types of instances can be
 |----------|-------------|
 | `template_id` | ID of the Open5GS VM template to use in your OpenNebula environment |
 | `image_id` | ID of the Open5GS VM image to use in your OpenNebula environment |
+| `testbed_sim` | Optional: contents of a shell script to provision sim card secrets used in the testbed |
 
 ## Input variables
 
