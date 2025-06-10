@@ -20,7 +20,7 @@ metadata:
     This component emulates a complete DVB-RCS2 – DVB-S2 system, providing an emulated satellite network environment. 
     It is designed to be deployed in the Trial Network as a Gateway entity, and it requires the `opensand_sat` (Satellite entity) component to be deployed beforehand.
     The component uses a custom OpenSAND appliance that must be installed in your site beforehand. Instructions for installation and configuration are provided in the README.md file.
-  Documentation can be found at: https://github.com/CNES/opensand
+    Documentation can be found at: https://github.com/CNES/opensand
   hypervisors: ["one"]
   depends_on:
     - "tn_bastion"
