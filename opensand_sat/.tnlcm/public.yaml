@@ -15,7 +15,7 @@ metadata:
   maintainers:
     - Nikolaos Gkatzios <ngkatzios@infolysis.gr>
     - Konstantinos Fragkos <cfragos@infolysis.gr>
-  short_description: OpenSAND (NTN Emulator) Satellite entity 
+  short_description: Emulated satellite entity for the OpenSAND (NTN Emulator) component
   long_description: |
     This component is able to emulate a complete DVB-RCS2 – DVB-S2 system and thus it 
     provides an emulated satellite network system. It can be deployed in the Trial Network 
@@ -24,7 +24,7 @@ metadata:
     and an emulated Satellite Terminal entity). Documentation can be found at https://github.com/CNES/opensand.
   hypervisors: ["one"]
   depends_on:
-    - tn_bastion
+    - "tn_bastion"
   tags:
     - "VM"
     - "appliance"
