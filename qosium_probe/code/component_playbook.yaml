@@ -115,7 +115,7 @@
         line: "service_id {{ one_qosium_probe_service_id }}"
         backup: no
       when: one_qosium_probe_service_id is defined
-       notify: Restart Qosium Probe
+      notify: Restart Qosium Probe
 
       handlers:
         - name: Restart Qosium Probe
