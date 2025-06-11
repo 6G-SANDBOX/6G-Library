@@ -31,6 +31,8 @@ metadata:
 ####################################
 site_variables:
   exata_licensing_server_ip: IP address of the EXata licensing server in your site.
+  template_id: ID of the Appliance to use in the OpenNebula environment
+  image_id: ID of the Appliance to use in the OpenNebula environment
 
 ####################################
 ## Input variables

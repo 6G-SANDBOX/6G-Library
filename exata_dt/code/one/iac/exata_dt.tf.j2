@@ -2,7 +2,7 @@
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
-  template_id = {{ site_available_components.EXata.template_id }}
+  template_id = {{ site_available_components.exata_dt.template_id }}
   cpu         = {{ one_exata_dt_cpu }}
   vcpu        = {{ one_exata_dt_cpu }}
   memory      = {{ one_exata_dt_memory }}
@@ -20,7 +20,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     ignore_changes = [disk]
   }
   disk {
-    image_id = {{ site_available_components.EXata.image_id }}
+    image_id = {{ site_available_components.exata_dt.image_id }}
     size     = {{ one_exata_dt_disk }}
     target   = "vda"
     driver   = "qcow2"
