@@ -104,8 +104,8 @@
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
 - name: "Update Qosium Probe Service ID and restart Probe if changed"
-      hosts: "all"
-      become: true
+  hosts: "all"
+  become: true
 
   tasks:
     - name: Update Qosium Probe Service ID
@@ -124,7 +124,7 @@
             state: restarted
 
     - name: Configure NTP server in chrony.conf
-      become: yes
+      become: true
       lineinfile:
         path: /etc/chrony/chrony.conf
         regexp: '^(pool|server)\s+.*'
