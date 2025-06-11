@@ -114,7 +114,7 @@
         regexp: '^service_id\s+'
         line: "service_id {{ one_qosium_probe_service_id }}"
         backup: no
-       when: one_qosium_probe_service_id is defined
+      when: one_qosium_probe_service_id is defined
        notify: Restart Qosium Probe
 
       handlers:
@@ -130,14 +130,14 @@
         regexp: '^(pool|server)\s+.*'
         line: "server {{ one_qosium_probe_ntp_server_address }} minpoll 1 maxpoll 3 burst iburst"
         state: present
-       when: one_qosium_probe_ntp_server_address is defined and one_qosium_probe_ntp_server_address != "pool.ntp.org"
+      when: one_qosium_probe_ntp_server_address is defined and one_qosium_probe_ntp_server_address != "pool.ntp.org"
 
     - name: Restart chronyd service
       become: yes
       service:
         name: chrony
         state: restarted
-       when: one_qosium_probe_ntp_server_address is defined and one_qosium_probe_ntp_server_address != "pool.ntp.org"
+      when: one_qosium_probe_ntp_server_address is defined and one_qosium_probe_ntp_server_address != "pool.ntp.org"
 
 
 # Final phase of the deployments
