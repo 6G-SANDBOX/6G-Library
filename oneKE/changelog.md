@@ -1,6 +1,8 @@
 # Changelog
 
 ## Unreleased
+### Added
+- New variable `one_oneKE_worker_nodes` adds support for scaling the number of worker nodes in the cluster
 ### Changed
 - Output dictionary `metadata` renamed to `oneKE_metadata`.
 
