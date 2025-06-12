@@ -102,22 +102,22 @@
         key: "{{ item }}"
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
-
-    - name: Update Qosium Probe Service ID
-      ansible.builtin.lineinfile:
-        path: /opt/QosiumProbe/bin/QosiumProbe.ini
-        regexp: '^service_id\s+'
-        line: "service_id {{ one_qosium_probe_service_id }}"
-        backup: no
-      when: one_qosium_probe_service_id is defined
-      notify: "Restart Qosium Probe"
-
-      handlers:
-        - name: Restart Qosium Probe
-          ansible.builtin.systemd:
-            name: QosiumProbe
-            state: restarted
-
+#
+#    - name: Update Qosium Probe Service ID
+#      ansible.builtin.lineinfile:
+#        path: /opt/QosiumProbe/bin/QosiumProbe.ini
+#        regexp: '^service_id\s+'
+#        line: "service_id {{ one_qosium_probe_service_id }}"
+#        backup: no
+#      when: one_qosium_probe_service_id is defined
+#      notify: "Restart Qosium Probe"
+#
+#      handlers:
+#        - name: Restart Qosium Probe
+#          ansible.builtin.systemd:
+#            name: QosiumProbe
+#            state: restarted
+#
     - name: Configure NTP server in chrony.conf
       become: true
       lineinfile:
