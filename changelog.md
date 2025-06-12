@@ -10,6 +10,7 @@
 - New component `mongodb` to store time series data.
 - New component `ris` to configure a RIS exposed from an API.
 - New `component_type` terraform output added to all components.
+- Component `oneKE` adds support for scaling the number of worker nodes in the cluster.
 ### Changed
 - Upgraded Runner version to 1.14.1 inf Dockerfile for KS8500_runner. 
 - Modified terraform outputs for all 5G Core components (`open5gcore_vm`, `open5gs_k8s`, `open5gs_vm` and `upf_p4_sw`).
