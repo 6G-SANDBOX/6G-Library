@@ -1,0 +1,11 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  prometheus-v2:
+    type: "prometheus"
+    name: "v2"
+    dependencies: ["tn_init"]
+    input:
+      one_prometheus_version: "2.53.4"

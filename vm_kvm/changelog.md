@@ -1,8 +1,9 @@
 # Changelog
 
-## unreleased
+## v0.5.0
 ### Fixed
 - Change param `required_when` to false in field `one_vm_kvm_size` and add default value to private yaml.
+
 
 ## v0.4.0
 ### Added

@@ -1,0 +1,57 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  vnet-internal:
+    type: "vnet"
+    name: "internal"
+    dependencies:
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.10.12.1"     # Default is 10.21.12.1
+      # one_vnet_netmask: 24              # Default value
+      # one_vnet_address_size: 100        # Default value
+  oneKE-cluster:
+    type: "oneKE"
+    name: "cluster"
+    dependencies:
+      - "vnet-internal"
+    input:
+      one_oneKE_external_vnet: "tn_vxlan"
+      one_oneKE_internal_vnet: "vnet-internal"
+      # one_oneKE_version: "131"           # Default value
+      # one_oneKE_multus: true             # Default value
+      # one_oneKE_cni_plugin: "canal"      # Default value
+      # one_oneKE_metallb: true            # Default value
+      one_oneKE_metallb_range: "10.10.12.200-10.10.12.240"
+      # one_oneKE_longhorn: true           # Default value
+      # one_oneKE_traefik: false           # Default value
+      # one_oneKE_nginx_passthough: false  # Default value
+  open5gs_k8s-core:
+    type: "open5gs_k8s"
+    name: "core"
+    dependencies:
+      - "oneKE-cluster"
+    input:
+      one_open5gs_k8s_target: "oneKE-cluster"
+      one_open5gs_k8s_amf_n2_ip: "10.10.12.200"
+      one_open5gs_k8s_upf_n3_ip: "10.10.12.201"
+      one_open5gs_k8s_ue_count: 1           # Default value is 20
+      one_open5gs_k8s_tac: 1                # Default value is 200
+      one_open5gs_k8s_mcc: "214"            # Default value is "001"
+      one_open5gs_k8s_mnc: "702"            # Default value is "01"
+      one_open5gs_k8s_msin: "000000600"     # Default value is "0000000001"
+      # one_open5gs_k8s_key: "465B5CE8B199B49FAA5F0A2EE238A6BC"  # Default value
+      # one_open5gs_k8s_opc: "E8ED289DEBA952E4283B54E88E6183CA"  # Default value
+      # one_open5gs_k8s_apn: "internet"        # Default value
+      # one_open5gs_k8s_s_nssai_sst: 1         # Default value
+      one_open5gs_k8s_s_nssai_sd: "000009"     # Default value is "000001"
+  nokia_radio-RAN:
+    type: "nokia_radio"
+    name: "RAN"
+    dependencies:
+      - "open5gs_k8s-core"
+    input:
+      any_nokia_radio_linked_5gcore: "open5gs_k8s-core"
+      any_nokia_radio_duration: 7200                # Default is 3600 seconds

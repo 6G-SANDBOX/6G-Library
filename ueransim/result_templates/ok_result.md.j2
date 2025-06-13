@@ -29,9 +29,8 @@ Component configuration logs can be foud at `/var/log/post-ueransim.log`
 ### gNB Runtime
 {% if one_ueransim_run_gnb %}
 Service `ueransim_gnb.service` is currently **running** and **enabled** with the following configuration:
-- **Linked Open5GS**: `{{ one_ueransim_gnb_linked_open5gs | default('None') }}`
-- **AMF IPv4 address**: `{{ one_ueransim_gnb_amf_ip }}`
-- **AMF proxy**: `{{ one_ueransim_gnb_amf_proxy | default('None') }}`
+- **Linked Open5GS**: `{{ one_ueransim_gnb_linked_5gcore | default('None') }}`
+- **AMF IPv4 address**: `{{ one_ueransim_gnb_amf_n2_ip }}`
 - **TAC**:  `{{ one_ueransim_gnb_mcc }}`
 - **MCC**:  `{{ one_ueransim_gnb_mcc }}`
 - **MNC**:  `{{ one_ueransim_gnb_mnc }}`
@@ -45,7 +44,7 @@ Service `ueransim_gnb.service` is currently **not running** and **disabled**.
 ### UE Runtime
 {% if one_ueransim_run_ue %}
 Service `ueransim_ue.service` is currently **running** and **enabled** with the following configuration:
-- **Linked gNB**:    `{{ one_ueransim_ue_linked_gnb | default('None') }}`
+- **Linked gNBs**: `{{ one_ueransim_ue_gnbsearchlist }}`
 - **gNB Search List**: `{{ one_ueransim_ue_gnbsearchlist }}`
 - **MCC**:  `{{ one_ueransim_ue_mcc }}`
 - **MNC**:  `{{ one_ueransim_ue_mnc }}`
@@ -60,8 +59,6 @@ Service `ueransim_ue.service` is currently **running** and **enabled** with the 
 - **configured_nssai_sd**: `{{ one_ueransim_ue_configured_nssai_sd }}`
 - **default_nssai_sst**: `{{ one_ueransim_ue_default_nssai_sst }}`
 - **default_nssai_sd**: `{{ one_ueransim_ue_default_nssai_sd }}` 
-
-TODO: Also show the resulting IMSI from mcc,mnc and msin
 #}
 {% else %}
 Service `ueransim_ue.service` is currently **not running** and **disabled**.

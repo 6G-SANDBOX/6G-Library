@@ -1,0 +1,82 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Carlos Andreo López <c.andreo@uma.es>
+  short_description: Deploy a virtual machine with MongoDB
+  long_description: |
+    Ubuntu 22.04 LTS virtual machine with MongoDB installed. 
+    
+    MongoDB is an open-source NoSQL database that uses a document-oriented data model. It is designed for scalability, flexibility and high performance. MongoDB stores data in JSON-like documents with dynamic schemas, allowing for easy integration with modern applications.
+  hypervisors: ["one"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "appliance"
+    - "monitoring"
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_mongodb"]
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the MongoDB VM template to use in your OpenNebula environment
+  image_id: ID of the MongoDB VM image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
+####################################
+input:
+  one_mongodb_version:
+    description: "MongoDB version to be installed. Format: X.X. Example: 8.0"
+    type: str
+    default_value: "8.0"
+    required_when: false
+  one_mongodb_user:
+    description: "Username used to login into the MongoDB"
+    type: str
+    default_value: "admin"
+    required_when: false
+  one_mongodb_password:
+    description: "Password used to login into the MongoDB. Required to be at least 8 characters long"
+    type: str
+    default_value: "adminadmin"
+    required_when: false
+  one_mongodb_database:
+    description: "Database name"
+    type: str
+    default_value: "dummydb"
+    required_when: false
+  one_mongo_express_user:
+    description: "Username used to login into the Mongo Express"
+    type: str
+    default_value: "admin"
+    required_when: false
+  one_mongo_express_password:
+    description: "Password used to login into the Mongo Express. Required to be at least 8 characters long"
+    type: str
+    default_value: "adminadmin"
+    required_when: false
+
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__component_type: "mongodb"
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"

@@ -1,0 +1,19 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  monitoring-v2:
+    type: "monitoring"
+    name: "v2"
+    dependencies: ["tn_init"]
+    input:
+      one_influxdb_version: "2.7.11"
+      one_influxdb_user: "admin"
+      one_influxdb_password: "adminadmin"
+      one_influxdb_org: "testing"
+      one_influxdb_bucket: "testing"
+      one_influxdb_token: "default-token-testing"
+      one_grafana_version: "11.6.0"
+      one_grafana_password: "adminadmin"
+      one_prometheus_version: "2.54.3"

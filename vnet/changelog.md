@@ -2,8 +2,12 @@
 
 ## unreleased
 ### Changed
-- Variable `one_vnet_gw` has now no default variable, and defined no gateway if empty.
+- MTU default values are now first gathered from 6G Sandbox sites repository as suggested in issue #78
 
+
+## v0.5.0
+### Changed
+- Variable `one_vnet_gw` has now no default variable, and defined no gateway if empty.
 
 ## v0.4.0
 ### Added
@@ -12,12 +16,10 @@
 - Variable `one_vnet_netmask` now takes numerical form, instead of CIDR form.
 - Variable `one_vnet_dns` has now no default variable, and defines no DNS if empty.
 
-
 ## v0.2.0
 ### Changed
 - Component follows the new architecture.
 - Component renamed from `vxlan` to `vnet`.
-
 
 ## v0.1.0
 ### Added
