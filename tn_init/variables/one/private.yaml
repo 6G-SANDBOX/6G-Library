@@ -13,10 +13,11 @@
 ##########################
 
 # opennebula_virtual_network resource
-one_vxlan_netmask: 24
-one_vxlan_mtu: 1500
-one_vxlan_guest_mtu: 1450
+one_vxlan_mtu: "{{ site_vxlan_mtu | default(1500) }}"
+one_vxlan_guest_mtu: "{{ site_vxlan_guest_mtu | default(1450) }}"
 one_vxlan_physical_device: "{{ site_vxlan_if }}"
+
+one_vxlan_netmask: 24
 
 # opennebula_virtual_network_address_range resource
 one_vxlan_first_ip: "192.168.199.1"
@@ -31,8 +32,11 @@ one_bastion_cpu: 4
 one_bastion_memory: 3072
 one_bastion_disk: 5120
 
-one_bastion_vpn_clients: 1
-# one_bastion_vpn_allowedips: null
-
 one_bastion_networks: 
   - tn_vxlan
+
+one_bastion_vpn_clients: 1
+# one_bastion_vpn_allowedips: null
+one_bastion_routemanager_add: []
+one_bastion_fw_exceptions: []
+one_bastion_nat_exceptions: []

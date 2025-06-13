@@ -3,6 +3,7 @@
 ## unreleased
 ### Changed
 - Adapted to accept external influxdb and grafana.
+- Component is now added to the sshconfig of tnuser
 
 ## v3.7.1
 ### Added

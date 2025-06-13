@@ -18,8 +18,14 @@ metadata:
   long_description: |
     Ubuntu 22.04 LTS virtual machine with InfluxDB v1 or v2 installed. 
     
-    InfluxDB is a time-series database designed to handle large volumes of event and metric data. It is ideal for applications that require high performance in data writes, such as infrastructure monitoring, log analysis, or IoT sensor metrics. In this project, InfluxDB is used to store and query time-based data, enabling trend analysis, alerting, and real-time visualization. Its ability to efficiently manage large amounts of data and integration with various visualization tools like Grafana make InfluxDB an excellent solution for such applications.
+    InfluxDB is an open-source time-series database designed to handle high write and query loads. It is optimized for fast, high-availability storage and retrieval of time series data, making it ideal for use cases such as monitoring, analytics and IoT applications. InfluxDB provides a powerful query language (InfluxQL) and supports various data formats, allowing users to easily store, retrieve, and analyze time-based data. With its built-in support for downsampling, retention policies, and continuous queries, InfluxDB enables efficient management of large volumes of time series data.
   hypervisors: ["one"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "appliance"
+    - "monitoring"
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_influxdb"]
 
 

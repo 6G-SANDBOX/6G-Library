@@ -1,0 +1,22 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_mongodb_cpu: 2
+one_mongodb_memory: 2048
+one_mongodb_disk: 3072
+one_mongodb_networks: 
+  - tn_vxlan
+
+one_mongodb_version: "8.0"
+one_mongodb_user: "admin"
+one_mongodb_password: "adminadmin"
+one_mongodb_database: "dummydb"
+one_mongo_express_user: "admin"
+one_mongo_express_password: "adminadmin"

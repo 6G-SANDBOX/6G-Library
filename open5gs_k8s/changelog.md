@@ -3,6 +3,7 @@
 ## Unreleased
 ### Changed
 - Output dictionary `metadata` renamed to `5gcore_metadata`.
+- Chart is now pulled from a private harbor repository server hosted by TID
 
 
 ## v0.5.0

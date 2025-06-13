@@ -8,4 +8,13 @@
 ##
 ######################################################
 
-any_nokia_radio_duration: 3600
+any_ris_f0: "28.0"
+any_ris_dist: "10.0"
+any_ris_phi_t: "0.0"
+any_ris_theta_t: "0.0"
+any_ris_num_phi_r: 1
+any_ris_phi_r_low: "0.0"
+any_ris_phi_r_high: "360.0"
+any_ris_num_theta_r: 1
+any_ris_theta_r_low: "0.0"
+any_ris_theta_r_high: "90.0"

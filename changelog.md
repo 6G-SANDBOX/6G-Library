@@ -2,21 +2,28 @@
 
 ## [unreleased]
 ### Added
+- New metadata variables `depends_on` and `tags` now present in the `.tnlcm/public.yaml` file of all components.
 - New component `prometheus` to scrape time series data.
 - New component `influxdb` to store time series data.
 - New component `grafana` to visualize time series data.
 - New component `monitoring` to deploy InfluxDB, Grafana and Prometheus stack together.
-- New component `custom_gNB` to integrate user-provided gNBs with 5G Cores inside TNs
+- New component `mongodb` to store time series data.
+- New component `ris` to configure a RIS exposed from an API.
 - New `component_type` terraform output added to all components.
 ### Changed
+- Common task file `routemanager_add.yaml` now also supports adding routes with key `dev`.
+- MTU default values in 'subnet' components (`tn_vxlan`, `vnet` and `tn_init`) are now first gathered from 6G Sandbox sites repository as suggested in issue #78
 - Modified terraform outputs for all 5G Core components (`open5gcore_vm`, `open5gs_k8s`, `open5gs_vm` and `upf_p4_sw`).
 - Modified terraform outputs for all gNB components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`).
+- Components `tn_bastion` and `tn_init` now support the inclusion of additional custom routes, and firewall/NAT exceptions.
 - Component `nokia_radio` renamed the site variables `cp_ip` and `up_ip` to `n2_ip` and `n3_ip` respectively, for coherence with the 5G Core outputs
 - Enhanced variable autocompletion on `ueransim`, gathering all UE-related metadata directly from the gNB's linked 5G Core
 - Component `elcm` now can use external influxdb and grafana instances.
+- Upgraded dockerfile to version `1.14.1` in component `ks8500_runner`.
 - Component `iswireless_radio` now supports **DU-RU** mode, connecting to a virtualized CU instead of a 5G core.
 ### Fixed
 - Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
+- All `.tnlcm/public.yaml` files now fit the LLM requirements as suggested in issue #128
 ### Deprecated
 - Multiple redundant variables removed from `ueransim`. **ue** mode now autocompletes its variables directly from the 5G core used by the *gNB*.
 

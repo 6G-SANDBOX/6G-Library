@@ -24,10 +24,16 @@ metadata:
     6GSB-Malaga, 6GSB-Berlin, 6GSB-Athen and 6GSB-Finland. To register, the users can simply send an email to the.dao@keysight.com or filip.ivanovic@keysight.com |
     and indicate which reals the users want to become a member of. |
     Once a runner is deployed, the users can access the Web UI interface to manage test plans, test campaign 
-  
   hypervisors: ["one"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "appliance"
+    - "testing"
   appliances: ["https://marketplace.opennebula.io/appliance/d74a5f80-20bd-013d-0e49-7875a4a4f528"]
-
+  depends_on:
+    - tn_bastion
 ####################################
 ## Site-specific variables
 ####################################

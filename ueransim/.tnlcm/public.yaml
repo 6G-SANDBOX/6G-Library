@@ -16,7 +16,6 @@ metadata:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
-  # short_description: Deploys a VM with UERANSIM services
   short_description: Deploys a VM with UERANSIM services, simulating an state-of-art 5G gNB, UE or both.
   long_description: |
     The UERANSIM component can be used as a 5G gNB, a User Equipment (UE) or as both at the same time, according to input variable `one_ueransim_mode`.
@@ -32,7 +31,15 @@ metadata:
       UE-related variables not provided by the experimenter can be autocompleted using their respective gNB equivalent variables. 
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_UERANSIM"]
-
+  depends_on:
+    - "[open5gs_vm, open5gs_k8s, open5gcore_vm, upf_p4_sw] if one_ueransim_mode in [gnb,both]"
+    - "ueransim if one_ueransim_mode in [ue,both]"
+  tags:
+    - "VM"
+    - "gNB"
+    - "UE"
+    - "appliance"
+    - "networking"
 
 ####################################
 ## Site-specific variables
