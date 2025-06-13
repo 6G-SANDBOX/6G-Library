@@ -99,18 +99,18 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: STOP, REMOVE, CREATE and START the container for the non RU-DU scenario
-      when: not any_iswireless_radio_ru_du
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/portainer_api.yaml"
-      loop:
-        - "{{ site_available_components.iswireless_radio.cu_container_name }}"
-        - "{{ site_available_components.iswireless_radio.du_cu_container_name }}"
+    # - name: STOP, REMOVE, CREATE and START the container for the non RU-DU scenario
+    #   when: not any_iswireless_radio_ru_du
+    #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/portainer_api.yaml"
+    #   loop:
+    #     - "{{ site_available_components.iswireless_radio.cu_container_name }}"
+    #     - "{{ site_available_components.iswireless_radio.du_cu_container_name }}"
 
-    - name: STOP, REMOVE, CREATE and START a container for the RU-DU scenario
-      when: any_iswireless_radio_ru_du
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/portainer_api.yaml"
-      loop:
-      - "{{ site_available_components.iswireless_radio.du_container_name }}"
+    # - name: STOP, REMOVE, CREATE and START a container for the RU-DU scenario
+    #   when: any_iswireless_radio_ru_du
+    #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/portainer_api.yaml"
+    #   loop:
+    #   - "{{ site_available_components.iswireless_radio.du_container_name }}"
 
     - name: Add the bastion to Ansible Inventory
       ansible.builtin.add_host:
@@ -162,20 +162,20 @@
           {
             'linked_5gcore': '{{ any_iswireless_radio_linked_5gcore | default('None') }}',
           }
-    - name: Define gnb_metadata dictionary in the RU-DU scenario
-      when: any_iswireless_radio_ru_du
-      ansible.builtin.set_fact:
-          # TODO: Ensure this output is defined in cu_k8s. NO DICTIONARY
-        gnb_metadata_dict: >-
-          {
-            'linked_5gcore': '{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_cu + '-linked_5gcore'] }}',
-          }
-    - name: Set custom terraform outputs for future components
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
-      vars:
-        custom_outputs:
-          - key: "{{ entity_name }}-gnb_metadata"
-            value: "{{ gnb_metadata_dict }}"
+    # - name: Define gnb_metadata dictionary in the RU-DU scenario
+    #   when: any_iswireless_radio_ru_du
+    #   ansible.builtin.set_fact:
+    #       # TODO: Ensure this output is defined in cu_k8s. NO DICTIONARY
+    #     gnb_metadata_dict: >-
+    #       {
+    #         'linked_5gcore': '{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_cu + '-linked_5gcore'] }}',
+    #       }
+    # - name: Set custom terraform outputs for future components
+    #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
+    #   vars:
+    #     custom_outputs:
+    #       - key: "{{ entity_name }}-gnb_metadata"
+    #         value: "{{ gnb_metadata_dict }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
