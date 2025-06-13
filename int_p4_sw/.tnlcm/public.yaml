@@ -23,7 +23,6 @@ metadata:
   hypervisors: ["one"]
   depends_on:
     - tn_bastion
-    # TODO: revisit
   tags:
     - "VM"
     - "appliance"
