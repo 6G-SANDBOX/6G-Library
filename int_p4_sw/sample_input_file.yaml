@@ -1,44 +1,50 @@
+# Configuration file for In-band Network Telemetry (INT) P4 switches and collector
+
+# Main section defining INT P4 switches in the network
 one_int_p4_sw_switches:
+  # Source switch configuration - Initiates INT packet processing
   int_p4_switch_0:
-    type: "source"
-    networks:
+    type: "source"  # Identifies this switch as the INT source node
+    networks:       # Network segments this switch is connected to
       - tn_vxlan
       - vnet-1
       - vnet-2
     config:
-      switch_id: 1
-      interfaces:
+      switch_id: 1  # Unique identifier for this switch
+      interfaces:   # Network interfaces configuration
         - name: "eth1"
           id: 1
         - name: "eth2" 
           id: 2
-      int_config:
-        forward_rules:
-          - dst_addr: "02:00:0a:0b:01:01"
-            port: 1
-            priority: 1
+      int_config:   # INT-specific configuration
+        forward_rules:  # Packet forwarding rules
+          - dst_addr: "02:00:0a:0b:01:01"  # Destination MAC address
+            port: 1                         # Output port
+            priority: 1                     # Rule priority
           - dst_addr: "02:00:0a:0b:04:02"
             port: 2
             priority: 1
-        ingress_port: 1
-        egress_port: 2
-        hop_metadata_len: 5
-        max_hop: 4
-        ins_mask: "0xEC00"
+        ingress_port: 1       # Port where INT packets enter
+        egress_port: 2        # Port where INT packets exit
+        hop_metadata_len: 5   # Length of metadata for each hop
+        max_hop: 4           # Maximum number of hops to monitor
+        ins_mask: "0xEC00"   # Instruction bit mask for INT headers
+
+  # Transit switch configuration - Processes and forwards INT packets
   int_p4_switch_1:
-    type: "transit"
-    networks:
+    type: "transit"  # Identifies this switch as an INT transit node
+    networks:        # Connected network segments
       - tn_vxlan
       - vnet-2
       - vnet-3
     config:
-      switch_id: 2
-      interfaces:
+      switch_id: 2   # Unique identifier
+      interfaces:    # Network interfaces
         - name: "eth1"
           id: 1
         - name: "eth2" 
           id: 2
-      int_config:
+      int_config:    # INT-specific settings
         forward_rules:
           - dst_addr: "02:00:0a:0b:01:01"
             port: 1
@@ -46,23 +52,25 @@ one_int_p4_sw_switches:
           - dst_addr: "02:00:0a:0b:04:02"
             port: 2
             priority: 1
+
+  # Sink switch configuration - Extracts and reports INT data
   int_p4_switch_2:
-    type: "sink"
-    networks:
+    type: "sink"    # Identifies this switch as the INT sink node
+    networks:       # Connected network segments
       - tn_vxlan
       - vnet-3
       - vnet-4
       - vnet-collector
     config:
-      switch_id: 3
-      interfaces:
+      switch_id: 3  # Unique identifier
+      interfaces:   # Network interfaces
         - name: "eth1"
           id: 1
         - name: "eth2"
           id: 2
-        - name: "eth3"  # Extra interface for collector
+        - name: "eth3"  # Additional interface for INT collector
           id: 3
-      int_config:
+      int_config:   # INT sink-specific configuration
         forward_rules:
           - dst_addr: "02:00:0a:0b:01:01"
             port: 1
@@ -70,24 +78,23 @@ one_int_p4_sw_switches:
           - dst_addr: "02:00:0a:0b:04:02"
             port: 2
             priority: 1
-        egress_spec: 2
-        sink_reporting_port: 3
-        collector_ip: "10.11.5.2"
-        collector_port: 12345
-        dp_mac: "02:00:0a:0b:05:01"
-        dp_ip: "10.11.5.1"
-        collector_mac: "02:00:0a:0b:05:02"
-        rep_md_bits: 0
+        egress_spec: 2                # Default egress port
+        sink_reporting_port: 3        # Port used for sending reports to collector
+        collector_ip: "10.11.5.2"     # INT collector IP address
+        collector_port: 12345         # INT collector UDP port
+        dp_mac: "02:00:0a:0b:05:01"  # Data plane MAC address
+        dp_ip: "10.11.5.1"           # Data plane IP address
+        collector_mac: "02:00:0a:0b:05:02"  # Collector MAC address
+        rep_md_bits: 0               # Report metadata bits configuration
 
 
-# ----- Config related to the collector INT VM -----
-# Config related to the collector INT VM
+# Configuration for the INT Collector Virtual Machine
 one_int_p4_sw_collector:
-  networks:
+  networks:  # Networks the collector is connected to
     - tn_vxlan
     - vnet-collector
   config:
-    #TODO: Add the collector configuration
-    collector_interface: eth1
-    collector_port: 12345
-    #TODO: Add Grafana configuration
+    # TODO: Add the collector configuration
+    collector_interface: eth1    # Interface to receive INT reports
+    collector_port: 12345       # UDP port for receiving INT reports
+    # TODO: Add Grafana configuration for visualization
