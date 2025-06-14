@@ -104,7 +104,7 @@
         cu_metadata_dict: >-
           {
             'oneKE': '{{ one_cu_k8s_target }}',
-            'cu_up_ip': '{{ one_cu_up_k8s_ip }}'
+            'cu_up_ip': '{{ one_cu_up_k8s_ip }}',
             'cu_cp_ip': '{{ one_cu_cp_k8s_ip }}'
           }
 
