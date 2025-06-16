@@ -63,6 +63,11 @@ input:
     type: "vnet"
     required_when: true
 
+  one_oneKE_worker_nodes:
+    description: Number of worker nodes to be deployed.
+    type: int
+    required_when: false
+
   one_oneKE_version:
     description: "Version of the OneKE Appliance to deploy. Default value is '131'."
     type: str
