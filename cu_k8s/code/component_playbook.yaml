@@ -98,22 +98,17 @@
   hosts: localhost
   gather_facts: false
   connection: local
-  tasks:
-    - name: Define CU metadata dictionary
-      ansible.builtin.set_fact:
-        cu_metadata_dict: >-
-          {
-            'oneKE': '{{ one_cu_k8s_target }}',
-            'cu_up_ip': '{{ one_cu_up_k8s_ip }}',
-            'cu_cp_ip': '{{ one_cu_cp_k8s_ip }}'
-          }
-
+  tasks:       
     - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-metadata"
-            value: "{{ cu_metadata_dict }}"
+          - key: "{{ entity_name }}-linked_5gcore"
+            value: "{{ one_cu_k8s_target }}"
+          - key: "{{ entity_name }}-n2_ip"
+            value: "{{ one_cu_k8s_n2_ip }}"
+          - key: "{{ entity_name }}-n3_ip"
+            value: "{{ one_cu_k8s_n3_ip }}"            
 
     - name: Set DNS record for the component
       ansible.builtin.uri:

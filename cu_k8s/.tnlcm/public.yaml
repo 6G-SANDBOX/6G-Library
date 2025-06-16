@@ -50,13 +50,13 @@ input:
     description: Name of a previously deployed `open5gs` component, which will be connected to the CU. E.g. `open5gs_k8s-my-core`.
     type: "str"
     required_when: true
-  one_cu_up_k8s_ip:
+  one_cu_k8s_n3_ip:
     description: |
       The IP address of a cu_k8s User Plane
     type: str
     default_value: "10.21.12.203"
     required_when: false  
-  one_cu_cp_k8s_ip:
+  one_cu_k8s_n2_ip:
     description: |
       The IP address of a cu_k8s Control Plane
     type: str
@@ -88,6 +88,6 @@ input:
 ####################################
 terraform_outputs:
   __entity_name__metadata:
-    oneKE: input.one_cu_k8s_target
-    cu_cp_ip: input.one_cu_cp_k8s_ip
-    cu_up_ip: input.one_cu_up_k8s_ip
+    linked_5gcore: input.one_cu_k8s_target
+    n2_ip: input.one_cu_k8s_n2_ip
+    n3_ip: input.one_cu_k8s_n3_ip

@@ -7,8 +7,8 @@ networking:
     open5gs_CP_IP: "{{ one_cu_open5gs_amf_ip | string }}"
     open5gs_UP_IP: "{{ one_cu_open5gs_upf_ip | string }}"
   mh:
-    CUCP_IP: "{{ one_cu_cp_k8s_ip | string }}"
-    CUUP_IP: "{{ one_cu_up_k8s_ip | string }}"
+    CUCP_IP: "{{ one_cu_k8s_n2_ip | string }}"
+    CUUP_IP: "{{ one_cu_k8s_n3_ip | string }}"
     DU_IP: "10.10.10.10"
     prefix: 24
     interface: "eth0"
