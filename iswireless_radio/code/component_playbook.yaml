@@ -99,19 +99,6 @@
   gather_facts: false
   connection: local
   tasks:
-    # - name: STOP, REMOVE, CREATE and START the container for the non RU-DU scenario
-    #   when: not any_iswireless_radio_ru_du
-    #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/portainer_api.yaml"
-    #   loop:
-    #     - "{{ site_available_components.iswireless_radio.cu_container_name }}"
-    #     - "{{ site_available_components.iswireless_radio.du_cu_container_name }}"
-
-    # - name: STOP, REMOVE, CREATE and START a container for the RU-DU scenario
-    #   when: any_iswireless_radio_ru_du
-    #   ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/portainer_api.yaml"
-    #   loop:
-    #   - "{{ site_available_components.iswireless_radio.du_container_name }}"
-
     - name: Add the bastion to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "bastion"

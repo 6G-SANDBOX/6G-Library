@@ -1,13 +1,14 @@
 dockerhub_organization: iswirelesspoland
 image:
-  tag: 2.3.0-e24f633a-develop-b189
+  tag: 2.3.0-0136f9e2-xapp_workload_dev-b7
 networking:
   ric_net:
     interface: "eth0"
     RIC_IP: "{{ one_ric_k8s_ip | string }}"
-    prefix: 24
+    mask: 24
 quota1: "{{ one_ric_k8s_quota1 | string }}"
 quota2: "{{ one_ric_k8s_quota2 | string }}"
 slice_id1: "{{ one_ric_k8s_slice_id1 | string }}"
 slice_id2: "{{ one_ric_k8s_slice_id2 | string }}"
 flip_period: "{{ one_ric_k8s_flip_period | string }}"
+target_node: "oneke-ip-10-10-12-3"

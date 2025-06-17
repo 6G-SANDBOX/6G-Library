@@ -1,6 +1,6 @@
 image:
   repo: iswirelesspoland/isw-sdran_5g_cu
-  tag: 1.15.0-d79c1b115-b44
+  tag: 1.15.1-develop-7748f3d9c-b797
 deployment_name: sandbox
 networking:
   bh:
@@ -9,8 +9,9 @@ networking:
   mh:
     CUCP_IP: "{{ one_cu_k8s_n2_ip | string }}"
     CUUP_IP: "{{ one_cu_k8s_n3_ip | string }}"
-    DU_IP: "10.10.10.10"
+    DU_IP: "10.182.32.254"
     prefix: 24
     interface: "eth0"
   ric_net:
     RIC_IP: "{{ one_cu_ric_ip | string }}"
+node_name: "oneke-ip-10-10-12-3"

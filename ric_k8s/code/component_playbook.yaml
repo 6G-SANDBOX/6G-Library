@@ -54,6 +54,21 @@
         ansible_host: "{{ bastion_ip }}"
         ansible_user: "jenkins"
 
+- name: "Install psutil to monitor cpu usage on worker"
+  hosts: worker_0
+  gather_facts: false
+  tasks:
+  - name: Install Python and pip
+    ansible.builtin.apt:
+      name: 
+        - python3
+        - python3-pip
+      update_cache: true
+  - name: Install psutil using pip
+    ansible.builtin.pip:
+      name: psutil
+      executable: pip3
+
 - name: "STAGE 2: Access tn_bastion to set firewall exceptions"
   hosts: bastion
   gather_facts: false

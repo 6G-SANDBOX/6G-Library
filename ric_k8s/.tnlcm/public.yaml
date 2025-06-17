@@ -46,7 +46,7 @@ input:
     description: |
       The IP address of a ric_k8s
     type: str
-    default_value: "10.21.12.202"
+    default_value: "10.10.12.205"
     required_when: false  
   one_ric_k8s_quota1:
     description: |

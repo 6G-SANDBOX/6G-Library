@@ -4,7 +4,6 @@
     src: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_values_template-cu.yaml.j2"
     dest: "/root/{{ helm_release_name }}-values-cu.yaml"
 
-
 - name: Authenticate in DockerHub and create secret
   ansible.builtin.shell: |
     helm registry login registry-1.docker.io -u smecina -p {{ dockerhub_token }} && \

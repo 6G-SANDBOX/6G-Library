@@ -50,10 +50,6 @@ These values must be present in the site's encrypted variables file:
 
 - `cu_ip`: IP address of the CU when not running in RU-DU mode  
 - `du_ip`: IP address of the DU when running in RU-DU mode  
-- `portainer_url`: URL of the Portainer instance managing the CU & DU containers (e.g. `http://10.20.30.40:9000`)  
-- `portainer_token`: Valid API token for authentication  
-- `portainer_environment`: Portainer environment ID (e.g. `1`)  
-- `cu_container_name`: Name of the CU container in Portainer  
 - `du_cu_container_name`: Name of the DU container for non RU-DU mode  
 - `du_container_name`: Name of the DU container for RU-DU mode  
 

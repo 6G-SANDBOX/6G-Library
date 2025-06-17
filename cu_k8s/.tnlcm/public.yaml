@@ -54,13 +54,13 @@ input:
     description: |
       The IP address of a cu_k8s User Plane
     type: str
-    default_value: "10.21.12.203"
+    default_value: "10.10.12.203"
     required_when: false  
   one_cu_k8s_n2_ip:
     description: |
       The IP address of a cu_k8s Control Plane
     type: str
-    default_value: "10.21.12.202"
+    default_value: "10.10.12.202"
     required_when: false  
   dockerhub_token:
     description: |
