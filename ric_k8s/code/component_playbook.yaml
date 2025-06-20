@@ -124,6 +124,7 @@
           - "{{ site_iswireless_routemanager.api_endpoint }}"
           - "{{ site_available_components.ric_k8s.du_ip }}"
         nat_exceptions:
+          - "{{ one_ric_k8s_ip }}"
           - "{{ site_available_components.ric_k8s.du_ip }}"
 
 
