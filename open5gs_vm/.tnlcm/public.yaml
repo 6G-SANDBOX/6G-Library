@@ -58,7 +58,9 @@ input:
       Optional list of 1 or 2 vnets used for interfaces N2 (AMF) and N3 (UPF) respectivelly.
       If undefined, the vnet from `one_open5gs_vm_external_vnet` will be used for everything
       If only one vnet is provided, it will be used for both N2 and N3 interfaces.
-      If more than 2 vnet are provided, the later ones will be ignored.
+      If provided two vnets, the first one will be used for N2 and the second one for N3.
+      If provided three vnets, the first one will be used for N2, the second one for N3 and the third one for N6.
+      If more than 3 vnet are provided, the later ones will be ignored.
     type: "list[tn_vxlan or vnet]"
     default_value: null
     required_when: false
@@ -91,6 +93,15 @@ input:
       It needs to be inside the "one_oneKE_internal_vnet" subnet, but preferably outside it's address range to avoid possible reservation conflicts.
     type: str
     default_value: "10.21.12.201"
+    required_when: false
+  one_open5gs_vm_upf_n6_ip:
+    description: |
+      IPv4 Address of the Core User Plane Function (UPF) in the 5G core network.
+      It needs to be inside the "one_oneKE_internal_vnet" subnet, but preferably outside it's address range to avoid possible reservation conflicts.
+      This is an optional parameter, only required if you want to use the N6 interface.
+      If not provided, the N6 interface will not be configured.
+    type: str
+    default_value: "10.21.12.202"
     required_when: false
   one_open5gs_vm_ue_count:
     description: |

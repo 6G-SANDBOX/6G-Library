@@ -155,6 +155,7 @@
       loop:
         - { to: "{{ one_open5gs_vm_amf_n2_ip }}", via: "{{ ips[access_vnet_id] }}" }
         - { to: "{{ one_open5gs_vm_upf_n3_ip }}", via: "{{ ips[access_vnet_id] }}" }
+        - { to: "{{ one_open5gs_vm_upf_n6_ip }}", via: "{{ ips[access_vnet_id] }}" }
         - { to: "{{ one_open5gs_vm_ue_subnet }}", via: "{{ ips[access_vnet_id] }}" }
 
     - name: Add tn_bastion to Ansible Inventory
@@ -177,6 +178,7 @@
         fw_exceptions:
           - "{{ one_open5gs_vm_amf_n2_ip }}"
           - "{{ one_open5gs_vm_upf_n3_ip }}"
+          - "{{ one_open5gs_vm_upf_n6_ip }}"
           - "{{ one_open5gs_vm_ue_subnet }}"
 
 
@@ -191,6 +193,7 @@
           {
             'amf_n2_ip': '{{ one_open5gs_vm_amf_n2_ip }}',
             'upf_n3_ip': '{{ one_open5gs_vm_upf_n3_ip }}',
+            'upf_n6_ip': '{{ one_open5gs_vm_upf_n6_ip }}',
             'ue_count': '{{ one_open5gs_vm_ue_count }}',
             'tac': '{{ one_open5gs_vm_tac }}',
             'mcc': '{{ one_open5gs_vm_mcc }}',
