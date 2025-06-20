@@ -22,8 +22,7 @@
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
-        tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"        
-        tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
+        tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
         node_ips: "{{ (terraform_outputs.stdout | from_json)[one_ric_k8s_target + '-node_ips'] }}"
         domain_name: >-
           {{
@@ -49,62 +48,22 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
         ansible_user: "root"
 
-    - name: Add the bastion to Ansible Inventory
-      ansible.builtin.add_host:
-        hostname: "bastion"
-        ansible_host: "{{ bastion_ip }}"
-        ansible_user: "jenkins"
 
-    - name: "Stablish route in tn_bastion to the DU through the site's route-manager-api"
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-      vars:
-        endpoint: "{{ bastion_ip }}"
-        token: "{{ tn_routemanager_token }}"
-        start_time: "{{ current_timestamp }}"
-        stop_time: "{{ ending_timestamp }}"
-      loop:
-        - { to: "{{ site_available_components.ric_k8s.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
-
-    - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-      vars:
-        endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
-        token: "{{ site_iswireless_routemanager.token }}"
-        start_time: "{{ current_timestamp }}"
-        stop_time: "{{ ending_timestamp }}"
-      loop:
-        - { to: "{{ one_ric_k8s_ip }}", via: "{{ bastion_ip }}" }
-
-- name: "Install psutil to monitor cpu usage on worker"
+- name: "STAGE 2: Install psutil to monitor cpu usage on worker"
   hosts: worker_0
   gather_facts: false
   tasks:
-  - name: Install Python and pip
-    ansible.builtin.apt:
-      name: 
-        - python3
-        - python3-pip
-      update_cache: true
-  - name: Install psutil using pip
-    ansible.builtin.pip:
-      name: psutil
-      executable: pip3
+    - name: Install Python and pip
+      ansible.builtin.apt:
+        name:
+          - python3
+          - python3-pip
+        update_cache: true
+    - name: Install psutil using pip
+      ansible.builtin.pip:
+        name: psutil
+        executable: pip3
 
-- name: "STAGE 2: Access tn_bastion to set firewall exceptions"
-  hosts: bastion
-  gather_facts: false
-  tasks:
-    - name: Load enviromental variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
-
-    - name: Write firewall exception for the route-manager-api and the DU of your site
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
-      vars:
-        fw_exceptions:
-          - "{{ site_iswireless_routemanager.api_endpoint }}"
-          - "{{ site_available_components.nokia_radio.du_ip }}"
-        nat_exceptions:
-          - "{{ site_available_components.nokia_radio.du_ip }}"
 
 - name: "STAGE 3: Apply IaC to deploy the component"
   hosts: "master_0"
@@ -118,37 +77,69 @@
         helm_release_name: "{{ hostvars['localhost']['entity_name'] | regex_replace('_', '') | lower }}"
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_install.yaml"
 
-- name: "STAGE 4: Publish execution results"
+
+- name: "STAGE 4: Manipulate tn_bastion in order to enable communication to the component"
   hosts: localhost
   gather_facts: false
   connection: local
   tasks:
-    - name: Define RIC metadata dictionary
-      ansible.builtin.set_fact:
-        ric_metadata_dict: >-
-          {
-            'oneKE': '{{ one_ric_k8s_target }}',
-            'ric_ip': '{{ one_ric_k8s_ip }}'
-          }
+    - name: Enable routes to the 5G Core AMF and UPF
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ bastion_ip }}"
+        token: "{{ tn_routemanager_token }}"
+      loop:
+        - { to: "{{ one_ric_k8s_ip }}", via: "{{ node_ips.vnf_0 }}" }
+        - { to: "{{ site_available_components.ric_k8s.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
 
+    - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
+        token: "{{ site_iswireless_routemanager.token }}"
+        start_time: "{{ current_timestamp }}"
+        stop_time: "{{ ending_timestamp }}"
+      loop:
+        - { to: "{{ one_ric_k8s_ip }}", via: "{{ bastion_ip }}" }
+
+    - name: Add the bastion to Ansible Inventory
+      ansible.builtin.add_host:
+        hostname: "bastion"
+        ansible_host: "{{ bastion_ip }}"
+        ansible_user: "jenkins"
+
+
+- name: "STAGE 5: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Write firewall exception for the route-manager-api and the DU of your site
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        fw_exceptions:
+          - "{{ one_ric_k8s_ip }}"
+          - "{{ site_iswireless_routemanager.api_endpoint }}"
+          - "{{ site_available_components.nokia_radio.du_ip }}"
+        nat_exceptions:
+          - "{{ site_available_components.nokia_radio.du_ip }}"
+
+
+- name: "STAGE 6: Publish execution results"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
     - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-metadata"
-            value: "{{ ric_metadata_dict }}"
-
-    - name: Set DNS record for the component
-      ansible.builtin.uri:
-        url: >-
-          {{
-            'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
-            '&domain=' ~ domain_name ~
-            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ node_ips.vnf_0 | trim
-          }}
-        method: POST
-        body_format: json
-        status_code: [200]
+          - key: "{{ entity_name }}-oneKE"
+            value: "{{ one_ric_k8s_target }}"
+          - key: "{{ entity_name }}-ric_ip"
+            value: "{{ one_ric_k8s_ip }}"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

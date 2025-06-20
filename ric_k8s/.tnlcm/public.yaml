@@ -89,6 +89,5 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__metadata:
-    oneKE: input.one_open5gs_k8s_target
-    ric_ip: input.one_ric_k8s_ip
+  __entity_name__oneKE: input.one_open5gs_k8s_target
+  __entity_name__ric_ip: input.one_ric_k8s_ip
