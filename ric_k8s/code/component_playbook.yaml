@@ -122,9 +122,9 @@
         fw_exceptions:
           - "{{ one_ric_k8s_ip }}"
           - "{{ site_iswireless_routemanager.api_endpoint }}"
-          - "{{ site_available_components.nokia_radio.du_ip }}"
+          - "{{ site_available_components.ric_k8s.du_ip }}"
         nat_exceptions:
-          - "{{ site_available_components.nokia_radio.du_ip }}"
+          - "{{ site_available_components.ric_k8s.du_ip }}"
 
 
 - name: "STAGE 6: Publish execution results"
