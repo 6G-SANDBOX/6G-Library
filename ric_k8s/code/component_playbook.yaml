@@ -71,10 +71,8 @@
         token: "{{ site_iswireless_routemanager.token }}"
         start_time: "{{ current_timestamp }}"
         stop_time: "{{ ending_timestamp }}"
-        # TODO: Ensure this output is defined in cu_k8s. NO DICTIONARY
-        ric_ip: "{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_ric + '-ric_ip'] }}"
       loop:
-        - { to: "{{ ric_ip }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ one_ric_k8s_ip }}", via: "{{ bastion_ip }}" }
 
 - name: "Install psutil to monitor cpu usage on worker"
   hosts: worker_0
