@@ -26,6 +26,7 @@ metadata:
 ## Site-specific variables
 ####################################
 site_variables:
+  du_ip: "IP address of the DU container hosted on the server"
   # None
 
 
