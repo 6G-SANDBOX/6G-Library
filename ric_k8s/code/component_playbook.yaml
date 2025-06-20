@@ -54,6 +54,28 @@
         ansible_host: "{{ bastion_ip }}"
         ansible_user: "jenkins"
 
+    - name: "Stablish route in tn_bastion to the DU through the site's route-manager-api"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ bastion_ip }}"
+        token: "{{ tn_routemanager_token }}"
+        start_time: "{{ current_timestamp }}"
+        stop_time: "{{ ending_timestamp }}"
+      loop:
+        - { to: "{{ site_available_components.iswireless_radio.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+
+    - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
+        token: "{{ site_iswireless_routemanager.token }}"
+        start_time: "{{ current_timestamp }}"
+        stop_time: "{{ ending_timestamp }}"
+        # TODO: Ensure this output is defined in cu_k8s. NO DICTIONARY
+        ric_ip: "{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_ric + '-ric_ip'] }}"
+      loop:
+        - { to: "{{ ric_ip }}", via: "{{ bastion_ip }}" }
+
 - name: "Install psutil to monitor cpu usage on worker"
   hosts: worker_0
   gather_facts: false
@@ -76,18 +98,7 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Write firewall exceptions for the route-manager-api and the CU of your site
-      when: not any_iswireless_radio_ru_du
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
-      vars:
-        fw_exceptions:
-          - "{{ site_iswireless_routemanager.api_endpoint }}"
-          - "{{ site_available_components.nokia_radio.cu_ip }}"
-        nat_exceptions:
-          - "{{ site_available_components.nokia_radio.cu_ip }}"
-
     - name: Write firewall exception for the route-manager-api and the DU of your site
-      when: any_iswireless_radio_ru_du
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
         fw_exceptions:
@@ -95,7 +106,6 @@
           - "{{ site_available_components.nokia_radio.du_ip }}"
         nat_exceptions:
           - "{{ site_available_components.nokia_radio.du_ip }}"
-
 
 - name: "STAGE 3: Apply IaC to deploy the component"
   hosts: "master_0"
