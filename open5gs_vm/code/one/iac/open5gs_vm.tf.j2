@@ -86,7 +86,7 @@ resource "opennebula_virtual_network_address_range" "upf_dn_ip_2" {
   size               = 1
   ip4                = "{{ one_open5gs_vm_upf_n6_ip }}"
 
-  hold_ips = ["{{ one_open5gs_vm_upf_6_ip }}"]
+  hold_ips = ["{{ one_open5gs_vm_upf_n6_ip }}"]
 }
 {% endif %}
 
