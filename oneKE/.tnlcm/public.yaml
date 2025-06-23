@@ -28,6 +28,12 @@ metadata:
     - "https://marketplace.opennebula.io/appliance/591dd3f1-220f-46a5-83f4-31031c753b8a"
     - "https://marketplace.mobilesandbox.cloud:9443/appliance/OneKE_1.31_service"
     - "https://marketplace.mobilesandbox.cloud:9443/appliance/OneKE_1.31a_service"
+  depends_on:
+    - "vnet"
+  tags:
+    - "OpenNebula Service"
+    - "appliance"
+    - "infrastructure"
 
 
 ####################################
@@ -56,6 +62,11 @@ input:
     description: Name of the VNet used to interconnect the OneKE nodes.
     type: "vnet"
     required_when: true
+
+  one_oneKE_worker_nodes:
+    description: Number of worker nodes to be deployed.
+    type: int
+    required_when: false
 
   one_oneKE_version:
     description: "Version of the OneKE Appliance to deploy. Default value is '131'."
@@ -141,11 +152,12 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
+  __entity_name__component_type: "oneKE"
   __entity_name__id: "Service ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__roles: "Array with service roles information. Generated from Terraform Manifest"
   __entity_name__node_ids: "Dictionary of VM IDs in OpenNebula: key='VM name', value='the VM ID'"
   __entity_name__node_ips: "Dictionary of VM addresses: key='VM name', value='the VM main address'"
-  __entity_name__metadata:
+  __entity_name__oneKE_metadata:
     external_vnet: input.one_oneKE_external_vnet
     internal_vnet: input.one_oneKE_internal_vnet
     version: input.one_oneKE_version

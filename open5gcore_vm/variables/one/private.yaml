@@ -35,8 +35,6 @@ one_open5gcore_vm_resources:
     disk: 10240
 
 one_open5gcore_vm_external_vnet: "tn_vxlan"
-one_open5gcore_vm_internal_vnet:
-  - "vnet-n2"
 one_open5gcore_vm_ue_subnet: "10.45.0.0/16"
 one_open5gcore_vm_mcc: "001"
 one_open5gcore_vm_mnc: "01"

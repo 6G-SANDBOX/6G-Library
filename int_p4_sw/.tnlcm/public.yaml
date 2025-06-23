@@ -13,15 +13,20 @@
 metadata:
   maintainers:
     - Rafael Manuel García Arévalo <rafagarciaa31@uma.es> 
-  short_description: Deploys multiple virtual machines with INT telemetry P4 module plus a collector virtual machine.
+  short_description: P4-based In-band Network Telemetry (INT) implementation with source, transit, and sink switches plus integrated collector for real-time network monitoring.
   long_description: |
-    This component is responsible for deploying multiple virtual machines equipped with the INT telemetry P4 module.
-    It also includes a collector virtual machine to gather and process telemetry data. The deployment is designed to 
-    facilitate network monitoring and management by providing detailed insights into network traffic and performance. 
-    The component supports various configurations for source, transit, and sink switches, allowing for flexible 
-    network setups. It is compatible with the 'one' hypervisor and can be customized to meet specific deployment 
-    requirements.  
+    The INT-P4 SW component deploys a comprehensive In-band Network Telemetry (INT) solution using P4 programming language on Ubuntu 22.04 LTS virtual machines. This component implements a complete INT pipeline consisting of source switches (that insert telemetry headers), transit switches (that add hop-by-hop metadata), and sink switches (that extract and report telemetry data) along with a dedicated collector virtual machine for data processing and visualization.
+    
+    The component leverages P4-based data plane running on BMv2 with Stratum, Python-based controllers for INT management, and includes InfluxDB and Grafana integration for telemetry data storage and visualization. All services are containerized using Docker for easy deployment and management.
+    
+    This component requires a previous "tn_bastion" component to be previously deployed and referenced in the networks configuration. The component uses custom appliances that must be previously installed in your OpenNebula site. The component is specifically designed for network monitoring and performance analysis in trial networks, supporting flexible configurations for different network topologies and telemetry requirements.
   hypervisors: ["one"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "appliance"
+    - "monitoring"
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_Collector_INT"]
 
 
@@ -173,5 +178,11 @@ input:
 ####################################
 ## Generated terraform outputs
 ####################################
-terraform_outputs: # TODO: Complete the output section
-  metadata: Metadata dictionary
+terraform_outputs:
+  __entity_name__component_type: "int_p4_sw"
+  __entity_name__int_p4_sw_metadata:
+    switch_ips:   # TODO
+    switch_ids:   # TODO
+    collector_ip: # TODO
+    collector_id: # TODO
+    bastion_ip:   # TODO

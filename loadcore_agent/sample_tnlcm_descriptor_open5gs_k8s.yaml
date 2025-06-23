@@ -52,6 +52,7 @@ trial_network:
       one_loadcore_agent_networks:
         - "tn_vxlan"
         - "vnet-internal"
+      one_loadcore_agent_hugepages: true
   loadcore_agent-gnb:
     type: "loadcore_agent"
     name: "gnb"
@@ -62,3 +63,4 @@ trial_network:
         - "tn_vxlan"
         - "vnet-internal"
         - "vnet-internal"
+      one_loadcore_agent_hugepages: true
