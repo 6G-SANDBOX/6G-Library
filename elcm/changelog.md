@@ -1,5 +1,10 @@
 # Changelog
 
+## unreleased
+### Changed
+- Adapted to accept external influxdb and grafana.
+- Component is now added to the sshconfig of tnuser
+
 ## v3.7.1
 ### Added
 - Migrate influxdb from `v1.7.6` to `v2.7.11`.

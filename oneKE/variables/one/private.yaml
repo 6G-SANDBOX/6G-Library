@@ -9,6 +9,7 @@
 ######################################################
 
 one_oneKE_external_vnet: "tn_vxlan"
+one_oneKE_worker_nodes: 1
 
 one_oneKE_version: "131"
 one_oneKE_multus: true             # Disabled by default in OneKE

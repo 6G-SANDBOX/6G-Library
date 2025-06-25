@@ -13,9 +13,3 @@ one_elcm_memory: 2048
 one_elcm_disk: 3072
 one_elcm_networks: 
   - tn_vxlan
-
-one_elcm_influxdb_user: "admin"
-one_elcm_influxdb_password: "admin"
-one_elcm_influxdb_org: "elcmorg"
-one_elcm_influxdb_bucket: "elcmbucket"
-one_elcm_grafana_password: "admin"

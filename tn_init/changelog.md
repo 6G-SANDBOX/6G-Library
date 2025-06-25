@@ -1,5 +1,17 @@
 # Changelog
 
+## unreleased
+### Added
+- New optional input variables `one_bastion_routemanager_add`, supporting the addition of custom routes to the internal route-manager-api
+- New optional input variables `one_bastion_fw_exceptions` and `one_bastion_nat_exceptions` to disable firewall/NAT respectivelly to custom IPs/networks.
+### Changed
+- MTU default values are now first gathered from 6G Sandbox sites repository as suggested in issue #78
+
+
+## v0.5.0
+### Added
+- NFTables firewall now accepts exception files for NATting at `/etc/nftables/nat_exceptions/*.nft`.
+
 ## v0.4.0
 ### Added
 - New public input variables `one_bastion_vpn_clients` and `one_bastion_vpn_allowedips`.

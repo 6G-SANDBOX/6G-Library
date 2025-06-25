@@ -27,10 +27,18 @@ metadata:
     - `tac`: 1
     - `s_nssai_sst`: 1
     - `s_nssai_sd`: "000009"
-    - `amf_ip`: "10.10.12.200"
-    - `upf_ip`: "10.10.12.201"
+    - `amf_n2_ip`: "10.10.12.200"
+    - `upf_n3_ip`: "10.10.12.201"
+    NOTE: Aditional routing configuration that is not dependent on the Trial Network may also need to be done beforehand.
     NOTE: Currently this component is only available in the site "uma".
-  hypervisors: ["one"]
+  hypervisors: ["any"]
+  depends_on:
+    - [open5gs_vm, open5gs_k8s, open5gcore_vm, upf_p4_sw]
+  tags:
+    - "gNB"
+    - "route_manager"
+    - "resource_manager"
+    - "networking"
   destroy_script: true
   resource_manager: true
 
@@ -39,19 +47,18 @@ metadata:
 ## Site-specific variables
 ####################################
 site_variables:
-  cp_ip: Nokia Airscale Control Plane IP address
-  up_ip: Nokia Airscale User Plane IP address
+  n2_ip: "IP address of Nokia Airscale in the Control Plane N2 interface. It will try to connect to the AMF of the 5G Core specified in `any_nokia_radio_linked_5gcore`."
+  n3_ip: "IP address of Nokia Airscale in the User Plane N3 interface. It will try to connect to the UPF of the 5G Core specified in `any_nokia_radio_linked_5gcore`."
 
 
 ####################################
 ## Input variables
 ####################################
 input:
-  one_nokia_radio_open5gs:
-    description: Name of a previosly deployed Open5GS 5G Core
-    type: "open5gs_vm or open5gs_k8s"
+  any_nokia_radio_linked_5gcore:
+    description: Name of a previously deployed 5G Core component inside the same Trial Network. The gNB will try to connect to its AMF.
+    type: "open5gs_vm or open5gs_k8s or open5gcore_vm or upf_p4_sw"
     required_when: true
-
   any_nokia_radio_start_time:
     description: |
       Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
@@ -59,7 +66,6 @@ input:
     type: str
     default_value: Current time and date
     required_when: false
-
   any_nokia_radio_duration:
     description: Time in seconds for the Nokia Airsale reservation
     type: int
@@ -71,4 +77,6 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__open5gs: input.one_nokia_radio_open5gs
+  __entity_name__component_type: "nokia_radio"
+  __entity_name__gnb_metadata:
+    linked_5gcore: input.any_nokia_radio_linked_5gcore

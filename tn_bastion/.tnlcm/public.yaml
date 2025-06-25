@@ -22,12 +22,22 @@ metadata:
     It manages external access to the TN and hosts various networking services such as:
     - DHCP server (not yet)
     - NTP server (not yet)
-    - Public network masquerading
+    - Public network masquerading (NAT)
     - Port forwarding (not yet)
     - DNS server
     - VPN Server
     Deploying tn_init instead is the recommended approach, as it serves as a wrapper of both tn_vxlan and tn_bastion.
   hypervisors: ["one"]
+  depends_on:
+    - tn_vxlan
+  tags:
+    - "tn_init"
+    - "appliance"
+    - "DNS"
+    - "VPN"
+    - "Gateway"
+    - "Firewall"
+    - "NAT"
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_bastion"]
 
 
@@ -51,7 +61,31 @@ input:
   one_bastion_vpn_allowedips:
     description: For the Wireguard VPN, comma-separated list of subnets that client configurations will route to the bastion.
     type: str
-    default_value: "The subnet of tn_vxlan"
+    default_value: "The subnet of component tn_vxlan"
+    required_when: false
+  one_bastion_routemanager_add:
+    description: |
+      List of additional routes to post in the route-manager-api server running in tn_bastion.
+      Each route in the list is a dictionary with the key "to", and at least one key between ‘via’ and “dev”.
+      The additional key "from" is expected to be added in future updates.
+      Sample input:
+        one_bastion_routemanager_add:
+          - to: "10.45.54.203"
+            via: "192.168.27.12"
+          - to: "10.45.6.0/24"
+            dev: "wg0"
+    type: list
+    default_value: []
+    required_when: false
+  one_bastion_fw_exceptions:
+    description: List of destination IPs/subnets to be whitelisted in the nftables firewall.
+    type: list
+    default_value: []
+    required_when: false
+  one_bastion_nat_exceptions:
+    description: List of origin IPs/subnets to be blacklisted from the nftables NAT.
+    type: list
+    default_value: []
     required_when: false
 
 

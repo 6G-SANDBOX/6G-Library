@@ -14,12 +14,21 @@
 metadata:
   maintainers:
     - Rafael Manuel García Arévalo <rafagarciaa31@uma.es>    
-  short_description: Deploys a virtual machine with the UPF-P4 software module plus Open5GS Release 16 as the control plane.
+  short_description: P4-based User Plane Function (UPF) implementation for 5G networks with integrated Open5GS Release 16 control plane.
   long_description: |
-    Ubuntu 22.04 LTS virtual machine with the UPF-P4 BMV2 software module installed.
-    It also contains the different Open5GS services that act as the control plane for the 5G core.
-    Containerized applications with Docker.
+    The UPF-P4 SW component deploys a P4-based implementation of the 5G User Plane Function (UPF) on an Ubuntu 22.04 LTS virtual machine. This component leverages the P4 programming language to define packet processing behavior, providing complete control and flexibility over network traffic management through a Next Generation Software Defined Networking (NG-SDN) approach.
+    
+    The component consists of three main parts: a P4-based data plane running on BMv2 with Stratum, a Python-based UPF controller, and Open5GS Release 16 components for 5G core network control. All services are containerized using Docker for easy deployment and management.
+    
+    This component requires a previous "tn_bastion" component to be previously deployed and referenced in the networks configuration. The component uses a 'Ubuntu 22.04' appliance that must be previously installed in your OpenNebula site. The component is specifically designed for deployment within 5G trial networks and supports integration with gNodeB and UE components for complete 5G network testing scenarios.
   hypervisors: ["one"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "5G Core"
+    - "appliance"
+    - "networking"
   appliances: ["https://marketplace.opennebula.io/appliance/4562be1a-4c11-4e9e-b60a-85a045f1de05"]
 
 
@@ -40,6 +49,21 @@ input:
     description: Ordered list of Virtual Network names the VM will be part of. In most cases first one should always be the tn_vxlan
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
+    required_when: false
+  one_upf_p4_sw_open5gs_amf_ngap_addr:
+    description: Address to expose the Core Access and Mobility Management Function (AMF)
+    type: str
+    default_value: "10.0.1.2"
+    required_when: false
+  one_upf_p4_sw_controller_upf_ipv4_n3:
+    description: Address to expose the N3 (upf-gnb) Core User Plane Function (UPF)
+    type: str
+    default_value: "10.0.3.1"
+    required_when: false
+  one_upf_p4_sw_open5gs_control_tac:
+    description: Tracking Area Code in the PLMN
+    type: int
+    default_value: 200
     required_when: false
   one_upf_p4_sw_open5gs_control_mcc:
     description: Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15
@@ -71,11 +95,6 @@ input:
     type: str
     default_value: "internet"
     required_when: false
-  one_upf_p4_sw_open5gs_control_tac:
-    description: Tracking Area Code in the PLMN
-    type: int
-    default_value: 200
-    required_when: false
   one_upf_p4_sw_open5gs_control_s_nssai_sst:
     description: Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
     type: int
@@ -85,16 +104,6 @@ input:
     description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI)
     type: str
     default_value: "1"
-    required_when: false
-  one_upf_p4_sw_open5gs_amf_ngap_addr:
-    description: Address to expose the Core Access and Mobility Management Function (AMF)
-    type: str
-    default_value: "10.0.1.2"
-    required_when: false
-  one_upf_p4_sw_controller_upf_ipv4_n3:
-    description: Address to expose the N3 (gnb-upf) Core User Plane Function (UPF)
-    type: str
-    default_value: "10.0.3.1"
     required_when: false
   one_upf_p4_sw_controller_upf_ipv4_n6:
     description: Address to expose the N6 (upf-pdn) Core User Plane Function (UPF)
@@ -118,23 +127,28 @@ input:
     required_when: false
 
 
+
 ####################################
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
+  __entity_name__component_type: "upf_p4_sw"
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
-  __entity_name__metadata:
-    proxy: "10.11.3.1"   # hardcoded
+  __entity_name__5gcore_metadata:
+    amf_n2_ip: input.one_upf_p4_sw_open5gs_amf_ngap_addr 
+    upf_n3_ip: input.one_upf_p4_sw_controller_upf_ipv4_n3
+    ue_count: '1'
+    tac: input.one_upf_p4_sw_open5gs_control_tac
     mcc: input.one_upf_p4_sw_open5gs_control_mcc
     mnc: input.one_upf_p4_sw_open5gs_control_mnc
     msin: input.one_upf_p4_sw_open5gs_control_msin
     key: input.one_upf_p4_sw_open5gs_control_key
     opc: input.one_upf_p4_sw_open5gs_control_opc
     apn: input.one_upf_p4_sw_open5gs_control_apn
-    tac: input.one_upf_p4_sw_open5gs_control_tac
-    s_nssai_sd: input.one_upf_p4_sw_open5gs_control_s_nssai_sd
     s_nssai_sst: input.one_upf_p4_sw_open5gs_control_s_nssai_sst
-    amf_ip: input.one_upf_p4_sw_open5gs_amf_ngap_addr 
-    upf_ip: input.one_upf_p4_sw_controller_upf_ipv4_n3
-    upf_ipv4_n6: input.one_upf_p4_sw_controller_upf_ipv4_n6
+    s_nssai_sd: input.one_upf_p4_sw_open5gs_control_s_nssai_sd
+    upf_n6_ip: input.one_upf_p4_sw_controller_upf_ipv4_n6       # Debatable
+    enb_n3_ip: input.one_upf_p4_sw_controller_enb_ipv4_n3       # Debatable
+    dn_n6_ip: input.one_upf_p4_sw_controller_dn_ipv4_n6         # Debatable
+    ue_subnet: input.one_upf_p4_sw_ue_pool                      # Debatable

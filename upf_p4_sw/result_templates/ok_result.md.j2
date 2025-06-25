@@ -3,42 +3,108 @@
 ## 📋 Deployment Summary
 The UPF-P4 BMv2 SW module has been successfully deployed as part of Trial Network **{{ tn_id }}**.
 
-## 🖥️ Virtual Machine Information
+### Component Version Information
+- UPF-P4 SW Component Version: v0.5.0
+- Data Plane Version (BMv2-Stratum): ubuntu18-stratum-bmv2_0.0.1
+- Control Plane Version (UPF Controller): 2.0.0
+- Open5GS Control Plane Version: 2.5.6 (Release 16)
+
+## 🖥️ System Overview
+
+### Virtual Machine Details
 - VM ID: {{ id }}
-- Assigned Network IPs: 
+- Assigned Network IPs:
 {% for network, ip in ips.items() %}
   - {{ network }}: {{ ip }}
 {% endfor %}
+- Access to Virtual Machine: SSH via {{ (ips | first)[1] }} through bastion host
 
-### 🐳 Docker Components
-Below is a summary of the docker components that have been deployed within the virtual machine:
-* DP-UPF Docker Container: Executes the P4 UPF data plane.
-* CP-UPF Docker Container: Run the data plane python controller.
-* Open5GS Release 16 Docker Containers: One container for each Open5GS service (AMF, SMF, etc) without UPF service.
+### 🐳 Deployed Docker Components
+The following containers have been deployed:
+* **DP-UPF Container**: P4-based UPF data plane with BMv2 & Stratum
+* **CP-UPF Container**: Run the data plane python controller.
+* **Open5GS R16 Containers**: Full control plane services (AMF, SMF, etc.)
 
-## Access to Virtual Machine
-You will be able to access the VM through SSH using the IP {{ (ips | first)[1] }} with SSH connection via the bastion host.
+## 🌐 Network Configuration
 
-## Connections
-The UPF-P4 BMv2 SW + Open5GS CP has been successfully deployed to connect to:
-* RAN N3 IP: {{ one_upf_p4_sw_controller_enb_ipv4_n3 }}
-* DN external: {{ one_upf_p4_sw_controller_dn_ipv4_n6 }}
+### Interface Configuration
+* **N3 Interface (RAN Side)**:
+  - gNodeB IP: {{ one_upf_p4_sw_controller_enb_ipv4_n3 }}
+  - UPF N3 IP: {{ one_upf_p4_sw_controller_upf_ipv4_n3 }}
 
-## 📊 Core Network Configuration
+* **N6 Interface (Data Network Side)**:
+  - DN IP: {{ one_upf_p4_sw_controller_dn_ipv4_n6 }}
+  - UPF N6 IP: {{ one_upf_p4_sw_controller_upf_ipv4_n6 }}
 
-### PLMN Information
-- MCC: {{ one_upf_p4_sw_open5gs_control_mcc }}
-- MNC: {{ one_upf_p4_sw_open5gs_control_mnc }}
-- TAC: {{ one_upf_p4_sw_open5gs_control_tac }}
+### UE IP Pool Information
+- Allocated Pool: {{ one_upf_p4_sw_ue_pool }}
 
-### Network Slice
-- SST: {{ one_upf_p4_sw_open5gs_control_s_nssai_sst }}
-- SD: {{ one_upf_p4_sw_open5gs_control_s_nssai_sd }}
+## 📊 Core Network Settings
+
+### PLMN Configuration
+- MCC (Mobile Country Code): {{ one_upf_p4_sw_open5gs_control_mcc }}
+- MNC (Mobile Network Code): {{ one_upf_p4_sw_open5gs_control_mnc }}
+- TAC (Tracking Area Code): {{ one_upf_p4_sw_open5gs_control_tac }}
+
+### Network Slice Information
+- SST (Slice/Service Type): {{ one_upf_p4_sw_open5gs_control_s_nssai_sst }}
+- SD (Slice Differentiator): {{ one_upf_p4_sw_open5gs_control_s_nssai_sd }}
 
 ### AMF Configuration
-- AMF Address: {{ one_upf_p4_sw_open5gs_amf_ngap_addr }}
+- NGAP Address: {{ one_upf_p4_sw_open5gs_amf_ngap_addr }}
 
-### UPF Configuration
-- See README file in the UPF-P4 BMv2 SW repository for more information.
+## 📝 Operation & Maintenance
 
-## 📝 Logs
+### Accessing Component Logs
+To view container logs:
+```bash
+# List containers
+docker ps -a
+
+# View specific container logs
+docker logs <container_id>
+```
+
+### Common Troubleshooting Steps
+1. For UE registration issues:
+   - Verify PLMN configuration matches between AMF and UE
+   - Check subscriber registration in Open5GS
+   - Validate network slice parameters
+
+2. For connectivity issues:
+   - Confirm interface configurations
+   - Check GTP tunnel establishment
+   - Verify routing tables
+
+### Default UE Configuration
+A default UE has been pre-configured with these parameters:
+- IMSI: {{ one_upf_p4_sw_open5gs_control_mcc }}{{ one_upf_p4_sw_open5gs_control_mnc }}{{ one_upf_p4_sw_open5gs_control_msin }}
+- Key: {{ one_upf_p4_sw_open5gs_control_key }}
+- OPC: {{ one_upf_p4_sw_open5gs_control_opc }}
+- APN: {{ one_upf_p4_sw_open5gs_control_apn }}
+
+### Component Status Verification
+To verify proper deployment:
+1. Check container status:
+   ```bash
+   docker ps
+   ```
+   All containers should be in "Up" state
+
+2. Verify service readiness:
+   ```bash
+   docker logs cp-upf  # Check UPF controller logs
+   docker logs amf     # Check AMF logs
+   ```
+
+### External Connectivity
+For UE internet access, ensure proper NAT configuration on the DN side.
+See documentation for NAT setup instructions if needed.
+
+### 📚 Documentation & Resources
+- Complete Configuration: /home/jenkins/config/
+- Component Documentation: See README.md
+- UPF Controller (v2.0.0) Features:
+  * Enhanced ARP handling
+  * Improved stability
+  * Better logging

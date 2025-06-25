@@ -1,5 +1,15 @@
 # Changelog
 
+## unreleased
+### Added
+- New optional input variables `one_bastion_routemanager_add`, supporting the addition of custom routes to the internal route-manager-api
+- New optional input variables `one_bastion_fw_exceptions` and `one_bastion_nat_exceptions` to disable firewall/NAT respectivelly to custom IPs/networks.
+
+
+## v0.5.0
+### Added
+- NFTables firewall now accepts exception files for NATting at `/etc/nftables/nat_exceptions/*.nft`.
+
 ## v0.4.0
 Massive update. Component is no longer deprecated, and tn_init will just use files from it when necessary.
 ### Added
@@ -7,20 +17,17 @@ Massive update. Component is no longer deprecated, and tn_init will just use fil
 ### Removed
 - Public input variable `one_bastion_wireguard_allowedips` has been deleted.
 
-
 ## v0.3.0
 ### Deprecated
 - Component is still deprecated, move to `tn_init` instead.
 ### Removed
 - Deleted ansible task overwriting `entity_name` with the component type. `entity_name` is now only defined during the Jenkins Pipeline.
 
-
 ## v0.2.0
 ### Changed
 - Component follows the new architecture.
 ### Deprecated
 - Component is now deprecated, try to use `tn_init` instead.
-
 
 ## v0.1.0
 ### Added

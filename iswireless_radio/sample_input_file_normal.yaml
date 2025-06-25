@@ -1,0 +1,7 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+any_iswireless_radio_ru_du: false
+any_iswireless_radio_linked_5gcore: "open5gs_k8s-core"
+# any_iswireless_radio_linked_cu: null
+# any_iswireless_radio_start_time: "2025-01-13T09:12:00+00:00"
+# any_iswireless_radio_duration: 10800
