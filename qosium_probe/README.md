@@ -10,6 +10,9 @@ To reveal all the available QoS statistics, you need to conduct measurements bet
 
 If you are heading for a monitoring setup, a central place for storing and visualizing the results can become useful. You can get the results into your own software, and even control measurements, by using Kaitotek's API. Another option is to deploy Kaitotek's Qosium Storage results solution, providing you with QoS situational awareness over the whole network. Qosium Storage can also be used to control measurements. Qosium Storage can be operated directly via its web UI or remotely over REST API.
 
+## Integration
+
+The Virtual Machine including Qosium Probe is, currently, deployed to OpenNebula manually. Please be in touch with [Kaitotek](https://www.kaitotek.com/forms/support-request) for more information and the VM image.
 
 ## Configuration
 
@@ -22,7 +25,7 @@ In addition, you can install Qosium Probes manually, e.g., to physical devices t
 
 Once you have Probes in place, install the measurement controllers of your choice, and/or the results solution, if not already installed. 
 
-For support and Qosium installers, please contact [Kaitotek](https://www.kaitotek.com/forms/support-request).
+NOTE: this component involves a private-licensed image. Thus, for support and Qosium installers, please contact [Kaitotek](https://www.kaitotek.com/forms/support-request).
 
 ## Additional information
 
