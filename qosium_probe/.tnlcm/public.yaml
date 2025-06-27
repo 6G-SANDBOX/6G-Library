@@ -21,13 +21,19 @@ metadata:
     Qosium Probes do nothin alone but needs a controller software (Qosium Scope, Qosium Scopemon, or your own).
     Read more at www.kaitotek.com/resources/documentation
   hypervisors: [one]
-
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "appliance"
+	- "licensed"
+    - "monitoring"
 ############################################################################################################
 ## Site-specific variables
 ############################################################################################################
 site_variables:
-  template_id: Short description of what this variable represents.
-
+  template_id: ID of the Qosium Probe VM template to use in your OpenNebula environment
+  image_id: ID of the Qosium Probe VM image to use in your OpenNebula environment. The VM is deployed to OpenNebula manually.
 
 ############################################################################################################
 ## Input variables
@@ -37,23 +43,6 @@ input:
     description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
-    required_when: false
-  one_qosium_probe_vm_size:
-    description: |
-      Select one type of instance according to your hardware requirements.
-      - extra_large: 32 GiB of memory, 8 vCPU and 100GiB of storage
-      - large: 16 GiB of memory, 4 vCPU and 50GiB of storage
-      - medium: 8 GiB of memory, 4 vCPU and 25GiB of storage
-      - small: 4 GiB of memory, 2 vCPU and 15GiB of storage
-      - very_small: 2 GiB of memory, 1 vCPU and 10GiB of storage
-    type: str
-    default_value: "small"
-    choices:
-      - "extra_large"
-      - "large"
-      - "medium"
-      - "small"
-      - "very_small"
     required_when: false
   one_qosium_probe_service_id:
     description: A unique identifier number for the Qosium Probe
