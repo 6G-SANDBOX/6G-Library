@@ -7,4 +7,5 @@ trial_network:
     type: "xrext"
     name: "nokia"
     dependencies: ["tn_init"]
-    input: {}
+    input:
+      xrext_nac_and_capif_server: "10.182.32.52"

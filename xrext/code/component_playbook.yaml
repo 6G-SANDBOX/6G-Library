@@ -81,7 +81,20 @@
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
-- name: "STAGE 4: Publish execution results"
+- name: "STAGE 4: Access tn_bastion to set firewall exceptions"
+  hosts: bastion
+  gather_facts: false
+  tasks:
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Write firewall exception for the XRext NaC and CAPIF Server
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+      vars:
+        fw_exceptions:
+          - "{{ xrext_nac_and_capif_server }}"
+
+- name: "STAGE 5: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local

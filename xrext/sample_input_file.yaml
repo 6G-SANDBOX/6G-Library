@@ -2,3 +2,5 @@
 
 # one_xrext_networks: 
 #   - tn_vxlan
+
+xrext_nac_and_capif_server: "10.182.32.52"
