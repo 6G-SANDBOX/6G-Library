@@ -36,36 +36,37 @@
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ks8500runner_networks[0] + '-id'] | string }}"
 
-    # Install additional packages
-    - name: Install dependencies for building native Ruby gems
-      become: true
-      ansible.builtin.apk:
-        name:
-          - ruby-dev
-          - build-base
-          - libxml2-dev
-          - libxslt-dev
-        state: present
+    # # Install additional packages
+    # - name: Install dependencies for building native Ruby gems
+    #   become: true
+    #   ansible.builtin.apk:
+    #     name:
+    #       - ruby
+    #       - ruby-dev
+    #       - build-base
+    #       - libxml2-dev
+    #       - libxslt-dev
+    #     state: present
 
-    - name: Install onevm tool
-      ansible.builtin.shell: "gem install opennebula-cli"
-      become: true
+    # - name: Install onevm tool
+    #   ansible.builtin.shell: "gem install opennebula-cli"
+    #   become: true
 
-    # For some weird reason, idempotency with this tool gives rc=255, but syntax errors give rc=0...
-    - name: Resize the disk reserved for Longhorn in the storage VMs
-      ansible.builtin.shell: >
-        /usr/local/bin/onevm
-        disk-resize {{ id }} 0 30G
-        --user {{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}
-        --password {{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}
-        --endpoint {{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}
-      register: disk_resize
-      failed_when: >
-        (disk_resize.rc !=  0 and 'must be larger' not in disk_resize.stderr) or
-        ('not found' in disk_resize.stderr)
-      changed_when:
-        - disk_resize.rc == 0
-        - "'not found' not in disk_resize.stderr"
+    # # For some weird reason, idempotency with this tool gives rc=255, but syntax errors give rc=0...
+    # - name: Resize the disk reserved for Longhorn in the storage VMs
+    #   ansible.builtin.shell: >
+    #     /usr/local/bin/onevm
+    #     disk-resize {{ id }} 0 30G
+    #     --user {{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}
+    #     --password {{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}
+    #     --endpoint {{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}
+    #   register: disk_resize
+    #   failed_when: >
+    #     (disk_resize.rc !=  0 and 'must be larger' not in disk_resize.stderr) or
+    #     ('not found' in disk_resize.stderr)
+    #   changed_when:
+    #     - disk_resize.rc == 0
+    #     - "'not found' not in disk_resize.stderr"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
