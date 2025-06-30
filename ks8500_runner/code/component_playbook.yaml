@@ -48,7 +48,7 @@
         state: present
 
     - name: Install onevm tool
-      ansible.builtin.shell: "sudo gem install opennebula-cli"
+      ansible.builtin.shell: "gem install opennebula-cli"
       become: true
 
     # For some weird reason, idempotency with this tool gives rc=255, but syntax errors give rc=0...
