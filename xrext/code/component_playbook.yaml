@@ -112,7 +112,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
         fw_exceptions:
-          - "{{ one_xr_nac_and_capif_server }}"
+          - "{{ one_xrext_external_server }}"
 
 
 - name: "STAGE 5: Publish execution results"

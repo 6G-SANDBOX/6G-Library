@@ -32,7 +32,7 @@ metadata:
     - "VM"
     - "appliance"
     - "testing"
-  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_XRext"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/XRext"]
 
 
 ####################################
@@ -53,7 +53,7 @@ input:
     default_value: ["tn_vxlan"]
     required_when: false
 
-  one_xr_nac_and_capif_server:
+  one_xrext_external_server:
     description: NaC and CAPIF Server IP Address to be accessed by the XR extension.
     type: "str"
     required_when: true

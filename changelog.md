@@ -11,6 +11,7 @@
 - New component `ris` to configure a RIS exposed from an API.
 - New `component_type` terraform output added to all components.
 - Component `oneKE` adds support for scaling the number of worker nodes in the cluster.
+- New mandatory input variable for component `xrext`: `one_xrext_external_server`.
 ### Changed
 - Common task file `routemanager_add.yaml` now also supports adding routes with key `dev`.
 - MTU default values in 'subnet' components (`tn_vxlan`, `vnet` and `tn_init`) are now first gathered from 6G Sandbox sites repository as suggested in issue #78
