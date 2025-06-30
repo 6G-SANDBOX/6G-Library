@@ -37,11 +37,14 @@
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ks8500runner_networks[0] + '-id'] | string }}"
 
     # Install additional packages
-    - name: Install additional required packages
+    - name: Install dependencies for building native Ruby gems
       become: true
-      ansible.builtin.package:
+      ansible.builtin.apk:
         name:
-          - ruby
+          - ruby-dev
+          - build-base
+          - libxml2-dev
+          - libxslt-dev
         state: present
 
     - name: Install onevm tool
