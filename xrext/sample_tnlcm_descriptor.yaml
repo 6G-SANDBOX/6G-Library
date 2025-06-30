@@ -8,4 +8,4 @@ trial_network:
     name: "nokia"
     dependencies: ["tn_init"]
     input:
-      xrext_nac_and_capif_server: "10.182.32.52"
+      one_xr_nac_and_capif_server: "10.182.32.52"

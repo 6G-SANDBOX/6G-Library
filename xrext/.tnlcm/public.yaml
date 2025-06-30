@@ -53,7 +53,7 @@ input:
     default_value: ["tn_vxlan"]
     required_when: false
 
-  xrext_nac_and_capif_server:
+  one_xr_nac_and_capif_server:
     description: NaC and CAPIF Server IP Address to be accessed by the XR extension.
     type: "str"
     required_when: true
