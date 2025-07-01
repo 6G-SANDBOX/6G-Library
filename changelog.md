@@ -21,7 +21,7 @@
 - Component `nokia_radio` renamed the site variables `cp_ip` and `up_ip` to `n2_ip` and `n3_ip` respectively, for coherence with the 5G Core outputs
 - Enhanced variable autocompletion on `ueransim`, gathering all UE-related metadata directly from the gNB's linked 5G Core
 - Component `elcm` now can use external influxdb and grafana instances.
-- Upgraded dockerfile to version `1.14.1` in component `ks8500_runner`.
+- Upgraded dockerfile to version `1.15.1` in component `ks8500_runner`.
 - Component `iswireless_radio` now supports **DU-RU** mode, connecting to a virtualized CU instead of a 5G core.
 ### Fixed
 - Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
