@@ -1,4 +1,8 @@
 # Changelog
+## v1.15.1
+### Changed
+- upgraded runner version 1.15.1
+- upgraded opentap version 9.28.3
 ## v1.14.0
 ### Changed
 - upgraded runner version 1.14.1
