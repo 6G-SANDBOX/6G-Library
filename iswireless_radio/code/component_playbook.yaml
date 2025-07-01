@@ -79,6 +79,9 @@
             stop_time: "{{ ending_timestamp }}"
           loop:
             - { to: "{{ site_available_components.iswireless_radio.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+            - { to: "{{ any_iswireless_radio_du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+            - { to: "{{ any_iswireless_radio_baremetal_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+
 
         - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
           when: not any_iswireless_radio_ru_du
