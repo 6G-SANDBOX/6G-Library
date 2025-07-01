@@ -90,7 +90,10 @@
         token: "{{ tn_routemanager_token }}"
       loop:
         - { to: "{{ one_ric_k8s_ip }}", via: "{{ node_ips.vnf_0 }}" }
-        - { to: "{{ site_available_components.ric_k8s.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+        # - { to: "{{ site_available_components.ric_k8s.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+        - { to: "10.182.32.110", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+        - { to: "10.182.32.109", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+
 
     - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
@@ -122,11 +125,14 @@
         fw_exceptions:
           - "{{ one_ric_k8s_ip }}"
           - "{{ site_iswireless_routemanager.api_endpoint }}"
-          - "{{ site_available_components.ric_k8s.du_ip }}"
+          # - "{{ site_available_components.ric_k8s.du_ip }}"
+          - "10.182.32.110"
+          - "10.182.32.109"
         nat_exceptions:
           - "{{ one_ric_k8s_ip }}"
-          - "{{ site_available_components.ric_k8s.du_ip }}"
-
+          # - "{{ site_available_components.ric_k8s.du_ip }}"
+          - "10.182.32.110"
+          - "10.182.32.109"
 
 - name: "STAGE 6: Publish execution results"
   hosts: localhost
