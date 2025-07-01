@@ -23,6 +23,7 @@
 - Component `elcm` now can use external influxdb and grafana instances.
 - Upgraded dockerfile to version `1.14.1` in component `ks8500_runner`.
 - Component `iswireless_radio` now supports **DU-RU** mode, connecting to a virtualized CU instead of a 5G core.
+- Upgraded KS8500 runner version 1.15.1
 ### Fixed
 - Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
 - All `.tnlcm/public.yaml` files now fit the LLM requirements as suggested in issue #128
