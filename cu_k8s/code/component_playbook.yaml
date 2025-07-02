@@ -43,11 +43,11 @@
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
         ansible_user: "root"
 
-    - name: Add the bastion to Ansible Inventory
-      ansible.builtin.add_host:
-        hostname: "bastion"
-        ansible_host: "{{ bastion_ip }}"
-        ansible_user: "jenkins"
+    # - name: Add the bastion to Ansible Inventory
+    #   ansible.builtin.add_host:
+    #     hostname: "bastion"
+    #     ansible_host: "{{ bastion_ip }}"
+    #     ansible_user: "jenkins"
 
 # - name: "STAGE 2: Access tn_bastion to set firewall exceptions"
 #   hosts: bastion
@@ -66,65 +66,65 @@
 #           - "{{ site_available_components.nokia_radio.du_ip }}"
 
 
-- name: "STAGE 4: Manipulate tn_bastion in order to enable communication to the component"
-  hosts: localhost
-  gather_facts: false
-  connection: local
-  tasks:
-    - name: Load enviromental variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
-    - name: Enable routes to the 5G Core AMF and UPF
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-      vars:
-        endpoint: "{{ bastion_ip }}"
-        token: "{{ tn_routemanager_token }}"
-      loop:
-        - { to: "{{ one_cu_k8s_n2_ip }}", via: "{{ node_ips.vnf_0 }}" }
-        - { to: "{{ one_cu_k8s_n3_ip }}", via: "{{ node_ips.vnf_0 }}" }
-        - { to: "{{ one_cu_k8s_n3_v2_ip }}", via: "{{ node_ips.vnf_0 }}" }
-        - { to: "{{ site_available_components.ric_k8s.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+# - name: "STAGE 4: Manipulate tn_bastion in order to enable communication to the component"
+#   hosts: localhost
+#   gather_facts: false
+#   connection: local
+#   tasks:
+#     - name: Load enviromental variables from different sources
+#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+#     - name: Enable routes to the 5G Core AMF and UPF
+#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+#       vars:
+#         endpoint: "{{ bastion_ip }}"
+#         token: "{{ tn_routemanager_token }}"
+#       loop:
+#         - { to: "{{ one_cu_k8s_n2_ip }}", via: "{{ node_ips.vnf_0 }}" }
+#         - { to: "{{ one_cu_k8s_n3_ip }}", via: "{{ node_ips.vnf_0 }}" }
+#         - { to: "{{ one_cu_k8s_n3_v2_ip }}", via: "{{ node_ips.vnf_0 }}" }
+#         - { to: "{{ site_available_components.ric_k8s.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
 
-    - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-      vars:
-        endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
-        token: "{{ site_iswireless_routemanager.token }}"
-        start_time: "{{ current_timestamp }}"
-        stop_time: "{{ ending_timestamp }}"
-      loop:
-        - { to: "{{ one_cu_k8s_n2_ip }}", via: "{{ bastion_ip }}" }
-        - { to: "{{ one_cu_k8s_n3_ip }}", via: "{{ bastion_ip }}" }
-        - { to: "{{ one_cu_k8s_n3_v2_ip }}", via: "{{ bastion_ip }}" }
-
-
-    - name: Add the bastion to Ansible Inventory
-      ansible.builtin.add_host:
-        hostname: "bastion"
-        ansible_host: "{{ bastion_ip }}"
-        ansible_user: "jenkins"
+#     - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
+#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+#       vars:
+#         endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
+#         token: "{{ site_iswireless_routemanager.token }}"
+#         start_time: "{{ current_timestamp }}"
+#         stop_time: "{{ ending_timestamp }}"
+#       loop:
+#         - { to: "{{ one_cu_k8s_n2_ip }}", via: "{{ bastion_ip }}" }
+#         - { to: "{{ one_cu_k8s_n3_ip }}", via: "{{ bastion_ip }}" }
+#         - { to: "{{ one_cu_k8s_n3_v2_ip }}", via: "{{ bastion_ip }}" }
 
 
-- name: "STAGE 5: Access tn_bastion to set firewall exceptions"
-  hosts: bastion
-  gather_facts: false
-  tasks:
-    - name: Load enviromental variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+#     - name: Add the bastion to Ansible Inventory
+#       ansible.builtin.add_host:
+#         hostname: "bastion"
+#         ansible_host: "{{ bastion_ip }}"
+#         ansible_user: "jenkins"
 
-    - name: Write firewall exception for the route-manager-api and the DU of your site
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
-      vars:
-        fw_exceptions:
-          - "{{ one_cu_k8s_n2_ip }}"
-          - "{{ one_cu_k8s_n3_ip }}"
-          - "{{ one_cu_k8s_n3_v2_ip }}"
-          - "{{ site_iswireless_routemanager.api_endpoint }}"
-          - "{{ site_available_components.ric_k8s.du_ip }}"
-        nat_exceptions:
-          - "{{ one_cu_k8s_n2_ip }}"
-          - "{{ one_cu_k8s_n3_ip }}"
-          - "{{ one_cu_k8s_n3_v2_ip }}"
-          - "{{ site_available_components.ric_k8s.du_ip }}"
+
+# - name: "STAGE 5: Access tn_bastion to set firewall exceptions"
+#   hosts: bastion
+#   gather_facts: false
+#   tasks:
+#     - name: Load enviromental variables from different sources
+#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+#     - name: Write firewall exception for the route-manager-api and the DU of your site
+#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+#       vars:
+#         fw_exceptions:
+#           - "{{ one_cu_k8s_n2_ip }}"
+#           - "{{ one_cu_k8s_n3_ip }}"
+#           - "{{ one_cu_k8s_n3_v2_ip }}"
+#           - "{{ site_iswireless_routemanager.api_endpoint }}"
+#           - "{{ site_available_components.ric_k8s.du_ip }}"
+#         nat_exceptions:
+#           - "{{ one_cu_k8s_n2_ip }}"
+#           - "{{ one_cu_k8s_n3_ip }}"
+#           - "{{ one_cu_k8s_n3_v2_ip }}"
+#           - "{{ site_available_components.ric_k8s.du_ip }}"
 
 
 
