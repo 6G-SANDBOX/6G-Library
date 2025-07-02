@@ -78,61 +78,61 @@
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_install.yaml"
 
 
-- name: "STAGE 4: Manipulate tn_bastion in order to enable communication to the component"
-  hosts: localhost
-  gather_facts: false
-  connection: local
-  tasks:
-    - name: Enable routes to the 5G Core AMF and UPF
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-      vars:
-        endpoint: "{{ bastion_ip }}"
-        token: "{{ tn_routemanager_token }}"
-      loop:
-        - { to: "{{ one_ric_k8s_ip }}", via: "{{ node_ips.vnf_0 }}" }
-        - { to: "10.182.32.110", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
-        - { to: "10.182.32.109", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
-        - { to: "{{ site_available_components.ric_k8s.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+# - name: "STAGE 4: Manipulate tn_bastion in order to enable communication to the component"
+#   hosts: localhost
+#   gather_facts: false
+#   connection: local
+#   tasks:
+    # - name: Enable routes to the 5G Core AMF and UPF
+    #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+    #   vars:
+    #     endpoint: "{{ bastion_ip }}"
+    #     token: "{{ tn_routemanager_token }}"
+    #   loop:
+    #     - { to: "{{ one_ric_k8s_ip }}", via: "{{ node_ips.vnf_0 }}" }
+    #     - { to: "10.182.32.110", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+    #     - { to: "10.182.32.109", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+    #     - { to: "{{ site_available_components.ric_k8s.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
 
 
-    - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-      vars:
-        endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
-        token: "{{ site_iswireless_routemanager.token }}"
-        start_time: "{{ current_timestamp }}"
-        stop_time: "{{ ending_timestamp }}"
-      loop:
-        - { to: "{{ one_ric_k8s_ip }}", via: "{{ bastion_ip }}" }
+    # - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
+    #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+    #   vars:
+    #     endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
+    #     token: "{{ site_iswireless_routemanager.token }}"
+    #     start_time: "{{ current_timestamp }}"
+    #     stop_time: "{{ ending_timestamp }}"
+    #   loop:
+    #     - { to: "{{ one_ric_k8s_ip }}", via: "{{ bastion_ip }}" }
 
-    - name: Add the bastion to Ansible Inventory
-      ansible.builtin.add_host:
-        hostname: "bastion"
-        ansible_host: "{{ bastion_ip }}"
-        ansible_user: "jenkins"
+#     - name: Add the bastion to Ansible Inventory
+#       ansible.builtin.add_host:
+#         hostname: "bastion"
+#         ansible_host: "{{ bastion_ip }}"
+#         ansible_user: "jenkins"
 
 
-- name: "STAGE 5: Access tn_bastion to set firewall exceptions"
-  hosts: bastion
-  gather_facts: false
-  tasks:
-    - name: Load enviromental variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+# - name: "STAGE 5: Access tn_bastion to set firewall exceptions"
+#   hosts: bastion
+#   gather_facts: false
+#   tasks:
+#     - name: Load enviromental variables from different sources
+#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Write firewall exception for the route-manager-api and the DU of your site
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
-      vars:
-        fw_exceptions:
-          - "{{ one_ric_k8s_ip }}"
-          - "{{ site_iswireless_routemanager.api_endpoint }}"
-          - "10.182.32.110"
-          - "10.182.32.109"
-          - "{{ site_available_components.ric_k8s.du_ip }}"
-        nat_exceptions:
-          - "{{ one_ric_k8s_ip }}"
-          - "10.182.32.110"
-          - "10.182.32.109"
-          - "{{ site_available_components.ric_k8s.du_ip }}"
+#     - name: Write firewall exception for the route-manager-api and the DU of your site
+#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+#       vars:
+#         fw_exceptions:
+#           - "{{ one_ric_k8s_ip }}"
+#           - "{{ site_iswireless_routemanager.api_endpoint }}"
+#           - "10.182.32.110"
+#           - "10.182.32.109"
+#           - "{{ site_available_components.ric_k8s.du_ip }}"
+#         nat_exceptions:
+#           - "{{ one_ric_k8s_ip }}"
+#           - "10.182.32.110"
+#           - "10.182.32.109"
+#           - "{{ site_available_components.ric_k8s.du_ip }}"
 
 - name: "STAGE 6: Publish execution results"
   hosts: localhost

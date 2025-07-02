@@ -35,66 +35,86 @@
           {{
             lookup('pipe', 'date -u -d "' ~ current_timestamp ~ ' + ' ~ any_iswireless_radio_duration ~ ' seconds" +"%Y-%m-%dT%H:%M:%SZ"')
           }}
+    - name: Enable routes to the 5G Core AMF and UPF
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ bastion_ip }}"
+        token: "{{ tn_routemanager_token }}"
+      loop:
+        - { to: "{{ one_ric_k8s_ip }}", via: "{{ node_ips.vnf_0 }}" }
+        - { to: "10.182.32.110", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+        - { to: "10.182.32.109", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+        - { to: "{{ site_available_components.ric_k8s.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
 
-    - name: Tasks for iswireless_radio with external CU
-      when: not any_iswireless_radio_ru_du
-      block:
-        - name: "Stablish route in tn_bastion to the CU through the site's route-manager-api"
-          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-          vars:
-            endpoint: "{{ bastion_ip }}"
-            token: "{{ tn_routemanager_token }}"
-            start_time: "{{ current_timestamp }}"
-            stop_time: "{{ ending_timestamp }}"
-          loop:
-            - { to: "{{ site_available_components.iswireless_radio.cu_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+    - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
+        token: "{{ site_iswireless_routemanager.token }}"
+        start_time: "{{ current_timestamp }}"
+        stop_time: "{{ ending_timestamp }}"
+      loop:
+        - { to: "{{ one_ric_k8s_ip }}", via: "{{ bastion_ip }}" }
 
-        - name: "Stablish routes in the site's route-manager-api to the 5G core through tn_bastion"
-          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-          vars:
-            endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
-            token: "{{ site_iswireless_routemanager.token }}"
-            start_time: "{{ current_timestamp }}"
-            stop_time: "{{ ending_timestamp }}"
-            core_metadata: "{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_5gcore + '-5gcore_metadata'] }}"
-            # TODO: Hardcoded vnet component name. Please remove this line after component testing
-            _vnet_internal_net: "{{ (terraform_outputs.stdout | from_json)['vnet-internal-net'] }}"
-          loop:
-            # TODO: Hardcoded vnet component name. Please remove this line after component testing
-            - { to: "{{ _vnet_internal_net }}", via: "{{ bastion_ip }}" }
-            # TODO: Desirable final routes. Uncomment themm when everything is tested
-            # - { to: "{{ core_metadata['amf_n2_ip'] }}", via: "{{ bastion_ip }}" }
-            # - { to: "{{ core_metadata['upf_n3_ip'] }}", via: "{{ bastion_ip }}" }
+    # - name: Tasks for iswireless_radio with external CU
+    #   when: not any_iswireless_radio_ru_du
+    #   block:
+    #     - name: "Stablish route in tn_bastion to the CU through the site's route-manager-api"
+    #       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+    #       vars:
+    #         endpoint: "{{ bastion_ip }}"
+    #         token: "{{ tn_routemanager_token }}"
+    #         start_time: "{{ current_timestamp }}"
+    #         stop_time: "{{ ending_timestamp }}"
+    #       loop:
+    #         - { to: "{{ site_available_components.iswireless_radio.cu_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
 
-    - name: Tasks for iswireless_radio in RU-DU mode, with a CU component
-      when: any_iswireless_radio_ru_du
-      block:
-        - name: "Stablish route in tn_bastion to the DU through the site's route-manager-api"
-          when: not any_iswireless_radio_ru_du
-          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-          vars:
-            endpoint: "{{ bastion_ip }}"
-            token: "{{ tn_routemanager_token }}"
-            start_time: "{{ current_timestamp }}"
-            stop_time: "{{ ending_timestamp }}"
-          loop:
-            - { to: "{{ site_available_components.iswireless_radio.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
-            - { to: "{{ any_iswireless_radio_du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
-            - { to: "{{ any_iswireless_radio_baremetal_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+    #     - name: "Stablish routes in the site's route-manager-api to the 5G core through tn_bastion"
+    #       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+    #       vars:
+    #         endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
+    #         token: "{{ site_iswireless_routemanager.token }}"
+    #         start_time: "{{ current_timestamp }}"
+    #         stop_time: "{{ ending_timestamp }}"
+    #         core_metadata: "{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_5gcore + '-5gcore_metadata'] }}"
+    #         # TODO: Hardcoded vnet component name. Please remove this line after component testing
+    #         _vnet_internal_net: "{{ (terraform_outputs.stdout | from_json)['vnet-internal-net'] }}"
+    #       loop:
+    #         # TODO: Hardcoded vnet component name. Please remove this line after component testing
+    #         - { to: "{{ _vnet_internal_net }}", via: "{{ bastion_ip }}" }
+    #         # TODO: Desirable final routes. Uncomment themm when everything is tested
+    #         # - { to: "{{ core_metadata['amf_n2_ip'] }}", via: "{{ bastion_ip }}" }
+    #         # - { to: "{{ core_metadata['upf_n3_ip'] }}", via: "{{ bastion_ip }}" }
+
+    # - name: Tasks for iswireless_radio in RU-DU mode, with a CU component
+    #   when: any_iswireless_radio_ru_du
+    #   block:
+    #     - name: "Stablish route in tn_bastion to the DU through the site's route-manager-api"
+    #       when: not any_iswireless_radio_ru_du
+    #       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+    #       vars:
+    #         endpoint: "{{ bastion_ip }}"
+    #         token: "{{ tn_routemanager_token }}"
+    #         start_time: "{{ current_timestamp }}"
+    #         stop_time: "{{ ending_timestamp }}"
+    #       loop:
+    #         - { to: "{{ site_available_components.iswireless_radio.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+    #         - { to: "{{ any_iswireless_radio_du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
+    #         - { to: "{{ any_iswireless_radio_baremetal_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
 
 
-        - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
-          when: not any_iswireless_radio_ru_du
-          ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-          vars:
-            endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
-            token: "{{ site_iswireless_routemanager.token }}"
-            start_time: "{{ current_timestamp }}"
-            stop_time: "{{ ending_timestamp }}"
-            # TODO: Ensure this output is defined in cu_k8s. NO DICTIONARY
-            cu_ip: "{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_cu + '-cu_ip'] }}"
-          loop:
-            - { to: "{{ cu_ip }}", via: "{{ bastion_ip }}" }
+    #     - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
+    #       when: not any_iswireless_radio_ru_du
+    #       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+    #       vars:
+    #         endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
+    #         token: "{{ site_iswireless_routemanager.token }}"
+    #         start_time: "{{ current_timestamp }}"
+    #         stop_time: "{{ ending_timestamp }}"
+    #         # TODO: Ensure this output is defined in cu_k8s. NO DICTIONARY
+    #         cu_ip: "{{ (terraform_outputs.stdout | from_json)[any_iswireless_radio_linked_cu + '-cu_ip'] }}"
+    #       loop:
+    #         - { to: "{{ cu_ip }}", via: "{{ bastion_ip }}" }
 
 
 - name: "STAGE 2: Recreate the necessary gNB containers, and prepare access to the tn_bastion"
@@ -119,25 +139,31 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Write firewall exceptions for the route-manager-api and the CU of your site
-      when: not any_iswireless_radio_ru_du
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
-      vars:
-        fw_exceptions:
-          - "{{ site_iswireless_routemanager.api_endpoint }}"
-          - "{{ site_available_components.iswireless_radio.cu_ip }}"
-        nat_exceptions:
-          - "{{ site_available_components.iswireless_radio.cu_ip }}"
+    # - name: Write firewall exceptions for the route-manager-api and the CU of your site
+    #   when: not any_iswireless_radio_ru_du
+    #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+    #   vars:
+    #     fw_exceptions:
+    #       - "{{ site_iswireless_routemanager.api_endpoint }}"
+    #       - "{{ site_available_components.iswireless_radio.cu_ip }}"
+    #     nat_exceptions:
+    #       - "{{ site_available_components.iswireless_radio.cu_ip }}"
 
     - name: Write firewall exception for the route-manager-api and the DU of your site
       when: any_iswireless_radio_ru_du
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
         fw_exceptions:
+          - "{{ one_ric_k8s_ip }}"
           - "{{ site_iswireless_routemanager.api_endpoint }}"
-          - "{{ site_available_components.iswireless_radio.du_ip }}"
+          - "10.182.32.110"
+          - "10.182.32.109"
+          - "{{ site_available_components.ric_k8s.du_ip }}"
         nat_exceptions:
-          - "{{ site_available_components.iswireless_radio.du_ip }}"
+          - "{{ one_ric_k8s_ip }}"
+          - "10.182.32.110"
+          - "10.182.32.109"
+          - "{{ site_available_components.ric_k8s.du_ip }}"
 
 
 - name: "STAGE 4: Publish execution results"
@@ -145,13 +171,13 @@
   gather_facts: false
   connection: local
   tasks:
-    - name: Define gnb_metadata dictionary in the CU-DU scenario
-      when: not any_iswireless_radio_ru_du
-      ansible.builtin.set_fact:
-        gnb_metadata_dict: >-
-          {
-            'linked_5gcore': '{{ any_iswireless_radio_linked_5gcore | default('None') }}',
-          }
+    # - name: Define gnb_metadata dictionary in the CU-DU scenario
+    #   when: not any_iswireless_radio_ru_du
+    #   ansible.builtin.set_fact:
+    #     gnb_metadata_dict: >-
+    #       {
+    #         'linked_5gcore': '{{ any_iswireless_radio_linked_5gcore | default('None') }}',
+    #       }
     - name: Define gnb_metadata dictionary in the RU-DU scenario
       when: any_iswireless_radio_ru_du
       ansible.builtin.set_fact:
