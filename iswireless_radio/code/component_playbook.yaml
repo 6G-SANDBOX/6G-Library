@@ -43,9 +43,11 @@
         token: "{{ tn_routemanager_token }}"
       loop:
         - { to: "{{ one_ric_k8s_ip }}", via: "{{ node_ips.vnf_0 }}" }
+        - { to: "{{ one_cu_k8s_n2_ip }}", via: "{{ node_ips.vnf_0 }}" }
+        - { to: "{{ one_cu_k8s_n3_ip }}", via: "{{ node_ips.vnf_0 }}" }
+        - { to: "{{ one_cu_k8s_n3_v2_ip }}", via: "{{ node_ips.vnf_0 }}" }
         - { to: "10.182.32.110", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
         - { to: "10.182.32.109", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
-        - { to: "{{ site_available_components.ric_k8s.du_ip }}", via: "{{ site_iswireless_routemanager.api_endpoint }}" }
 
     - name: "Stablish routes in the site's route-manager-api to the CU through tn_bastion"
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
@@ -54,6 +56,9 @@
         token: "{{ site_iswireless_routemanager.token }}"
       loop:
         - { to: "{{ one_ric_k8s_ip }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ one_cu_k8s_n2_ip }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ one_cu_k8s_n3_ip }}", via: "{{ bastion_ip }}" }
+        - { to: "{{ one_cu_k8s_n3_v2_ip }}", via: "{{ bastion_ip }}" }
 
     # - name: Tasks for iswireless_radio with external CU
     #   when: not any_iswireless_radio_ru_du
@@ -155,14 +160,18 @@
         fw_exceptions:
           - "{{ one_ric_k8s_ip }}"
           - "{{ site_iswireless_routemanager.api_endpoint }}"
-          - "10.182.32.110"
-          - "10.182.32.109"
-          - "{{ site_available_components.ric_k8s.du_ip }}"
+          - "{{ any_iswireless_radio_du_ip }}"
+          - "{{ any_iswireless_radio_baremetal_ip }}"
+          - "{{ one_cu_k8s_n2_ip }}"
+          - "{{ one_cu_k8s_n3_ip }}"
+          - "{{ one_cu_k8s_n3_v2_ip }}"
         nat_exceptions:
           - "{{ one_ric_k8s_ip }}"
-          - "10.182.32.110"
-          - "10.182.32.109"
-          - "{{ site_available_components.ric_k8s.du_ip }}"
+          - "{{ any_iswireless_radio_du_ip }}"
+          - "{{ any_iswireless_radio_baremetal_ip }}"
+          - "{{ one_cu_k8s_n2_ip }}"
+          - "{{ one_cu_k8s_n3_ip }}"
+          - "{{ one_cu_k8s_n3_v2_ip }}"
 
 
 - name: "STAGE 4: Publish execution results"
