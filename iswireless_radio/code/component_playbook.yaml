@@ -52,8 +52,6 @@
       vars:
         endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
         token: "{{ site_iswireless_routemanager.token }}"
-        start_time: "{{ current_timestamp }}"
-        stop_time: "{{ ending_timestamp }}"
       loop:
         - { to: "{{ one_ric_k8s_ip }}", via: "{{ bastion_ip }}" }
 
