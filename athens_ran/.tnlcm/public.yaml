@@ -13,38 +13,36 @@
 ####################################
 metadata:
   maintainers:
+    - Jason Diakoumakos <i.diakoumakos@oteresearch.gr>
     - Vasilis Pitsilis <vpitsilis@dat.demokritos.gr>
     - George Pappas <g.pappas@oteresearch.gr>
-    - Jason Diakoumakos <i.diakoumakos@oteresearch.gr>
-  short_description: Enables the capability of using physical RAN in a Trial Network (Athens RAN Erricson).
+  short_description: Enables routing temporarily between Ericsson RAN and a previously deployed 5G Core regarding the Athens site.
   long_description: |
-    This component enables the integration of Erricson physical equipment located at Athens with an open5Gs 5G core deployed as part of the Trial Network.
-    open5Gs is a commercial 5G core deployed by COSMOTE and its internal components are not exposed to the experimenter. This component will only
-    configure the routing path between the Trial Network and the Erricson RAN.
-    It is done by enabling the necessary routing path through the use of the element called ‘Route Manager’ (already deployed in the site). 
-    The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction with the Erricson RAN.
-    - `mcc`: "001"
+    Component to integrate the Ericsson RAN physical equipment with a 5G core already deployed inside the Trial Network.
+    It is done by enabling the necessary routing path for a limited time duration using a [6G-Sandbox route-manager-api](https://marketplace.mobilesandbox.cloud:9443/appliance/service_routemanager) VM expected to be already deployed in the site.
+    WARNING: This component may only work if the configurations for the related 5G Core and UE are set as follows:
+    - `mcc`: "001" 
     - `mnc`: "01"
-    - `apn`: "internet"
-    - `tac`: 200
+    - `apn`: "default"
+    - `tac`: 1
     - `s_nssai_sst`: 1
-    - `s_nssai_sd`: "000001"
-    - `amf_ip`: "10.10.10.200"
-    - `upf_ip`: "10.10.10.201"
+    - `s_nssai_sd`: "1"
+    - `amf_n2_ip`: "10.10.10.200"
+    - `upf_n3_ip`: "10.10.10.201"
+    NOTE: Aditional routing configuration that is not dependent on the Trial Network may also need to be done beforehand.
     NOTE: Currently this component is only available in the site "athens".
-  hypervisors: ["one"]
-  depends_on: 
-    - tn_bastion
-    - tn_init
-    - open5gs_vm-core
-  tags: # Tags to classify/identify the component. The tags are used to understand the different ways the user could called the component.
-    - radio
-    - gNB
-    - route manager
-    - Erricson RAN
-    - 5G Core
-    - Physical Equipment
-    - Athens Site
+  hypervisors: ["any"]
+  depends_on:
+    - [open5gs_vm]
+  tags:
+    - "gNB"
+    - "route_manager"
+    - "resource_manager"
+    - "networking"
+    - "radio"
+    - "ericsson"
+    - "5g_core"
+    - "physical_equipment"
   destroy_script: true
   resource_manager: true
 
@@ -53,29 +51,27 @@ metadata:
 ## Site-specific variables
 ####################################
 site_variables:
-  cp_ip: 172.25.11.200 #ericsson Control Plane IP address
-  up_ip: 172.25.13.200 #ericsson User Plane IP address
+  n2_ip: 172.25.11.200 #"IP address of Ericsson RAN in the Control Plane N2 interface for Athens site. It will try to connect to the AMF of the 5G Core specified in `any_athens_ran_linked_5gcore`."
+  n3_ip: 172.25.13.200 #"IP address of Ericsson RAN in the User Plane N3 interface for Athens site. It will try to connect to the UPF of the 5G Core specified in `any_athens_ran_linked_5gcore`."
 
 
 ####################################
 ## Input variables
 ####################################
 input:
-  one_ericsson_radio_open5gs:
-    description: Name of a previosly deployed Open5GS 5G Core
+  any_athens_ran_linked_5gcore:
+    description: Name of a previously deployed 5G Core component inside the same Trial Network. The gNB will try to connect to its AMF.
     type: "open5gs_vm"
     required_when: true
-
-  any_ericsson_radio_start_time:
+  any_athens_ran_start_time:
     description: |
       Time and date from which the route is enabled, with RFC 3339 section 5.6 format. E.g. '2024-11-08T09:12:00+00:00'.
       If unspecified, value takes current time and date.
     type: str
     default_value: Current time and date
     required_when: false
-
   any_athens_ran_duration:
-    description: Time in seconds for the ericsson reservation
+    description: Time in seconds for the Ericsson RAN reservation
     type: int
     default_value: 3600
     required_when: false
@@ -85,4 +81,6 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__open5gs: input.one_ericsson_radio_open5gs
+  __entity_name__component_type: "athens_ran"
+  __entity_name__gnb_metadata:
+    linked_5gcore: input.any_athens_ran_linked_5gcore
