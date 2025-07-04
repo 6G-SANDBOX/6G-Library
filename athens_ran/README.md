@@ -23,7 +23,7 @@ The configuration exposed by this component should be synchronized with the 5G c
 > [!NOTE]  
 > Currently this component is only available in the site "athens".
 
-![athens_ran](https://github.com/6G-SANDBOX/6G-Library/blob/assets/athens_ran/athens_radio.png)
+![athens_ran](https://github.com/6G-SANDBOX/6G-Library/blob/assets/athens_ran/athens_ran.png)
 
 ## Maintainers
 
