@@ -26,7 +26,7 @@ metadata:
     - `apn`: "default"
     - `tac`: 1
     - `s_nssai_sst`: 1
-    - `s_nssai_sd`: "1"
+    - `s_nssai_sd`: "000001"
     - `amf_n2_ip`: "10.10.10.200"
     - `upf_n3_ip`: "10.10.10.201"
     NOTE: Aditional routing configuration that is not dependent on the Trial Network may also need to be done beforehand.

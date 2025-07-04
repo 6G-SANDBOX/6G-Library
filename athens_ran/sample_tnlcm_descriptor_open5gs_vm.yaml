@@ -40,7 +40,7 @@ trial_network:
       one_open5gs_vm_opc: "E8ED289DEBA952E4283B54E88E6183CA"  # Default value
       one_open5gs_vm_apn: "default"     # Default value is internet
       one_open5gs_vm_s_nssai_sst: 1      # Default value
-      one_open5gs_vm_s_nssai_sd: "1"  # Default value is "000001"
+      one_open5gs_vm_s_nssai_sd: "000001"  # Default value is "000001"
   
   athens_ran-RAN:
     type: "athens_ran"

@@ -10,7 +10,7 @@ The configuration exposed by this component should be synchronized with the 5G c
 - `imsi`: "001010000000001"
 - `tac`: 1
 - `s_nssai_sst`: 1
-- `s_nssai_sd`: "1"
+- `s_nssai_sd`: "000001"
 - `key`: "465B5CE8B199B49FAA5F0A2EE238A6BC"
 - `opc`: "E8ED289DEBA952E4283B54E88E6183CA"
 - `amf_n2_ip`: "10.10.10.200"
@@ -57,7 +57,7 @@ The Route Manager is a custom appliance, developed as part of the 6G-SANDBOX lib
 > - `imsi`: `"001010000000001"`  
 > - `tac`: `1`  
 > - `s_nssai_sst`: `1`  
-> - `s_nssai_sd`: `"1"`  
+> - `s_nssai_sd`: `"000001"`  
 > - `amf_n2_ip`: `"10.10.10.200"`  
 > - `upf_n3_ip`: `"10.10.10.201"`  
 > - `key`: `"465B5CE8B199B49FAA5F0A2EE238A6BC"`  
