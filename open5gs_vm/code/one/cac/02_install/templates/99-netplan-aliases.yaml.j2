@@ -24,17 +24,4 @@ network:
       addresses:
         - {{ ips[n3_vnet_id] }}/24
         - {{ one_open5gs_vm_upf_n3_ip }}/24
-{% elif one_open5gs_vm_internal_vnet|length == 3 %}
-    eth1:
-      addresses:
-        - {{ ips[n2_vnet_id] }}/24
-        - {{ one_open5gs_vm_amf_n2_ip }}/24
-    eth2:
-      addresses:
-        - {{ ips[n3_vnet_id] }}/24
-        - {{ one_open5gs_vm_upf_n3_ip }}/24
-    eth3:
-      addresses:
-        - {{ ips[n6_vnet_id] }}/24
-        - {{ one_open5gs_vm_upf_n6_ip }}/24
 {% endif %}

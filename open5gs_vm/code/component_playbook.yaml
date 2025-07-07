@@ -59,11 +59,6 @@
             if one_open5gs_vm_internal_vnet | length > 1 else
             (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[0] + '-id'] | string
           }}
-        n6_vnet_id: >-
-          {{
-            (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[2] + '-id'] | string
-            if one_open5gs_vm_internal_vnet | length > 2 else ''
-          }}
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
@@ -119,7 +114,6 @@
         access_vnet_id: "{{ hostvars['localhost']['access_vnet_id'] }}"
         n2_vnet_id: "{{ hostvars['localhost']['n2_vnet_id'] }}"
         n3_vnet_id: "{{ hostvars['localhost']['n3_vnet_id'] }}"
-        n6_vnet_id: "{{ hostvars['localhost']['n6_vnet_id'] }}"
 
   handlers:
     - name: Restart Open5GS
@@ -155,7 +149,6 @@
       loop:
         - { to: "{{ one_open5gs_vm_amf_n2_ip }}", via: "{{ ips[access_vnet_id] }}" }
         - { to: "{{ one_open5gs_vm_upf_n3_ip }}", via: "{{ ips[access_vnet_id] }}" }
-        - { to: "{{ one_open5gs_vm_upf_n6_ip }}", via: "{{ ips[access_vnet_id] }}" }
         - { to: "{{ one_open5gs_vm_ue_subnet }}", via: "{{ ips[access_vnet_id] }}" }
 
     - name: Add tn_bastion to Ansible Inventory
@@ -178,7 +171,6 @@
         fw_exceptions:
           - "{{ one_open5gs_vm_amf_n2_ip }}"
           - "{{ one_open5gs_vm_upf_n3_ip }}"
-          - "{{ one_open5gs_vm_upf_n6_ip }}"
           - "{{ one_open5gs_vm_ue_subnet }}"
 
 
@@ -193,7 +185,6 @@
           {
             'amf_n2_ip': '{{ one_open5gs_vm_amf_n2_ip }}',
             'upf_n3_ip': '{{ one_open5gs_vm_upf_n3_ip }}',
-            'upf_n6_ip': '{{ one_open5gs_vm_upf_n6_ip }}',
             'ue_count': '{{ one_open5gs_vm_ue_count }}',
             'tac': '{{ one_open5gs_vm_tac }}',
             'mcc': '{{ one_open5gs_vm_mcc }}',
