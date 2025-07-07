@@ -26,14 +26,18 @@ metadata:
   tags:
     - "VM"
     - "appliance"
-    - "licensed"
+	- "licensed"
     - "monitoring"
 ############################################################################################################
 ## Site-specific variables
 ############################################################################################################
 site_variables:
-  template_id: ID of the Qosium Probe VM template to use in your OpenNebula environment
-  image_id: ID of the Qosium Probe VM image to use in your OpenNebula environment. The VM is deployed to OpenNebula manually.
+  template_id: |
+    ID of the Qosium Probe VM template to use in your OpenNebula environment. The VM image related to the component is closed/licenseable
+    and it needs to be manually pre-imported to OpenNebula. Contact <support@kaitotek.com> for the VM image.
+  image_id: |
+    ID of the Qosium Probe VM image to use in your OpenNebula environment. The VM image related to the component is closed/licenseable
+    and it needs to be manually pre-imported to OpenNebula. Contact <support@kaitotek.com> for the VM image.
 
 ############################################################################################################
 ## Input variables
