@@ -11,6 +11,7 @@
 - New component `ris` to configure a RIS exposed from an API.
 - New `component_type` terraform output added to all components.
 - Component `oneKE` adds support for scaling the number of worker nodes in the cluster.
+- New mandatory input variable for component `xrext`: `one_xrext_external_server`.
 ### Changed
 - Common task file `routemanager_add.yaml` now also supports adding routes with key `dev`.
 - MTU default values in 'subnet' components (`tn_vxlan`, `vnet` and `tn_init`) are now first gathered from 6G Sandbox sites repository as suggested in issue #78
@@ -20,7 +21,7 @@
 - Component `nokia_radio` renamed the site variables `cp_ip` and `up_ip` to `n2_ip` and `n3_ip` respectively, for coherence with the 5G Core outputs
 - Enhanced variable autocompletion on `ueransim`, gathering all UE-related metadata directly from the gNB's linked 5G Core
 - Component `elcm` now can use external influxdb and grafana instances.
-- Upgraded dockerfile to version `1.14.1` in component `ks8500_runner`.
+- Upgraded dockerfile to version `1.15.1` in component `ks8500_runner`.
 - Component `iswireless_radio` now supports **DU-RU** mode, connecting to a virtualized CU instead of a 5G core.
 ### Fixed
 - Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
