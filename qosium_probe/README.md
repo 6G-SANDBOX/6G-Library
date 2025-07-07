@@ -12,7 +12,7 @@ If you are heading for a monitoring setup, a central place for storing and visua
 
 ## Integration
 
-The Virtual Machine including Qosium Probe is, currently, deployed to OpenNebula manually. Please be in touch with [Kaitotek](https://www.kaitotek.com/forms/support-request) for more information and the VM image.
+The Virtual Machine image including Qosium Probe is a closed, licenseable component. Please be in touch with [Kaitotek](https://www.kaitotek.com/forms/support-request) for more information and the VM image for manually importing the image into the platform.
 
 ## Configuration
 
