@@ -39,10 +39,10 @@ amf:
           mnc: "{{ one_open5gs_k8s_mnc | string }}"  # Default "70"
         tac: [ {{ one_open5gs_k8s_tac | int }} ]  # Default [1, 2, 3]
     networkName: "{{ hostvars['localhost']['tn_id'] }}-{{ hostvars['localhost']['entity_name'] }}"
-  services:
-    ngap:
-      type: "LoadBalancer"  # Default "ClusterIP"
-      loadBalancerIP: "{{ one_open5gs_k8s_amf_n2_ip | string }}"  # Default ""
+#  services:
+#    ngap:
+#      type: "LoadBalancer"  # Default "ClusterIP"
+#      loadBalancerIP: "{{ one_open5gs_k8s_amf_n2_ip | string }}"  # Default ""
 
 nrf:
   config:
@@ -62,10 +62,10 @@ upf:
     upf:
       gtpu:
         advertise: "{{ one_open5gs_k8s_upf_n3_ip | string }}"  # Default ""
-  services:
-    gtpu:
-      type: "LoadBalancer"  # Default "ClusterIP"
-      loadBalancerIP: "{{ one_open5gs_k8s_upf_n3_ip | string }}"  # Default ""
+#  services:
+#    gtpu:
+#      type: "LoadBalancer"  # Default "ClusterIP"
+#      loadBalancerIP: "{{ one_open5gs_k8s_upf_n3_ip | string }}"  # Default ""
 
 
 # Common
