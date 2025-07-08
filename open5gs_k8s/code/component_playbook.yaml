@@ -76,35 +76,35 @@
       retries: 3
       delay: 10
 
-    - name: Enable routes to the 5G Core AMF and UPF
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
-      vars:
-        endpoint: "{{ bastion_ip }}"
-        token: "{{ tn_routemanager_token }}"
-      loop:
-        - { to: "{{ one_open5gs_k8s_amf_n2_ip }}", via: "{{ node_ips.vnf_0 }}" }
-        - { to: "{{ one_open5gs_k8s_upf_n3_ip }}", via: "{{ node_ips.vnf_0 }}" }
+    # - name: Enable routes to the 5G Core AMF and UPF
+    #   ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+    #   vars:
+    #     endpoint: "{{ bastion_ip }}"
+    #     token: "{{ tn_routemanager_token }}"
+    #   loop:
+    #     - { to: "{{ one_open5gs_k8s_amf_n2_ip }}", via: "{{ node_ips.vnf_0 }}" }
+    #     - { to: "{{ one_open5gs_k8s_upf_n3_ip }}", via: "{{ node_ips.vnf_0 }}" }
 
-    - name: Add tn_bastion to Ansible Inventory
-      ansible.builtin.add_host:
-        hostname: "bastion"
-        ansible_host: "{{ bastion_ip }}"
-        ansible_user: "jenkins"
+#     - name: Add tn_bastion to Ansible Inventory
+#       ansible.builtin.add_host:
+#         hostname: "bastion"
+#         ansible_host: "{{ bastion_ip }}"
+#         ansible_user: "jenkins"
 
 
-- name: "STAGE 4: Access tn_bastion to set firewall exceptions"
-  hosts: bastion
-  gather_facts: false
-  tasks:
-    - name: Load enviromental variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+# - name: "STAGE 4: Access tn_bastion to set firewall exceptions"
+#   hosts: bastion
+#   gather_facts: false
+#   tasks:
+#     - name: Load enviromental variables from different sources
+#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
-    - name: Write firewall exceptions for the 5G Core AMF and UPF
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
-      vars:
-        fw_exceptions:
-          - "{{ one_open5gs_k8s_amf_n2_ip }}"
-          - "{{ one_open5gs_k8s_upf_n3_ip }}"
+#     - name: Write firewall exceptions for the 5G Core AMF and UPF
+#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
+#       vars:
+#         fw_exceptions:
+#           - "{{ one_open5gs_k8s_amf_n2_ip }}"
+#           - "{{ one_open5gs_k8s_upf_n3_ip }}"
 
 
 - name: "STAGE 5: Publish execution results"
