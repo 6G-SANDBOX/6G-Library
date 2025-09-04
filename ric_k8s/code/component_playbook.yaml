@@ -24,6 +24,7 @@
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
         node_ips: "{{ (terraform_outputs.stdout | from_json)[one_ric_k8s_target + '-node_ips'] }}"
+        node_ids: "{{ (terraform_outputs.stdout | from_json)[one_ric_k8s_target + '-node_ids'] }}"
         domain_name: >-
           {{
             (
@@ -47,6 +48,15 @@
         ansible_host: "{{ node_ips.worker_0 }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }},root@{{ node_ips.vnf_0 }}"
         ansible_user: "root"
+
+
+    - name: Scale CPU and RAM reserved in worker_0
+      ansible.builtin.shell: >
+        /usr/local/bin/onevm
+        resize {{ node_ids.worker_0 }} --cpu 12 --vcpu 12
+        --user {{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}
+        --password {{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}
+        --endpoint {{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}
 
 
 - name: "STAGE 2: Install psutil to monitor cpu usage on worker"
