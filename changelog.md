@@ -28,6 +28,7 @@
 - Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
 - All `.tnlcm/public.yaml` files now fit the LLM requirements as suggested in issue #128
 - remove the transmission of icmp-reirect messages from the UPF of `open5gcore_vm` and `open5gs_vm` component
+- Removed duplicated tn_bastion in ks8500_runner
 ### Deprecated
 - Multiple redundant variables removed from `ueransim`. **ue** mode now autocompletes its variables directly from the 5G core used by the *gNB*.
 
