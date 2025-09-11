@@ -35,6 +35,8 @@
 - Component is now also deployable by only using Terraform, without the ansible workaround. For more details check the component's changelog.
 ### Deprecated
 - Multiple redundant variables removed from `ueransim`. **ue** mode now autocompletes its variables directly from the 5G core used by the *gNB*.
+### Removed
+- Component `oneKE` does no longer support OneKE 1.29
 
 
 ## [v0.5.0] - 2025-03-31
@@ -53,6 +55,7 @@
 - Component `int_p4_sw` requires new variables in sites repository. For more details check the component's changelog.
 ### Deprecated
 - All 'gNB' components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`) no longer require a 'proxy' variable.
+- Component `oneKE` dropped support for OneKE 1.29.
 
 ### Fixed
 - TN_IDs can now correctly set DNS records when they have _ and mixed mayor/minorcase characters.

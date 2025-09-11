@@ -5,6 +5,8 @@
 - New variable `one_oneKE_worker_nodes` adds support for scaling the number of worker nodes in the cluster.
 ### Changed
 - Output dictionary `metadata` renamed to `oneKE_metadata`.
+### Removed
+- Removing OneKE v1.29 as a deployable option.
 
 
 ## v0.5.0
@@ -15,6 +17,8 @@
 - MetalLB is now installed outside the RKE2 deployment due to the mandatory loadBalancerClass field in its OpenNebula 1.31 chart.
 ### Fixed
 - Jenkins is now able to resize the Longhorn disk in the storage nodes.
+### Deprecated
+- Support finished for OneKE v1.29
 
 ## v0.4.0
 ### Added
