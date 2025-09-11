@@ -6,5 +6,8 @@
 #one_elcm_networks: 
 #  - tn_vxlan
 
-one_elcm_influxdb: "influxdb-mymetrics"
-one_elcm_grafana: "grafana-mydashboard"
+# one_elcm_influxdb_user: "admin"
+one_elcm_influxdb_password: "adminadmin"
+# one_elcm_influxdb_org: "elcmorg"
+# one_elcm_influxdb_bucket: "elcmbucket"
+one_elcm_grafana_password: "adminadmin"

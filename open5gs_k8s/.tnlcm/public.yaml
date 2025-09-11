@@ -21,12 +21,6 @@ metadata:
     The **open5gs_k8s** 6G-Library component deploys a 5G SA Core inside a Kubernetes cluster using the [Helm Chart from Gradiant](https://artifacthub.io/packages/helm/open5gs/open5gs).
     More info in the official documentation: https://open5gs.org/open5gs/docs/
   hypervisors: ["one"]
-  depends_on:
-    - "oneKE"
-  tags:
-    - Helm Chart
-    - 5G Core
-    - networking
 
 
 ####################################
@@ -122,8 +116,7 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__component_type: "open5gs_k8s"
-  __entity_name__5gcore_metadata:
+  __entity_name__metadata:
     amf_n2_ip: input.one_open5gs_k8s_amf_n2_ip
     upf_n3_ip: input.one_open5gs_k8s_upf_n3_ip
     ue_count: input.one_open5gs_k8s_ue_count
@@ -136,4 +129,4 @@ terraform_outputs:
     apn: input.one_open5gs_k8s_apn
     s_nssai_sst: input.one_open5gs_k8s_s_nssai_sd
     s_nssai_sd: input.one_open5gs_k8s_s_nssai_sst
-    oneke: input.one_open5gs_k8s_target             # Debatable
+    oneke: input.one_open5gs_k8s_target

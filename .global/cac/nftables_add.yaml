@@ -4,7 +4,7 @@
 # nftables_add.yaml
 #
 # This task file writes firewall exceptions in the nftables configuration of the tn_bastion
-# The task should be called from the jenkins server itself
+# Task should be called from the jenkins itself
 #
 # vars:
 #   fw_exceptions: [List of private IPs/subnets to be allowed in the firewall]

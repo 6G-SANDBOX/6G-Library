@@ -1,0 +1,10 @@
+---
+- name: "Set VM Resources according to the instance type"
+  ansible.builtin.set_fact:
+    one_xrext_cpu: "{{ one_xrext_cpu }}"
+    one_xrext_memory: "{{ one_xrext_memory }}"
+    one_xrext_disk: "{{ one_xrext_disk }}"
+
+- name: Overwrite again with explicit values from the input file
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/{{ component_type }}/variables/input_file.yaml"

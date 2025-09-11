@@ -1,45 +1,16 @@
 # Changelog
 
-## [v1.0.0] - 2025-09-11
+## [unreleased]
+
+## [v0.5.1]
 ### Added
-- New metadata variables `depends_on` and `tags` now present in the `.tnlcm/public.yaml` file of all components.
-- New component `prometheus` to scrape time series data.
-- New component `influxdb` to store time series data.
-- New component `grafana` to visualize time series data.
-- New component `monitoring` to deploy InfluxDB, Grafana and Prometheus stack together.
-- New component `mongodb` to store time series data.
-- New component `ris` to configure a RIS exposed from an API.
-- New `component_type` terraform output added to all components.
-- Component `oneKE` adds support for scaling the number of worker nodes in the cluster.
-- New mandatory input variable for component `xrext`: `one_xrext_external_server`.
 - New input variable `one_open5gs_vm_install_webui` in `open5gs_vm`, enabling the installation of the webUI.
 - New input variable `one_loadcore_agent_hugepages` and site variable schema in `loadcore_agent`, to switch between the 2 possible appliances.
-### Changed
-- Common task file `routemanager_add.yaml` now also supports adding routes with key `dev`.
-- MTU default values in 'subnet' components (`tn_vxlan`, `vnet` and `tn_init`) are now first gathered from 6G Sandbox sites repository as suggested in issue #78
-- Modified terraform outputs for all 5G Core components (`open5gcore_vm`, `open5gs_k8s`, `open5gs_vm` and `upf_p4_sw`).
-- Modified terraform outputs for all gNB components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`).
-- Components `tn_bastion` and `tn_init` now support the inclusion of additional custom routes, and firewall/NAT exceptions.
-- Component `nokia_radio` renamed the site variables `cp_ip` and `up_ip` to `n2_ip` and `n3_ip` respectively, for coherence with the 5G Core outputs.
-- Software from `open5gs_vm` and `open5gs_k8s` upgraded from version `v2.7.2` to `v2.7.6`. Chart version upgraded from `v2.2.6` to `v2.3.1`.
-- Enhanced variable autocompletion on `ueransim`, gathering all UE-related metadata directly from the gNB's linked 5G Core.
-- Component `elcm` now can use external influxdb and grafana instances.
-- Upgraded dockerfile to version `1.15.1` in component `ks8500_runner`.
-- Component `iswireless_radio` now supports **DU-RU** mode, connecting to a virtualized CU instead of a 5G core.
-- ks8500_runner upgraded from version v1.15.1 to 1.16.1
 ### Fixed
-- Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
-- All `.tnlcm/public.yaml` files now fit the LLM requirements as suggested in issue #128
-- remove the transmission of icmp-reirect messages from the UPF of `open5gcore_vm` and `open5gs_vm` component
 - Component `loadcore_agent` now correctly works with both the hugepages appliance, and the "light" one.
 - Component is now also deployable by only using Terraform, without the ansible workaround. For more details check the component's changelog.
-### Deprecated
-- Multiple redundant variables removed from `ueransim`. **ue** mode now autocompletes its variables directly from the 5G core used by the *gNB*.
-### Removed
-- Component `oneKE` does no longer support OneKE 1.29
 
-
-## [v0.5.0] - 2025-03-31
+## [v0.5.0]
 ### Added
 - Component `oneKE` now supports OneKE 1.31 and OneKE 1.31 Airgapped, and they are the new default version. New custom templates for 6G-Sandbox available in the official marketplace.
 - Common task file `nftables_add.yaml` now also supports adding NAT exceptions into the `tn_bastion`.
@@ -55,8 +26,6 @@
 - Component `int_p4_sw` requires new variables in sites repository. For more details check the component's changelog.
 ### Deprecated
 - All 'gNB' components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`) no longer require a 'proxy' variable.
-- Component `oneKE` dropped support for OneKE 1.29.
-
 ### Fixed
 - TN_IDs can now correctly set DNS records when they have _ and mixed mayor/minorcase characters.
 - Storage nodes of `oneKE` can now be resized from the deployment itself.
@@ -65,7 +34,8 @@
 - Add firewall exception for the `loadcore_agent` middleware  (#112).
 - Hardware RAN components (`berlin_ran`, `iswireless_radio` and `nokia_radio`) are now correctly exposed to the Trial Network by adding a NATting exception into the `tn_bastion`.
 
-## [v0.4.0] - 2025-02-06
+
+## [v0.4.0]
 ### Added
 - New component `berlin_ran`.
 - New component `int_p4_sw`.
@@ -112,17 +82,24 @@
 - New common task `publish_fail_results.yaml`, abstracting tasks from `terraform_apply.yaml`.
 - New input variable `one_oneKE_nginx_passthough` in component `oneKE` to enable [SSL/TLS passthrough](https://kubernetes.github.io/ingress-nginx/user-guide/tls/#ssl-passthrough).
 - New output variable `metadata_dict` in component `oneKE` to share its input variables to future components.
-- New component `nokia_radio`.
 ### Changed
 - Ansible's `hostname` variable from created VM components no longer contains nested variables. It only added complexity without benefits.
 - `.dummy_component` upgraded to version `v0.3.0`. Added comments to make its following less confusing. Also output variables naming recommendation is reflected on `.tnlcm/public.yaml`.
-- Updated description of pipeline parameters in TN_DEPLOY.groovy and TN_DESTROY.groovy.
+- Component `nokia_radio_uma` renamed to `nokia_radio` and upgraded to version `v0.3.0` with JSON callback bugfix
 ### Removed
 - Removed ansible task in unique components where `entity_name=component_type`. `entity_name` is now only defined during the Jenkins Pipeline.
 - Removed `pipeline-parameters.yaml` from playbook execution. Pipeline parameters are now sent as extraVars when executing the ansible playbook.
 ### Fixed
 - Markdown rendering issues in the `ueransim` component.
-- Failed execution markdown now includes stderr logs from "terraform apply" steps.
+
+
+## [v0.2.1] - 2024-09-02
+### Added
+- New component `nokia_radio_uma`.
+### Changed
+- Updated description of pipeline parameters in TN_DEPLOY.groovy and TN_DESTROY.groovy.
+### Fixed
+- Markdown file with stderr from failed executions of terraform apply are now correctly uploaded to the object storage.
 
 
 ## [v0.2.0] - 2024-06-06
@@ -178,11 +155,12 @@ Initial set of components is:
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v1.1.0...unreleased
-[v1.0.0]:https://github.com/6G-SANDBOX/6G-Library/compare/v0.5.0...v1.0.0
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.5.1...unreleased
+[v0.5.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.5.0...v0.5.1
 [v0.5.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.3.0...v0.4.0
-[v0.3.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...v0.3.0
+[v0.3.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.1...v0.3.0
+[v0.2.1]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.1.0...v0.2.0
 [v0.1.0]: https://github.com/6G-SANDBOX/6G-Library/releases/tag/v0.1.0
 

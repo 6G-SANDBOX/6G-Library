@@ -9,8 +9,8 @@
 ######################################################
 
 ### opennebula_virtual_network resource
-one_vnet_mtu: "{{ site_vxlan_mtu | default(1500) }}"
-one_vnet_guest_mtu: "{{ site_vxlan_guest_mtu | default(1450) }}"
+one_vnet_mtu: 1500
+one_vnet_guest_mtu: 1450
 one_vnet_physical_device: "{{ site_vxlan_if }}"
 
 one_vnet_netmask: 24

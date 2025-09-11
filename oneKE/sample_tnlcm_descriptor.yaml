@@ -9,7 +9,7 @@ trial_network:
     dependencies:
       - "tn_init"
     input:
-      one_vnet_first_ip: "10.21.12.1"     # Default value
+      # one_vnet_first_ip: "10.21.12.1"   # Default value
       # one_vnet_netmask: 24              # Default value
       # one_vnet_address_size: 100        # Default value
   oneKE-cluster:
@@ -21,7 +21,6 @@ trial_network:
     input:
       one_oneKE_external_vnet: "tn_vxlan"
       one_oneKE_internal_vnet: "vnet-internal"
-      one_oneKE_worker_nodes: 3            # Default value is 1
       one_oneKE_version: "131"
       # one_oneKE_multus: true             # Default value
       # one_oneKE_cni_plugin: "canal"      # Default value

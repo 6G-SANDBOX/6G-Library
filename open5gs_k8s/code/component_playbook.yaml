@@ -130,11 +130,12 @@
             's_nssai_sd': '{{ one_open5gs_k8s_s_nssai_sd }}',
             'oneke': '{{ one_open5gs_k8s_target }}'
           }
+
     - name: Set custom terraform outputs for future components
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-5gcore_metadata"
+          - key: "{{ entity_name }}-metadata"
             value: "{{ open5gs_metadata_dict }}"
 
     - name: Publish execution results to TNLCM and S3 object storage

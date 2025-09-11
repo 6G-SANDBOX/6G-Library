@@ -23,13 +23,6 @@ metadata:
     IxChariot Performance Endpoints act as controlled traffic sources and receivers, simulating real-world applications like web browsing, video streaming, or file transfers to evaluate how a network handles different traffic types.
   hypervisors: ["one"]
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/ixc_endpoint"]
-  depends_on:
-    - tn_bastion
-  tags:
-    - "VM"
-    - "appliance"
-    - "benchmarking"
-    - "testing"
 
 
 ####################################
@@ -60,6 +53,5 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__component_type: "ixc_endpoint"
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
