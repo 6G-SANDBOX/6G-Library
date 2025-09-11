@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.0.0
 ### Added
 - New variable `one_oneKE_worker_nodes` adds support for scaling the number of worker nodes in the cluster.
 ### Changed

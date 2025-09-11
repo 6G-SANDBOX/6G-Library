@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v1.0.0
 ### Added
 - New input variable `one_open5gs_vm_install_webui` to enable the installation of the Web UI.
 ### Changed

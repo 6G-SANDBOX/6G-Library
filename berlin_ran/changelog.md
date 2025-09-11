@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.0.0
 ### Changed
 - Output `linked_open5gs` moved to `gnb_metadata.linked_5gcore`.
 

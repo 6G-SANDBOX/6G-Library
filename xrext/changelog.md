@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.0.0
 ### Added
 - New public input variable `one_xrext_external_server`.
 - Deployment now needs to define an exception on tn_bastion's firewall.
