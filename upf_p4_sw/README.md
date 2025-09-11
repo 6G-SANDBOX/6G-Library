@@ -1,6 +1,79 @@
 # UPF-P4 Software Component
 The UPF-P4 SW component allows a P4-based implementation of the User Plane Function (UPF) for 5G networks. Additionally, this component includes a 5G Open5GS Release 16 control plane, which is compatible with the developed UPF-P4.
 
+## Maintainers
+
+- Rafael Manuel García Arévalo <rafagarciaa31@uma.es>
+
+## Short Description
+
+P4-based User Plane Function (UPF) implementation for 5G networks with integrated Open5GS Release 16 control plane, enabling flexible and programmable packet processing for trial networks.
+
+## Long Description
+
+The UPF-P4 SW component deploys a P4-based implementation of the 5G User Plane Function (UPF) on an Ubuntu 22.04 LTS virtual machine. This component leverages the P4 programming language to define packet processing behavior, providing complete control and flexibility over network traffic management through a Next Generation Software Defined Networking (NG-SDN) approach.
+
+The component consists of three main parts: a P4-based data plane running on BMv2 with Stratum, a Python-based UPF controller, and Open5GS Release 16 components for 5G core network control. All services are containerized using Docker for easy deployment and management.
+
+This component requires a previous "tn_bastion" component to be previously deployed and referenced in the networks configuration. The component uses a 'Ubuntu 22.04' appliance that must be previously installed in your OpenNebula site. The component is specifically designed for deployment within 5G trial networks and supports integration with gNodeB and UE components for complete 5G network testing scenarios.
+
+## Hypervisors
+
+- OpenNebula (one)
+
+## Depends on
+
+- tn_bastion
+
+## Tags
+
+- VM
+- 5G Core
+- appliance
+- networking
+- P4
+- UPF
+- SDN
+- trial network
+
+## Site-specific variables
+
+| Variable | Description |
+|----------|-------------|
+| `template_id` | ID of the Ubuntu 22.04 LTS VM template to use in your OpenNebula environment |
+| `image_id` | ID of the Ubuntu 22.04 LTS VM image to use in your OpenNebula environment |
+| `harbor_token` | Token to authenticate against the Harbor registry (https://dockerhub.mobilesandbox.cloud:9443) |
+
+## Input variables
+
+| Variable | Description | Type | Default | Choices | Required When |
+|----------|-------------|------|---------|---------|----------------|
+| `one_upf_p4_sw_networks` | Ordered list of Virtual Network names the VM will be part of. In most cases first one should always be the tn_vxlan | list[tn_vxlan or vnet] | ["tn_vxlan"] | - | false |
+| `one_upf_p4_sw_open5gs_amf_ngap_addr` | Address to expose the Core Access and Mobility Management Function (AMF) | str | "10.0.1.2" | - | false |
+| `one_upf_p4_sw_controller_upf_ipv4_n3` | Address to expose the N3 (upf-gnb) Core User Plane Function (UPF) | str | "10.0.3.1" | - | false |
+| `one_upf_p4_sw_open5gs_control_tac` | Tracking Area Code in the PLMN | int | 200 | - | false |
+| `one_upf_p4_sw_open5gs_control_mcc` | Mobile Country Code (MCC) used in the Public Land Mobile Network (PLMN). 3 digits inside quotes. mcc + mnc + msin must add to exactly 15 | str | "001" | - | false |
+| `one_upf_p4_sw_open5gs_control_mnc` | Mobile Network Code (MNC) used in the Public Land Mobile Network (PLMN). 2 or 3 digits inside quotes. mcc + mnc + msin must add to exactly 15 | str | "01" | - | false |
+| `one_upf_p4_sw_open5gs_control_msin` | Mobile Subscriber Identification Number (MSIN) used in the Public Land Mobile Network (PLMN). 9 or 10 digits inside quotes. mcc + mnc + msin must add to exactly 15 | str | "0000000001" | - | false |
+| `one_upf_p4_sw_open5gs_control_key` | Permanent Subscription Key | str | "465B5CE8B199B49FAA5F0A2EE238A6BC" | - | false |
+| `one_upf_p4_sw_open5gs_control_opc` | Operator Code | str | "E8ED289DEBA952E4283B54E88E6183CA" | - | false |
+| `one_upf_p4_sw_open5gs_control_apn` | Access Point Name (APN) of the initial PDU session to be established | str | "internet" | - | false |
+| `one_upf_p4_sw_open5gs_control_s_nssai_sst` | Slice/Service Type (SST) of the Single-Network Slice Selection Assistant Information (S-NSSAI) | int | 1 | - | false |
+| `one_upf_p4_sw_open5gs_control_s_nssai_sd` | Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI) | str | "1" | - | false |
+| `one_upf_p4_sw_controller_upf_ipv4_n6` | Address to expose the N6 (upf-pdn) Core User Plane Function (UPF) | str | "10.0.6.1" | - | false |
+| `one_upf_p4_sw_controller_enb_ipv4_n3` | Address of the eNB to connect to the UPF | str | "10.0.3.2" | - | false |
+| `one_upf_p4_sw_controller_dn_ipv4_n6` | Address of the PDN to connect to the UPF | str | "10.0.6.2" | - | false |
+| `one_upf_p4_sw_ue_pool` | Pool of IP addresses to be used as the UE pool | str | "10.45.0.0/16" | - | false |
+
+## Generated terraform outputs
+
+Unknown before the deployment, they are stored in the S3 Object Storage, and available to use by future components. Each variable has a short description of what it does for informational purposes.
+
+- **__entity_name__component_type**: "upf_p4_sw"
+- **__entity_name__id**: "VM ID in OpenNebula. Generated from Terraform Manifest"
+- **__entity_name__ips**: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
+- **__entity_name__5gcore_metadata**: Contains comprehensive 5G core metadata including AMF N2 IP, UPF N3/N6 IPs, UE count, tracking area code, mobile country/network codes, subscriber identification, authentication keys, operator codes, access point names, network slice information, and UE subnet configuration
+
 ## 📚 What is UPF-P4 SW?
 UPF-P4 SW is a software-based implementation of the 5G UPF, a critical network function responsible for handling user plane traffic within a 5G core network. This implementation leverages the power of P4 to define and control the packet processing behavior of the UPF, enabling flexible and efficient traffic management. 
 

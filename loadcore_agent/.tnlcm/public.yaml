@@ -23,6 +23,13 @@ metadata:
     Deploy a VM with Keysight's LoadCore Agent ready to play.
     After booting, the agent register itself with the LoadCore Middleware server.
   hypervisors: ["one"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "appliance"
+    - "testing"
+    - "benchmarking"
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent"]
 
 
@@ -63,5 +70,6 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
+  __entity_name__component_type: "loadcore_agent"
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"

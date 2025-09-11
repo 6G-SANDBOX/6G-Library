@@ -1,4 +1,26 @@
 ---
+####################################################################################
+#
+# routemanager_add.yaml
+#
+# This task file creates a custom route in the route-manager-api of the tn_bastion
+# The task should be called from the jenkins server itself
+#
+# vars:
+#   endpoint: "IP address of the tn_bastion in the default network"
+#   token: "Bearer token to authenticate to the tn_bastion route-manager-api"
+#   start_time: "Timestamp of the route creation". OPTIONAL
+#   stop_time: "Timestamp of the route deletion". OPTIONAL
+#   item: [List of routes to be added. Each route is a dictionary with the key "to", and at least one key between ‘via’ and “dev”.]
+#         The additional key "from" is expected to be added in future updates.
+#
+####################################################################################
+
+- name: Display route to be added
+  ansible.builtin.debug:
+    var: item
+  when: debug
+
 - name: "Make a PUT request to a route-manager-api"
   ansible.builtin.uri:
     url: "http://{{ endpoint }}:8172/routes/"
@@ -11,16 +33,17 @@
     body: "{{
       {
         'to': item.to,
-        'via': item.via
-      } 
+      }
+      | combine( {'via': item.via} if item.via is defined else {} )
+      | combine( {'dev': item.dev} if item.dev is defined else {} )
       | combine( {'create_at': start_time} if start_time is defined else {} )
       | combine( {'delete_at': stop_time} if stop_time is defined else {} )
       | to_json }}"
     return_content: true
-    status_code: [200,201]
+    status_code: [200, 201]
   register: api_response
 
 - name: Display response content
-  debug:
+  ansible.builtin.debug:
     var: api_response.content
   when: debug

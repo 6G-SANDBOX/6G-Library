@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.0.0
+### Changed
+- Output dictionary `metadata` renamed to `5gcore_metadata`.
+- Variable `one_open5gcore_vm_external_vnet` is now optional with `tn_vxlan` by default.
+- Variable `one_open5gcore_vm_internal_vnet` is now mandatory.
+### Fixed
+- disbale sending of icmp redirect messages for the UPF
+
+
 ## v0.5.0
 ### Added
 - Component is now responsible to expose its AMF and UPF interfaces, by adding rules and firewall exceptions to `tn_bastion`.

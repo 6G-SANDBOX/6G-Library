@@ -82,7 +82,7 @@
     - name: Add IP addresses to DNS API server
       ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/dnsapi.yaml"
 
-    - name: Import tasks to forbid all unauthorized access to private IPs
+    - name: Import tasks to configure the netfilter rules (firewall and NAT capabilities)
       ansible.builtin.include_tasks: "{{ workspace }}/tn_bastion/code/{{ site_hypervisor }}/cac/02_install/nftables.yaml"
 
     - name: Setup wireguard VPN
@@ -113,6 +113,15 @@
         tn_bastion_dns_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_DNS_TOKEN }}"
         tn_bastion_routemanager_token: "{{ bastion_metadata.instances[0].attributes.ONEAPP_BASTION_ROUTEMANAGER_APITOKEN }}"
 
+    - name: Setup custom routes in the internal route-manager-api of the bastion
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
+      vars:
+        endpoint: "{{ tn_bastion_ips[site_networks_id.default | string] }}"
+        token: "{{ tn_bastion_routemanager_token }}"
+        start_time: "{{ lookup('pipe', 'date -u +\"%Y-%m-%dT%H:%M:%SZ\"') }}"
+        stop_time: "9999-12-31T23:59:59Z"
+      loop: "{{ one_bastion_routemanager_add }}"
+
     - name: Upload private ssh key to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
@@ -124,7 +133,6 @@
         content_base64: "{{ hostvars['tn_bastion']['tn_ssh_private_key']['content'] }}"
         encrypt: false
         validate_certs: false
-
     - name: Upload public ssh key to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
@@ -136,7 +144,6 @@
         content_base64: "{{ hostvars['tn_bastion']['tn_ssh_public_key']['content'] }}"
         encrypt: false
         validate_certs: false
-
     - name: Upload wireguard client configs to S3 object storage
       amazon.aws.s3_object:
         endpoint_url: "{{ site_s3_server.endpoint }}"
@@ -166,3 +173,5 @@
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
+      vars:
+        unique_component: true
