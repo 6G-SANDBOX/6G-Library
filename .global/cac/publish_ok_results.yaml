@@ -1,12 +1,4 @@
 ---
-- name: Set an additional custom terraform outputs with the component type
-  ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
-  vars:
-    custom_outputs:
-      - key: "{{ entity_name }}-component_type"
-        value: "{{ component_type }}"
-  when: not (unique_component | default(false))
-
 - name: Upload terraform manifest to S3 object storage
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"

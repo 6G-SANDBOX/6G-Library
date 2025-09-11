@@ -1,14 +1,5 @@
 # Changelog
 
-## v1.0.0
-### Added
-- New variable `one_oneKE_worker_nodes` adds support for scaling the number of worker nodes in the cluster.
-### Changed
-- Output dictionary `metadata` renamed to `oneKE_metadata`.
-### Removed
-- Removing OneKE v1.29 as a deployable option.
-
-
 ## v0.5.0
 ### Added
 - Component support for OneKE 1.31 and 1.31 Airgapped. New custom templates for 6G-Sandbox available in the official marketplace.
@@ -17,8 +8,7 @@
 - MetalLB is now installed outside the RKE2 deployment due to the mandatory loadBalancerClass field in its OpenNebula 1.31 chart.
 ### Fixed
 - Jenkins is now able to resize the Longhorn disk in the storage nodes.
-### Deprecated
-- Support finished for OneKE v1.29
+
 
 ## v0.4.0
 ### Added
@@ -26,6 +16,7 @@
 ### Removed
 - OneKE v1.27 is no longer allowed
 - Input variable one_oneKE_dns is no longer present.
+
 
 ## v0.3.0
 ### Added
@@ -39,12 +30,14 @@
 - Fix error where in some runtimes, VNF was not ready on time.
 - `tnuser`'s account is no longer locked on `vnf_0`.
 
+
 ## v0.2.0
 ### Changed
 - Component follows the new architecture.
 - Component renamed from `k8s_medium`.
 - Cluster configuration now made directly through the master node. No tunneling.
 - OneKE v1.29 with three storage nodes is the new default.
+
 
 ## v0.1.0
 ### Added

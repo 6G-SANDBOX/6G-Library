@@ -32,3 +32,33 @@ Registration is required to access the frontend dashboard in the following link:
 Fill the form with your information.
 
 Login with your credentials in the following link: [http://{{ domain_name }}:5000/auth/login](http://{{ domain_name }}:5000/auth/login)
+
+## InfluxDB v2
+
+InfluxDB v2 is available on port 8086.
+
+[http://{{ domain_name }}:8086](http://{{ domain_name }}:8086)
+
+Information to access to InfluxDB v2 dashboard:
+
+- **Username**: `{{ one_elcm_influxdb_user }}`
+- **Password**: `{{ one_elcm_influxdb_password }}`
+- **Organization**: `{{ one_elcm_influxdb_org }}`
+- **Bucket**: `{{ one_elcm_influxdb_bucket }}`
+
+## Grafana
+
+Grafana is available on port 3000.
+
+[http://{{ domain_name }}:3000](http://{{ domain_name }}:3000)
+
+Information to access to Grafana dashboard:
+
+- **Username**: `admin`
+- **Password**: `{{ one_elcm_grafana_password }}`
+
+## Prometheus
+
+Prometheus is available on port 9090.
+
+[http://{{ domain_name }}:9090](http://{{ domain_name }}:9090)

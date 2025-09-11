@@ -17,18 +17,10 @@ metadata:
     - Francisco Luque Schempp <schempp@uma.es>
   short_description: Enables the capability of using TSN endpoints in the Trial Network.
   long_description: |
-    Component that enables the capability of using TSN (Time-Sensitive Networking)  endpoints in the Trial Network
+    Component that enables the capability of using TSN endpoints in the Trial Network
 
     NOTE: Currently tsn is only available in the site "uma"
-  hypervisors: ["any"]
-  depends_on:
-    - tn_bastion
-  tags:
-    - "capability"
-    - "resource_manager"
-    - "networking"
-  destroy_script: true
-  resource_manager: true
+  hypervisors: ["one"]
 
 
 ####################################
@@ -49,4 +41,4 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__component_type: "tsn"
+  # None

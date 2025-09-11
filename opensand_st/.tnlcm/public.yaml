@@ -15,21 +15,14 @@ metadata:
   maintainers:
     - Nikolaos Gkatzios <ngkatzios@infolysis.gr>
     - Konstantinos Fragkos <cfragos@infolysis.gr>
-  short_description: Emulated satellite terminal entity for the OpenSAND (NTN Emulator) component
+  short_description: OpenSAND (NTN Emulator) Satellite Terminal entity 
   long_description: |
-    This component emulates a complete DVB-RCS2 – DVB-S2 system and acts as a Satellite Terminal within an emulated satellite network.  
-    It is intended to be deployed in the Trial Network and must be interconnected with the `opensand_sat` (Satellite entity) and the `opensand_gw` (Gateway entity), which should be deployed beforehand.  
-    This component uses a custom OpenSAND appliance that must be available in your site.  
-    Documentation is available at: https://github.com/CNES/opensand
+    This component is able to emulate a complete DVB-RCS2 – DVB-S2 system and thus it 
+    provides an emulated satellite network system. It can be deployed in the Trial Network 
+    and create an emulated Satellite Terminal entity that can be interconnected with various other components, 
+    depending on the Trial Network’s topology (mandatory interconnection with an emulated Gateway entity 
+    and an emulated Satellite Terminal entity). Documentation can be found at https://github.com/CNES/opensand.
   hypervisors: ["one"]
-  depends_on:
-    - "tn_bastion"
-    - "opensand_sat"
-    - "opensand_gw"
-  tags:
-    - "VM"
-    - "appliance"
-    - "NTN"
   appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/opensand"]
 
 
@@ -56,7 +49,6 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__component_type: "opensand_st"
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
   

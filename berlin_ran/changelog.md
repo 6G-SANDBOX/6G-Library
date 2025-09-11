@@ -1,10 +1,5 @@
 # Changelog
 
-## v1.0.0
-### Changed
-- Output `linked_open5gs` moved to `gnb_metadata.linked_5gcore`.
-
-
 ## v0.5.0
 ### Changed
 - Variable `any_berlin_ran_linked_open5g` renamed to `any_berlin_ran_linked_5gcore`.
@@ -16,6 +11,7 @@
 - Component no longer requires a proxy IP address coming from `any_berlin_ran_linked_5gcore`. `tn_bastion` now takes care of all the Trial Networks routing.
 ### Fixed
 - Hardware RAN is now correctly exposed to the Trial Network by adding a NATting exception into the `tn_bastion`.
+
 
 ## v0.4.0
 ### Added

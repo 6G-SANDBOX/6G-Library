@@ -133,7 +133,7 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
       vars:
         custom_outputs:
-          - key: "{{ entity_name }}-ocf_metadata"
+          - key: "{{ entity_name }}-metadata"
             value: "{{ ocf_metadata_dict }}"
 
     - name: Publish execution results to TNLCM and S3 object storage

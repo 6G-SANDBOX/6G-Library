@@ -2,7 +2,6 @@
 
 #one_oneKE_external_vnet: "tn_vxlan"
 one_oneKE_internal_vnet: "vnet-custom_name"
-#one_oneKE_worker_nodes: 3
 
 #one_oneKE_version: "131"
 #one_oneKE_multus: true
