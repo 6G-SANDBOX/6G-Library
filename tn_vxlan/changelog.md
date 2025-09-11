@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.0.0
 ### Changed
 - MTU default values are now first gathered from 6G Sandbox sites repository as suggested in issue #78
 
