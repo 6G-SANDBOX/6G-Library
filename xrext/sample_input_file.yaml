@@ -2,3 +2,5 @@
 
 # one_xrext_networks: 
 #   - tn_vxlan
+
+one_xrext_external_server: "10.182.32.52"

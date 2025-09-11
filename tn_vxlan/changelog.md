@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.0
+### Changed
+- MTU default values are now first gathered from 6G Sandbox sites repository as suggested in issue #78
+
+
 ## v0.4.0
 Massive update. Component is no longer deprecated, and tn_init will just use files from it when necessary.
 ### Added
@@ -8,7 +13,6 @@ Massive update. Component is no longer deprecated, and tn_init will just use fil
 - Variable `one_vxlan_netmask` now takes numerical form, instead of CIDR form.
 ### Removed
 - Variables `one_vxlan_gw` and `one_vxlan_dns` have been deleted, as the new tn_bastion fills those roles now.
-
 
 ## v0.3.0
 ### Deprecated

@@ -1,7 +1,14 @@
 # Changelog
 
-## v0.5.0
-### Changed
+## v1.1.0
+### Changed
+- Switched from 'latest' to fixed version tags in Docker images to ensure deployment stability and reproducibility.
+- Updated INT control plane to version v2.0.0 which includes:
+  - New logging functionality
+  - Improved ARP handling
+  - Better stability
+- Enhanced `sample_input_file.yaml` documentation.
+- Emhanced `README.md` documentation.
 - Component now specifies new variables in the sites repository: `collector_template_id`, `collector_image_id`, `switch_template_id`, `switch_image_id` and `harbor_token'`.
 
 

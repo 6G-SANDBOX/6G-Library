@@ -14,11 +14,11 @@
 metadata:
   maintainers:
     - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
-  short_description: Enables the capability of using physical RAN in a Trial Network.
+  short_description: Enables routing temporarily between physical RAN available in Berlin and a previously deployed 5G Core.
   long_description: |
-    This component enables the integration of RAN physical equipment located at FOKUS with a 5G core deployed in the Trial Network.
-    It is done by enabling the necessary routing path through the use of the element called ‘Route Manager’ (already deployed in the site). 
-    The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
+    This component enables the integration of RAN physical equipment located at Berlin FOKUS with a 5G core already deployed in the Trial Network.
+    It is done by enabling the necessary routing path through the use of the element called [6G-Sandbox route-manager-api](https://marketplace.mobilesandbox.cloud:9443/appliance/service_routemanager) expected to be already deployed in the site.
+    WARNING: The configuration exposed by this component should be synchronized with the 5G core and the UE to be used in conjunction:
     - `mcc`: "999"
     - `mnc`: "38"
     - `apn`: "internet"
@@ -28,7 +28,15 @@ metadata:
     - `amf_n2_ip`: "10.10.11.200"
     - `upf_n3_ip`: "10.10.11.201"
     NOTE: Currently this component is only available in the site "fokus".
-  hypervisors: ["one"]
+    NOTE: Aditional routing configuration that is not dependent on the Trial Network may also need to be done beforehand.
+  hypervisors: ["any"]
+  depends_on:
+    - [open5gs_vm, open5gs_k8s, open5gcore_vm, upf_p4_sw]
+  tags:
+    - "gNB"
+    - "route_manager"
+    - "resource_manager"
+    - "networking"
   destroy_script: true
   resource_manager: true
 
@@ -45,8 +53,8 @@ site_variables:
 ####################################
 input:
   any_berlin_ran_linked_5gcore:
-    description: Name of a previously deployed 5G-core instance. Defines the 5G SA core the gNB will try to connect
-    type: "open5gs_k8s or open5gs_vm or open5gcore_vm or upf_p4_sw"
+    description: Name of a previously deployed 5G Core component inside the same Trial Network. The gNB will try to connect to its AMF.
+    type: "open5gs_vm or open5gs_k8s or open5gcore_vm or upf_p4_sw"
     required_when: true
   any_berlin_ran_start_time:
     description: |
@@ -66,4 +74,6 @@ input:
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
-  __entity_name__open5gs: input.any_berlin_ran_linked_5gcore
+  __entity_name__component_type: "berlin_ran"
+  __entity_name__gnb_metadata:
+    linked_5gcore: input.any_berlin_ran_linked_5gcore

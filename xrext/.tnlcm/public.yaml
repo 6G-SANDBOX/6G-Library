@@ -14,18 +14,25 @@
 metadata:
   maintainers:
     - Joaquín Pérez Otero <joaquin.perez_otero.ext@nokia.com>
-  short_description: Deploys a Virtual Machine with Python modules installed to consume XR extensions of NaC REST API. 
+  short_description: Appliance that deploys an OpenNebula virtual machine with Python modules installed to consume XR extensions of NaC REST API. 
   long_description: |
-    A Virtual Machine based on Ubuntu 22.04 LTS.
-    Size: 2 GiB of memory, 1 vCPU and 20GiB of storage
-    Python 3 + pip
-    Python packages 'nac_api' and 'xrext' installed
+    The XRext 6G-Library component allows the experimenters to deploy their own virtual machine for 
+    testing XR sessions, using Nokia's Network as Code (NaC) API, on top of the 5G network deployed 
+    in the UMA site.
 
-    NOTE: XRext image ONE PARAMS may be included as input variables, but at the moment the 
-          image is only intended to be used in [uma] site, so the PARAMS are not included to avoid 
-          confusing the experimenter.
+    The virtual machine deployed by the appliance should only interact with the NaC server and the 
+    CAPIF server that are already serving the UMA site, through the corresponding Python scripts. 
+    The locations and credentials are obtained from the config.ini file, which must be located in 
+    the same directory as these scripts. The appliance already provides a config.ini file with the 
+    information needed to access the services deployed on the UMA site.
   hypervisors: ["one"]
-  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_XRext"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "appliance"
+    - "testing"
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/XRext"]
 
 
 ####################################
@@ -46,10 +53,16 @@ input:
     default_value: ["tn_vxlan"]
     required_when: false
 
+  one_xrext_external_server:
+    description: NaC and CAPIF Server IP Address to be accessed by the XR extension.
+    type: "str"
+    required_when: true
+
 
 ####################################
 ## Generated terraform outputs
 ####################################
 terraform_outputs:
+  __entity_name__component_type: "xrext"
   __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
   __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"

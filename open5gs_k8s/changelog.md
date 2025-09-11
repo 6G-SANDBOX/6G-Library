@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.0
+### Changed
+- Output dictionary `metadata` renamed to `5gcore_metadata`.
+- Upgraded Open5GS from version `v2.7.2` to `v2.7.6`. Chart version upgraded from `v2.2.6` to `v2.3.1`.
+- Chart is now pulled from a private harbor repository server hosted by TID
+
+
 ## v0.5.0
 ### Added
 - Component is now responsible to expose its AMF and UPF interfaces, by adding rules and firewall exceptions to `tn_bastion`.
@@ -9,7 +16,6 @@
 - Renamed variable `one_open5gs_k8s_amf_ip` to `one_open5gs_k8s_amf_n2_ip`.
 - Renamed variable `one_open5gs_k8s_upf_ip` to `one_open5gs_k8s_upf_n3_ip`.
   
-
 ## v0.4.0
 ### Changed
 - Componet renamed from `open5gs` to `open5gs_k8s`. All component references have been updated following this change.
@@ -23,17 +29,14 @@
 ### Fixed
 - Variable `one_open5gs_k8s_upf_ip` is now correctly set as an output variable.
 
-
 ## v0.3.0
 ### Changed
 - Ansible hostname of the OneKE master no longer uses variables. It only added complexity without benefits.
 - Output variable `open5gs_metadata_dict` renamed to `metadata_dict` like in the rest of the components.
 
-
 ## v0.2.0
 ### Changed
 - Component follows the new architecture.
-
 
 ## v0.1.0
 ### Added

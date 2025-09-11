@@ -1,5 +1,5 @@
 ---
-- name: "STAGE 1: Apply IaC to deploy the component"
+- name: "STAGE 1: Prepare to access a previous target component"
   hosts: localhost
   gather_facts: false
   connection: local
@@ -10,18 +10,29 @@
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
 
-    - name: Overwrite defaults with correct values
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/vm_resources.yaml"
+    - name: Retrieve terraform outputs
+      ansible.builtin.shell:
+      args:
+        chdir: "{{ workspace }}/.terraform/"
+        cmd: "set -o pipefail && terraform output --json | jq 'with_entries(.value |= .value)'"
+        executable: /bin/bash
+      register: terraform_outputs
+      changed_when: false
 
-    - name: Terraform apply
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+    - name: Set basic Terraform outputs
+      ansible.builtin.set_fact:
+        influxdb_configuration: "{{ (terraform_outputs.stdout | from_json)[(one_elcm_influxdb | default('none')) + '-influx_conf'] | default({}) }}"
+        grafana_configuration: "{{ (terraform_outputs.stdout | from_json)[(one_elcm_grafana | default('none')) + '-grafana_conf'] | default({}) }}"
 
 
-- name: "STAGE 2: Prepare to access the component"
+- name: "STAGE 2: Apply IaC to deploy the component"
   hosts: localhost
   gather_facts: false
   connection: local
   tasks:
+    - name: Terraform apply
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
+
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
       args:
@@ -49,6 +60,12 @@
             ) | trim
           }}
 
+
+- name: "STAGE 3: Prepare to access the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "elcm"
@@ -59,8 +76,11 @@
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
 
+    - name: Add new VM to an SSH config file ment to be usable by the experimenter
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
-- name: "STAGE 3: Apply CaC to prepare the component"
+
+- name: "STAGE 4: Apply CaC to prepare the component"
   hosts: "elcm"
   gather_facts: false
   tasks:
@@ -95,7 +115,7 @@
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
 
-- name: "STAGE 4: Publish execution results"
+- name: "STAGE 5: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local

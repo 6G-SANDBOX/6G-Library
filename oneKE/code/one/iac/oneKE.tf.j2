@@ -9,6 +9,12 @@ resource "opennebula_service" "{{ entity_name }}" {
           { Public = { id = opennebula_virtual_network.{{ one_oneKE_external_vnet }}.id } },
           { Private = { id = opennebula_virtual_network.{{ one_oneKE_internal_vnet }}.id } },
       ]
+      roles = [
+        { cardinality = 1 },
+        { cardinality = 1 },
+        { cardinality = {{ one_oneKE_worker_nodes }} },
+        { cardinality = 3 },
+      ]
       custom_attrs_values = {
         "ONEAPP_VROUTER_ETH0_VIP0": "",
         "ONEAPP_VROUTER_ETH1_VIP0": "",

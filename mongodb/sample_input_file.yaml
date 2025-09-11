@@ -1,0 +1,15 @@
+# THIS IS AN INPUT FILE EXAMPLE. Values may not be valid for your enviroment
+
+# one_mongodb_cpu: 2
+# one_mongodb_memory: 2048
+# one_mongodb_disk: 3072
+# one_mongodb_networks: 
+#   - tn_vxlan
+
+# one_mongodb_version: "8.0"
+# one_mongodb_user: "admin"
+# one_mongodb_password: "adminadmin"
+# one_mongodb_database: "dummydb"
+# one_mongo_express_user: "admin"
+# one_mongo_express_password: "adminadmin"
+
