@@ -11,20 +11,25 @@
 - New component `ris` to configure a RIS exposed from an API.
 - New `component_type` terraform output added to all components.
 - Component `oneKE` adds support for scaling the number of worker nodes in the cluster.
+- New mandatory input variable for component `xrext`: `one_xrext_external_server`.
 ### Changed
 - Common task file `routemanager_add.yaml` now also supports adding routes with key `dev`.
 - MTU default values in 'subnet' components (`tn_vxlan`, `vnet` and `tn_init`) are now first gathered from 6G Sandbox sites repository as suggested in issue #78
 - Modified terraform outputs for all 5G Core components (`open5gcore_vm`, `open5gs_k8s`, `open5gs_vm` and `upf_p4_sw`).
 - Modified terraform outputs for all gNB components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`).
 - Components `tn_bastion` and `tn_init` now support the inclusion of additional custom routes, and firewall/NAT exceptions.
-- Component `nokia_radio` renamed the site variables `cp_ip` and `up_ip` to `n2_ip` and `n3_ip` respectively, for coherence with the 5G Core outputs
-- Enhanced variable autocompletion on `ueransim`, gathering all UE-related metadata directly from the gNB's linked 5G Core
+- Component `nokia_radio` renamed the site variables `cp_ip` and `up_ip` to `n2_ip` and `n3_ip` respectively, for coherence with the 5G Core outputs.
+- Software from `open5gs_vm` and `open5gs_k8s` upgraded from version `v2.7.2` to `v2.7.6`. Chart version upgraded from `v2.2.6` to `v2.3.1`.
+- Enhanced variable autocompletion on `ueransim`, gathering all UE-related metadata directly from the gNB's linked 5G Core.
 - Component `elcm` now can use external influxdb and grafana instances.
-- Upgraded dockerfile to version `1.14.1` in component `ks8500_runner`.
+- Upgraded dockerfile to version `1.15.1` in component `ks8500_runner`.
 - Component `iswireless_radio` now supports **DU-RU** mode, connecting to a virtualized CU instead of a 5G core.
+- ks8500_runner upgraded from version v1.15.1 to 1.16.1
 ### Fixed
 - Component `ks8500_runner` updated to add firewall exceptions for `loadcore` and `ixchariot` middlewares.
 - All `.tnlcm/public.yaml` files now fit the LLM requirements as suggested in issue #128
+- remove the transmission of icmp-reirect messages from the UPF of `open5gcore_vm` and `open5gs_vm` component
+- Removed duplicated tn_bastion in ks8500_runner
 ### Deprecated
 - Multiple redundant variables removed from `ueransim`. **ue** mode now autocompletes its variables directly from the 5G core used by the *gNB*.
 

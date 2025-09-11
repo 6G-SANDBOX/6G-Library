@@ -1,24 +1,33 @@
 ---
+# Main playbook to deploy the component
 - name: "STAGE 1: Apply IAC to deploy the component"
   hosts: localhost
   gather_facts: false
   connection: local
   tasks:
+
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
+
     - name: Prepare terraform working directory
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_workdir.yaml"
+
+
+    - name: Configure selected VM resources
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/01_pre/vm_resources.yaml"
 
     - name: Terraform apply
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/terraform_apply.yaml"
 
 
+# Post-terraform preliminary tasks
 - name: "STAGE 2: Prepare to access the component"
   hosts: localhost
   gather_facts: false
   connection: local
   tasks:
+
     - name: Retrieve terraform outputs
       ansible.builtin.shell:
       args:
@@ -30,33 +39,22 @@
 
     - name: Set Terraform outputs as playbook facts
       ansible.builtin.set_fact:
+        # defined in the tn_init deployment
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
+        # defined in the tn_init deployment
         tn_ssh_public_key: "{{ (terraform_outputs.stdout | from_json)['tn_ssh_public_key'] }}"
-        tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
+        # IPs of the newly created VM
         ips: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-ips'] }}"
+        # ID of the newly created VM
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
-        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_xrext_networks[0] + '-id'] | string }}"
-        domain_name: >-
-          {{
-            (
-              (component_type  | regex_replace('_', '') | lower) ~ '-' ~
-              (custom_name     | regex_replace('_', '') | lower) ~ '.' ~
-              (tn_id           | regex_replace('_', '') | lower) ~ '.' ~
-              site_domain
-            ) | trim
-          }}
+        # ID of the first VNet used in this VM
+        access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_qosium_probe_vm_networks[0] + '-id'] | string }}"
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
-        hostname: "xrext"
+        hostname: "qosium_probe"
         ansible_host: "{{ ips[access_vnet_id] }}"
         ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
-        ansible_user: "jenkins"
-
-    - name: Add the bastion to Ansible Inventory
-      ansible.builtin.add_host:
-        hostname: "bastion"
-        ansible_host: "{{ bastion_ip }}"
         ansible_user: "jenkins"
 
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
@@ -66,14 +64,19 @@
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
 
+# Configuration play
 - name: "STAGE 3: Apply CAC to prepare the component"
-  hosts: "xrext"
+  hosts: "qosium_probe"
   gather_facts: false
   tasks:
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
         connect_timeout: 5
         timeout: 200
+
+    - name: Load enviromental variables from different sources
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
 
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
@@ -100,36 +103,44 @@
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key'] }}"
 
+    - name: Update Qosium Probe Service ID
+      become: true
+      lineinfile:
+        path: /opt/QosiumProbe/bin/QosiumProbe.ini
+        regexp: '^service_id\s+'
+        line: "service_id {{ one_qosium_probe_service_id }}"
+        state: present
+      when: one_qosium_probe_service_id is defined and one_qosium_probe_service_id != 10
 
-- name: "STAGE 4: Access tn_bastion to set firewall exceptions"
-  hosts: bastion
-  gather_facts: false
-  tasks:
-    - name: Load enviromental variables from different sources
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+    - name: Restart Qosium Probe
+      become: yes
+      service:
+        name: QosiumProbe
+        state: restarted
+      when: one_qosium_probe_service_id is defined and one_qosium_probe_service_id != 10
 
-    - name: Write firewall exception for the XRext NaC and CAPIF Server
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
-      vars:
-        fw_exceptions:
-          - "{{ one_xrext_external_server }}"
+    - name: Configure NTP server in chrony.conf
+      become: true
+      lineinfile:
+        path: /etc/chrony/chrony.conf
+        regexp: '^(pool|server)\s+.*'
+        line: "server {{ one_qosium_probe_ntp_server_address }} minpoll 1 maxpoll 3 burst iburst"
+        state: present
+      when: one_qosium_probe_ntp_server_address is defined and one_qosium_probe_ntp_server_address != "pool.ntp.org"
+
+    - name: Restart chronyd service
+      become: yes
+      service:
+        name: chrony
+        state: restarted
+      when: one_qosium_probe_ntp_server_address is defined and one_qosium_probe_ntp_server_address != "pool.ntp.org"
 
 
-- name: "STAGE 5: Publish execution results"
+# Final phase of the deployments
+- name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local
   tasks:
-    - name: Set DNS record for the component
-      ansible.builtin.uri:
-        url: >-
-          {{
-            'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
-            '&domain=' ~ domain_name ~
-            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ ips[access_vnet_id] | trim
-          }}
-        method: POST
-        body_format: json
-        status_code: [200]
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

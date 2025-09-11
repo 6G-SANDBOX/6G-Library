@@ -1,4 +1,13 @@
 # Changelog
+## v1.16.1.2
+### Fixed
+- Removed duplicated tn_bastion  in .tnclm/public.yaml 
+## v1.16.1
+- upgraded runner version 1.16.1
+## v1.15.1
+### Changed
+- upgraded runner version 1.15.1
+- upgraded opentap version 9.28.3
 ## v1.14.0
 ### Changed
 - upgraded runner version 1.14.1
@@ -10,8 +19,7 @@
 - update component_playbook.yaml with tasks to add firewall exceptions
 - update runner version to 1.14.0
 ### Fixed
-- START_SCRIPT_BASE64 defined in ks8500_runner.tfj2   
-
+- START_SCRIPT_BASE64 defined in ks8500_runner.tfj2 
 ## v1.13.0
 ### Changed
 - Software updated to version `1.30.0`.
