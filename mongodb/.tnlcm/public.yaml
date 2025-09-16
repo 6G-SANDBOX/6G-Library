@@ -26,7 +26,7 @@ metadata:
     - "VM"
     - "appliance"
     - "monitoring"
-  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_mongodb"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/mongodb"]
 
 
 ####################################
