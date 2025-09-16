@@ -1,5 +1,9 @@
 # Changelog
 
+## [unreleased] - 2025-XX-XX
+### Fixed
+- Fixed broken links for components that have appliances in `.tnlcm/public.yaml` file.
+
 ## [v1.0.0] - 2025-09-11
 ### Added
 - New metadata variables `depends_on` and `tags` now present in the `.tnlcm/public.yaml` file of all components.
@@ -178,7 +182,7 @@ Initial set of components is:
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v1.1.0...unreleased
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v1.0.0...unreleased
 [v1.0.0]:https://github.com/6G-SANDBOX/6G-Library/compare/v0.5.0...v1.0.0
 [v0.5.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.3.0...v0.4.0
