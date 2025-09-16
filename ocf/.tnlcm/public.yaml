@@ -25,7 +25,6 @@ metadata:
   tags:
     - "Helm Chart"
     - "networking"
-  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/OCF"]
 
 
 ####################################
