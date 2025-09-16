@@ -26,7 +26,7 @@ metadata:
     - "VM"
     - "appliance"
     - "monitoring"
-  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_influxdb"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/influxdb"]
 
 
 ####################################
