@@ -13,17 +13,20 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     SET_HOSTNAME: "$NAME"
     USERNAME: "jenkins"
     SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
-    # install apk add python3
-    START_SCRIPT_BASE64: "IyEvYmluL2Jhc2gKYXBrIGFkZCBweXRob24z"
+    # install apk add python3; growpart /dev/vda 1; resize2fs /dev/vda1
+    START_SCRIPT_BASE64: "IyEvYmluL2Jhc2gKZ3Jvd3BhcnQgL2Rldi92ZGEgMQpyZXNpemUyZnMgL2Rldi92ZGExCmFwayBhZGQgcHl0aG9uMwo="
   }
 
-{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
+  # Ignore changes in the disk argument due to limitations in the OpenNebula Terraform provider (#598)
+  lifecycle {
+    ignore_changes = [disk]
+  }
   disk {
-    image_id = {{ site_available_components.ks8500_runner.image_id }}
+    image_id = {{ image_id }}
     size     = {{ one_ks8500runner_disk }}
     target   = "vda"
     driver   = "qcow2"
-  } #}
+  }
 
 
 {% for network in one_ks8500runner_networks %}
