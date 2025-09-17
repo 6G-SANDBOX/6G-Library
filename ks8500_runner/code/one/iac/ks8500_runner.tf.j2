@@ -22,7 +22,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     ignore_changes = [disk]
   }
   disk {
-    image_id = {{ image_id }}
+    image_id = {{ site_available_components.ks8500_runner.image_id }}
     size     = {{ one_ks8500runner_disk }}
     target   = "vda"
     driver   = "qcow2"
