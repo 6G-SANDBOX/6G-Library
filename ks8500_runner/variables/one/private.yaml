@@ -14,8 +14,8 @@
 
 one_ks8500runner_cpu: 2
 one_ks8500runner_memory: 16384
-one_ks8500runner_disk: 10000
-one_ks8500runner_networks: 
+one_ks8500runner_disk: 30000
+one_ks8500runner_networks:
   - tn_vxlan
 
 ks8500runner_backend_url: https://test-automation.pw.keysight.com
