@@ -1,7 +1,8 @@
 # Changelog
 ## v1.16.1.2
 ### Fixed
-- Removed duplicated tn_bastion  in .tnclm/public.yaml 
+- Removed duplicated tn_bastion  in .tnclm/public.yaml
+- Fixed disk resize method.
 ## v1.16.1
 - upgraded runner version 1.16.1
 ## v1.15.1
