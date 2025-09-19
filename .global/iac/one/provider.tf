@@ -8,7 +8,3 @@ terraform {
 }
 
 provider "opennebula" {}
-
-resource "opennebula_group" "group" {
-  name = "OpenNebula"
-}
