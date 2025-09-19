@@ -3,6 +3,7 @@
 ## [unreleased] - 2025-XX-XX
 ### Fixed
 - Fixed broken links for components that have appliances in `.tnlcm/public.yaml` file.
+- Fixed disk resize method used in KS8500_runner
 
 ## [v1.0.0] - 2025-09-11
 ### Added
