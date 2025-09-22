@@ -3,7 +3,7 @@
 ## v1.0.0
 ### Changed
 - Output dictionary `metadata` renamed to `5gcore_metadata`.
-- Upgraded Open5GS from version `v2.7.2` to `v2.7.6`. Chart version upgraded from `v2.2.6` to `v2.3.1`.
+- Upgraded Open5GS from version `v2.7.2` to `v2.7.5`. Chart version upgraded from `v2.2.6` to `v2.3.1`.
 - Chart is now pulled from a private harbor repository server hosted by TID
 
 

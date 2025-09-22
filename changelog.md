@@ -26,7 +26,7 @@
 - Modified terraform outputs for all gNB components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`).
 - Components `tn_bastion` and `tn_init` now support the inclusion of additional custom routes, and firewall/NAT exceptions.
 - Component `nokia_radio` renamed the site variables `cp_ip` and `up_ip` to `n2_ip` and `n3_ip` respectively, for coherence with the 5G Core outputs.
-- Software from `open5gs_vm` and `open5gs_k8s` upgraded from version `v2.7.2` to `v2.7.6`. Chart version upgraded from `v2.2.6` to `v2.3.1`.
+- Software from `open5gs_vm` and `open5gs_k8s` upgraded from version `v2.7.2` to `v2.7.6` and `v2.7.5` respectively. Chart version upgraded from `v2.2.6` to `v2.3.1`.
 - Enhanced variable autocompletion on `ueransim`, gathering all UE-related metadata directly from the gNB's linked 5G Core.
 - Component `elcm` now can use external influxdb and grafana instances.
 - Upgraded dockerfile to version `1.15.1` in component `ks8500_runner`.
