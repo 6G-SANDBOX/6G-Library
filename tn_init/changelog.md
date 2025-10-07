@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v1.0.0
 ### Added
 - New optional input variables `one_bastion_routemanager_add`, supporting the addition of custom routes to the internal route-manager-api
 - New optional input variables `one_bastion_fw_exceptions` and `one_bastion_nat_exceptions` to disable firewall/NAT respectivelly to custom IPs/networks.

@@ -1,0 +1,22 @@
+# {{ tn_id }}-{{ entity_name}}
+
+The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
+
+<p align="center">
+    <img src="https://www.kaitotek.com/media/pages/resources/documentation/probe/af2329b8e1-1662121716/logo_probe_texts_light_small.png" width="600" title="QosiumProbe">
+  </a>
+</p>
+
+It consists of a Qosium Probe measurement agent virtual machine 
+
+## Information:
+
+- **VM memory**: `{{ one_qosium_probe_vm_memory }} MiB`
+- **VM VCPUs**: `{{ one_qosium_probe_vm_cpu }}`
+- **VM network interfaces**:
+  ```json
+  {{ ips }}
+  ```
+- **Qosium Probe Service ID**: `{{ one_qosium_probe_service_id}}`
+- **VM synced with NTP against:**: `{{ one_qosium_probe_ntp_server_address}}`
+---

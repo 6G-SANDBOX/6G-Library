@@ -1,0 +1,17 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+  qosium_probe-agent:
+    type: "qosium_probe"
+    name: "agent"
+    dependencies:
+      - "tn_init"
+    input:
+      one_qosium_probe_vm_size: "small"
+      one_qosium_probe_vm_networks:
+        - "tn_vxlan"
+      one_qosium_probe_service_id: 1
+      one_qosium_probe_ntp_server_address: "pool.ntp.org"
+

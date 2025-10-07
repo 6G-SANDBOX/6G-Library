@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.0.0
 ### Changed
 - Output dictionary `metadata` renamed to `5gcore_metadata`.
 - Variable `one_open5gcore_vm_external_vnet` is now optional with `tn_vxlan` by default.

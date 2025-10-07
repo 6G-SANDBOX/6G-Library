@@ -1,10 +1,11 @@
 # Changelog
 
-## unreleased
+## v1.0.0
 ### Added
 - New input variable `one_open5gs_vm_install_webui` to enable the installation of the Web UI.
 ### Changed
 - Output dictionary `metadata` renamed to `5gcore_metadata`.
+- Upgraded Open5GS from version `v2.7.2` to `v2.7.6`.
 ### Fixed
 - disbale sending of icmp redirect messages for the UPF
 
