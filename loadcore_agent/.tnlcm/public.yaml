@@ -30,23 +30,34 @@ metadata:
     - "appliance"
     - "testing"
     - "benchmarking"
-  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent"]
+  appliances:
+    - "https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent_v5.0.1"
+    - "https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent_v4.3.0.23"
+    - "https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent_v4.3.0.23_hugepages"
 
 
 ####################################
 ## Site-specific variables
 ####################################
 site_variables:
-  loadcore_middleware_ip: IP address of the loadcore middleware in your site
-  template_id: (DEPRECATED) ID of the LoadCore Agent Test Tool VM template to use in your OpenNebula environment.
-  image_id: (DEPRECATED) ID of the LoaLoadCore Agent Test Tool VM image to use in your OpenNebula environment.
+  loadcore_middleware_ip: "IP address of the loadcore middleware in your site."
+  template_id: "(DELETED in 6G-Library 'unreleased') ID of the LoadCore Agent Test Tool VM template to use in your OpenNebula environment."
+  image_id:    "(DELETED in 6G-Library 'unreleased') ID of the LoaLoadCore Agent Test Tool VM image to use in your OpenNebula environment."
   base_appliance:
-    template_id: ID of the 'LoadCore Agent Test Tool' VM template to use in your OpenNebula environment
-    image_id: ID of the 'LoadCore Agent Test Tool' VM image to use in your OpenNebula environment
+    template_id: "(DEPRECATED, use 'appliance_v4_3_0' instead) ID of the 'LoadCore Agent Test Tool' VM template to use in your OpenNebula environment."
+    image_id:    "(DEPRECATED, use 'appliance_v4_3_0' instead) ID of the 'LoadCore Agent Test Tool' VM image to use in your OpenNebula environment."
   hugepages_appliance:
-    template_id: ID of the 'LoadCore Agent Test Tool + hugepages' VM template to use in your OpenNebula environment
-    image_id: ID of the 'LoadCore Agent Test Tool + hugepages' VM image to use in your OpenNebula environment
-    
+    template_id: "(DEPRECATED, use 'appliance_v4_3_0_hugepages' instead) ID of the 'LoadCore Agent Test Tool + hugepages' VM template to use in your OpenNebula environment."
+    image_id:    "(DEPRECATED, use 'appliance_v4_3_0_hugepages' instead) ID of the 'LoadCore Agent Test Tool + hugepages' VM image to use in your OpenNebula environment."
+  appliance_v5_0_1:
+    template_id: "ID of the VM template for appliance 'LoadCore Agent Test Tool v5.0.1'."
+    image_id:    "ID of the VM image for appliance 'LoadCore Agent Test Tool v5.0.1'."
+  appliance_v4_3_0:
+    template_id: "ID of the VM template for appliance 'LoadCore Agent Test Tool v4.3.0.23'."
+    image_id:    "ID of the VM image for appliance 'LoadCore Agent Test Tool v4.3.0.23'."
+  appliance_v4_3_0_hugepages:
+    template_id: "ID of the VM template for appliance 'LoadCore Agent Test Tool v4.3.0.23 + hugepages'."
+    image_id:    "ID of the VM image for appliance 'LoadCore Agent Test Tool v4.3.0.23 + hugepages'."
 
 
 ####################################
@@ -58,9 +69,14 @@ input:
     type: "list[tn_vxlan or vnet]"
     default_value: ["tn_vxlan"]
     required_when: false
+  one_loadcore_agent_appliance:
+    description: "Select which appliance to use for the component. 'v5.0.1' by default."
+    type: str
+    default_value: "v5.0.1"
+    choices: ["v5.0.1", "v4.3.0", "v4.3.0_hugepages"]
+    required_when: false
   one_loadcore_agent_hugepages:
-    description: |
-      Whether the component should be deployed with 16 1G hugepages or not. False by default.
+    description: "(DEPRECATED, overwritten by 'one_loadcore_agent_appliances') Deploy component allocating 16 1G hugepages. False by default."
     type: bool
     default_value: false
     required_when: false
