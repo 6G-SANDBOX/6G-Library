@@ -15,6 +15,7 @@ ocf_one_oneKE: "oneKE-custom_name"
 #ocf_any_monitoring_service_name: "monitoring"
 
 # OpenCAPIF deployment configuration
+#ocf_any_capif_release: "v3.0.0-release"
 #ocf_any_capif_namespace: "ocf-capif"
 #ocf_any_capif_resources_reserve: "NO"
 #ocf_any_capif_storage_class: "longhorn"

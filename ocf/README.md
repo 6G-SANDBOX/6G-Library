@@ -61,6 +61,7 @@ _N/A_
 | `ocf_any_vault_storage_size` | Vault Storage Size | str | 1Gi | - | false |
 | `ocf_any_monitoring_namespace` | Monitoring namespace | str | ocf-monitoring | - | false |
 | `ocf_any_monitoring_service_name` | Monitoring service name | str | monitoring | - | false |
+| `ocf_any_capif_release` | CAPIF Version to deploy | str | v3.0.0-release | Check production versions released | false |
 | `ocf_any_capif_namespace` | CAPIF namespace | str | ocf-capif | - | false |
 | `ocf_any_capif_resources_reserve` | CAPIF resource reserve | str | NO | - | false |
 | `ocf_any_capif_storage_class` | CAPIF storage class to use | str | longhorn | - | false |

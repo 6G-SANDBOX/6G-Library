@@ -148,6 +148,7 @@ terraform_outputs:
   __entity_name__component_type: "ocf"
   __entity_name__ocf_metadata:
     oneKE: input.ocf_one_oneKE
+    release: input.ocf_any_capif_release
     repo: input.ocf_any_repo
     branch: input.ocf_any_branch
     vault_namespace: input.ocf_any_vault_namespace
