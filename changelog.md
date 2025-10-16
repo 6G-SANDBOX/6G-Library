@@ -1,9 +1,12 @@
 # Changelog
 
 ## [unreleased] - 2025-XX-XX
+### Changed
+- Upgraded OpenNebula Terraform provider from 1.4 to 1.5
 ### Fixed
 - Fixed broken links for components that have appliances in `.tnlcm/public.yaml` file.
-- Fixed disk resize method used in KS8500_runner
+- Fixed `open5gs_k8s` charts not being able to pull mongodb images. Chart version upgraded from `v2.3.1` to `v2.3.3`.
+- Fixed disk resize method used in `ks8500_runner`.
 
 ## [v1.0.0] - 2025-09-11
 ### Added
@@ -26,7 +29,7 @@
 - Modified terraform outputs for all gNB components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`).
 - Components `tn_bastion` and `tn_init` now support the inclusion of additional custom routes, and firewall/NAT exceptions.
 - Component `nokia_radio` renamed the site variables `cp_ip` and `up_ip` to `n2_ip` and `n3_ip` respectively, for coherence with the 5G Core outputs.
-- Software from `open5gs_vm` and `open5gs_k8s` upgraded from version `v2.7.2` to `v2.7.6`. Chart version upgraded from `v2.2.6` to `v2.3.1`.
+- Software from `open5gs_vm` and `open5gs_k8s` upgraded from version `v2.7.2` to `v2.7.6` and `v2.7.5` respectively. Chart version upgraded from `v2.2.6` to `v2.3.1`.
 - Enhanced variable autocompletion on `ueransim`, gathering all UE-related metadata directly from the gNB's linked 5G Core.
 - Component `elcm` now can use external influxdb and grafana instances.
 - Upgraded dockerfile to version `1.15.1` in component `ks8500_runner`.
