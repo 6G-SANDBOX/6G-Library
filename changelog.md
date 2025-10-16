@@ -1,9 +1,12 @@
 # Changelog
 
 ## [unreleased] - 2025-XX-XX
+### Changed
+- Upgraded OpenNebula Terraform provider from 1.4 to 1.5
 ### Fixed
 - Fixed broken links for components that have appliances in `.tnlcm/public.yaml` file.
-- Fixed disk resize method used in KS8500_runner
+- Fixed `open5gs_k8s` charts not being able to pull mongodb images. Chart version upgraded from `v2.3.1` to `v2.3.3`.
+- Fixed disk resize method used in `ks8500_runner`.
 
 ## [v1.0.0] - 2025-09-11
 ### Added
