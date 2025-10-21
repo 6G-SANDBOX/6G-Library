@@ -3,10 +3,12 @@
 ## [unreleased] - 2025-XX-XX
 ### Changed
 - Upgraded OpenNebula Terraform provider from 1.4 to 1.5
+- `open5gs_vm` New input variabe `one_open5gs_vm_loglevel` to set the log-level of the open5gs components
 ### Fixed
 - Fixed broken links for components that have appliances in `.tnlcm/public.yaml` file.
 - Fixed `open5gs_k8s` charts not being able to pull mongodb images. Chart version upgraded from `v2.3.1` to `v2.3.3`.
 - Fixed disk resize method used in `ks8500_runner`.
+- Disabled `open5gs-seppd` component of `open5gs_vm`
 
 ## [v1.0.0] - 2025-09-11
 ### Added
