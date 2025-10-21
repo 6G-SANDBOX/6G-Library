@@ -12,7 +12,7 @@
 # 6G-SANDBOX SNS Library
   [![6G SANDBOX LIBRARY][6glibrary-badge]][6glibrary-url]
 
-  [Documentation](https://6g-sandbox.github.io/docs/category/6g-library) • [Report Error](https://github.com/6G-SANDBOX/6G-Library/issues/new?assignees=&labels=&projects=&template=bug_report.md) • [Feature Request](https://github.com/6G-SANDBOX/6G-Library/issues/new?assignees=&labels=&projects=&template=feature_request.md)
+  [Documentation](https://6g-sandbox.github.io/docs/) • [Report Error](https://github.com/6G-SANDBOX/6G-Library/issues/new?assignees=&labels=&projects=&template=bug_report.md) • [Feature Request](https://github.com/6G-SANDBOX/6G-Library/issues/new?assignees=&labels=&projects=&template=feature_request.md)
 </div>
 
 [6G-SANDBOX](https://6g-sandbox.eu/) is a HE funded research project (HORIZON-JU-SNS-2022-STREAM-C-01-01). The 6G-SANDBOX project brings a complete and modular facility for the European experimentation ecosystem (in line and under the directions set by SNS JU), which is expected to support for the next decade technology and research validation processes needed in the pathway towards 6G.

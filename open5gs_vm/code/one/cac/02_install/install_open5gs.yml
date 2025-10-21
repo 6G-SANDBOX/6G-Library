@@ -41,9 +41,9 @@
             repo: 'ppa:open5gs/latest'
             state: present
 
-        - name: Install Open5GS 2.7.2~*
+        - name: Install Open5GS 2.7.6~*
           ansible.builtin.apt:
-            name: open5gs=2.7.2~*
+            name: open5gs=2.7.6~*
             state: present
       when: not one_open5gs_vm_use_nightly
 

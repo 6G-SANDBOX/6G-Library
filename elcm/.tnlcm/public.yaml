@@ -32,7 +32,7 @@ metadata:
     - "VM"
     - "appliance"
     - "testing"
-  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_ELCM"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/ELCM"]
 
 
 ####################################

@@ -51,7 +51,6 @@ TNLCM checks that the variables are defined and errors if attempting to deploy t
 
 | Variable | Description |
 |----------|-------------|
-| `129.template_id` | ID of the OneKE v1.29 service template to use in your OpenNebula environment |
 | `131.template_id` | ID of the OneKE v1.31 service template to use in your OpenNebula environment |
 | `131a.template_id` | ID of the OneKE v1.31 Airgapped service template to use in your OpenNebula environment |
 

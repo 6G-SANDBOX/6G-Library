@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.0.0
 ### Changed
 - Output dictionary `metadata` renamed to `ocf_metadata`.
 

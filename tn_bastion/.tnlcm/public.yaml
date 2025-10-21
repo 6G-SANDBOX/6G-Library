@@ -38,7 +38,7 @@ metadata:
     - "Gateway"
     - "Firewall"
     - "NAT"
-  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_bastion"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/bastion"]
 
 
 ####################################

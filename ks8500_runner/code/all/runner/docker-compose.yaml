@@ -2,6 +2,7 @@ services:
   runner:
     image: ks8500_runner
     entrypoint: tap runner start
+    restart: unless-stopped
     environment:
       LM_LICENSE_FILE: "@license.opentap.keysight.com"
     volumes:

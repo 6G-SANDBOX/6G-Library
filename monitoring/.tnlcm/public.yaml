@@ -27,7 +27,7 @@ metadata:
     - "VM"
     - "appliance"
     - "monitoring"
-  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/service_monitoring"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/monitoring"]
 
 
 ####################################
