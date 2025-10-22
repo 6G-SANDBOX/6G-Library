@@ -1,24 +1,31 @@
-** NOTES ** 
+# NOTES 
 
-** Problem **
+This are internatl notes used for the development of the component.
+Main fact is to have a set of important guidlines in case of specific failures, refering mainly to the ROUTE Manager.
+
+## **Problem**
+
 The Build fails because the ansible scripts tries to insert duplicate entries in the Route Manager database (`/opt/route-manager-api/routes.db`). 
-The problem persists although when all TNs are destroyed && purged.
+The problem persists although when all TNs are destroyed && purged. This is probably because some times the destroy scripts does not destroy every entity, especially when the initial build fails.
 
 
 Specifically (in our integration) the following routes are noticed:
 
 ```console
+...
 sqlite3 /opt/route-manager-api/routes.db "SELECT * FROM 'Saved Routes' WHERE \"to\"='10.10.10.200/32';"
 10.10.10.200/32|10.100.100.33||2025-03-27 11:31:37.000000|2025-03-27 12:31:37.000000|1
 root@router-manager-ote:~# ^C
 root@router-manager-ote:~# sqlite3 /opt/route-manager-api/routes.db "SELECT * FROM 'Saved Routes' WHERE \"to\"='10.10.10.201/32';"
 10.10.10.201/32|10.100.100.33||2025-03-27 11:31:37.000000|2025-03-27 12:31:37.000000|1
+...
 ```
 
 
-The above makes a 500 ERRROR during pipeline as visible via the logs:
+The above makes a 500 ERROR during pipeline as visible via the logs:
 
 ```console
+...
 root@router-manager-ote:~# cat /var/log/route_manager.log | tail -n 50
   File "/opt/route-manager-api/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 1313, in commit
     self._prepare_impl()
@@ -70,26 +77,30 @@ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed
 [SQL: INSERT INTO "Saved Routes" ("to", via, dev, create_at, delete_at, active) VALUES (?, ?, ?, ?, ?, ?)]
 [parameters: ('10.10.10.200/32', '10.100.100.33', None, '2025-10-02 08:54:40.000000', '2025-10-02 09:54:40.000000', 1)]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
+...
 ```
 
-** QUICK FIX **
-For testing and deploying the following command is implemented (after deletign once more the newly created TN)
+## **QUICK FIX**
+**Step1**: Delete the created TN and purge it.
 
-* Delete the old/stale entries before running Ansible:
+**Step2**: Run the following command to delete all entries in DB.
+
+*Delete the old/stale entries before running Ansible:*
 ```bash
 sqlite3 /opt/route-manager-api/routes.db "DELETE FROM 'Saved Routes' WHERE \"to\"='10.10.10.200/32';"
 sqlite3 /opt/route-manager-api/routes.db "DELETE FROM 'Saved Routes' WHERE \"to\"='10.10.10.201/32';"
 ```
 
-* Rerun ansible.
+**Step3**: Rerun ansible via the normal TNLCM workflow.
 
-To reinsert the existing values (since creation) the following commands should be run:
+**Note:**
+To reinsert the existing values (in case is needed) the following commands should be run:
 ```bash
 sqlite3 /opt/route-manager-api/routes.db "INSERT INTO 'Saved Routes' (to, via, dev, create_at, delete_at, active) VALUES ('10.10.10.200/32', '10.100.100.33', NULL, '2025-03-27 11:31:37.000000', '2025-03-27 12:31:37.000000', 1);"
 sqlite3 /opt/route-manager-api/routes.db "INSERT INTO 'Saved Routes' (to, via, dev, create_at, delete_at, active) VALUES ('10.10.10.201/32', '10.100.100.33', NULL, '2025-03-27 11:31:37.000000', '2025-03-27 12:31:37.000000', 1);"
 
 ```
 
-** FUTURE PROOF **
+## **FUTURE PROOF**
 
 The RouterManager (or ansible code) should be altered so that they not break when tryign to instert an existign path. Rather they should either alter the existing, or ignore it.
