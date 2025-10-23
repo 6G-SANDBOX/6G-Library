@@ -23,7 +23,11 @@
     url: https://open5gs.org/open5gs/assets/webui/install
     dest: /opt/install-oopen5gs-webui.sh
     mode: '0755'
+    status_code: [200]
   register: add_webui_script
+  until: add_webui_script.status == 200
+  retries: 3
+  delay: 10
 
 - name: Install WebUI from source
   ansible.builtin.command:
