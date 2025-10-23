@@ -22,6 +22,7 @@
 - New mandatory input variable for component `xrext`: `one_xrext_external_server`.
 - New input variable `one_open5gs_vm_install_webui` in `open5gs_vm`, enabling the installation of the webUI.
 - New input variable `one_loadcore_agent_hugepages` and site variable schema in `loadcore_agent`, to switch between the 2 possible appliances.
+- New component `athens_ran` implemented to support the athens testbed related to ericsson RAN and the Open5Gs module.
 ### Changed
 - Common task file `routemanager_add.yaml` now also supports adding routes with key `dev`.
 - MTU default values in 'subnet' components (`tn_vxlan`, `vnet` and `tn_init`) are now first gathered from 6G Sandbox sites repository as suggested in issue #78
