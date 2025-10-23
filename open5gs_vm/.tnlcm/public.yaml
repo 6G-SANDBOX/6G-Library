@@ -169,6 +169,7 @@ input:
     description: "Loglevel of the open5GS components"
     type: str
     default_value: "warn"
+    required_when: false
     choices:
       - "fatal"
       - "error"
