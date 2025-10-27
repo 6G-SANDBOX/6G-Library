@@ -117,7 +117,7 @@
     - name: Execute bash script to register the Agent with the Middleware
       ansible.builtin.shell: |
         set -o pipefail
-        printf "{{ middleware_ip }}\neth0\ny\nn" | /opt/5gc-test-engine/agent-setup.sh
+        printf "{{ middleware_ip }}\nens3\ny\nn" | /opt/5gc-test-engine/agent-setup.sh
       args:
         executable: /bin/bash
       vars:
