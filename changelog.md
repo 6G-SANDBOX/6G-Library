@@ -3,10 +3,12 @@
 ## [unreleased] - 2025-XX-XX
 ### Changed
 - Upgraded OpenNebula Terraform provider from 1.4 to 1.5
+- `open5gs_vm` New input variabe `one_open5gs_vm_loglevel` to set the log-level of the open5gs components
 ### Fixed
 - Fixed broken links for components that have appliances in `.tnlcm/public.yaml` file.
 - Fixed `open5gs_k8s` charts not being able to pull mongodb images. Chart version upgraded from `v2.3.1` to `v2.3.3`.
 - Fixed disk resize method used in `ks8500_runner`.
+- Disabled `open5gs-seppd` component of `open5gs_vm`
 
 ## [v1.0.0] - 2025-09-11
 ### Added
@@ -22,6 +24,7 @@
 - New mandatory input variable for component `xrext`: `one_xrext_external_server`.
 - New input variable `one_open5gs_vm_install_webui` in `open5gs_vm`, enabling the installation of the webUI.
 - New input variable `one_loadcore_agent_hugepages` and site variable schema in `loadcore_agent`, to switch between the 2 possible appliances.
+- New component `athens_ran` implemented to support the athens testbed related to ericsson RAN and the Open5Gs module.
 ### Changed
 - Common task file `routemanager_add.yaml` now also supports adding routes with key `dev`.
 - MTU default values in 'subnet' components (`tn_vxlan`, `vnet` and `tn_init`) are now first gathered from 6G Sandbox sites repository as suggested in issue #78

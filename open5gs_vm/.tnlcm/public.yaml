@@ -165,6 +165,18 @@ input:
     type: bool
     default_value: false
     required_when: false
+  one_open5gs_vm_loglevel:
+    description: "Loglevel of the open5GS components"
+    type: str
+    default_value: "warn"
+    required_when: false
+    choices:
+      - "fatal"
+      - "error"
+      - "warn"
+      - "info"
+      - "debug"
+      - "trace"
 
 ####################################
 ## Generated terraform outputs
