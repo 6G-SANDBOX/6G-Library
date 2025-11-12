@@ -1,4 +1,8 @@
 # Changelog
+## v1.16.2.0
+### changed
+- upgraded runner version 2.0.0
+- upgraded to KS8500 cloud V2
 ## v1.16.1.2
 ### Fixed
 - Removed duplicated tn_bastion  in .tnclm/public.yaml
