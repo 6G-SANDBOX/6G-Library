@@ -120,6 +120,7 @@
         n2_vnet_id: "{{ hostvars['localhost']['n2_vnet_id'] }}"
         n3_vnet_id: "{{ hostvars['localhost']['n3_vnet_id'] }}"
         n6_vnet_id: "{{ hostvars['localhost']['n6_vnet_id'] }}"
+        ue_dns_server: "{{site_available_components.open5gs_vm.dns | default('8.8.8.8')}}"
 
   handlers:
     - name: Restart Open5GS
