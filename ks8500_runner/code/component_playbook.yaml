@@ -36,22 +36,6 @@
         id: "{{ (terraform_outputs.stdout | from_json)[entity_name + '-id'] }}"
         access_vnet_id: "{{ (terraform_outputs.stdout | from_json)[one_ks8500runner_networks[0] + '-id'] | string }}"
 
-    # For some weird reason, idempotency with this tool gives rc=255, but syntax errors give rc=0...
-    - name: Resize the disk reserved for Longhorn in the storage VMs
-      ansible.builtin.shell: >
-        /usr/local/bin/onevm
-        disk-resize {{ id }} 0 30G
-        --user {{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}
-        --password {{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}
-        --endpoint {{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}
-      register: disk_resize
-      failed_when: >
-        (disk_resize.rc !=  0 and 'must be larger' not in disk_resize.stderr) or
-        ('not found' in disk_resize.stderr)
-      changed_when:
-        - disk_resize.rc == 0
-        - "'not found' not in disk_resize.stderr"
-
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
         hostname: "ks8500runner"
@@ -119,7 +103,7 @@
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
     - name: Verify connectivity
-      ansible.builtin.shell: curl https://test-automation.pw.keysight.com/index.html
+      ansible.builtin.shell: curl https://6g-sandbox.automation.keysight.com/index.html
 
     # - name: Get os info
     #   command: cat /etc/os-release
@@ -196,7 +180,7 @@
         entrypoint: ""
         detach: false
         working_dir: "{{ ks8500runner_path }}"
-        command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --registrationToken {{ ks8500runner_registration_token }}
+        command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --token {{ ks8500runner_registration_token }}
       register: docker_container_output
       when: not registration_file.stat.exists
       become: true

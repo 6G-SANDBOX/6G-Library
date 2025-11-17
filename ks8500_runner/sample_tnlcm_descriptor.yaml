@@ -11,5 +11,5 @@ trial_network:
     input:
       ks8500runner_name: "6gsb-<your site name>"
       ks8500runner_registration_token: "<Put your registration token here>"
-      ks8500runner_backend_url: "https://test-automation.pw.keysight.com"
+      ks8500runner_backend_url: "https://6g-sandbox.automation.keysight.com"
       ks8500runner_special_action: "delete_runner_data"

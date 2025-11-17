@@ -3,8 +3,8 @@
 The **open5gs_k8s** 6G-Library component deploys a 5G SA Core inside a Kubernetes cluster using the [Helm Chart from Gradiant](https://artifacthub.io/packages/helm/open5gs/open5gs).
 
 ## 📦 Current versions:
-- Open5GS v2.7.6
-- Used Helm Chart v2.3.1
+- Open5GS binaries: `v2.7.5`
+- Helm Chart: `v2.3.3`
 
 > [!NOTE]  
 > The Kubernetes worker nodes need a CPU architecture with the vmx instructions set.

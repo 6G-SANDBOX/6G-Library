@@ -1,6 +1,12 @@
 # Changelog
 
-## unreleased
+## [unreleased] - 2025-XX-XX
+### Added
+- New input variabe `one_open5gs_vm_loglevel` to set the log-level of the open5gs components
+### Changed
+- disable `open5gs-seppd` which was unused and filled the logfile
+
+## v1.0.0
 ### Added
 - New input variable `one_open5gs_vm_install_webui` to enable the installation of the Web UI.
 ### Changed

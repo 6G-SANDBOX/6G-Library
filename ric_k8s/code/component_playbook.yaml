@@ -52,7 +52,7 @@
 
     - name: Scale CPU and RAM reserved in worker_0
       ansible.builtin.shell: >
-        /usr/local/bin/onevm
+        /usr/bin/onevm
         resize {{ node_ids.worker_0 }} --cpu 12 --vcpu 12
         --user {{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}
         --password {{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}
