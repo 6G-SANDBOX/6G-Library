@@ -93,17 +93,17 @@
         name:
           - py3-pip
           - py3-requests
-          - docker
-          - docker-cli-buildx
-          - docker-compose
+          #- docker
+          #- docker-cli-buildx
+          #- docker-compose
           - openrc
-          - docker-cli-compose
+          #- docker-cli-compose
         state: present
 
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
-    - name: Verify connectivity
-      ansible.builtin.shell: curl https://6g-sandbox.automation.keysight.com/index.html
+    #- name: Verify connectivity
+    #  ansible.builtin.shell: curl https://6g-sandbox.automation.keysight.com/index.html
 
     # - name: Get os info
     #   command: cat /etc/os-release
@@ -113,48 +113,48 @@
     #   debug:
     #     msg: "{{ os_info.stdout }}"
 
-    - name: Enable docker service
-      ansible.builtin.service:
-        name: docker
-        state: started
-        enabled: true
-      become: true
+    #- name: Enable docker service
+    #  ansible.builtin.service:
+    #    name: docker
+    #    state: started
+    #    enabled: true
+    #  become: true
 
-    - name: Delete runner data
-      ansible.builtin.include_tasks: special_action_delete_runner_data.yaml
-      when: ks8500runner_special_action is defined and ks8500runner_special_action == "delete_runner_data"
+    #- name: Delete runner data
+    #  ansible.builtin.include_tasks: special_action_delete_runner_data.yaml
+    #  when: ks8500runner_special_action is defined and ks8500runner_special_action == "delete_runner_data"
 
-    - name: Create runner dirs
-      ansible.builtin.file:
-        path: "{{ ks8500runner_path }}/{{ item }}"
-        state: directory
-        mode: '0700'
-      loop: "{{ ks8500runner_mounts }}"
-      become: true
+    #- name: Create runner dirs
+    #  ansible.builtin.file:
+    #    path: "{{ ks8500runner_path }}/{{ item }}"
+    #   state: directory
+    #    mode: '0700'
+    #  loop: "{{ ks8500runner_mounts }}"
+    #  become: true
 
-    - name: Deploy runner configuration
-      ansible.builtin.copy:
-        src: "{{ playbook_dir }}/all/runner/"
-        dest: "{{ ks8500runner_path }}"
-      become: true
+    #- name: Deploy runner configuration
+    #  ansible.builtin.copy:
+    #    src: "{{ playbook_dir }}/all/runner/"
+    #    dest: "{{ ks8500runner_path }}"
+    #  become: true
 
-    - name: Build runner image
-      community.docker.docker_image_build:
-        name: ks8500_runner:latest
-        path: "{{ ks8500runner_path }}"
-        dockerfile: Dockerfile
-      become: true
+    #- name: Build runner image
+    #  community.docker.docker_image_build:
+    #    name: ks8500_runner:latest
+    #    path: "{{ ks8500runner_path }}"
+    #    dockerfile: Dockerfile
+    #  become: true
 
-    - name: Create mount list
-      ansible.builtin.set_fact:
-        mount_list: '{{ (mount_list|default([])) + [{"target": "/opt/tap/" + item, "source": "{{ ks8500runner_path }}/" + item, "type": "bind" }] }}'
-      loop: "{{ ks8500runner_mounts }}"
-      become: true
+    #- name: Create mount list
+    #  ansible.builtin.set_fact:
+    #    mount_list: '{{ (mount_list|default([])) + [{"target": "/opt/tap/" + item, "source": "{{ ks8500runner_path }}/" + item, "type": "bind" }] }}'
+    #  loop: "{{ ks8500runner_mounts }}"
+    #  become: true
 
     # The microsoft base image uses this UID. Maybe we can find a better solution.
-    - name: Workaround permissions
-      ansible.builtin.shell: "chown -R 1654:1654 {{ ks8500runner_path }}"
-      become: true
+    #- name: Workaround permissions
+    #  ansible.builtin.shell: "chown -R 1654:1654 {{ ks8500runner_path }}"
+    #  become: true
 
     # - name: Storage debug collect
     #   ansible.builtin.command:
@@ -166,39 +166,39 @@
     #   ansible.builtin.debug:
     #     var: storage_debug.stdout_lines
 
-    - name: Check if the registration file exists
-      ansible.builtin.stat:
-        path: "{{ ks8500runner_path }}/Config/runner.lic"
-      register: registration_file
-      become: true
+    #- name: Check if the registration file exists
+    #  ansible.builtin.stat:
+    #    path: "{{ ks8500runner_path }}/Config/runner.lic"
+    #  register: registration_file
+    #  become: true
 
-    - name: Register runner
-      community.docker.docker_container:
-        image: ks8500_runner
-        name: register-runner
-        mounts: "{{ mount_list }}"
-        entrypoint: ""
-        detach: false
-        working_dir: "{{ ks8500runner_path }}"
-        command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --token {{ ks8500runner_registration_token }}
-      register: docker_container_output
-      when: not registration_file.stat.exists
-      become: true
+    #- name: Register runner
+    #  community.docker.docker_container:
+    #    image: ks8500_runner
+    #    name: register-runner
+    #    mounts: "{{ mount_list }}"
+    #    entrypoint: ""
+    #    detach: false
+    #    working_dir: "{{ ks8500runner_path }}"
+    #    command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --token {{ ks8500runner_registration_token }}
+    #  register: docker_container_output
+    #  when: not registration_file.stat.exists
+    #  become: true
 
-    - name: Start runner
-      community.docker.docker_compose_v2:
-        project_src: "{{ ks8500runner_path }}"
-      become: true
+    #- name: Start runner
+    #  community.docker.docker_compose_v2:
+    #    project_src: "{{ ks8500runner_path }}"
+    #  become: true
 
-    - name: Add registration_info if not available
-      ansible.builtin.set_fact:
-        ks8500runner_registration_info: "Registration not performed (already registered)"
-      when: docker_container_output.container.Output is undefined
+    #- name: Add registration_info if not available
+    #  ansible.builtin.set_fact:
+    #    ks8500runner_registration_info: "Registration not performed (already registered)"
+    #  when: docker_container_output.container.Output is undefined
 
-    - name: Add registration_info if available
-      ansible.builtin.set_fact:
-        ks8500runner_registration_info: "{{ docker_container_output.container.Output }}"
-      when: docker_container_output.container.Output is defined
+    #- name: Add registration_info if available
+    #  ansible.builtin.set_fact:
+    #    ks8500runner_registration_info: "{{ docker_container_output.container.Output }}"
+    #  when: docker_container_output.container.Output is defined
 
 
 - name: "STAGE 4: Access tn_bastion to set firewall exceptions"
