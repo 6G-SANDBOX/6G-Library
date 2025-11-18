@@ -44,7 +44,7 @@ resource "opennebula_service" "{{ entity_name }}" {
         "ONEAPP_STORAGE_FILESYSTEM": "xfs",       {# for OpenNebula <  7.0 #}
         "ONEAPP_K8S_TRAEFIK_ENABLED": "{% if one_oneKE_traefik %}YES{% else %}NO{% endif %}",
         "ONEAPP_VNF_HAPROXY_INTERFACES": "eth0",
-        "ONEAPP_VNF_HAPROXY_REFRESH_RATE": "30",å
+        "ONEAPP_VNF_HAPROXY_REFRESH_RATE": "30",
         "ONEAPP_VNF_HAPROXY_LB0_PORT": "9345",
         "ONEAPP_VNF_HAPROXY_LB1_PORT": "6443",
         "ONEAPP_VNF_HAPROXY_LB2_PORT": "443",
