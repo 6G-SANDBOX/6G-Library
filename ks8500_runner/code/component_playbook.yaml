@@ -190,10 +190,10 @@
     #    project_src: "{{ ks8500runner_path }}"
     #  become: true
 
-    #- name: Add registration_info if not available
-    #  ansible.builtin.set_fact:
-    #    ks8500runner_registration_info: "Registration not performed (already registered)"
-    #  when: docker_container_output.container.Output is undefined
+    - name: Add registration_info if not available
+      ansible.builtin.set_fact:
+        ks8500runner_registration_info: "Registration not performed (already registered)"
+    #when: docker_container_output.container.Output is undefined
 
     #- name: Add registration_info if available
     #  ansible.builtin.set_fact:
