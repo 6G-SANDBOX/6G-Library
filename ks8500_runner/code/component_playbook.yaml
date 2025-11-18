@@ -225,7 +225,7 @@
       vars:
         custom_outputs:
           - key: "registration_info"
-            value: "{{ hostvars['ks8500runner']['ks8500runner_registration_info'] | b64encode }}"
+            value: "Dummy Runner"
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
