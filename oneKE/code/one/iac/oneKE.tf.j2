@@ -38,8 +38,10 @@ resource "opennebula_service" "{{ entity_name }}" {
         "ONEAPP_K8S_METALLB_RANGE": "",
         "ONEAPP_K8S_METALLB_CONFIG": "",
         "ONEAPP_K8S_LONGHORN_ENABLED": "{% if one_oneKE_longhorn %}YES{% else %}NO{% endif %}",
-        "ONEAPP_STORAGE_DEVICE": "/dev/vdb",
-        "ONEAPP_STORAGE_FILESYSTEM": "xfs",
+        "ONEAPP_K8S_STORAGE_DEVICE": "/dev/vdb",  {# for OpenNebula >= 7.0 #}
+        "ONEAPP_STORAGE_DEVICE": "/dev/vdb",      {# for OpenNebula <  7.0 #}
+        "ONEAPP_K8S_STORAGE_FILESYSTEM": "xfs",   {# for OpenNebula >= 7.0 #}
+        "ONEAPP_STORAGE_FILESYSTEM": "xfs",       {# for OpenNebula <  7.0 #}
         "ONEAPP_K8S_TRAEFIK_ENABLED": "{% if one_oneKE_traefik %}YES{% else %}NO{% endif %}",
         "ONEAPP_VNF_HAPROXY_INTERFACES": "eth0",
         "ONEAPP_VNF_HAPROXY_REFRESH_RATE": "30",
