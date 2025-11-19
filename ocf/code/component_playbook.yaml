@@ -128,5 +128,24 @@
           - key: "{{ entity_name }}-ocf_metadata"
             value: "{{ ocf_metadata_dict }}"
 
+    - name: Set DNS record for the component
+      ansible.builtin.uri:
+        url: >-
+          {{
+            'http://' ~ bastion_ip ~ ':5380/api/zones/records/add?token=' ~ tn_dns_token ~
+            '&domain=' ~ item ~
+            '&type=A&ptr=true&createPtrZone=true&ipAddress=' ~ node_ips.vnf_0 | trim
+          }}
+        method: POST
+        body_format: json
+        status_code: [200]
+      loop:
+        - "{{ ocf_any_vault_hostname }}"
+        - "{{ ocf_any_monitoring_prometheus_hostname }}" 
+        - "{{ ocf_any_capif_hostname }}"
+        - "{{ ocf_any_capif_register_hostname }}"
+      loop_control:
+        label: "{{ item }}"
+
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
