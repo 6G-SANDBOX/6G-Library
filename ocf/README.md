@@ -56,22 +56,8 @@ _N/A_
 | `ocf_one_oneKE` | Name of the oneKE cluster used to deploy the Helm Chart | oneKE | - | - | true |
 | `ocf_any_repo` | OCF Repository URL | str | https://labs.etsi.org/rep/ocf/capif.git | - | false |
 | `ocf_any_branch` | OCF Repository Branch to use | str | staging | - | false |
-| `ocf_any_vault_namespace` | Vault namespace | str | ocf-vault | - | false |
-| `ocf_any_vault_storage_class` | Vault Storage class | str | longhorn | - | false |
-| `ocf_any_vault_storage_size` | Vault Storage Size | str | 1Gi | - | false |
-| `ocf_any_monitoring_namespace` | Monitoring namespace | str | ocf-monitoring | - | false |
 | `ocf_any_monitoring_service_name` | Monitoring service name | str | monitoring | - | false |
-| `ocf_any_capif_release` | CAPIF Version to deploy | str | v3.0.0-release | Check production versions released | false |
-| `ocf_any_capif_name_version_chart`| Chart version | str | ocf-release-3 | - | false |
-| `ocf_any_capif_namespace` | CAPIF namespace | str | ocf-capif | - | false |
 | `ocf_any_capif_resources_reserve` | CAPIF resource reserve | str | NO | - | false |
-| `ocf_any_capif_storage_class` | CAPIF storage class to use | str | longhorn | - | false |
-| `ocf_any_capif_storage_access_mode` | CAPIF storage access mode | str | ReadWriteOnce | ReadWriteMany, ReadWriteOnce | false |
-| `ocf_any_capif_grafana_storage_size` | Grafana storage size | str | 1Gi | - | false |
-| `ocf_any_capif_loki_storage_size` | Loki storage size | str | 100Mi | - | false |
-| `ocf_any_capif_mongo_storage_size` | CAPIF Mongo storage size | str | 1Gi | - | false |
-| `ocf_any_capif_mongo_register_storage_size` | Register Mongo storage size | str | 1Gi | - | false |
-| `ocf_any_capif_tempo_storage_size` | Tempo Persistent storage size | str | 1Gi | - | false |
 | `ocf_any_user` | User to be registered on OpenCAPIF | str | client | - | false |
 | `ocf_any_password` | User password to be registered on OpenCAPIF | str | password | - | false |
 | `ocf_any_tests_to_pass` | Tests to launch after deployment | str | smoke | smoke, all | false |

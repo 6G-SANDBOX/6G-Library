@@ -38,9 +38,9 @@
         domain_name: >-
           {{
             (
-              (component_type  | regex_replace('_', '') | lower) ~ '-' ~
-              (custom_name     | regex_replace('_', '') | lower) ~ '.' ~
-              (tn_id           | regex_replace('_', '') | lower) ~ '.' ~
+              (component_type  | regex_replace('_', '') | regex_replace('[^a-zA-Z0-9-]', '-') | lower) ~ '-' ~
+              (custom_name     | regex_replace('_', '') | regex_replace('[^a-zA-Z0-9-]', '-') | lower) ~ '.' ~
+              (tn_id           | regex_replace('_', '') | regex_replace('[^a-zA-Z0-9-]', '-') | lower) ~ '.' ~
               site_domain
             ) | trim
           }}

@@ -52,77 +52,21 @@ input:
     type: str
     default_value: "staging"
     required_when: false
-  ocf_any_vault_namespace:
-    description: Vault namespace
-    type: str
-    default_value: "ocf-vault"
-    required_when: false
-  ocf_any_vault_storage_class:
-    description: Vault Storage class. (longhorn by default)
-    type: str
-    default_value: "longhorn"
-    required_when: false
-  ocf_any_vault_storage_size: 
-    description: Vault Storage Size
-    type: str
-    default_value: "1Gi"
-    required_when: false
-  ocf_any_monitoring_namespace:
-    description: Monitoring namespace
-    type: str
-    default_value: "ocf-monitoring"
-    required_when: false
+
+  # Monitoring deployment configuration
   ocf_any_monitoring_service_name:
-    description: Vault Storage Size
+    description: Monitoring Service name
     type: str
     default_value: "monitoring"
     required_when: false
-  ocf_any_capif_namespace: 
-    description: CAPIF namespace
-    type: str
-    default_value: "ocf-capif"
-    required_when: false
+
+  # OpenCAPIF deployment configuration
   ocf_any_capif_resources_reserve:
     description: CAPIF resource reserve (default NO)
     type: str
     default_value: "NO"
     required_when: false
-  ocf_any_capif_storage_class:
-    description: CAPIF storage class to use (default longhorn)
-    type: str
-    default_value: "longhorn"
-    required_when: false
-  ocf_any_capif_storage_access_mode:
-    description: CAPIF storage access mode (ReadWriteOnce by default)
-    type: str
-    default_value: "ReadWriteOnce"
-    choices: ["ReadWriteMany", "ReadWriteOnce"]
-    required_when: false
-  ocf_any_capif_grafana_storage_size: 
-    description: Grafana storage size
-    type: str
-    default_value: "1Gi"
-    required_when: false
-  ocf_any_capif_loki_storage_size:
-    description: Loki storage size
-    type: str
-    default_value: "100Mi"
-    required_when: false
-  ocf_any_capif_mongo_storage_size:
-    description: CAPIF Mongo storage size
-    type: str
-    default_value: "1Gi"
-    required_when: false
-  ocf_any_capif_mongo_register_storage_size:
-    description: Register Mongo Storage Size
-    type: str
-    default_value: "1Gi"
-    required_when: false
-  ocf_any_capif_tempo_storage_size:
-    description: Tempo Persistent storage size
-    type: str
-    default_value: "1Gi"
-    required_when: false
+
   ocf_any_user:
     description: User to be registered on OpenCAPIF
     type: str
@@ -152,8 +96,6 @@ terraform_outputs:
     repo: input.ocf_any_repo
     branch: input.ocf_any_branch
     vault_namespace: input.ocf_any_vault_namespace
-    vault_storage_class: input.ocf_any_vault_storage_class
-    vault_storage_size: input.ocf_any_vault_storage_size
     vault_hostname: private.ocf_any_vault_hostname
     monitoring_namespace: input.ocf_any_monitoring_namespace
     monitoring_service_name: input.ocf_any_monitoring_service_name
@@ -162,12 +104,6 @@ terraform_outputs:
     capif_namespace: input.ocf_any_capif_namespace
     capif_resources_reserve: input.ocf_any_capif_resources_reserve
     capif_name_version_chart: input.ocf_any_capif_name_version_chart
-    capif_storage_class: input.ocf_any_capif_storage_class
-    capif_storage_access_mode: input.ocf_any_capif_storage_access_mode
-    capif_grafana_storage_size: input.ocf_any_capif_grafana_storage_size
-    capif_loki_storage_size: input.ocf_any_capif_loki_storage_size
-    capif_mongo_storage_size: input.ocf_any_capif_mongo_storage_size
-    capif_mongo_register_storage_size: input.ocf_any_capif_mongo_register_storage_size
     capif_hostname: private.ocf_any_capif_hostname
     capif_register_hostname: private.ocf_any_capif_register_hostname
     user: input.ocf_any_user

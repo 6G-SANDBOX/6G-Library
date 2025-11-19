@@ -16,10 +16,12 @@
   - "\"s/export DOMAIN1=.*/export DOMAIN1={{ ocf_any_vault_domain_1 }}/g\""
   - "\"s/export DOMAIN2=.*/export DOMAIN2={{ ocf_any_vault_domain_2 }}/g\""
   - "\"s/export DOMAIN3=.*/export DOMAIN3={{ ocf_any_vault_domain_3 }}/g\""
+
   - "\"s/export MONITORING_NAMESPACE=.*/export MONITORING_NAMESPACE={{ ocf_any_monitoring_namespace }}/g\""
   - "\"s/export MONITORING_SERVICE_NAME=.*/export MONITORING_SERVICE_NAME={{ ocf_any_monitoring_service_name }}/g\""
   - "\"s/export PROMETHEUS_HOSTNAME=.*/export PROMETHEUS_HOSTNAME={{ ocf_any_monitoring_prometheus_hostname }}/g\""
   - "\"s/export MONITORING_SNOOKER_ENABLED=.*/export MONITORING_SNOOKER_ENABLED={{ ocf_any_monitoring_snooker_enabled }}/g\""
+
   - "\"s/export CAPIF_IMAGE_TAG=.*/export CAPIF_IMAGE_TAG={{ ocf_any_capif_release }}/g\""
   - "\"s/export CAPIF_NAME_VERSION_CHART=.*/export CAPIF_NAME_VERSION_CHART={{ ocf_any_capif_name_version_chart }}/g\""
   - "\"s/export CAPIF_NAMESPACE=.*/export CAPIF_NAMESPACE={{ ocf_any_capif_namespace }}/g\""

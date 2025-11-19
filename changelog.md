@@ -1,8 +1,6 @@
 # Changelog
 
 ## [unreleased] - 2025-XX-XX
-### Added
-- Component `ocf` has 2 new public variables: `ocf_any_capif_release` and `ocf_any_capif_name_version_chart`.
 ### Changed
 - Upgraded OpenNebula Terraform provider from 1.4 to 1.5
 - `open5gs_vm` New input variabe `one_open5gs_vm_loglevel` to set the log-level of the open5gs components
