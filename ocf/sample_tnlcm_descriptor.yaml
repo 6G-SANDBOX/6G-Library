@@ -3,9 +3,9 @@ trial_network:
     type: "tn_init"
     dependencies: []
     input: {}
-  vnet-internal:
+  vnet-01:
     type: "vnet"
-    name: "internal"
+    name: "01"
     dependencies:
       - "tn_init"
     input:
@@ -13,14 +13,14 @@ trial_network:
       one_vnet_netmask: 24
       one_vnet_address_size: 100
       one_vnet_gw: "10.10.10.1"
-  oneKE-k8s:
+  oneKE-01:
     type: "oneKE"
-    name: "k8s"
+    name: "01"
     dependencies:
       - "tn_init"
-      - "vnet-internal"
+      - "vnet-01"
     input:
-      one_oneKE_internal_vnet: "vnet-internal"
+      one_oneKE_internal_vnet: "vnet-01"
       one_oneKE_worker_nodes: 3        # Default value is 1
       one_oneKE_version: "131"
       # one_oneKE_multus: true         # Default value
@@ -30,11 +30,11 @@ trial_network:
       # one_oneKE_longhorn: true       # Default value
       # one_oneKE_traefik: false       # Default value
       one_oneKE_nginx_passthough: true
-  ocf-openCapif:
+  ocf-01:
     type: "ocf"
-    name: "openCapif"
+    name: "01"
     dependencies:
-      - "oneKE-k8s"
+      - "oneKE-01"
     input:
-      ocf_one_oneKE: "oneKE-k8s"
+      ocf_one_oneKE: "oneKE-01"
       ocf_any_branch: "staging"
