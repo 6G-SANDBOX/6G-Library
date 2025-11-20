@@ -1,0 +1,43 @@
+---
+####################################################################################
+#
+# routemanager_del.yaml
+#
+# This task file deletes one or more custom route from a route-manager-api server
+# The task should be called from the jenkins server itself
+#
+# vars:
+#   endpoint: "IP address of the routemanager server. Usually in the default network"
+#   token: "Bearer token to authenticate to the route-manager-api server"
+#   item: [List of routes to be deleted. Each route is a dictionary with the key "to"]
+#         The additional key "from" is expected to be added in future updates.
+#
+####################################################################################
+
+- name: Display route to be deleted
+  ansible.builtin.debug:
+    var: item
+  when: debug
+
+- name: "Make a DELETE request to a route-manager-api"
+  ansible.builtin.uri:
+    url: "http://{{ endpoint }}:8172/routes/"
+    method: DELETE
+    headers:
+      accept: application/json
+      Authorization: "Bearer {{ token }}"
+      Content-Type: application/json
+    body_format: json
+    body: "{{
+      {
+        'to': item.to,
+      }
+      | to_json }}"
+    return_content: true
+    status_code: [200, 201]
+  register: api_response
+
+- name: Display response content
+  ansible.builtin.debug:
+    var: api_response.content
+  when: debug

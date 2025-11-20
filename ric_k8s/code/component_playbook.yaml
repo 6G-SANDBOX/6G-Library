@@ -53,13 +53,13 @@
     - name: Scale CPU and RAM reserved in worker_0
       ansible.builtin.shell: >
         /usr/bin/onevm
-        resize {{ node_ids.worker_0 }} --cpu 12 --vcpu 12
+        resize {{ node_ids.worker_0 }} --cpu 12 --vcpu 12 --memory 8g
         --user {{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}
         --password {{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}
         --endpoint {{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}
 
 
-- name: "STAGE 2: Install psutil to monitor cpu usage on worker"
+- name: "STAGE 2: Install psutil to monitor cpu usage on worker and restart rke service"
   hosts: worker_0
   gather_facts: false
   tasks:
@@ -73,6 +73,10 @@
       ansible.builtin.pip:
         name: psutil
         executable: pip3
+    - name: Restart rke2-agent service
+      ansible.builtin.systemd:
+        name: rke2-agent.service
+        state: restarted        
 
 
 - name: "STAGE 3: Apply IaC to deploy the component"

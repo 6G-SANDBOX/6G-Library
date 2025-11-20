@@ -36,6 +36,18 @@
           {{
             lookup('pipe', 'date -u -d "' ~ current_timestamp ~ ' + ' ~ any_iswireless_radio_duration ~ ' seconds" +"%Y-%m-%dT%H:%M:%SZ"')
           }}
+
+    - name: "Delete previous routes from the site's route-manager-api to the ISW containers"
+      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_del.yaml"
+      vars:
+        endpoint: "{{ site_iswireless_routemanager.api_endpoint }}"
+        token: "{{ site_iswireless_routemanager.token }}"
+      loop:
+        - { to: "{{ one_ric_k8s_ip }}" }
+        - { to: "{{ one_cu_k8s_n2_ip }}" }
+        - { to: "{{ one_cu_k8s_n3_ip }}" }
+        - { to: "{{ one_cu_k8s_n3_v2_ip }}" }      
+
     - name: Enable routes to the 5G Core AMF and UPF
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/routemanager_add.yaml"
       vars:
