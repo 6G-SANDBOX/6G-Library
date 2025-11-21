@@ -1,6 +1,15 @@
+- name: Delete previous Vault namespace if exists
+  kubernetes.core.k8s:
+    kubeconfig: /etc/rancher/rke2/rke2.yaml
+    api_version: v1
+    kind: Namespace
+    name: "{{ ocf_any_vault_namespace }}"
+    state: absent
+    wait: yes
+    wait_timeout: 60
+
 - name: Execute Install Vault Script
   ansible.builtin.shell: "/root/capif/helm/scripts/install_vault.sh"
-  become: true
   environment:
     KUBECONFIG: /etc/rancher/rke2/rke2.yaml
 
