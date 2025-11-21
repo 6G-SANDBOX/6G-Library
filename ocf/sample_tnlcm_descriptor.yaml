@@ -37,4 +37,4 @@ trial_network:
       - "oneKE-01"
     input:
       ocf_one_oneKE: "oneKE-01"
-      ocf_any_branch: "staging"
+      ocf_any_branch: "REL3-fix-scripts"    # Default value is "staging"

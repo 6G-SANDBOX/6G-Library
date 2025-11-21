@@ -1,3 +1,9 @@
+- name: Increase Helm timeout in install_capif.sh script to 30 minutes
+  ansible.builtin.replace:
+    path: /root/capif/helm/scripts/install_capif.sh
+    regexp: '--wait --timeout=10m'
+    replace: '--wait --timeout=30m'
+
 - name: Execute Install OpenCAPIF Script
   ansible.builtin.shell: "/root/capif/helm/scripts/install_capif.sh"
   become: true

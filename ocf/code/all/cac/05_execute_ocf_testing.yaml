@@ -5,16 +5,21 @@
   environment:
     KUBECONFIG: /etc/rancher/rke2/rke2.yaml
 
-- name: Compress Robot OCF Testsuite results
-  ansible.builtin.shell: "zip -r ocf_robot_results.zip capif/results"
-  become: true
+- name: Archive Robot OCF Testsuite results
+  ansible.builtin.archive:
+    path: capif/results
+    dest: /tmp/ocf_robot_results.zip
+    format: zip
+    remove: yes
 
-- name: Fetch Robot Tests results
-  ansible.builtin.fetch:
-    src: "ocf_robot_results.zip"
-    dest: "{{ workspace }}/{{ component_type }}/code/ocf_robot_results.zip"
-    flat: true
-
-- name: Remove Results directory
-  ansible.builtin.shell: "rm -rf capif/results"
-  become: true
+- name: Fetch and remove Robot Tests results
+  block:
+    - name: Fetch results
+      ansible.builtin.fetch:
+        src: /tmp/ocf_robot_results.zip
+        dest: "{{ workspace }}/{{ component_type }}/code/ocf_robot_results.zip"
+  # always:
+  #   - name: Cleanup zip file
+  #     ansible.builtin.file:
+  #       path: /tmp/ocf_robot_results.zip
+  #       state: absent
