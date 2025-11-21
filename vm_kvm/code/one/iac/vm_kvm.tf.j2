@@ -15,13 +15,17 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
   }
 
-{# ### Disabled the possibility to modify VM's size due to a problem with Terraform's OpenNebula Provider
+  # Ignore changes in the disk argument due to limitations in the OpenNebula Terraform provider
+  # Issue #598 https://github.com/OpenNebula/terraform-provider-opennebula/issues/598
+  lifecycle {
+    ignore_changes = [disk]
+  }
   disk {
     image_id = {{ site_available_components.vm_kvm.image_id }}
     size     = {{ one_vm_kvm_disk }}
     target   = "vda"
     driver   = "qcow2"
-  } #}
+  }
 
 {% for network in one_vm_kvm_networks %}
   nic {

@@ -141,7 +141,7 @@
         status_code: [200]
       loop:
         - "{{ ocf_any_vault_hostname }}"
-        - "{{ ocf_any_monitoring_prometheus_hostname }}" 
+        - "{{ ocf_any_monitoring_prometheus_hostname }}"
         - "{{ ocf_any_capif_hostname }}"
         - "{{ ocf_any_capif_register_hostname }}"
       loop_control:
