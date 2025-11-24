@@ -92,6 +92,13 @@
         name: sudo
         state: present
 
+    - name: Ensure admin group exists
+      become: true
+      ansible.builtin.group:
+        name: "{{ admin_group }}"
+        state: present
+
+
     - name: Set admin group based on OS family
       set_fact:
         admin_group: sudo
