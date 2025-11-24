@@ -96,7 +96,7 @@
         shell: /bin/bash
         groups: "{{ admin_group }}"
         append: yes
-        password: "{{ 'keysight' | password_hash('sha512', 'S4feS4lt') }}"
+        password: 'keysight'
         update_password: on_create
 
     # Install additional packages
