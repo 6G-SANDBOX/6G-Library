@@ -89,11 +89,6 @@
     - name: Set admin group based on OS family
       set_fact:
         admin_group: sudo
-  
-    - name: Ensure admin group exists
-      ansible.builtin.group:
-        name: "{{ admin_group }}"
-        state: present
    
     - name: Create new user for experimenter access
       ansible.builtin.user:
