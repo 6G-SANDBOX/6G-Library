@@ -88,7 +88,7 @@
 
     - name: Set admin group based on OS family
       set_fact:
-        admin_group: "{{ 'sudo' if ansible_os_family == 'Debian' else 'wheel' }}"
+        admin_group: sudo
   
     - name: Ensure admin group exists
       ansible.builtin.group:
