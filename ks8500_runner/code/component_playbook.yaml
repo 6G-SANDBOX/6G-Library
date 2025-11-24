@@ -85,11 +85,6 @@
       loop:
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
-    
-    - name: Ensure sudo package is installed
-      ansible.builtin.package:
-        name: sudo
-        state: present
 
     - name: Set admin group based on OS family
       set_fact:
