@@ -85,6 +85,29 @@
       loop:
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
+    
+    - name: Ensure sudo package is installed
+      ansible.builtin.package:
+        name: sudo
+        state: present
+
+    - name: Set admin group based on OS family
+      set_fact:
+        admin_group: "{{ 'sudo' if ansible_os_family == 'Debian' else 'wheel' }}"
+  
+    - name: Ensure admin group exists
+      ansible.builtin.group:
+        name: "{{ admin_group }}"
+        state: present
+   
+    - name: Create new user for experimenter access
+      ansible.builtin.user:
+        name: tnuser
+        shell: /bin/bash
+        groups: "{{ admin_group }}"
+        append: yes
+        password: "{{ 'keysight' | password_hash('sha512', 'S4feS4lt') }}"
+        update_password: on_create
 
     # Install additional packages
     - name: Install additional required packages
