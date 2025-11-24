@@ -91,11 +91,12 @@
         admin_group: sudo
    
     - name: Create new user for experimenter access
+      become: true
       ansible.builtin.user:
         name: tnuser
         shell: /bin/bash
-        #groups: "{{ admin_group }}"
-        #append: yes
+        groups: "{{ admin_group }}"
+        append: yes
         password: 'keysight'
         update_password: on_create
 
