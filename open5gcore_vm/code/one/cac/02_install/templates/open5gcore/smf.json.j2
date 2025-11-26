@@ -93,9 +93,9 @@
                     "mtu": {{ dnn_mtu }},
                     "dnn":[
                         { "ignore": 1 , "name": "", "ipaddr": "", "slice": [{"sst": 1, "sd": "000001"}],"ipv4_allocation": [{"supi": "", "ipaddr": ""}, {"mac": "", "ipaddr": ""}], "dns": [""] },
-                        { "name": "ims", "ipaddr": "10.45.3.0/24", "reserved_ip": ["10.45.3.254"], "dns": ["8.8.8.8"] },
-                        { "name": "%DNN", "ipaddr": "%DNN_SUBNET", "dns": ["8.8.8.8"] },
-                        { "name": "default", "ipaddr": "10.45.1.0/24", "reserved_ip":["10.45.1.1"], "dns": ["8.8.8.8"] }
+                        { "name": "ims", "ipaddr": "10.45.3.0/24", "reserved_ip": ["10.45.3.254"], "dns": ["{{ue_dns_server}}","1.1.1.1"] },
+                        { "name": "%DNN", "ipaddr": "%DNN_SUBNET", "dns": ["{{ue_dns_server}}","1.1.1.1"] },
+                        { "name": "default", "ipaddr": "10.45.1.0/24", "reserved_ip":["10.45.1.1"], "dns": ["{{ue_dns_server}}","1.1.1.1"] }
                     ],
                     "hacks": {
                         "im_cn_subsystem_signaling_flag": true,
