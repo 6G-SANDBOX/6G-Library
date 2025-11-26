@@ -33,8 +33,8 @@
     ### install open5gcore
     gitlab_deploy_token: "{{ site_available_components.open5gcore_vm.gitlab_deploy_token | default('') }}"
     phoenix_version: 10.3.0
-    ubuntu_version: 24.04
-    phoenix_deb_url: "{{ gitlab_base_url }}/packages/generic/open5Gcore.v{{ phoenix_version | replace('.','-') }}/{{ phoenix_version }}/open5gcore-{{ phoenix_version }}_amd64-u{{ ubuntu_version }}.deb"
+    ubuntu_version: 22.04
+    phoenix_deb_url: "{{ site_available_components.open5gcore_vm.gitlab_base_url }}/packages/generic/open5Gcore.v{{ phoenix_version | replace('.','-') }}/{{ phoenix_version }}/open5gcore-{{ phoenix_version }}_amd64-u{{ ubuntu_version }}.deb"
 
   block:
     - name: render netplan aliases
