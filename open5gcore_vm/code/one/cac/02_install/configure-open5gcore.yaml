@@ -2,6 +2,17 @@
 - name: Setting up open5gcore configs
   become: true
   block:
+    vars:
+      tacs:
+        - tac: "{{ one_open5gcore_vm_tac }}"
+          comment: "from experimenter"
+        - tac: 1
+        - tac: 2
+        - tac: 3
+        - tac: 121
+          comment: "UG2"
+        - tac: 122
+          comment: "Lab"
 
     - name: create directories
       file:
