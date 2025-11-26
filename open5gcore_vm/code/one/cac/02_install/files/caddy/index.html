@@ -289,7 +289,7 @@
       function checkAll() {
         items.forEach(({ a, dot }) => {
           const href = a.getAttribute("href").replace("console.html", "live");
-          checkReachability(href, dot, "HEAD");
+          checkReachability(href, dot, "GET");
         });
       }
 
