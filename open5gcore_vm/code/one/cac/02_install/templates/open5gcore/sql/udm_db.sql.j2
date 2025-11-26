@@ -243,6 +243,7 @@ CREATE TABLE `supi` (
   `auth_type` int(11) NOT NULL,
   `op_is_opc` tinyint(1) NOT NULL DEFAULT 0,
   `usim_type` tinyint(1) NOT NULL DEFAULT 0,
+  `tel` varchar(12) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_supi_identity` (`identity`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Subscriber Permanent Identifier';
@@ -316,7 +317,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `db_version` WRITE;
 /*!40000 ALTER TABLE `db_version` DISABLE KEYS */;
-INSERT INTO `db_version` VALUES (10,10);
+INSERT INTO `db_version` VALUES (11,10);
 /*!40000 ALTER TABLE `db_version` ENABLE KEYS */;
 UNLOCK TABLES;
 
