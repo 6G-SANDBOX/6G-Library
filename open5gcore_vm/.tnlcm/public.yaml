@@ -41,6 +41,8 @@ site_variables:
   image_id: ID of the Open5gcore VM image to use in your OpenNebula environment
   testbed_sim_sql: "Optional: SQL dump with sim card credentials used in the `udm_db`"
   dns: "Optional: DNS server given to te UE's (default: 8.8.8.8)"
+  gitlab_deploy_token: "secret token to access the `phoenix_deb_url`"
+  gitlab_base_url: "URL of the gitlab instance to download an updated Open5Gcore"
 
 
 ####################################
