@@ -32,7 +32,7 @@
     s_nssai_sst: "{{ one_open5gcore_vm_s_nssai_sst }}"
     ### install open5gcore
     gitlab_deploy_token: "{{ site_available_components.open5gcore_vm.gitlab_deploy_token | default('') }}"
-    phoenix_version: 10.3.0
+    phoenix_version: 10.4.0
     ubuntu_version: 22.04
     phoenix_deb_url: "{{ site_available_components.open5gcore_vm.gitlab_base_url }}/packages/generic/open5Gcore.v{{ phoenix_version | replace('.','-') }}/{{ phoenix_version }}/open5gcore-{{ phoenix_version }}_amd64-u{{ ubuntu_version }}.deb"
 
