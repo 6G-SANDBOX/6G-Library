@@ -1,5 +1,10 @@
 # Changelog
 
+## unreleased
+### Changed
+- Update open5gcore to version 10.4.0
+- The DNS server which is send to the UE's can now be configured using a site variable
+
 ## v1.0.0
 ### Changed
 - Output dictionary `metadata` renamed to `5gcore_metadata`.
