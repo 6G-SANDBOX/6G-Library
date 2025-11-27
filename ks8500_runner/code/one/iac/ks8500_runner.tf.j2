@@ -12,6 +12,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     NETCFG_TYPE: "interfaces"
     SET_HOSTNAME: "$NAME"
     USERNAME: "jenkins"
+    PASSWORD: "keysight"
     SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
     # install apk add python3; growpart /dev/vda 1; resize2fs /dev/vda1
     START_SCRIPT_BASE64: "IyEvYmluL2Jhc2gKZ3Jvd3BhcnQgL2Rldi92ZGEgMQpyZXNpemUyZnMgL2Rldi92ZGExCmFwayBhZGQgcHl0aG9uMwo="
