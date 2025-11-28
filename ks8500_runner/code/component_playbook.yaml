@@ -112,6 +112,16 @@
         password: 'keysight'
         update_password: on_create
 
+    # Some sites may have a MASTER ssh key, appart of the jenkins one
+    - name: Set site ssh key as authorized in tnuser
+      ansible.posix.authorized_key:
+        user: tnuser
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost']['tn_ssh_public_key']}}"
+      when: item != ''   
+
     # Install additional packages
     - name: Install additional required packages
       become: true
