@@ -114,7 +114,7 @@
         shell: /bin/bash
         groups: "{{ admin_group }}"
         append: yes
-        password: "{{ 'keysight' | password_hash('sha512') }}"
+        password: "{{ 'keysight' | password_hash('sha256') }}"
         update_password: on_create
 
     # add public key to authorized keys list in tnuser
