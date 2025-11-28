@@ -5,6 +5,7 @@
 - New input variabe `one_open5gs_vm_loglevel` to set the log-level of the open5gs components
 ### Changed
 - disable `open5gs-seppd` which was unused and filled the logfile
+- The DNS server which is send to the UE's can now be configured using a site variable
 
 ## v1.0.0
 ### Added
