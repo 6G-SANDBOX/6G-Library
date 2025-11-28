@@ -67,6 +67,13 @@ upf:
       type: "LoadBalancer"  # Default "ClusterIP"
       loadBalancerIP: "{{ one_open5gs_k8s_upf_n3_ip | string }}"  # Default ""
 
+smf:
+  config:
+    dnsList:
+      - {{ ue_dns_server }} # Default 8.8.8.8
+      - 8.8.4.4
+      - 2001:4860:4860::8888
+      - 2001:4860:4860::8844
 
 # Common
 webui:
