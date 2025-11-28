@@ -55,7 +55,12 @@
     - name: Add new VM to an SSH config file ment to be usable by the experimenter
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
-
+    # install passlib  
+    - name: Install Passlib
+      ansible.builtin.pip:
+        name: passlib
+        state: present
+  
 - name: "STAGE 3: Apply CAC to prepare the component"
   vars:
     ks8500runner_mounts:
