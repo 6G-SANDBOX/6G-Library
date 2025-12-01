@@ -55,11 +55,11 @@
     - name: Add new VM to an SSH config file ment to be usable by the experimenter
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
-    # install passlib  
-    #- name: Install Passlib
-    #  ansible.builtin.pip:
-    #    name: passlib
-    #    state: present
+     # install passlib  
+     - name: Install Passlib
+       ansible.builtin.pip:
+         name: passlib
+         state: present
   
 - name: "STAGE 3: Apply CAC to prepare the component"
   vars:
@@ -114,8 +114,8 @@
         shell: /bin/bash
         groups: "{{ admin_group }}"
         append: yes
-        #password: "{{ 'keysight' | password_hash('sha256') }}"
-        password: 'keysight'
+        password: "{{ 'keysight' | password_hash('sha256') }}"
+        #password: 'keysight'
         update_password: on_create
 
     # add public key to authorized keys list in tnuser
