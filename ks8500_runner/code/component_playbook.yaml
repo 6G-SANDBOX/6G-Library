@@ -108,6 +108,7 @@
         state: present
 
     - name: Enable admin group in sudoers
+      become: true
       ansible.builtin.lineinfile:
         path: /etc/sudoers
         regexp: "^%{{ admin_group }}"
