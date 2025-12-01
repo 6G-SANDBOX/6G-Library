@@ -96,7 +96,7 @@
       ansible.builtin.package:
         name: sudo
         state: present
-        
+
     - name: Set admin group based on OS family
       set_fact:
         admin_group: sudo    
@@ -106,6 +106,14 @@
       ansible.builtin.group:
         name: "{{ admin_group }}"
         state: present
+
+    - name: Enable admin group in sudoers
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        regexp: "^%{{ admin_group }}"
+        line: "%{{ admin_group }} ALL=(ALL) ALL"
+        state: present
+        validate: "visudo -cf %s"
 
     - name: Create new user for experimenter access
       become: true
@@ -127,7 +135,15 @@
         key: "{{ item }}"
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key']}}"
-      when: item != ''   
+      when: item != ''  
+
+      
+    - name: Ensure tnuser has sudo privileges
+      become: true
+      ansible.builtin.user:
+        name: tnuser
+        groups: sudo        # or wheel on some systems
+        append: yes
 
     # Install additional packages
     - name: Install additional required packages
