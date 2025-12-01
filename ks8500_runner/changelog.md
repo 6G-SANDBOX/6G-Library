@@ -3,6 +3,7 @@
 ### changed
 - upgraded runner version 2.0.0
 - upgraded to KS8500 cloud V2
+- added tnuser
 ## v1.16.1.2
 ### Fixed
 - Removed duplicated tn_bastion  in .tnclm/public.yaml
