@@ -1,5 +1,9 @@
 # https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
+
+resource "opennebula_virtual_network" "tn_bastion_network" {
+  name = "TNBastion Network"  
+}
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
   template_id = {{ template_id }}
@@ -29,7 +33,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 
   nic{
     model           = "virtio"
-    network_id      = opennebula_virtual_network.TNBastion Network.id
+    network_id      = opennebula_virtual_network.tn_bastion_network.id
   }
 {% for network in one_cyperf_agent_networks %}
   nic {
