@@ -13,5 +13,4 @@ one_cyperf_agent_memory:
   base_appliance: 8192
 one_cyperf_agent_disk: 20480
 one_loadcore_agent_networks: 
-  - TNBastion Network
   - tn_vxlan
