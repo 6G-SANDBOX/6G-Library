@@ -1,0 +1,58 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - For now Shota
+  long_description: |
+    Deploy a VM with Keysight's Cyperf Agent ready to play.
+    After booting, the agent register itself with the Cyperf Controller server.
+  hypervisors: ["one"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "appliance"
+    - "testing"
+    - "benchmarking"
+  # As of now Keysight's private marketplace appliance do not have individual pages like 6G Sandbox marketplace
+  appliances: 
+    - ""
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  cyperf_controller_ip: "IP address of the loadcore middleware in your site."
+  template_id: "ID of the VM template for appliance 'Cyperf Agent'."
+  image_id:    "ID of the VM image for appliance 'Cyperf Agent'."
+
+
+####################################
+## Input variables
+####################################
+input:
+  one_cyperf_agent_networks:
+    description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
+    type: "list[TNBastion Network and tn_vxlan]"
+    default_value: ["TNBastion Network, tn_vxlan"]
+    required_when: false
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__component_type: "cyperf_agent"
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"

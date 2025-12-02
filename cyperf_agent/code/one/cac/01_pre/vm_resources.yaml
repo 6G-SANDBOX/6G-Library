@@ -1,0 +1,22 @@
+---
+- name: "Set variables for the terraform manifest according to the selected appliance"
+  ansible.builtin.set_fact:
+    one_memory: >
+      {{
+        cyperf_agent | bool | ternary(
+          cyperf_agent_memory
+      ) }}
+    template_id: >-
+      {{
+        cyperf_agent | bool | ternary(
+          site_available_components.cyperf_agent.template_id | default(site_available_components.cyperf_agent.template_id)
+      ) }}
+    image_id: >-
+      {{ cyperf_agent | bool | ternary(
+          site_available_components.cyperf_agent.image_id | default(site_available_components.cyperf_agent.image_id)
+      ) }}
+
+
+- name: Overwrite again with explicit values from the input file
+  ansible.builtin.include_vars:
+    file: "{{ workspace }}/{{ component_type }}/variables/input_file.yaml"

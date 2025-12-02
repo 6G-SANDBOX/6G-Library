@@ -1,0 +1,17 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_cyperf_agent_cpu: 4
+one_cyperf_agent_memory:
+  base_appliance: 8192
+one_cyperf_agent_disk: 20480
+one_loadcore_agent_networks: 
+  - TNBastion Network
+  - tn_vxlan
