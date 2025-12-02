@@ -27,6 +27,10 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     driver   = "qcow2"
   }
 
+  nic{
+    model           = "virtio"
+    network_id      = opennebula_virtual_network.TNBastion Network.id
+  }
 {% for network in one_cyperf_agent_networks %}
   nic {
     model           = "virtio"
