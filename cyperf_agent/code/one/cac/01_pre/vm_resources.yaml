@@ -4,7 +4,7 @@
     one_memory: >
       {{
         cyperf_agent | bool | ternary(
-          cyperf_agent_memory
+          one_cyperf_agent_memory
       ) }}
     template_id: >-
       {{
