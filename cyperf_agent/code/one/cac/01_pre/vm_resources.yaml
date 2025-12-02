@@ -3,7 +3,7 @@
   ansible.builtin.set_fact:
     one_memory: >
       {{
-        cyperf_agent | bool | ternary(
+        one_cyperf_agent | bool | ternary(
           one_cyperf_agent_memory
       ) }}
     template_id: >-
