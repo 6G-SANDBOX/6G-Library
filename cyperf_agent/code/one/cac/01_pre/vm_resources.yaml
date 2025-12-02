@@ -8,11 +8,11 @@
       ) }}
     template_id: >-
       {{
-        cyperf_agent | bool | ternary(
+        one_cyperf_agent | bool | ternary(
           site_available_components.cyperf_agent.template_id | default(site_available_components.cyperf_agent.template_id)
       ) }}
     image_id: >-
-      {{ cyperf_agent | bool | ternary(
+      {{ one_cyperf_agent | bool | ternary(
           site_available_components.cyperf_agent.image_id | default(site_available_components.cyperf_agent.image_id)
       ) }}
 
