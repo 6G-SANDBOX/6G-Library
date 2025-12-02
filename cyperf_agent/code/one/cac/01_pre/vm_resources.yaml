@@ -3,18 +3,17 @@
   ansible.builtin.set_fact:
     one_memory: >
       {{
-        one_cyperf_agent | bool | ternary(
           one_cyperf_agent_memory
-      ) }}
+       }}
     template_id: >-
       {{
-        one_cyperf_agent | bool | ternary(
+      
           site_available_components.cyperf_agent.template_id | default(site_available_components.cyperf_agent.template_id)
-      ) }}
+       }}
     image_id: >-
-      {{ one_cyperf_agent | bool | ternary(
+      {{ 
           site_available_components.cyperf_agent.image_id | default(site_available_components.cyperf_agent.image_id)
-      ) }}
+       }}
 
 
 - name: Overwrite again with explicit values from the input file
