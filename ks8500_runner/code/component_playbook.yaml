@@ -161,12 +161,12 @@
     #    state: present
 
     
-    - name: Enable Universe repository
-      become: true
-      ansible.builtin.command: add-apt-repository universe
-      args:
-        creates: /etc/apt/sources.list.d/universe.list
-
+    #- name: Enable Universe repository
+    #  become: true
+    #  ansible.builtin.command: add-apt-repository universe
+    #  args:
+    #    creates: /etc/apt/sources.list.d/universe.list
+    
     - name: Update apt cache
       become: true
       ansible.builtin.apt:
