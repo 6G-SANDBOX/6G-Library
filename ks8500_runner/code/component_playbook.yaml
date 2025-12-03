@@ -248,12 +248,12 @@
         dest: "{{ ks8500runner_path }}"
       become: true
 
-    - name: Build runner image
-      community.docker.docker_image_build:
-        name: ks8500_runner:latest
-        path: "{{ ks8500runner_path }}"
-        dockerfile: Dockerfile
-      become: true
+    ##- name: Build runner image
+    ##  community.docker.docker_image_build:
+    ##    name: ks8500_runner:latest
+    ##    path: "{{ ks8500runner_path }}"
+    ##    dockerfile: Dockerfile
+    ##  become: true
 
     - name: Create mount list
       ansible.builtin.set_fact:
@@ -276,29 +276,29 @@
     #   ansible.builtin.debug:
     #     var: storage_debug.stdout_lines
 
-    - name: Check if the registration file exists
-      ansible.builtin.stat:
-        path: "{{ ks8500runner_path }}/Config/runner.lic"
-      register: registration_file
-      become: true
+   # - name: Check if the registration file exists
+   #   ansible.builtin.stat:
+   #     path: "{{ ks8500runner_path }}/Config/runner.lic"
+   #   register: registration_file
+   #   become: true
 
-    - name: Register runner
-      community.docker.docker_container:
-        image: ks8500_runner
-        name: register-runner
-        mounts: "{{ mount_list }}"
-        entrypoint: ""
-        detach: false
-        working_dir: "{{ ks8500runner_path }}"
-        command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --token {{ ks8500runner_registration_token }}
-      register: docker_container_output
-      when: not registration_file.stat.exists
-      become: true
+    #- name: Register runner
+    #  community.docker.docker_container:
+    #    image: ks8500_runner
+    #    name: register-runner
+    #    mounts: "{{ mount_list }}"
+    #    entrypoint: ""
+    #    detach: false
+    #    working_dir: "{{ ks8500runner_path }}"
+    #    command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --token {{ ks8500runner_registration_token }}
+    #  register: docker_container_output
+    #  when: not registration_file.stat.exists
+    #  become: true
 
-    - name: Start runner
-      community.docker.docker_compose_v2:
-        project_src: "{{ ks8500runner_path }}"
-      become: true
+    #- name: Start runner
+    #  community.docker.docker_compose_v2:
+    #    project_src: "{{ ks8500runner_path }}"
+    #  become: true
 
     - name: Add registration_info if not available
       ansible.builtin.set_fact:
