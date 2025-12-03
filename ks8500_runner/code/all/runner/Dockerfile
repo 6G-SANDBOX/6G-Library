@@ -22,24 +22,25 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.22/main" > /etc/apk/repositor
 # ---------------------------- build stage ----------------------------
 FROM base AS build
 
-# Install the Runner package (signed and obfuscated)
-# COPY ./Runner.*.Linux.*.TapPackage /tmp
-RUN wget -O /tmp/Runner.TapPackage "https://packages.opentap.io/4.0/Objects/Packages/Runner?version=$RUNNERVERSION&os=Linux&architecture=x64"
 
-RUN export ARCH=$([ "$TARGETARCH" = "arm64" ] && echo arm64 || echo x64) && \
-	echo "Building docker image for architecture: $ARCH ($TARGETARCH)" && \
+# 1) Download the Runner package to a file (don’t pipe to unzip)
+RUN wget -nv -O /tmp/Runner.TapPackage \
+  "https://packages.opentap.io/4.0/Objects/Packages/Runner?version=${RUNNERVERSION}&os=Linux&architecture=x64"
 
-	# Install OpenTAP & Runner in an official way - at /opt/tap
-	wget -nv -O- "https://packages.opentap.io/4.0/Objects/Packages/OpenTAP?version=$OPENTAP_VERSION&os=Linux&architecture=$ARCH" | unzip -d /opt/tap - && \
-	chmod +x /opt/tap/tap && \
-	/opt/tap/tap package install /tmp/Runner.TapPackage --no-isolation --non-interactive --no-cache && \
-
-  # Create these directories so that it has the right permissions (owned by "app" not "root") when a volume is mounted later
-	mkdir /opt/tap/Storage /opt/tap/Config /opt/tap/Settings && \
-	chown -R $APP_UID:$APP_UID /opt/tap && \
-	chmod -R a+w /opt/tap && \
-	chmod a+x /opt/tap/tap && \
-	rm -r /opt/tap/SessionLogs/* /opt/tap/.opentap_recent_logs
+# 2) Map Buildx TARGETARCH -> OpenTAP architecture strings; download OpenTAP to a file and unzip it
+RUN ARCH="$([ "$TARGETARCH" = "arm64" ] && echo arm64 || echo x64)" \
+ && echo "Building docker image for architecture: ${ARCH} (${TARGETARCH})" \
+ && mkdir -p /opt/tap \
+ && wget -nv -O /tmp/opentap.zip \
+      "https://packages.opentap.io/4.0/Objects/Packages/OpenTAP?version=${OPENTAP_VERSION}&os=Linux&architecture=${ARCH}" \
+ && unzip -d /opt/tap /tmp/opentap.zip \
+ && chmod +x /opt/tap/tap \
+ && /opt/tap/tap package install /tmp/Runner.TapPackage --no-isolation --non-interactive --no-cache \
+ && mkdir -p /opt/tap/Storage /opt/tap/Config /opt/tap/Settings \
+ && chown -R app:app /opt/tap \
+ && chmod -R a+w /opt/tap \
+ && chmod a+x /opt/tap/tap \
+ && rm -rf /opt/tap/SessionLogs/* /opt/tap/.opentap_recent_logs
 
 #---------------------------- updatable stage ----------------------------
 
