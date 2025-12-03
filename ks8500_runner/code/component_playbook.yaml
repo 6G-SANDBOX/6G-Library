@@ -187,7 +187,16 @@
       become: true
       ansible.builtin.apt:
         update_cache: yes
-
+   
+    - name: Wait for APT lock to be released
+      become: true
+      ansible.builtin.shell: |
+        while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+          echo "APT lock detected, waiting..."
+          sleep 30
+        done
+      changed_when: false
+     
     - name: Install Python 3 and related packages
       become: true
       ansible.builtin.package:
