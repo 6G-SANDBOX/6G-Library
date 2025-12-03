@@ -3,15 +3,20 @@ ARG OPENTAP_VERSION=9.31.0
 ARG RUNNERVERSION=2.0.0
 ARG TARGETARCH
 
-ENV OPENTAP_NO_UPDATE_CHECK=true
-ENV OPENTAP_RUNNER_HealthEndpoint=true
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+# .NET + OpenTAP env
+ENV OPENTAP_NO_UPDATE_CHECK=true \
+    OPENTAP_RUNNER_HealthEndpoint=true \
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
-# Install required packages
-RUN apk --no-cache add bash icu-libs
+# Ensure mirrors are reachable, refresh index, and install required tools/libraries
+# - bash is in 'main' (Alpine 3.22)
+# - icu-libs supplies ICU runtime; icu-data-full adds full locale data (recommended)
+# - wget/unzip used by later RUN and healthcheck
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.alpinelinux.org/g' /etc/apk/repositories \
+ && apk update \
+ && apk add --no-cache bash icu-libs icu-data-full tzdata wget unzip curl
 
-
-
+# ---------------------------- build stage ----------------------------
 FROM base AS build
 
 # Install the Runner package (signed and obfuscated)
@@ -33,7 +38,7 @@ RUN export ARCH=$([ "$TARGETARCH" = "arm64" ] && echo arm64 || echo x64) && \
 	chmod a+x /opt/tap/tap && \
 	rm -r /opt/tap/SessionLogs/* /opt/tap/.opentap_recent_logs
 
-
+#---------------------------- updatable stage ----------------------------
 
 FROM base AS updatable
 COPY --from=build --chown=$APP_UID:$APP_UID /opt/tap /opt/tap
@@ -47,8 +52,7 @@ VOLUME [ "/opt/tap" ]
 
 ENTRYPOINT ["tap", "runner", "start", "-v"]
 
-
-
+# ---------------------------- sixgsandbox stage ----------------------------
 FROM updatable AS sixgsandbox
 
 USER root
