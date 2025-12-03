@@ -151,8 +151,8 @@
       become: true
       ansible.builtin.package:
         name:
-          - py3-pip
-          - py3-requests
+          - python3-pip
+          - python3-requests
           - docker
           - docker-cli-buildx
           - docker-compose
