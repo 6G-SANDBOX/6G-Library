@@ -12,9 +12,12 @@ ENV OPENTAP_NO_UPDATE_CHECK=true \
 # - bash is in 'main' (Alpine 3.22)
 # - icu-libs supplies ICU runtime; icu-data-full adds full locale data (recommended)
 # - wget/unzip used by later RUN and healthcheck
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.alpinelinux.org/g' /etc/apk/repositories \
+
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.22/main" > /etc/apk/repositories \
+ && echo "https://dl-cdn.alpinelinux.org/alpine/v3.22/community" >> /etc/apk/repositories \
  && apk update \
  && apk add --no-cache bash icu-libs icu-data-full tzdata wget unzip curl
+
 
 # ---------------------------- build stage ----------------------------
 FROM base AS build
