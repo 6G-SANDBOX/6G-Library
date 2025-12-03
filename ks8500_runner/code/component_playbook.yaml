@@ -147,17 +147,39 @@
         append: yes
 
     # Install additional packages
-    - name: Install additional required packages
+    #- name: Install additional required packages
+    #  become: true
+    #  ansible.builtin.package:
+    #    name:
+    #      - python3-pip
+    #      - python3-requests
+    #      - docker
+    #      - docker-cli-buildx
+    #      - docker-compose
+    #      - openrc
+    #      - docker-cli-compose
+    #    state: present
+
+    
+    - name: Enable Universe repository
+      become: true
+      ansible.builtin.command: add-apt-repository universe
+      args:
+        creates: /etc/apt/sources.list.d/universe.list
+
+    - name: Update apt cache
+      become: true
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Install Python 3 and related packages
       become: true
       ansible.builtin.package:
         name:
           - python3-pip
           - python3-requests
-          - docker
-          - docker-cli-buildx
+          - docker.io
           - docker-compose
-          - openrc
-          - docker-cli-compose
         state: present
 
     # Detect if required network connectivity is available for the runner
