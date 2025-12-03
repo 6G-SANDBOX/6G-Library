@@ -171,8 +171,6 @@
       become: true
       ansible.builtin.apt:
         update_cache: yes
-
-
    
     - name: Add Docker official repo
       become: true
@@ -184,7 +182,6 @@
         echo \
           "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
           $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-        apt-get update
   
     - name: Install Python 3 and related packages
       become: true
@@ -192,10 +189,9 @@
         name:
           - python3-pip
           - python3-requests
-          #- docker.io
-          - docker-compose
           - docker-ce
           - docker-ce-cli
+          - containerd.io
           - docker-buildx-plugin
           - docker-compose-plugin
         state: present
