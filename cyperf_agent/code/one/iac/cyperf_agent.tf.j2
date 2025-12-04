@@ -31,15 +31,15 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     driver   = "qcow2"
   }
 
+  nic{
+    model = "virtio"
+    network_id = data.opennebula_virtual_network.tn_bastion_network.id
+  }
+
 {% for network in one_cyperf_agent_networks %}
   nic {
     model = "virtio"
-
-    {% if network == "tn_bastion_network" %}
-    network_id = data.opennebula_virtual_network.tn_bastion_network.id
-    {% else %}
     network_id = opennebula_virtual_network.{{ network }}.id
-    {% endif %}
   }
 {% endfor %}
 
