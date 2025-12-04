@@ -3,6 +3,7 @@ services:
     image: ks8500_runner
     entrypoint: tap runner start
     restart: unless-stopped
+    network_mode: "host"
     environment:
       LM_LICENSE_FILE: "@license.opentap.keysight.com"
     volumes:
