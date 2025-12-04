@@ -30,20 +30,21 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     target   = "vda"
     driver   = "qcow2"
   }
-
   nic{
-    model = "virtio"
-    network_id = data.opennebula_virtual_network.tn_bastion_network.id
+    model           = "virtio"
+    network_id      = data.opennebula_virtual_network.tn_bastion_network.id
   }
 
 {% for network in one_cyperf_agent_networks %}
   nic {
-    model = "virtio"
-    network_id = opennebula_virtual_network.{{ network }}.id
+    model           = "virtio"
+    network_id      = opennebula_virtual_network.{{ network }}.id
   }
 {% endfor %}
 
+  depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
 }
+
 output "{{ entity_name }}-id" {
   description = "OpenNebula VM ID"
   value = opennebula_virtual_machine.{{ entity_name }}.id
