@@ -43,7 +43,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   }
 {% endfor %}
 
-
+}
 output "{{ entity_name }}-id" {
   description = "OpenNebula VM ID"
   value = opennebula_virtual_machine.{{ entity_name }}.id
