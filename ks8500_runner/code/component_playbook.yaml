@@ -228,12 +228,45 @@
     #     msg: "{{ os_info.stdout }}"
 
     
+    - name: Add Microsoft package repository GPG key
+      apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+      become: true   
+
+    - name: Add Microsoft repo package
+      apt:
+        deb: "https://packages.microsoft.com/config/ubuntu/{{ ansible_distribution_release }}/packages-microsoft-prod.deb"
+      become: true
+      
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: true
+       
+    - name: Install .NET SDK
+      apt:
+        name: dotnet-sdk-9.0
+        state: present
+      become: true
+
+    
+    - name: Verify .NET installation
+      command: dotnet --version
+      register: dotnet_version
+      changed_when: false
+      become: true
+      
+    - debug:
+        msg: "Installed .NET version: {{ dotnet_version.stdout }}"
+
     - name: Ensure runner directory exists
       file:
         path: "{{ runner_dir }}"
         state: directory
         mode: "0755"
       become: true
+      
     - name: Download OpenTAP package zip
       get_url:
         url: "{{ opentap_url }}"
@@ -255,6 +288,15 @@
         path: "{{ zip_path }}"
         state: absent
       become: true
+
+    
+    - name: Ensure tap is executable
+      file:
+        path: "{{ runner_dir }}/tap"
+        mode: "0755"
+        state: file
+      become: true
+  
       
     - name: Install Runner image using tap
       command: ./tap image install "Runner:2.0.0"
