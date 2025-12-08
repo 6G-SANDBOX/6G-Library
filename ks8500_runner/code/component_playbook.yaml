@@ -232,17 +232,35 @@
       apt_key:
         url: https://packages.microsoft.com/keys/microsoft.asc
         state: present
-      become: true  
+      become: true        
+    
+    - name: Ensure lsb-release is available
+      apt:
+        name: lsb-release
+        state: present
+        update_cache: yes
+      become: true
 
-      
     - name: Get Ubuntu codename via lsb_release
       command: lsb_release -cs
       register: ubuntu_codename
       changed_when: false
+      become: true
 
+    - debug:
+        msg: "ubuntu codename: {{ ubuntu_codename.stdout }}"
+
+    # Optional: skip if repo already installed
+    - name: Check if Microsoft repo is already configured
+      stat:
+        path: "/etc/apt/sources.list.d/microsoft-prod.list"
+      register: ms_repo_list
+      become: true
+      
     - name: Add Microsoft repo package
       apt:
         deb: "https://packages.microsoft.com/config/ubuntu/{{ ubuntu_codename.stdout }}/packages-microsoft-prod.deb"
+      when: not ms_repo_list.stat.exists
       become: true
       
     - name: Update apt cache
