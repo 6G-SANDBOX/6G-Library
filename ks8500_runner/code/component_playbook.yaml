@@ -284,13 +284,16 @@
     - debug:
         msg: "Installed .NET version: {{ dotnet_version.stdout }}"
 
+    
     - name: Ensure runner directory exists
       file:
         path: "{{ runner_dir }}"
         state: directory
         mode: "0755"
+        owner: tnuser
+        group: tnuser
       become: true
-      become_user: tnuser
+
       
     - name: Download OpenTAP package zip
       get_url:
@@ -300,13 +303,23 @@
         force: yes
       become_user: tnuser
        
-    - name: Unzip OpenTAP into runner
+    
+    - name: Unpack OpenTAP into runner directory
       unarchive:
         src: "{{ zip_path }}"
         dest: "{{ runner_dir }}"
         remote_src: true
-        keep_newer: true
-      become_user: tnuser
+      become: true
+
+    - name: Ensure ownership after unpack
+      file:
+        path: "{{ runner_dir }}"
+        state: directory
+        recurse: true
+        owner: tnuser
+        group: tnuser
+        mode: "0755"
+      become: true
       
     - name: Remove zip after extraction
       file:
@@ -314,14 +327,14 @@
         state: absent
       become_user: tnuser
 
-    
     - name: Ensure tap is executable
       file:
         path: "{{ runner_dir }}/tap"
-        mode: "0755"
         state: file
-      become_user: tnuser
-  
+        mode: "0755"
+        owner: tnuser
+        group: tnuser
+      become: true  
       
     - name: Install Runner image using tap
       command: ./tap image install "Runner:2.0.0"
