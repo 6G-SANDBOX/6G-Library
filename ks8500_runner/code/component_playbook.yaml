@@ -301,7 +301,7 @@
         dest: "{{ zip_path }}"
         mode: "0644"
         force: yes
-      become_user: tnuser
+      become: true
        
     
     - name: Unpack OpenTAP into runner directory
@@ -325,7 +325,7 @@
       file:
         path: "{{ zip_path }}"
         state: absent
-      become_user: tnuser
+      become: true
 
     - name: Ensure tap is executable
       file:
