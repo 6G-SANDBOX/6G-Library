@@ -336,11 +336,17 @@
         group: tnuser
       become: true  
       
-    - name: Install Runner image using tap
-      command: ./tap image install "Runner:2.0.0"
-      args:
-        chdir: "{{ runner_dir }}"
-      become_user: tnuser 
+     #- name: Install Runner image using tap
+     # command: ./tap image install "Runner:2.0.0"
+     # args:
+     #   chdir: "{{ runner_dir }}"
+     # become_user: tnuser 
+     
+    - name: Run tap install as tnuser
+      ansible.builtin.shell: "cd {{ runner_dir }} && ./tap image install 'Runner:2.0.0'"
+      become: true
+      become_user: tnuser
+
 
     - name: Check if the registration file exists
       ansible.builtin.stat:
@@ -366,12 +372,19 @@
       ansible.builtin.set_fact:
         ks8500runner_registration_info: "Registration not performed (already registered)"
       when: register_output is undefined
-   
-    - name: Install and start runner service
-      command: ./tap runner service install --start-now
-      args:
-        chdir: "{{ runner_dir }}"
+
+
+    - name: Run tap install as tnuser
+      ansible.builtin.shell: "cd {{ runner_dir }} && ./tap service install --start-now"
+      become: true
       become_user: tnuser
+   
+    #- name: Install and start runner service
+    #  command: ./tap runner service install --start-now
+    #  args:
+    #    chdir: "{{ runner_dir }}"
+    #  become_user: tnuser
+   
    
 
     ################################### Docker Container starts ########################################
