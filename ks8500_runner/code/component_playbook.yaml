@@ -399,13 +399,13 @@
     #    mount_list: '{{ (mount_list|default([])) + [{"target": "/opt/tap/" + item, "source": "{{ ks8500runner_path }}/" + item, "type": "bind" }] }}'
     #  loop: "{{ ks8500runner_mounts }}"
     #  become: true
-    ################################### Docker Container ends ########################################
-
+   
     # The microsoft base image uses this UID. Maybe we can find a better solution.
     #- name: Workaround permissions
     #  ansible.builtin.shell: "chown -R 1654:1654 {{ ks8500runner_path }}"
     #  become: true
-
+    ################################### Docker Container ends ########################################
+ 
     # - name: Storage debug collect
     #   ansible.builtin.command:
     #     cmd: "ls -lR {{ ks8500runner_path }}"
