@@ -12,7 +12,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   {% if one_host %}
   host        = "{{ one_host }}"
   {% endif %}
-  {% endif %}
+  
   context = {
     NETWORK =        "YES"
     NETCFG_TYPE =    "interfaces"
