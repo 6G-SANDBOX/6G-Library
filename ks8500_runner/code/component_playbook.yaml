@@ -341,7 +341,7 @@
         chdir: "{{ runner_dir }}"
       register: register_output
       when: not registration_file.stat.exists
-      #become: true
+      become: true
 
     - name: Add registration_info if available
       ansible.builtin.set_fact:
