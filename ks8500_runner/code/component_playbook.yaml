@@ -171,21 +171,21 @@
     #  args:
     #    creates: /etc/apt/sources.list.d/universe.list
     
-    - name: Update apt cache
-      become: true
-      ansible.builtin.apt:
-        update_cache: yes
+    #- name: Update apt cache
+    #  become: true
+    #  ansible.builtin.apt:
+    #    update_cache: yes
    
-    - name: Add Docker official repo
-      become: true
-      ansible.builtin.shell: |
-        apt-get update
-        apt-get install -y ca-certificates curl gnupg
-        install -m 0755 -d /etc/apt/keyrings
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-        echo \
-          "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-          $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    #- name: Add Docker official repo
+    #  become: true
+    #  ansible.builtin.shell: |
+    #    apt-get update
+    #    apt-get install -y ca-certificates curl gnupg
+    #    install -m 0755 -d /etc/apt/keyrings
+    #    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    #    echo \
+    #      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    #      $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     - name: Update apt cache
       become: true
@@ -285,7 +285,7 @@
     - name: Add registration_info if not available
       ansible.builtin.set_fact:
         ks8500runner_registration_info: "Registration not performed (already registered)"
-      when:register_output is undefined
+      when: register_output is undefined
    
     - name: Install and start runner service
       command: ./tap runner service install --start-now
