@@ -289,7 +289,7 @@
         path: "{{ runner_dir }}"
         state: directory
         mode: "0755"
-      become:true
+      become: true
       become_user: tnuser
       
     - name: Download OpenTAP package zip
