@@ -289,7 +289,7 @@
         path: "{{ runner_dir }}"
         state: directory
         mode: "0755"
-      become: true
+      become_user: tnuser
       
     - name: Download OpenTAP package zip
       get_url:
@@ -297,7 +297,7 @@
         dest: "{{ zip_path }}"
         mode: "0644"
         force: yes
-      become: true
+      become_user: tnuser
        
     - name: Unzip OpenTAP into runner
       unarchive:
@@ -305,13 +305,13 @@
         dest: "{{ runner_dir }}"
         remote_src: true
         keep_newer: true
-      become: true
+      become_user: tnuser
       
     - name: Remove zip after extraction
       file:
         path: "{{ zip_path }}"
         state: absent
-      become: true
+      become_user: tnuser
 
     
     - name: Ensure tap is executable
@@ -319,20 +319,20 @@
         path: "{{ runner_dir }}/tap"
         mode: "0755"
         state: file
-      become: true
+      become_user: tnuser
   
       
     - name: Install Runner image using tap
       command: ./tap image install "Runner:2.0.0"
       args:
         chdir: "{{ runner_dir }}"
-      become: true  
+      become_user: tnuser 
 
     - name: Check if the registration file exists
       ansible.builtin.stat:
         path: "{{ ks8500runner_path }}/Config/runner.lic"
       register: registration_file
-      become: true
+      become_user: tnuser
    
 
     - name: Register runner with Keysight sandbox
@@ -341,7 +341,7 @@
         chdir: "{{ runner_dir }}"
       register: register_output
       when: not registration_file.stat.exists
-      become: true
+      become_user: tnuser
 
     - name: Add registration_info if available
       ansible.builtin.set_fact:
@@ -357,7 +357,7 @@
       command: ./tap runner service install --start-now
       args:
         chdir: "{{ runner_dir }}"
-      #become: true
+      become_user: tnuser
    
 
     ################################### Docker Container starts ########################################
