@@ -72,7 +72,7 @@
     #ks8500runner_path: /opt/KS8500Runner
     ks8500runner_path: /home/tnuser/runner
     opentap_url: "https://packages.opentap.io/4.0/Objects/Packages/OpenTAP?os=Linux&architecture=x64"
-    runner_dir: " /home/tnuser/runner"   # change if you prefer another location
+    runner_dir: "/home/tnuser/runner"   # change if you prefer another location
     zip_path: "{{ runner_dir }}/opentap.zip"
   hosts: "ks8500runner"
   gather_facts: false
