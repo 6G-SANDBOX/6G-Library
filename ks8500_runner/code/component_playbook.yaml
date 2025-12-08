@@ -402,9 +402,9 @@
     ################################### Docker Container ends ########################################
 
     # The microsoft base image uses this UID. Maybe we can find a better solution.
-    - name: Workaround permissions
-      ansible.builtin.shell: "chown -R 1654:1654 {{ ks8500runner_path }}"
-      become: true
+    #- name: Workaround permissions
+    #  ansible.builtin.shell: "chown -R 1654:1654 {{ ks8500runner_path }}"
+    #  become: true
 
     # - name: Storage debug collect
     #   ansible.builtin.command:
