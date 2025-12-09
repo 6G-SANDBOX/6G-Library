@@ -223,13 +223,12 @@
     #    append: yes
     #  become: true
       
-    - name: Copy runner files
-      ansible.builtin.copy:
-        src: "{{ playbook_dir }}/all/runner/"
-        dest: "{{ ks8500runner_path }}"
-      become: true
-
-      
+    #- name: Copy runner files
+    #  ansible.builtin.copy:
+    #    src: "{{ playbook_dir }}/all/runner/"
+    #    dest: "{{ ks8500runner_path }}"
+    #  become: true
+    
     - name: Ensure Wireshark config directory exists for tnuser
       file:
         path: /home/tnuser/.config/wireshark
@@ -239,26 +238,36 @@
         mode: '0755'
       become: true
 
-   
-    - name: Copy Wireshark preferences for tnuser
-      copy:
-        src: "{{ ks8500runner_path }}/preferences"        # Path in your Ansible role/playbook
-        dest: /home/tnuser/.config/wireshark/preferences
+    
+    - name: Copy Wireshark preferences file to remote
+      ansible.builtin.copy:
+        src: all/runner/preferences          
+        dest: /home/tnuser/.config/wireshark/preferences  # Path on the remote
         owner: tnuser
         group: tnuser
         mode: '0644'
-        remote_src: true   
       become: true
 
-    - name: Copy system-wide Wireshark preferences
-      copy:
-        src: "{{ ks8500runner_path }}/preferences" 
-        dest: /etc/wireshark/preferences
-        owner: root
-        group: root
-        mode: '0644'
-        remote_src: true 
-      become: true
+   
+    #- name: Copy Wireshark preferences for tnuser
+    #  copy:
+    #    src: "{{ ks8500runner_path }}/preferences"        # Path in your Ansible role/playbook
+    #    dest: /home/tnuser/.config/wireshark/preferences
+    #    owner: tnuser
+    #    group: tnuser
+    #    mode: '0644'
+    #    remote_src: true   
+    #  become: true
+
+    #- name: Copy system-wide Wireshark preferences
+    #  copy:
+    #    src: "{{ ks8500runner_path }}/preferences" 
+    #    dest: /etc/wireshark/preferences
+    #    owner: root
+    #    group: root
+    #    mode: '0644'
+    #    remote_src: true 
+    #  become: true
 
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
