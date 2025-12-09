@@ -248,7 +248,7 @@
         mode: '0644'
       become: true
 
-     - name: Copy Wireshark preferences file to system wide (remote)
+    - name: Copy Wireshark preferences file to system wide (remote)
       ansible.builtin.copy:
         src: all/runner/preferences          
         dest: /etc/wireshark/preferences  # Path on the remote
