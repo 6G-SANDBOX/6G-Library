@@ -336,17 +336,33 @@
         group: tnuser
       become: true  
 
-     
-    - name: Install ACL tooling to allow become_user
+    
+    - name: Ensure Ansible remote tmp exists for tnuser
+      ansible.builtin.file:
+        path: /home/tnuser/.ansible/tmp
+        state: directory
+        mode: "0700"
+        owner: tnuser
+        group: tnuser
+      become: true
+
+    
+    - name: Install ACL tooling
       ansible.builtin.package:
         name: acl
         state: present
       become: true
  
+    # inventory or group_vars for ks8500runner
+    [ks8500runner:vars] 
+    ansible_remote_tmp=/home/tnuser/.ansible/tmp
+
+ 
     - name: Install Runner image using tap
       command: ./tap image install "Runner:2.0.0"
       args:
         chdir: "{{ runner_dir }}"
+      become: true   
       become_user: tnuser 
      
     #- name: Run tap install as tnuser
@@ -367,6 +383,7 @@
         chdir: "{{ runner_dir }}"
       register: register_output
       when: not registration_file.stat.exists
+      become: true 
       become_user: tnuser
 
     - name: Add registration_info if available
@@ -389,6 +406,7 @@
       command: ./tap runner service install --start-now
       args:
         chdir: "{{ runner_dir }}"
+      become: true   
       become_user: tnuser
    
     ################################### Docker Container starts ########################################
