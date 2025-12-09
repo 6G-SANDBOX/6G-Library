@@ -406,14 +406,14 @@
     #  ansible.builtin.shell: "cd {{ runner_dir }} && ./tap service install --start-now"
     #  become: true
     #  become_user: tnuser
-   
-    - name: Install and start runner service
-      command: ./tap runner service install --start-now
-      args:
-        chdir: "{{ runner_dir }}"
-      become: true   
-      become_user: tnuser
-      become_method: machinectl
+
+    # TVD: Enable it once OpenTap team has provided a fix in runner
+    #- name: Install and start runner service
+    #  command: ./tap runner service install --start-now
+    #  args:
+    #    chdir: "{{ runner_dir }}"
+    #  become: true   
+    #  become_user: tnuser
    
     ################################### Docker Container starts ########################################
 
