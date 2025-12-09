@@ -375,11 +375,11 @@
     #  become: true
     #  become_user: tnuser
 
-    - name: Check if the registration file exists
-      ansible.builtin.stat:
-        path: "{{ ks8500runner_path }}/Config/runner.lic"
-      register: registration_file
-      become_user: tnuser
+    #- name: Check if the registration file exists
+    #  ansible.builtin.stat:
+    #    path: "{{ ks8500runner_path }}/Config/runner.lic"
+    #  register: registration_file
+    #  become_user: tnuser
    
 
     - name: Register runner with Keysight sandbox
@@ -387,7 +387,7 @@
       args:
         chdir: "{{ runner_dir }}"
       register: register_output
-      when: not registration_file.stat.exists
+      #when: not registration_file.stat.exists
       become: true 
       become_user: tnuser
 
