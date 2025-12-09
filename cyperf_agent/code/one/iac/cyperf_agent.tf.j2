@@ -43,7 +43,6 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 
   depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
   
-  host        = "{{ one_host }}"
 }
 
 output "{{ entity_name }}-id" {

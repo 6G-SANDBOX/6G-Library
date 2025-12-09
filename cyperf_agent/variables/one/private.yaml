@@ -13,6 +13,5 @@ one_cyperf_agent_memory: 8192
 one_cyperf_agent_disk: 20480
 #With This variable you can choose which host you want to deploy the vm on. It is usefull from cyperf mainly since they generate lot of network traffic and sometimes
 #Lab computers crash. You can choose saci-01 => saci-10 and saci-12. saci-11 does not exist as hostname and that host is only used for tooling.
-one_cyperf_agent_host: "saci-12"
 one_loadcore_agent_networks: 
   - tn_vxlan
