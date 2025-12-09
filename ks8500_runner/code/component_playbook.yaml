@@ -208,7 +208,7 @@
           - python3-pip
           - python3-requests
           - tshark 
-          #- libcap2-bin
+          - libcap2-bin
           #- docker-ce
           #- docker-ce-cli
           #- containerd.io
