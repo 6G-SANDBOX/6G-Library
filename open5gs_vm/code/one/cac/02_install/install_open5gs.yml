@@ -46,7 +46,7 @@
             name: open5gs=2.7.6~*
             state: present
           register: apt_result
-          retries: 30
+          retries: 60
           delay: 10
           until: apt_result is succeeded
       when: not one_open5gs_vm_use_nightly
