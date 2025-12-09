@@ -229,6 +229,35 @@
         dest: "{{ ks8500runner_path }}"
       become: true
 
+      
+    - name: Ensure Wireshark config directory exists for tnuser
+      file:
+        path: /home/tnuser/.config/wireshark
+        state: directory
+        owner: tnuser
+        group: tnuser
+        mode: '0755'
+      become: true
+
+   
+    - name: Copy Wireshark preferences for tnuser
+      copy:
+        src: "{{ ks8500runner_path }}/preferences"        # Path in your Ansible role/playbook
+        dest: /home/tnuser/.config/wireshark/preferences
+        owner: tnuser
+        group: tnuser
+        mode: '0644'
+      become: true
+
+    - name: Copy system-wide Wireshark preferences
+      copy:
+        src: "{{ ks8500runner_path }}/preferences" 
+        dest: /etc/wireshark/preferences
+        owner: root
+        group: root
+        mode: '0644'
+      become: true
+
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
     - name: Verify connectivity
