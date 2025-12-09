@@ -208,14 +208,21 @@
           - python3-pip
           - python3-requests
           - tshark 
-          - libcap
+          - libcap2-bin
           #- docker-ce
           #- docker-ce-cli
           #- containerd.io
           #- docker-buildx-plugin
           #- docker-compose-plugin
         state: present
-
+    
+    - name: Add tnuser to wireshark group
+      user:
+        name: tnuser
+        groups: wireshark
+        append: yes
+      become: true
+      
     - name: Copy runner files
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/all/runner/"
