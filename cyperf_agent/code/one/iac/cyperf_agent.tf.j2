@@ -9,6 +9,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   template_id = {{ template_id }}
   cpu         = {{ one_cyperf_agent_cpu }}
   vcpu        = {{ one_cyperf_agent_cpu }}
+  
   {% if one_host %}
   host        = "{{ one_host | trim }}"
   {% endif %}
