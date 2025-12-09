@@ -353,11 +353,16 @@
         state: present
       become: true
  
-    # inventory or group_vars for ks8500runner
-    [ks8500runner:vars] 
-    ansible_remote_tmp=/home/tnuser/.ansible/tmp
+    
+    - name: Ensure Ansible remote tmp exists for tnuser
+      ansible.builtin.file:
+        path: /home/tnuser/.ansible/tmp
+        state: directory
+        mode: "0700"       # strictly user-only
+        owner: tnuser
+        group: tnuser
+      become: true
 
- 
     - name: Install Runner image using tap
       command: ./tap image install "Runner:2.0.0"
       args:
