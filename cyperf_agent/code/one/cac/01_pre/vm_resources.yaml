@@ -5,10 +5,7 @@
       {{
           one_cyperf_agent_memory
        }}
-    one_host: >
-      {{
-          one_cyperf_agent_host | default('')
-      }}
+    one_host: "{{ one_cyperf_agent_host | default('') }}"
     template_id: >-
       {{
       
