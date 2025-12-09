@@ -413,6 +413,7 @@
         chdir: "{{ runner_dir }}"
       become: true   
       become_user: tnuser
+      become_method: machinectl
    
     ################################### Docker Container starts ########################################
 
