@@ -239,7 +239,7 @@
       become: true
 
     
-    - name: Copy Wireshark preferences file to remote
+    - name: Copy Wireshark preferences file to tnuser (remote) 
       ansible.builtin.copy:
         src: all/runner/preferences          
         dest: /home/tnuser/.config/wireshark/preferences  # Path on the remote
@@ -248,6 +248,14 @@
         mode: '0644'
       become: true
 
+     - name: Copy Wireshark preferences file to system wide (remote)
+      ansible.builtin.copy:
+        src: all/runner/preferences          
+        dest: /etc/wireshark/preferences  # Path on the remote
+        owner: root
+        group: root
+        mode: '0644'
+      become: true 
    
     #- name: Copy Wireshark preferences for tnuser
     #  copy:
