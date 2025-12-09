@@ -247,6 +247,7 @@
         owner: tnuser
         group: tnuser
         mode: '0644'
+        remote_src: true   
       become: true
 
     - name: Copy system-wide Wireshark preferences
@@ -256,6 +257,7 @@
         owner: root
         group: root
         mode: '0644'
+        remote_src: true 
       become: true
 
     # Detect if required network connectivity is available for the runner
