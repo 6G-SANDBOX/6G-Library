@@ -274,7 +274,6 @@
         state: present
       become: true
 
-    
     - name: Verify .NET installation
       command: dotnet --version
       register: dotnet_version
@@ -337,14 +336,14 @@
       become: true  
 
     
-    - name: Ensure Ansible remote tmp exists for tnuser
-      ansible.builtin.file:
-        path: /home/tnuser/.ansible/tmp
-        state: directory
-        mode: "0700"
-        owner: tnuser
-        group: tnuser
-      become: true
+    #- name: Ensure Ansible remote tmp exists for tnuser
+    #  ansible.builtin.file:
+    #    path: /home/tnuser/.ansible/tmp
+    #    state: directory
+    #    mode: "0700"
+    #    owner: tnuser
+    #    group: tnuser
+    #  become: true
 
     
     - name: Install ACL tooling
@@ -353,7 +352,6 @@
         state: present
       become: true
  
-    
     - name: Ensure Ansible remote tmp exists for tnuser
       ansible.builtin.file:
         path: /home/tnuser/.ansible/tmp
