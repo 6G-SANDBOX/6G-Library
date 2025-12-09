@@ -9,7 +9,6 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   template_id = {{ template_id }}
   cpu         = {{ one_cyperf_agent_cpu }}
   vcpu        = {{ one_cyperf_agent_cpu }}
-  host        = "{{ one_host }}"
 
   context = {
     NETWORK =        "YES"
@@ -43,6 +42,8 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
 {% endfor %}
 
   depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
+  
+  host        = "{{ one_host }}"
 }
 
 output "{{ entity_name }}-id" {
