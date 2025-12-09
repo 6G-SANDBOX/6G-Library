@@ -216,12 +216,12 @@
           #- docker-compose-plugin
         state: present
     
-    - name: Add tnuser to wireshark group
-      user:
-        name: tnuser
-        groups: wireshark
-        append: yes
-      become: true
+    #- name: Add tnuser to wireshark group
+    #  user:
+    #    name: tnuser
+    #    groups: wireshark
+    #    append: yes
+    #  become: true
       
     - name: Copy runner files
       ansible.builtin.copy:
