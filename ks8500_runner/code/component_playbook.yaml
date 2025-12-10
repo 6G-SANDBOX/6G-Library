@@ -470,13 +470,35 @@
     #  become_user: tnuser
 
     #TVD: Enable it once OpenTap team has provided a fix in runner
-    - name: Install and start runner service
-      command: ./tap runner service install -v --start-now
+    #- name: Install and start runner service
+    #  command: ./tap runner service install -v --start-now
+    #  args:
+    #    chdir: "{{ runner_dir }}"
+    #  become: true   
+    #  become_user: tnuser
+    #  become_method: machinectl
+
+    ######### Alternative method #########
+    
+    - name: Install and start runner service inside container
+      ansible.builtin.command: ./tap runner service install -v --start-now
       args:
         chdir: "{{ runner_dir }}"
-      become: true   
-      become_user: tnuser
+      become: true
       become_method: machinectl
+      vars:
+        ansible_become_flags: "--machine=<container-name>"
+
+    - name: Ensure Ansible remote tmp exists for tnuser (inside container)
+      ansible.builtin.file:
+        path: /home/tnuser/.ansible/tmp
+        state: directory
+        mode: "0700"
+        owner: tnuser
+        group: tnuser
+      become: true
+      become_method: machinectl
+
    
     ################################### Docker Container starts ########################################
 
