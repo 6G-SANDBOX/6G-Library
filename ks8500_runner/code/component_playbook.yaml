@@ -425,7 +425,7 @@
       become: true
 
     - name: Install Runner image using tap
-      command: ./tap image install "2.1.0-beta.18+b07e0e63"     #"Runner:2.0.0"
+      command: ./tap image install "Runner:2.1.0-beta.18+b07e0e63"     #"Runner:2.0.0"
       args:
         chdir: "{{ runner_dir }}"
       become: true   
