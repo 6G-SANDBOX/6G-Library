@@ -258,25 +258,22 @@
         mode: '0644'
       become: true 
    
-    #- name: Copy Wireshark preferences for tnuser
-    #  copy:
-    #    src: "{{ ks8500runner_path }}/preferences"        # Path in your Ansible role/playbook
-    #    dest: /home/tnuser/.config/wireshark/preferences
-    #    owner: tnuser
-    #    group: tnuser
-    #    mode: '0644'
-    #    remote_src: true   
-    #  become: true
+    - name: Ensure /etc/polkit-1/rules.d exist
+      file:
+        path: /etc/polkit-1/rules.d
+        state: directory
+        mode: '0755'
+      become: true
 
-    #- name: Copy system-wide Wireshark preferences
-    #  copy:
-    #    src: "{{ ks8500runner_path }}/preferences" 
-    #    dest: /etc/wireshark/preferences
-    #    owner: root
-    #    group: root
-    #    mode: '0644'
-    #    remote_src: true 
-    #  become: true
+    - name: Copy 60-machinectl-fast-user-auth.rules (remote)
+      ansible.builtin.copy:
+        src: all/runner/60-machinectl-fast-user-auth.rules          
+        dest: /etc/polkit-1/rules.d/60-machinectl-fast-user-auth.rules  # Path on the remote
+        owner: root
+        group: root
+        mode: '0644'
+      become: true 
+      
 
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
