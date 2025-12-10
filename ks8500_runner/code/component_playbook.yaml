@@ -209,6 +209,7 @@
           - python3-requests
           - tshark 
           - libcap2-bin
+          - systemd-container
           #- docker-ce
           #- docker-ce-cli
           #- containerd.io
@@ -475,6 +476,7 @@
         chdir: "{{ runner_dir }}"
       become: true   
       become_user: tnuser
+      become_method: machinectl
    
     ################################### Docker Container starts ########################################
 
