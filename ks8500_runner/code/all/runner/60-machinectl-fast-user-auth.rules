@@ -1,0 +1,5 @@
+polkit.addRule(function(action, subject) {
+        if (action.id == "org.freedesktop.machine1.host-shell" && subject.isInGroup("jenkins")) {
+                return polkit.Result.AUTH_SELF_KEEP;
+        }
+});
