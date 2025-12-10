@@ -70,9 +70,9 @@
       - Storage
       - OpentapImages    
     #ks8500runner_path: /opt/KS8500Runner
-    ks8500runner_path: /home/tnuser/runner
+    ks8500runner_path: /home/jenkins/runner
     opentap_url: "https://packages.opentap.io/4.0/Objects/Packages/OpenTAP?os=Linux&architecture=x64"
-    runner_dir: /home/tnuser/runner   # change if you prefer another location
+    runner_dir: /home/jenkins/runner   # change if you prefer another location
     zip_path: "{{ runner_dir }}/opentap.zip"
   hosts: "ks8500runner"
   gather_facts: false
@@ -209,7 +209,7 @@
           - python3-requests
           - tshark 
           - libcap2-bin
-          - systemd-container
+          #- systemd-container
           #- docker-ce
           #- docker-ce-cli
           #- containerd.io
@@ -230,24 +230,24 @@
     #    dest: "{{ ks8500runner_path }}"
     #  become: true
     
-    - name: Ensure Wireshark config directory exists for tnuser
+    - name: Ensure Wireshark config directory exists for jenkins
       file:
-        path: /home/tnuser/.config/wireshark
+        path: /home/jenkins/.config/wireshark
         state: directory
-        owner: tnuser
-        group: tnuser
+        #owner: tnuser
+        #group: tnuser
         mode: '0755'
-      become: true
+      #become: true
 
     
-    - name: Copy Wireshark preferences file to tnuser (remote) 
+    - name: Copy Wireshark preferences file to jenkins (remote) 
       ansible.builtin.copy:
         src: all/runner/preferences          
-        dest: /home/tnuser/.config/wireshark/preferences  # Path on the remote
-        owner: tnuser
-        group: tnuser
+        dest: /home/jenkins/.config/wireshark/preferences  # Path on the remote
+        #owner: tnuser
+        #group: tnuser
         mode: '0644'
-      become: true
+      #become: true
 
     - name: Copy Wireshark preferences file to system wide (remote)
       ansible.builtin.copy:
@@ -258,21 +258,21 @@
         mode: '0644'
       become: true 
    
-    - name: Ensure /etc/polkit-1/rules.d exist
-      file:
-        path: /etc/polkit-1/rules.d
-        state: directory
-        mode: '0755'
-      become: true
+    #- name: Ensure /etc/polkit-1/rules.d exist
+    #  file:
+    #    path: /etc/polkit-1/rules.d
+    #    state: directory
+    #    mode: '0755'
+    #  become: true
 
-    - name: Copy 60-machinectl-fast-user-auth.rules (remote)
-      ansible.builtin.copy:
-        src: all/runner/60-machinectl-fast-user-auth.rules          
-        dest: /etc/polkit-1/rules.d/60-machinectl-fast-user-auth.rules  # Path on the remote
-        owner: root
-        group: root
-        mode: '0644'
-      become: true 
+    #- name: Copy 60-machinectl-fast-user-auth.rules (remote)
+    #  ansible.builtin.copy:
+    #    src: all/runner/60-machinectl-fast-user-auth.rules          
+    #    dest: /etc/polkit-1/rules.d/60-machinectl-fast-user-auth.rules  # Path on the remote
+    #   owner: root
+    #    group: root
+    #    mode: '0644'
+    #  become: true 
       
 
     # Detect if required network connectivity is available for the runner
@@ -350,9 +350,9 @@
         path: "{{ runner_dir }}"
         state: directory
         mode: "0755"
-        owner: tnuser
-        group: tnuser
-      become: true
+        #owner: tnuser
+        #group: tnuser
+      #become: true
 
       
     - name: Download OpenTAP package zip
@@ -361,7 +361,7 @@
         dest: "{{ zip_path }}"
         mode: "0644"
         force: yes
-      become: true
+      #become: true
        
     
     - name: Unpack OpenTAP into runner directory
@@ -369,17 +369,17 @@
         src: "{{ zip_path }}"
         dest: "{{ runner_dir }}"
         remote_src: true
-      become: true
+      #become: true
 
-    - name: Ensure ownership after unpack
-      file:
-        path: "{{ runner_dir }}"
-        state: directory
-        recurse: true
-        owner: tnuser
-        group: tnuser
-        mode: "0755"
-      become: true
+    #- name: Ensure ownership after unpack
+    #  file:
+    #    path: "{{ runner_dir }}"
+    #    state: directory
+    #    recurse: true
+    #    owner: tnuser
+    #    group: tnuser
+    #    mode: "0755"
+    #  become: true
       
     - name: Remove zip after extraction
       file:
@@ -392,9 +392,9 @@
         path: "{{ runner_dir }}/tap"
         state: file
         mode: "0755"
-        owner: tnuser
-        group: tnuser
-      become: true  
+        #owner: tnuser
+        #group: tnuser
+      #become: true  
 
     
     #- name: Ensure Ansible remote tmp exists for tnuser
@@ -407,27 +407,27 @@
     #  become: true
 
     
-    - name: Install ACL tooling
-      ansible.builtin.package:
-        name: acl
-        state: present
-      become: true
+    #- name: Install ACL tooling
+    #  ansible.builtin.package:
+    #    name: acl
+    #    state: present
+    #  become: true
  
-    - name: Ensure Ansible remote tmp exists for tnuser
+    - name: Ensure Ansible remote tmp exists for jenkins
       ansible.builtin.file:
-        path: /home/tnuser/.ansible/tmp
+        path: /home/jenkins/.ansible/tmp
         state: directory
         mode: "0700"       # strictly user-only
-        owner: tnuser
-        group: tnuser
-      become: true
+        #owner: tnuser
+        #group: tnuser
+      #become: true
 
     - name: Install Runner image using tap
-      command: ./tap image install "Runner:2.1.0-beta.18+b07e0e63"     #"Runner:2.0.0"
+      command: ./tap image install "Runner:2.0.0"
       args:
         chdir: "{{ runner_dir }}"
-      become: true   
-      become_user: tnuser 
+      #become: true   
+      #become_user: tnuser 
      
     #- name: Run tap install as tnuser
     #  ansible.builtin.shell: "cd {{ runner_dir }} && ./tap image install 'Runner:2.0.0'"
@@ -447,8 +447,8 @@
         chdir: "{{ runner_dir }}"
       register: register_output
       #when: not registration_file.stat.exists
-      become: true 
-      become_user: tnuser
+      #become: true 
+      #become_user: tnuser
 
     - name: Add registration_info if available
       ansible.builtin.set_fact:
@@ -471,9 +471,9 @@
       command: ./tap runner service install -v --start-now
       args:
         chdir: "{{ runner_dir }}"
-      become: true   
-      become_user: tnuser
-      become_method: machinectl
+      #become: true   
+      #become_user: tnuser
+      #become_method: machinectl
 
     ######### Alternative method #########
     
