@@ -69,7 +69,6 @@
       - Settings
       - Storage
       - OpentapImages    
-    #ks8500runner_path: /opt/KS8500Runner
     ks8500runner_path: /home/jenkins/runner
     opentap_url: "https://packages.opentap.io/4.0/Objects/Packages/OpenTAP?os=Linux&architecture=x64"
     runner_dir: /home/jenkins/runner   # change if you prefer another location
@@ -128,7 +127,6 @@
         groups: "{{ admin_group }}"
         append: yes
         password: "{{ 'keysight' | password_hash('sha256') }}"
-        #password: 'keysight'
         update_password: on_create
 
     # add public key to authorized keys list in tnuser
@@ -149,44 +147,7 @@
         name: tnuser
         groups: sudo        # or wheel on some systems
         append: yes
-
-    # Install additional packages
-    #- name: Install additional required packages
-    #  become: true
-    #  ansible.builtin.package:
-    #    name:
-    #      - python3-pip
-    #      - python3-requests
-    #      - docker
-    #      - docker-cli-buildx
-    #      - docker-compose
-    #      - openrc
-    #      - docker-cli-compose
-    #    state: present
-
     
-    #- name: Enable Universe repository
-    #  become: true
-    #  ansible.builtin.command: add-apt-repository universe
-    #  args:
-    #    creates: /etc/apt/sources.list.d/universe.list
-    
-    #- name: Update apt cache
-    #  become: true
-    #  ansible.builtin.apt:
-    #    update_cache: yes
-   
-    #- name: Add Docker official repo
-    #  become: true
-    #  ansible.builtin.shell: |
-    #    apt-get update
-    #    apt-get install -y ca-certificates curl gnupg
-    #    install -m 0755 -d /etc/apt/keyrings
-    #    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-    #    echo \
-    #      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-    #      $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-
     - name: Update apt cache
       become: true
       ansible.builtin.apt:
@@ -209,45 +170,19 @@
           - python3-requests
           - tshark 
           - libcap2-bin
-          #- systemd-container
-          #- docker-ce
-          #- docker-ce-cli
-          #- containerd.io
-          #- docker-buildx-plugin
-          #- docker-compose-plugin
         state: present
-    
-    #- name: Add tnuser to wireshark group
-    #  user:
-    #    name: tnuser
-    #    groups: wireshark
-    #    append: yes
-    #  become: true
-      
-    #- name: Copy runner files
-    #  ansible.builtin.copy:
-    #    src: "{{ playbook_dir }}/all/runner/"
-    #    dest: "{{ ks8500runner_path }}"
-    #  become: true
-    
+        
     - name: Ensure Wireshark config directory exists for jenkins
       file:
         path: /home/jenkins/.config/wireshark
         state: directory
-        #owner: tnuser
-        #group: tnuser
         mode: '0755'
-      #become: true
-
-    
+        
     - name: Copy Wireshark preferences file to jenkins (remote) 
       ansible.builtin.copy:
         src: all/runner/preferences          
         dest: /home/jenkins/.config/wireshark/preferences  # Path on the remote
-        #owner: tnuser
-        #group: tnuser
         mode: '0644'
-      #become: true
 
     - name: Copy Wireshark preferences file to system wide (remote)
       ansible.builtin.copy:
@@ -257,60 +192,18 @@
         group: root
         mode: '0644'
       become: true 
-   
-    #- name: Ensure /etc/polkit-1/rules.d exist
-    #  file:
-    #    path: /etc/polkit-1/rules.d
-    #    state: directory
-    #    mode: '0755'
-    #  become: true
-
-    #- name: Copy 60-machinectl-fast-user-auth.rules (remote)
-    #  ansible.builtin.copy:
-    #    src: all/runner/60-machinectl-fast-user-auth.rules          
-    #    dest: /etc/polkit-1/rules.d/60-machinectl-fast-user-auth.rules  # Path on the remote
-    #   owner: root
-    #    group: root
-    #    mode: '0644'
-    #  become: true 
-      
 
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
     - name: Verify connectivity
       ansible.builtin.shell: curl https://6g-sandbox.automation.keysight.com/index.html
 
-    # - name: Get os info
-    #   command: cat /etc/os-release
-    #   register: os_info
-
-    # - name: List os info
-    #   debug:
-    #     msg: "{{ os_info.stdout }}"
-
-    
     - name: Add Microsoft package repository GPG key
       apt_key:
         url: https://packages.microsoft.com/keys/microsoft.asc
         state: present
       become: true        
     
-    #- name: Ensure lsb-release is available
-    #  apt:
-    #    name: lsb-release
-    #    state: present
-    #    update_cache: yes
-    #  become: true
-
-    #- name: Get Ubuntu codename via lsb_release
-    #  command: lsb_release -cs
-    #  register: ubuntu_codename
-    #  changed_when: false
-    #  become: true
-
-    #- debug:
-    #    msg: "ubuntu codename: {{ ubuntu_codename.stdout }}"
-
     # Optional: skip if repo already installed
     - name: Check if Microsoft repo is already configured
       stat:
@@ -350,37 +243,20 @@
         path: "{{ runner_dir }}"
         state: directory
         mode: "0755"
-        #owner: tnuser
-        #group: tnuser
-      #become: true
-
-      
+       
     - name: Download OpenTAP package zip
       get_url:
         url: "{{ opentap_url }}"
         dest: "{{ zip_path }}"
         mode: "0644"
         force: yes
-      #become: true
-       
     
     - name: Unpack OpenTAP into runner directory
       unarchive:
         src: "{{ zip_path }}"
         dest: "{{ runner_dir }}"
         remote_src: true
-      #become: true
 
-    #- name: Ensure ownership after unpack
-    #  file:
-    #    path: "{{ runner_dir }}"
-    #    state: directory
-    #    recurse: true
-    #    owner: tnuser
-    #    group: tnuser
-    #    mode: "0755"
-    #  become: true
-      
     - name: Remove zip after extraction
       file:
         path: "{{ zip_path }}"
@@ -392,21 +268,8 @@
         path: "{{ runner_dir }}/tap"
         state: file
         mode: "0755"
-        #owner: tnuser
-        #group: tnuser
-      #become: true  
 
-    
-    #- name: Ensure Ansible remote tmp exists for tnuser
-    #  ansible.builtin.file:
-    #    path: /home/tnuser/.ansible/tmp
-    #    state: directory
-    #    mode: "0700"
-    #    owner: tnuser
-    #    group: tnuser
-    #  become: true
-
-    
+    # ACL tooling is needed for switching to different users (become_user)
     #- name: Install ACL tooling
     #  ansible.builtin.package:
     #    name: acl
@@ -418,37 +281,18 @@
         path: /home/jenkins/.ansible/tmp
         state: directory
         mode: "0700"       # strictly user-only
-        #owner: tnuser
-        #group: tnuser
-      #become: true
-
+        
     - name: Install Runner image using tap
       command: ./tap image install "Runner:2.0.0"
       args:
         chdir: "{{ runner_dir }}"
-      #become: true   
-      #become_user: tnuser 
-     
-    #- name: Run tap install as tnuser
-    #  ansible.builtin.shell: "cd {{ runner_dir }} && ./tap image install 'Runner:2.0.0'"
-    #  become: true
-    #  become_user: tnuser
-
-    #- name: Check if the registration file exists
-    #  ansible.builtin.stat:
-    #    path: "{{ ks8500runner_path }}/Config/runner.lic"
-    #  register: registration_file
-    #  become_user: tnuser
-   
+        
 
     - name: Register runner with Keysight sandbox
       command: ./tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --token {{ ks8500runner_registration_token }}
       args:
         chdir: "{{ runner_dir }}"
       register: register_output
-      #when: not registration_file.stat.exists
-      #become: true 
-      #become_user: tnuser
 
     - name: Add registration_info if available
       ansible.builtin.set_fact:
@@ -460,120 +304,11 @@
         ks8500runner_registration_info: "Registration not performed (already registered)"
       when: register_output is undefined
 
-
-    #- name: Run tap install as tnuser
-    #  ansible.builtin.shell: "cd {{ runner_dir }} && ./tap service install --start-now"
-    #  become: true
-    #  become_user: tnuser
-
-    #TVD: Enable it once OpenTap team has provided a fix in runner
     - name: Install and start runner service
       command: ./tap runner service install -v --start-now
       args:
         chdir: "{{ runner_dir }}"
-      #become: true   
-      #become_user: tnuser
-      #become_method: machinectl
-
-    ######### Alternative method #########
-    
-    #- name: Install and start runner service inside container
-    #  ansible.builtin.command: ./tap runner service install -v --start-now
-    #  args:
-    #    chdir: "{{ runner_dir }}"
-    #  become: true
-    #  become_method: machinectl
-    #  vars:
-    #    ansible_become_flags: "--machine=<container-name>"
-
-    #- name: Ensure Ansible remote tmp exists for tnuser (inside container)
-    #  ansible.builtin.file:
-    #    path: /home/tnuser/.ansible/tmp
-    #    state: directory
-    #    mode: "0700"
-    #    owner: tnuser
-    #    group: tnuser
-    #  become: true
-    #  become_method: machinectl
-
-   
-    ################################### Docker Container starts ########################################
-
-    #- name: Enable docker service
-    #  ansible.builtin.service:
-    #    name: docker
-    #    state: started
-    #    enabled: true
-    #  become: true
-
-    #- name: Delete runner data
-    #  ansible.builtin.include_tasks: special_action_delete_runner_data.yaml
-    #  when: ks8500runner_special_action is defined and ks8500runner_special_action == "delete_runner_data"
-
-    #- name: Create runner dirs
-    #  ansible.builtin.file:
-    #    path: "{{ ks8500runner_path }}/{{ item }}"
-    #    state: directory
-    #    mode: '0700'
-    #  loop: "{{ ks8500runner_mounts }}"
-    #  become: true
-
-    #- name: Deploy runner configuration
-    #  ansible.builtin.copy:
-    #    src: "{{ playbook_dir }}/all/runner/"
-    #    dest: "{{ ks8500runner_path }}"
-    #  become: true
-
-    #- name: Build runner image
-    #  community.docker.docker_image_build:
-    #    name: ks8500_runner:latest
-    #    path: "{{ ks8500runner_path }}"
-    #    dockerfile: Dockerfile
-    #  become: true
-
-    #- name: Create mount list
-    #  ansible.builtin.set_fact:
-    #    mount_list: '{{ (mount_list|default([])) + [{"target": "/opt/tap/" + item, "source": "{{ ks8500runner_path }}/" + item, "type": "bind" }] }}'
-    #  loop: "{{ ks8500runner_mounts }}"
-    #  become: true
-   
-    # The microsoft base image uses this UID. Maybe we can find a better solution.
-    #- name: Workaround permissions
-    #  ansible.builtin.shell: "chown -R 1654:1654 {{ ks8500runner_path }}"
-    #  become: true
-    ################################### Docker Container ends ########################################
- 
-    # - name: Storage debug collect
-    #   ansible.builtin.command:
-    #     cmd: "ls -lR {{ ks8500runner_path }}"
-    #   register: storage_debug
-    #   become: true
-
-    # - name: Storage debug out
-    #   ansible.builtin.debug:
-    #     var: storage_debug.stdout_lines
-
-   
-    #- name: Register runner
-    #  community.docker.docker_container:
-    #    image: ks8500_runner
-    #    name: register-runner
-    #    mounts: "{{ mount_list }}"
-    #    entrypoint: ""
-    #    detach: false
-    #    working_dir: "{{ ks8500runner_path }}"
-    #    command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --token {{ ks8500runner_registration_token }}
-    #  register: docker_container_output
-    #  when: not registration_file.stat.exists
-    #  become: true
-
-    #- name: Start runner
-    #  community.docker.docker_compose_v2:
-    #    project_src: "{{ ks8500runner_path }}"
-    #  become: true
-
-  
-
+      
 - name: "STAGE 4: Access tn_bastion to set firewall exceptions"
   hosts: bastion
   gather_facts: false
