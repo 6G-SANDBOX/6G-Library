@@ -3,11 +3,11 @@
 ## [unreleased] - 2025-XX-XX
 ### Added
 - Component `ocf` has 2 new public variables: `ocf_any_capif_release` and `ocf_any_capif_name_version_chart`.
+- Component `open5gs_vm` has 1 new public variable: `one_open5gs_vm_loglevel`, allowing to to set the log-level of the NFs.
 ### Changed
 - Upgraded OpenNebula Terraform provider from 1.4 to 1.5.
-- `open5gs_vm` New input variabe `one_open5gs_vm_loglevel` to set the log-level of the open5gs components.
-- 'ks8500_runner' Upgraded runner version 2.0.0 and KS8500 Cloud Version 2.
-- 'ks8500_runner' added tnuser.
+- Component `open5gcore_vm` updated open5gcore to version `10.4.0`.
+- Component `ks8500_runner`updated runner to version `2.0.0` and KS8500 Cloud Version 2.
 ### Fixed
 - Fixed broken links for components that have appliances in `.tnlcm/public.yaml` file.
 - Fixed `open5gs_k8s` charts not being able to pull mongodb images. Chart version upgraded from `v2.3.1` to `v2.3.3`.

@@ -120,11 +120,9 @@
                             "mcc":"%MCC",
                             "mnc":"%MNC",
                             "taiList":[
-                                { "tac":1 },
-                                { "tac":2 },
-                                { "tac":3 },
-                                { "tac":"%TAC" },
-                                { "tac":117, "comment": "gnb1.json" }
+                                {% for item in tacs -%}
+                                  {{ item | to_json(sort_keys=False) }}{{ "," if not loop.last else "" }}
+                                {% endfor %}
                             ]
                         }
                     ]
