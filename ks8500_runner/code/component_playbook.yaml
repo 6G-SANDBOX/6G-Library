@@ -71,8 +71,10 @@
       - OpentapImages    
     ks8500runner_path: /home/jenkins/runner
     opentap_url: "https://packages.opentap.io/4.0/Objects/Packages/OpenTAP?os=Linux&architecture=x64"
+    keysight_iolibrary_url: "https://6g-research-ext.automation.keysight.com/api/repository/4.0/Objects/Packages/Keysight_IOLibrary?version=1.0.0"
     runner_dir: /home/jenkins/runner   # change if you prefer another location
     zip_path: "{{ runner_dir }}/opentap.zip"
+    keysight_iolibrary_zip_path: "{{ runner_dir }}/Keysight_IOLibrary.zip"
   hosts: "ks8500runner"
   gather_facts: false
   tasks:
@@ -192,6 +194,41 @@
         group: root
         mode: '0644'
       become: true 
+
+
+    # Download keysigh_iolibrary  
+    - name: Download Keysight IOLibrary package 
+      get_url:
+        url: "{{ keysight_iolibrary_url }}"
+        dest: "{{ keysight_iolibrary_zip_path }}"
+        headers: 
+          Authorization: "Bearer 8_2xqTc4Qsci0xOdithMCjYm7IqcJ373SaJJqaSqOqo"
+          mode: "0644"
+        force: yes
+    
+    - name: Unpack Keysight IOLibrary package
+      unarchive:
+        src: "{{ keysight_iolibrary_zip_path }}"
+        dest: "{{ runner_dir }}"
+        remote_src: true
+
+    - name: Remove zip after extraction
+      file:
+        path: "{{ keysight_iolibrary_zip_path }}"
+        state: absent
+      become: true
+
+    - name: Ensure IOLSPrerequisites.run is executable
+      file:
+        path: "{{ runner_dir }}/Packages/IOLSPrerequisites.run"
+        state: file
+        mode: "0755"
+
+    - name: Ensure IOLibrariesSuiteMain.run is executable
+      file:
+        path: "{{ runner_dir }}/Packages/IOLibrariesSuiteMain.run"
+        state: file
+        mode: "0755"   
 
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
