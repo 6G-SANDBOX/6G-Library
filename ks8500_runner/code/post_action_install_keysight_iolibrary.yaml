@@ -1,1 +1,53 @@
+# Download keysigh_iolibrary  
+    - name: Download Keysight IOLibrary package 
+      get_url:
+        url: "{{ keysight_iolibrary_url }}"
+        dest: "{{ keysight_iolibrary_zip_path }}"
+        headers: 
+          Authorization: "Bearer 8_2xqTc4Qsci0xOdithMCjYm7IqcJ373SaJJqaSqOqo"
+          mode: "0644"
+        force: yes
+    
+    - name: Unpack Keysight IOLibrary package
+      unarchive:
+        src: "{{ keysight_iolibrary_zip_path }}"
+        dest: "{{ home_path }}"
+        remote_src: true
 
+    - name: Remove zip after extraction
+      file:
+        path: "{{ keysight_iolibrary_zip_path }}"
+        state: absent
+      become: true
+
+    - name: Ensure IOLSPrerequisites.run is executable
+      file:
+        path: "{{ home_path }}/Packages/IOLSPrerequisites.run"
+        state: file
+        mode: "0755"
+
+    - name: Ensure IOLibrariesSuiteMain.run is executable
+      file:
+        path: "{{ home_path }}/Packages/IOLibrariesSuiteMain.run"
+        state: file
+        mode: "0755"
+    
+    - name: install IOLSPrerequisites
+      ansible.builtin.command: "{{ home_path }}/Packages/IOLSPrerequisites.run --mode unattended" 
+      register: iolsprerequisites_installer_result
+      become: true
+      
+    - name: Show installer stdout
+      ansible.builtin.debug:
+        msg: "{{ iolsprerequisites_installer_result.stdout }}"
+
+
+    - name: install IOLibrariesSuiteMain
+      ansible.builtin.command: "{{ home_path }}/Packages/IOLibrariesSuiteMain.run --mode unattended" 
+      register: iolibrariesSuiteMain_installer_result
+      become: true  
+
+    - name: Show installer stdout
+      ansible.builtin.debug:
+        msg: "{{ iolibrariesSuiteMain_installer_result.stdout }}"
+  
