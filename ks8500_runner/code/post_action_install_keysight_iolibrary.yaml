@@ -1,3 +1,10 @@
+# Define variables
+- name: Set custom fact
+  ansible.builtin.set_fact:
+    opentap_url: "https://packages.opentap.io/4.0/Objects/Packages/OpenTAP?os=Linux&architecture=x64"
+    keysight_iolibrary_url: "https://6g-research-ext.automation.keysight.com/api/repository/4.0/Objects/Packages/Keysight_IOLibrary?version=1.0.0"
+    keysight_iolibrary_zip_path: "{{ home_path}}/Keysight_IOLibrary.zip"
+
 # Download keysigh_iolibrary  
 - name: Download Keysight IOLibrary package 
   get_url:
