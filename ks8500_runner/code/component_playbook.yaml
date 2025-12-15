@@ -196,7 +196,7 @@
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
     - name: Verify connectivity
-      ansible.builtin.shell: curl "{{ks8500_backend_url}}/index.html"
+      ansible.builtin.shell: curl "{{ks8500runner_backend_url}}/index.html"
 
     - name: Add Microsoft package repository GPG key
       apt_key:
