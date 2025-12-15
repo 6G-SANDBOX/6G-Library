@@ -365,6 +365,10 @@
       command: ./tap runner service install -v --start-now
       args:
         chdir: "{{ runner_dir }}"
+
+    - name: Post action: install Keysight IOLibrary 
+      ansible.builtin.include_tasks: post_action_install_keysight_iolibrary.yaml
+      when: ks8500runner_post_action is defined and ks8500runner_post_action == "install_keysight_iolibrary"     
       
 - name: "STAGE 4: Access tn_bastion to set firewall exceptions"
   hosts: bastion
