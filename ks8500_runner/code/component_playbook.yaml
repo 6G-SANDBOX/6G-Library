@@ -309,7 +309,7 @@
       args:
         chdir: "{{ runner_dir }}"
 
-    - name: Post action: install Keysight IOLibrary 
+    - name: install Keysight IOLibrary 
       ansible.builtin.include_tasks: post_action_install_keysight_iolibrary.yaml
       when: ks8500runner_post_action is defined and ks8500runner_post_action == "install_keysight_iolibrary"     
       
