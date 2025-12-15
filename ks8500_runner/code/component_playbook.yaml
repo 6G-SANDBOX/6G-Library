@@ -229,8 +229,17 @@
       file:
         path: "{{ home_path }}/Packages/IOLibrariesSuiteMain.run"
         state: file
-        mode: "0755"   
+        mode: "0755"
 
+     
+    - name: install IOLSPrerequisites
+      ansible.builtin.command: "{{ home_path }}/Packages/IOLSPrerequisites.run" --mode unattended
+      become: true
+
+    - name: install IOLSPrerequisites
+      ansible.builtin.command: "{{ home_path }}/Packages/IOLibrariesSuiteMain.run" --mode unattended
+      become: true  
+  
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
     - name: Verify connectivity
