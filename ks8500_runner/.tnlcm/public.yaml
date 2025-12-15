@@ -83,6 +83,17 @@ input:
     default_value: "none"
     required_when: false
 
+  ks8500runner_post_action:
+    description: |
+      Select sepcial action
+      - none: No special action taken
+      - instal_keysight_iolibrary: Install Keysight IOLibrary required for support SCPI-Instruments
+    type: str
+    choices:
+      - "none"
+      - "install_keysight_iolibrary"
+    default_value: "none"
+    required_when: false  
 
 ####################################
 ## Component output
