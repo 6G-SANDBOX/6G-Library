@@ -11,7 +11,7 @@
     url: "{{ keysight_iolibrary_url }}"
     dest: "{{ keysight_iolibrary_zip_path }}"
     headers: 
-      Authorization: "Bearer 8_2xqTc4Qsci0xOdithMCjYm7IqcJ373SaJJqaSqOqo"
+      Authorization: "Bearer {{ks8500runner_package_download_token}}"
       mode: "0644"
     force: yes
 
