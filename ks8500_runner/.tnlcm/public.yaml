@@ -71,18 +71,6 @@ input:
     default_value: "https://test-automation.pw.keysight.com"
     required_when: false
 
-  ks8500runner_special_action:
-    description: |
-      Select sepcial action
-      - none: No special action taken
-      - delete_runner_data: Deletes the runner data to trigger a new registration attempt. This may be useful if the runner has been accidentally deleted in the KS8500 backend
-    type: str
-    choices:
-      - "none"
-      - "delete_runner_data"
-    default_value: "none"
-    required_when: false
-
   ks8500runner_post_action:
     description: |
       Select sepcial action
