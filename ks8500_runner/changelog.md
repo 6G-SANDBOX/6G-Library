@@ -1,4 +1,8 @@
 # Changelog
+## v2.0.0.0
+### changed
+- use ubuntu vm image
+- added support for scpi-instrument
 ## v1.16.2.0
 ### changed
 - upgraded runner version 2.0.0
