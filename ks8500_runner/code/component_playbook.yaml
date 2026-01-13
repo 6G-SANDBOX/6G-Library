@@ -135,7 +135,7 @@
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
     - name: Verify connectivity
-      ansible.builtin.shell: curl https://test-automation.pw.keysight.com/index.html
+      ansible.builtin.shell: curl https://6g-sandbox.automation.keysight.com/index.html
 
     # - name: Get os info
     #   command: cat /etc/os-release
@@ -212,7 +212,7 @@
         entrypoint: ""
         detach: false
         working_dir: "{{ ks8500runner_path }}"
-        command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --registrationToken {{ ks8500runner_registration_token }}
+        command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --token {{ ks8500runner_registration_token }}
       register: docker_container_output
       when: not registration_file.stat.exists
       become: true
