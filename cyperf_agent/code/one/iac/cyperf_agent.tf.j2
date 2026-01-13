@@ -1,9 +1,6 @@
 # https://registry.terraform.io/providers/OpenNebula/opennebula/latest/docs/resources/virtual_machine
 # https://docs.opennebula.io/6.8/management_and_operations/references/template.html#context-section
 
-data "opennebula_virtual_network" "tn_bastion_network_{{ entity_name }}" {
-  name = "TNBastion Network"  
-}
 resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
   template_id = {{ template_id }}
@@ -28,10 +25,6 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     size     = {{ one_cyperf_agent_disk }}
     target   = "vda"
     driver   = "qcow2"
-  }
-  nic{
-    model           = "virtio"
-    network_id      = data.opennebula_virtual_network.tn_bastion_network_{{ entity_name }}.id
   }
 
 {% for network in one_cyperf_agent_networks %}
