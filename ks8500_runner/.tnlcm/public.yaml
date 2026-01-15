@@ -31,7 +31,7 @@ metadata:
     - "VM"
     - "appliance"
     - "testing"
-  appliances: ["https://marketplace.opennebula.io/appliance/d74a5f80-20bd-013d-0e49-7875a4a4f528"]
+  appliances: ["https://marketplace.opennebula.io/appliance/f4cc1890-f430-013c-b669-7875a4a4f528"]
 
 ####################################
 ## Site-specific variables
