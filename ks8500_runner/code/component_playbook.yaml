@@ -95,11 +95,11 @@
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
 
-    - name: Ensure sudo package is installed
-      become: true
-      ansible.builtin.package:
-        name: sudo
-        state: present
+    #- name: Ensure sudo package is installed
+    #  become: true
+    #  ansible.builtin.package:
+    #    name: sudo
+    #    state: present
 
     - name: Set admin group based on OS family
       set_fact:
@@ -270,13 +270,6 @@
         state: file
         mode: "0755"
 
-    # ACL tooling is needed for switching to different users (become_user)
-    #- name: Install ACL tooling
-    #  ansible.builtin.package:
-    #    name: acl
-    #    state: present
-    #  become: true
- 
     - name: Ensure Ansible remote tmp exists for jenkins
       ansible.builtin.file:
         path: /home/jenkins/.ansible/tmp
