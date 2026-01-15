@@ -27,7 +27,7 @@ This Componnet represents a VM with the Open5gCore 5G Core network inside custom
 
 The integrated UPF can be configured to utilize Linux XDP/eBPF to accelerate the datapath. 
 
-Version 10.4.0 of the Open5Gcore is used for this component. 
+Version 10.5.0 of the Open5Gcore is used for this component. 
 
 > [!NOTE] 
 > This Component is only availabe in the Berlin Platform.
