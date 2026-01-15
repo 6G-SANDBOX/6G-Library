@@ -1,5 +1,10 @@
 # Changelog
 
+## unreleased
+### Changed
+- Update open5gcore to version 10.5.0
+
+
 ## v1.0.0
 ### Changed
 - Output dictionary `metadata` renamed to `5gcore_metadata`.

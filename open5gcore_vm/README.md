@@ -27,7 +27,7 @@ This Componnet represents a VM with the Open5gCore 5G Core network inside custom
 
 The integrated UPF can be configured to utilize Linux XDP/eBPF to accelerate the datapath. 
 
-Version 9.1.0 of the Open5Gcore is used for this component. 
+Version 10.5.0 of the Open5Gcore is used for this component. 
 
 > [!NOTE] 
 > This Component is only availabe in the Berlin Platform.
@@ -59,6 +59,8 @@ Currently only OpenNebula (one) is available
 | `image_id` | ID of the Open5GS VM image to use in your OpenNebula environment |
 | `license_crt` | contents of the open5gcore license certificate | 
 | `testbed_sim_sql` | Optional: SQL dump with sim card credentials used in the `udm_db` |
+| `gitlab_deploy_token` | secret token to access the `gitlab_base_url` |
+| `gitlab_base_url` | Part of the URL to download an updated Open5Gcore |
 
 ## Input variables
 

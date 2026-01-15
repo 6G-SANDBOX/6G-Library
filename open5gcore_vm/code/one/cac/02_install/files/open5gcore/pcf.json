@@ -58,14 +58,59 @@
                 "binaryFile": "modules/pcf/pcf.so",
                 "config": {
                     "hashSize":32,
-                    "qos": {
-                        "default_5qi": 2,
-                        "maxbrUl": "50000 bps",
-                        "maxbrDl": "80000 bps",
-                        "gbrul": "30000 bps",
-                        "gbrdl": "50000 bps",
-                        "bitrate": "bps"
-                    }
+                    "qosProfiles": [
+                        {
+                            "profileName": "GBR_5QI1_Pri1_5Mbps",
+                            "5qi": 1,
+                            "maxbrUl": "5 Mbps",
+                            "maxbrDl": "5 Mbps",
+                            "gbrul": "100 Kbps",
+                            "gbrdl": "100 Kbps"
+                        },
+                        {
+                            "profileName": "GBR_5QI4_Pri1_1Mbps",
+                            "5qi": 4,
+                            "maxbrUl": "1 Mbps",
+                            "maxbrDl": "1 Mbps",
+                            "gbrul": "100 Kbps",
+                            "gbrdl": "100 Kbps"
+                        },
+                        {
+                            "profileName": "NONGBR_5QI9_Pri1_10Mbps",
+                            "5qi": 9,
+                            "maxbrUl": "10 Mbps",
+                            "maxbrDl": "10 Mbps"
+                        },
+                        {
+                            "profileName": "NONGBR_5QI9_Pri1_1Mbps",
+                            "5qi": 9,
+                            "maxbrUl": "1 Mbps",
+                            "maxbrDl": "1 Mbps"
+                        },
+                        {
+                            "profileName": "NONGBR_5QI9_Pri1_30Mbps",
+                            "5qi": 9,
+                            "maxbrUl": "30 Mbps",
+                            "maxbrDl": "30 Mbps"
+                        }
+                    ]
+                }
+            },
+
+            {
+                "name": "json_rpc",
+                "ignore": "%DISABLE_REMOTE_COMMAND",
+                "version": 1,
+                "binaryFile": "modules/json_rpc/json_rpc.so",
+                "config": { }
+            },
+            {
+                "name": "remote_commandModule",
+                "ignore": "%DISABLE_REMOTE_COMMAND",
+                "version": 1,
+                "binaryFile": "modules/remote_command/remote_command.so",
+                "config": {
+                    "name": "PCF"
                 }
             },
             {
