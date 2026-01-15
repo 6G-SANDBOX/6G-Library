@@ -6,12 +6,13 @@
 ### Changed
 - Upgraded OpenNebula Terraform provider from 1.4 to 1.5.
 - `open5gs_vm` New input variabe `one_open5gs_vm_loglevel` to set the log-level of the open5gs components.
-- `ks8500_runner` uses ubuntu vm image and added support for scpi-instruments
+- `ks8500_runner` is upgraded to version 2.0.0 which uses ubuntu vm image and has support for scpi-instruments
 ### Fixed
 - Fixed broken links for components that have appliances in `.tnlcm/public.yaml` file.
 - Fixed `open5gs_k8s` charts not being able to pull mongodb images. Chart version upgraded from `v2.3.1` to `v2.3.3`.
 - Fixed disk resize method used in `ks8500_runner`.
 - Disabled `open5gs-seppd` component of `open5gs_vm`
+- Fixed 'ks8500_runner' renames the public variable ks8500_special_action to  ks8500_post_action
 
 ## [v1.0.0] - 2025-09-11
 ### Added
