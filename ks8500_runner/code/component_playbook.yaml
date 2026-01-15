@@ -140,7 +140,6 @@
       loop:
         - "{{ hostvars['localhost']['tn_ssh_public_key']}}"
       when: item != ''  
-
       
     - name: Ensure tnuser has sudo privileges
       become: true
@@ -238,71 +237,9 @@
     - debug:
         msg: "Installed .NET version: {{ dotnet_version.stdout }}"
 
+    - name: install opentap package and deploy runner 
+      ansible.builtin.include_tasks: deploy_ks8500runner.yaml   
     
-    - name: Ensure runner directory exists
-      file:
-        path: "{{ runner_dir }}"
-        state: directory
-        mode: "0755"
-       
-    - name: Download OpenTAP package zip
-      get_url:
-        url: "{{ opentap_url }}"
-        dest: "{{ zip_path }}"
-        mode: "0644"
-        force: yes
-    
-    - name: Unpack OpenTAP into runner directory
-      unarchive:
-        src: "{{ zip_path }}"
-        dest: "{{ runner_dir }}"
-        remote_src: true
-
-    - name: Remove zip after extraction
-      file:
-        path: "{{ zip_path }}"
-        state: absent
-      become: true
-
-    - name: Ensure tap is executable
-      file:
-        path: "{{ runner_dir }}/tap"
-        state: file
-        mode: "0755"
-
-    - name: Ensure Ansible remote tmp exists for jenkins
-      ansible.builtin.file:
-        path: /home/jenkins/.ansible/tmp
-        state: directory
-        mode: "0700"       # strictly user-only
-        
-    - name: Install Runner image using tap
-      command: ./tap image install "Runner:2.0.0"
-      args:
-        chdir: "{{ runner_dir }}"
-        
-
-    - name: Register runner with Keysight sandbox
-      command: ./tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --token {{ ks8500runner_registration_token }}
-      args:
-        chdir: "{{ runner_dir }}"
-      register: register_output
-
-    - name: Add registration_info if available
-      ansible.builtin.set_fact:
-        ks8500runner_registration_info: "{{ register_output }}"
-      when: register_output is defined  
-
-    - name: Add registration_info if not available
-      ansible.builtin.set_fact:
-        ks8500runner_registration_info: "Registration not performed (already registered)"
-      when: register_output is undefined
-
-    - name: Install and start runner service
-      command: ./tap runner service install -v --start-now
-      args:
-        chdir: "{{ runner_dir }}"
-
     - name: install Keysight IOLibrary 
       ansible.builtin.include_tasks: post_action_install_keysight_iolibrary.yaml
       when: ks8500runner_post_action is defined and ks8500runner_post_action == "install_keysight_iolibrary"     
