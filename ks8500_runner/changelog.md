@@ -1,8 +1,15 @@
 # Changelog
+## v2.0.0.0
+### changed
+- uses ubuntu vm image
+- added support for scpi-instrument
+### Fixed
+- public variable ks8500_special_action to ks8500_post_action.
 ## v1.16.2.0
 ### changed
 - upgraded runner version 2.0.0
 - upgraded to KS8500 cloud V2
+- added tnuser
 ## v1.16.1.2
 ### Fixed
 - Removed duplicated tn_bastion  in .tnclm/public.yaml
