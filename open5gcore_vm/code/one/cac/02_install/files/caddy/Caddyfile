@@ -27,6 +27,10 @@
 		reverse_proxy {env.SMF_CP_IP}:8080
 	}
 
+    handle_path /204/* {
+            respond 204
+    }
+
 	handle_path / {
 		root * /etc/open5gcore/caddy/index.html
 		file_server

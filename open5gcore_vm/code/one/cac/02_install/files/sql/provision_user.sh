@@ -76,8 +76,9 @@ trap "rm -f -- '$t'" EXIT
 [ -z $PHONE_NUMBER ] && PHONE_NUMBER=$SUPI
 
 printf "USE udm_db;\n" > $t
+printf "START TRANSACTION;\n" >>$t
 printf "SET @newimsi := \"$SUPI\";\n" >> $t
-printf 'INSERT INTO `supi` VALUES (0,"%s",%s,%s,%s,"%s",%d,%d,%d);\n' ${SUPI} ${K} ${AMF} ${OP} ${SQN} ${AUTH_TYPE} ${OP_IS_OPC} ${USIM_TYPE} >> $t
+printf 'INSERT INTO `supi` VALUES (0,"%s",%s,%s,%s,"%s",%d,%d,%d,%s);\n' ${SUPI} ${K} ${AMF} ${OP} ${SQN} ${AUTH_TYPE} ${OP_IS_OPC} ${USIM_TYPE} ${$PHONE_NUMBER} >> $t
 printf "SELECT @id_supi := last_insert_id();\n" >> $t
 #INSERT INTO `impi` VALUES (6,33,'001010000049726@ims.mnc001.mcc001.3gppnetwork.org','sip:scscf.ims.mnc001.mcc001.3gppnetwork.org:6060',0,NULL,1,1);
 printf "INSERT INTO impi VALUES (0,@id_supi,concat(@newimsi,'@ims.$DOMAIN_NAME'),concat('sip:scscf','.ims.$DOMAIN_NAME:6060'),0,NULL,1,1);\n" >> $t
@@ -97,6 +98,7 @@ printf "INSERT INTO impi_impu VALUES (@impi,@impu,1);\n" >> $t
 printf "INSERT INTO impu VALUES (null,concat('sip:',$PHONE_NUMBER),0,0,1,1,0,1);\n" >> $t
 printf "SELECT @impu := last_insert_id();\n" >> $t
 printf "INSERT INTO impi_impu VALUES (@impi,@impu,1);\n" >> $t
+printf "COMMIT;\n" >>$t
 
 if [[ $DEBUG == 0 ]]; then
 	echo "tmp file: $t, added user: ${SUPI}"
