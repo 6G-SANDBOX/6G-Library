@@ -31,7 +31,7 @@ metadata:
     - "VM"
     - "appliance"
     - "testing"
-  appliances: ["https://marketplace.opennebula.io/appliance/d74a5f80-20bd-013d-0e49-7875a4a4f528"]
+  appliances: ["https://marketplace.opennebula.io/appliance/f4cc1890-f430-013c-b669-7875a4a4f528"]
 
 ####################################
 ## Site-specific variables
@@ -71,18 +71,17 @@ input:
     default_value: "https://test-automation.pw.keysight.com"
     required_when: false
 
-  ks8500runner_special_action:
+  ks8500runner_post_action:
     description: |
-      Select sepcial action
+      Select post action
       - none: No special action taken
-      - delete_runner_data: Deletes the runner data to trigger a new registration attempt. This may be useful if the runner has been accidentally deleted in the KS8500 backend
+      - install_keysight_iolibrary: Install Keysight IOLibrary required for support SCPI-Instruments
     type: str
     choices:
       - "none"
-      - "delete_runner_data"
+      - "install_keysight_iolibrary"
     default_value: "none"
-    required_when: false
-
+    required_when: false  
 
 ####################################
 ## Component output

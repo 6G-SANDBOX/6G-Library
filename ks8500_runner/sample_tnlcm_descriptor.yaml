@@ -2,14 +2,14 @@ trial_network:
   tn_init:
     type: "tn_init"
     dependencies: []
-    input: {}
   ks8500_runner-6gsb:
     type: "ks8500_runner"
     name: "6gsb" 
     dependencies:
       - "tn_init"    
     input:
-      ks8500runner_name: "6gsb-<your site name>"
-      ks8500runner_registration_token: "<Put your registration token here>"
-      ks8500runner_backend_url: "https://6g-sandbox.automation.keysight.com"
-      ks8500runner_special_action: "delete_runner_data"
+      ks8500runner_name: "6gsb-ks8500-runner"
+      ks8500runner_registration_token: "<your registration token>"
+      ks8500runner_backend_url: "https://6g-research-ext.automation.keysight.com"
+      ks8500runner_post_action: "none" # "install_keysight_iolibrary"
+      ks8500runner_package_download_token: "<your download token>" # if install_keysight_iolibrary, which is required to support SCPI-instrument

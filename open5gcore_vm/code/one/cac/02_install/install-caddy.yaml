@@ -6,11 +6,18 @@
 
 - name: download caddy
   become: true
-  ansible.builtin.get_url:
-    url: "https://caddyserver.com/api/download?os=linux&arch=amd64&idempotency=63113367019600"
-    dest: /usr/local/bin/caddy_server
+  ansible.builtin.unarchive:
+    src: "https://github.com/caddyserver/caddy/releases/download/v2.10.0/caddy_2.10.0_linux_amd64.tar.gz"
+    dest: /usr/local/bin/
     mode: "+x"
+    remote_src: true
   when: not caddy_bin.stat.exists
+
+- name: rename
+  become: true
+  ansible.builtin.command:
+    cmd: mv /usr/local/bin/caddy /usr/local/bin/caddy_server
+    removes: /usr/local/bin/caddy
 
 - name: create caddy directory
   file:
@@ -26,8 +33,9 @@
     mode: 0660
     dest: /etc/open5gcore/caddy/
   loop:
-  - "caddy/Caddyfile"
-  - "caddy/index.html"
+    - "caddy/Caddyfile"
+    - "caddy/index.html"
+  become: true
 
 - name: install caddy service
   copy:
