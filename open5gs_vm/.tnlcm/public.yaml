@@ -42,6 +42,7 @@ site_variables:
   template_id: ID of the Open5GS VM template to use in your OpenNebula environment
   image_id: ID of the Open5GS VM image to use in your OpenNebula environment
   testbed_sim: "Optional: contents of a shell script to provision sim card secrets used in the testbed"
+  dns: "Optional: Default DNS server to give to the UE's if public variable one_open5gs_vm_dns is unset (default: 8.8.8.8)"
 
 
 ####################################
@@ -177,6 +178,11 @@ input:
       - "info"
       - "debug"
       - "trace"
+  one_open5gs_vm_dns:
+    description: "DNS server to give to the UE's. Overrides the site's default."
+    type: str
+    default_value: false
+    required_when: false
 
 ####################################
 ## Generated terraform outputs

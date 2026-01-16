@@ -63,7 +63,9 @@ More info is available in the Open5GS [official documentation](https://open5gs.o
 Variables read from the site's encrypted file in the 6G-Sandbox-Sites repository.
 TNLCM checks that the variables are defined and errors if attempting to deploy the component without them.
 
-*None defined for this component.*
+| Variable | Description |
+|----------|-------------|
+| `dns` | Optional: Default DNS server to give to the UE's if public variable one_open5gs_k8s_dns is unset (default: 8.8.8.8) |
 
 ## Input variables
 
@@ -82,6 +84,7 @@ TNLCM checks that the variables are defined and errors if attempting to deploy t
 | `one_open5gs_k8s_apn` | Access Point Name | str | `"internet"` | - | false |
 | `one_open5gs_k8s_s_nssai_sst` | S-NSSAI Slice/Service Type | int | `1` | - | false |
 | `one_open5gs_k8s_s_nssai_sd` | S-NSSAI Slice Differentiator | str | `"000001"` | - | false |
+| `one_open5gs_k8s_dns` | DNS server to give to the UE's. Overrides the site's default | str | false | - | false |
 
 ## Generated terraform outputs
 

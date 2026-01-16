@@ -59,6 +59,7 @@ Currently only OpenNebula (one) is available
 | `image_id` | ID of the Open5GS VM image to use in your OpenNebula environment |
 | `license_crt` | contents of the open5gcore license certificate | 
 | `testbed_sim_sql` | Optional: SQL dump with sim card credentials used in the `udm_db` |
+| `dns` | Optional: Default DNS server to give to the UE's if public variable one_open5gcore_vm_dns is unset (default: 8.8.8.8) |
 | `gitlab_deploy_token` | secret token to access the `gitlab_base_url` |
 | `gitlab_base_url` | Part of the URL to download an updated Open5Gcore |
 
@@ -84,6 +85,7 @@ Currently only OpenNebula (one) is available
 | `one_open5gcore_vm_s_nssai_sd` | SD of the S-NSSAI | str | 000001 | - | false |
 | `one_open5gcore_vm_ue_subnet` | Subnet to be used by the UEs. | str | 10.45.0.0/16 | - | false |
 | `one_open5gcore_vm_upf_xdp` | Enable UDP XDP Datapath acceleration | bool | false | - | false |
+| `one_open5gcore_vm_dns` | DNS server to give to the UE's. Overrides the site's default | str | false | - | false |
 
 
 ## Generated terraform outputs

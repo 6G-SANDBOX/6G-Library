@@ -3,6 +3,7 @@
 ## [unreleased] - 2025-XX-XX
 ### Added
 - Component `ocf` has 2 new public variables: `ocf_any_capif_release` and `ocf_any_capif_name_version_chart`.
+- Components `open5gs_vm`, `open5gs_k8s` & `open5gcore_vm` can now select the DNS server which is sent to the UE's through variables.
 ### Changed
 - `open5gcore_vm` Update open5gcore to version 10.5.0
 - Upgraded OpenNebula Terraform provider from 1.4 to 1.5
