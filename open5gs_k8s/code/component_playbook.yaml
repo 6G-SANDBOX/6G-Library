@@ -52,7 +52,11 @@
     - name: Helm install
       vars:
         helm_release_name: "{{ hostvars['localhost']['entity_name'] | regex_replace('_', '') | lower }}"
-        ue_dns_server: "{{site_available_components.open5gs_k8s.dns | default('8.8.8.8')}}"
+        ue_dns_server: >-
+          {{ one_open5gs_k8s_dns
+            | default(site_available_components.open5gs_k8s.dns, true)
+            | default('8.8.8.8', true)
+          }}
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_install.yaml"
 
 

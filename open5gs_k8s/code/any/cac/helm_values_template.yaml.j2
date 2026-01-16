@@ -6,10 +6,6 @@ mme:
   enabled: false  # Default true
 pcrf:
   enabled: false  # Default true
-smf:
-  config:
-    pcrf:
-      enabled: false  # Default true
 sgwc:
   enabled: false  # Default true
 sgwu:
@@ -69,6 +65,8 @@ upf:
 
 smf:
   config:
+    pcrf:
+      enabled: false  # Default true
     dnsList:
       - {{ ue_dns_server }} # Default 8.8.8.8
       - 8.8.4.4

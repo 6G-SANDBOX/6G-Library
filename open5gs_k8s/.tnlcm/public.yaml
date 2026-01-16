@@ -33,7 +33,7 @@ metadata:
 ## Site-specific variables
 ####################################
 site_variables:
-  # None
+  dns: "Optional: Default DNS server to give to the UE's if public variable one_open5gs_k8s_dns is unset (default: 8.8.8.8)"
 
 
 ####################################
@@ -115,6 +115,11 @@ input:
     description: Slice Differentiator (SD) of the Single-Network Slice Selection Assistant Information (S-NSSAI). Minimum length of 6.
     type: str
     default_value: "000001"
+    required_when: false
+  one_open5gs_k8s_dns:
+    description: "DNS server to give to the UE's. Overrides the site's default."
+    type: str
+    default_value: false
     required_when: false
 
 

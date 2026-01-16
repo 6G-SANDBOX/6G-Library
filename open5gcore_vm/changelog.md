@@ -1,16 +1,17 @@
 # Changelog
 
 ## unreleased
-### Changed
-- The DNS server which is send to the UE's can now be configured using a site variable
+### Added
+- The DNS server which is send to the UE's can now be configured using a site variable or a public variable.
+ 
+ 
 ## v1.0.0
 ### Changed
 - Output dictionary `metadata` renamed to `5gcore_metadata`.
 - Variable `one_open5gcore_vm_external_vnet` is now optional with `tn_vxlan` by default.
 - Variable `one_open5gcore_vm_internal_vnet` is now mandatory.
 ### Fixed
-- disbale sending of icmp redirect messages for the UPF
-
+- Disabled sending of ICMP redirect messages for the UPF.
 
 ## v0.5.0
 ### Added

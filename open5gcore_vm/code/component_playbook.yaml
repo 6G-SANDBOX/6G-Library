@@ -125,7 +125,11 @@
     - name: Configure open5gcore
       vars:
         vm_ips: "{{ hostvars['localhost']['ips'] | dict2items(key_name='id', value_name='ip') }}"
-        ue_dns_server: "{{site_available_components.open5gcore_vm.dns | default('8.8.8.8')}}"
+        ue_dns_server: >-
+          {{ one_open5gcore_vm_dns
+            | default(site_available_components.open5gcore_vm.dns, true)
+            | default('8.8.8.8', true)
+          }}
       ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/setup-open5gcore.yaml"
 
   handlers:
