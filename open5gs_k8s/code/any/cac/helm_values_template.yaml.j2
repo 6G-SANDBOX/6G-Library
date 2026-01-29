@@ -15,6 +15,7 @@ sgwu:
 # 5G
 amf:
   config:
+    logLevel: "debug"
     guamiList:
       - amf_id:
           region: 2
@@ -49,12 +50,14 @@ nrf:
 
 nssf:
   config:
+    logLevel: "debug"
     nsiList:
     - sst: {{ one_open5gs_k8s_s_nssai_sst | int }}  # Default 1
       sd: "{{ one_open5gs_k8s_s_nssai_sd | string }}"  # Default "0x111111"
 
 upf:
   config:
+    logLevel: "debug"
     upf:
       gtpu:
         advertise: "{{ one_open5gs_k8s_upf_n3_ip | string }}"  # Default ""
@@ -68,6 +71,7 @@ upf:
 
 smf:
   config:
+    logLevel: "debug"
     pcrf:
       enabled: false  # Default true
     dnsList:
