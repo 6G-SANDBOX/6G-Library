@@ -11,7 +11,6 @@
 one_bastion_cpu: 4
 one_bastion_memory: 3072
 one_bastion_disk: 5120
-one_host_name: "10.0.50.12"
 one_bastion_networks: 
   - tn_vxlan
 

@@ -13,10 +13,12 @@
 # Fact is, with input_file.yaml you can technically overwrite any value shown here, but the TNLCM will only let you to modify the ones in public.yaml
 
 one_ks8500runner_cpu: 2
-one_ks8500runner_memory: 16384
+one_ks8500runner_memory: 10240
 one_ks8500runner_disk: 10000
 one_ks8500runner_networks: 
   - tn_vxlan
+
+one_host_name: "10.0.50.12"  
 
 ks8500runner_backend_url: https://6g-sandbox.automation.keysight.com
 ks8500runner_registration_token: null

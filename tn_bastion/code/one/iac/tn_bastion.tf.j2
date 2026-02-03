@@ -7,8 +7,6 @@ resource "opennebula_virtual_machine" "tn_bastion" {
   vcpu        = {{ one_bastion_cpu }}
   memory      = {{ one_bastion_memory }}
 
-  sched_requirements = "NAME = {{ one_host_name }}"
-
   context = {
     NETWORK =        "YES"
     NETCFG_TYPE =    "interfaces"
