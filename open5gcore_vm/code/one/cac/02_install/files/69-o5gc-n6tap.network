@@ -1,0 +1,10 @@
+[Match]
+Name=n6_tap*
+Type=ether
+Kind=tun
+
+[Network]
+Bridge=n6tap-br
+
+[Link]
+RequiredForOnline=no
