@@ -59,11 +59,11 @@
         timeout: 200
 
     - name: Wait again until one-appliance contextualization scripts have finished
-      become: true
-      become_timeout: 60
       ansible.builtin.wait_for:
         path: /etc/one-appliance/status
         search_regex: bootstrap_success
+      become: true
+      become_timeout: 60
 
     ### Calling load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
     ### But it makes the code much MUCH cleaner with almost no extra latency
