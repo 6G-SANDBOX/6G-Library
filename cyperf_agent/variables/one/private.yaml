@@ -8,7 +8,7 @@
 ##
 ######################################################
 
-one_cyperf_agent_cpu: 8
+one_cyperf_agent_cpu: 1
 one_cyperf_agent_memory: 8192
 one_cyperf_agent_disk: 20480
 one_loadcore_agent_networks: 
