@@ -8,6 +8,8 @@
 ### Changed
 - disable `open5gs-seppd` which was unused and filled the logfile
 - The DNS server which is send to the UE's can now be configured using a site variable
+### Fixed
+- fix ansible syntax for installing the webUI
 
 ## v1.0.0
 ### Added

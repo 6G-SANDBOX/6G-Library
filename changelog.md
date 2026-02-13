@@ -16,6 +16,7 @@
 - Fixed disk resize method used in `ks8500_runner`.
 - Disabled `open5gs-seppd` component of `open5gs_vm`
 - Fixed 'ks8500_runner' renames the public variable ks8500_special_action to  ks8500_post_action
+- Fixed webUI installation of the `open5gs_vm` component
 
 ## [v1.0.0] - 2025-09-11
 ### Added
