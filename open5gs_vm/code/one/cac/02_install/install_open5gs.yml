@@ -47,7 +47,7 @@
             state: present
           register: apt_result
           retries: 60
-          delay: 10
+          delay: 30
           until: apt_result is succeeded
       when: not one_open5gs_vm_use_nightly
 
