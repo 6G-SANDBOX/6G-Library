@@ -7,7 +7,6 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   vcpu        = {{ one_ks8500runner_cpu }}
   memory      = {{ one_ks8500runner_memory }}
   
-  sched_requirements = "NAME = {{ one_host_name }}"
 
   context = {
     NETWORK: "YES"
