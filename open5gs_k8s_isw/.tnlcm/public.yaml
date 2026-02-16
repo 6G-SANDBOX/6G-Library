@@ -1,0 +1,48 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Szymon Mecina <s.mecina@is-wireless.com>
+    - Robert Gdowski <r.gdowski@is-wireless.com>
+  short_description: Deploys a open5gs inside a Kubernetes cluster 
+  long_description: |
+    The **open5gs_k8s_isw** 6G-Library component deploys a 5G open5gs inside a Kubernetes cluster for the following config:
+  hypervisors: ["one"]
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  # None
+
+
+####################################
+## Input variables
+####################################
+input:
+  one_open5gs_k8s_isw_target:
+    description: Name of a previously deployed `oneKE` component, where the the CU Helm Chart will be applied. E.g. `oneKE-my_cluster`.
+    type: "oneKE"
+    required_when: true
+  dockerhub_token:
+    description: |
+      Token required to authenticate to dockerhub
+    type: str
+    required_when: false
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__metadata:

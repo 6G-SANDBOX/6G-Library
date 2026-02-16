@@ -1,0 +1,18 @@
+image:
+  dockerhub_organization: iswirelesspoland
+  repo: open5gs
+  tag: 2.7.6-dev-b30
+app_name: open5gs
+deployment_name: open5gs-auto
+namespace: "{{ helm_release_name | string }}"
+networking:
+  core_gui_port: 30006
+  internal:
+    enabled: "true"
+  external:
+    enabled: "false"
+    mask: "24"
+    interface: "ens10f0.3333"
+    vlan: "false"
+    IP: "172.30.44.2"
+service_name: n2-n3-interface-service-open5gs
