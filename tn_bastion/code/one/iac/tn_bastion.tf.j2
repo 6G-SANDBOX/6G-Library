@@ -7,7 +7,7 @@ resource "opennebula_virtual_machine" "tn_bastion" {
   vcpu        = {{ one_bastion_cpu }}
   memory      = {{ one_bastion_memory }}
 
-  sched_reqirements = "ID = {{ one_opennebula_host }}"
+  sched_requirements = "ID = {{ one_opennebula_host }}"
 
   context = {
     NETWORK =        "YES"
