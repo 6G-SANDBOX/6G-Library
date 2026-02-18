@@ -7,6 +7,10 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   cpu         = {{ one_cyperf_agent_cpu }}
   vcpu        = {{ one_cyperf_agent_cpu }}
 
+  {% if one_opennebula_host is defined %}
+  sched_requirements = "ID = {{ one_opennebula_host }}"
+  {% endif %}
+  
   context = {
     NETWORK =        "YES"
     NETCFG_TYPE =    "interfaces"
