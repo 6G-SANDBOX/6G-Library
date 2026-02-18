@@ -14,6 +14,8 @@ one_bastion_disk: 5120
 one_bastion_networks: 
   - tn_vxlan
 
+one_opennebula_host: 12
+
 one_bastion_vpn_clients: 1
 # one_bastion_vpn_allowedips: null
 one_bastion_routemanager_add: []
