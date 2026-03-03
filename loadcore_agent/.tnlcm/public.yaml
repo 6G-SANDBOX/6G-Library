@@ -30,7 +30,7 @@ metadata:
     - "appliance"
     - "testing"
     - "benchmarking"
-  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/loadcore_agent_v5.0.1"]
 
 
 ####################################
