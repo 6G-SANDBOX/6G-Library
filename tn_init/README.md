@@ -18,7 +18,8 @@ First component of any Trial Network, composed of two sepparate entities: tn_vxl
 
 - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
 - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
-- Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+- Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
 
 ## Short Description
 

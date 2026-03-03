@@ -19,7 +19,8 @@ To set this applinace in your site, please first download either the [base appli
 
 - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
 - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
-- Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+- Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
 - Filip Ivanovich <filip.ivanovic@keysight.com>
 - Abhishek Bakshi <abhishek.bakshi@keysight.com>
 

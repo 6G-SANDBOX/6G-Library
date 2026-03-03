@@ -14,7 +14,8 @@
 metadata:
   maintainers:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
-    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
   short_description: Configures a RIS exposed from an API.
   long_description: |
     Reconfigurable Intelligent Surfaces (RIS) are a new technology that can be used to control the radio environment

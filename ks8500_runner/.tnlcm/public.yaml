@@ -15,7 +15,8 @@ metadata:
   maintainers:
     - Torsten Iversen <torsten.iversen@keysight.com>
     - The Dao <the.dao@keysight.com>
-    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
   short_description: Deploys a VM with KS8500 Runner
   long_description: |
     The KS8500 Runner allows accessing local on premises resources while running a test campaign being scheduled from the KS8500 backend. |

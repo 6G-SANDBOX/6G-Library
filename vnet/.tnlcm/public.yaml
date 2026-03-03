@@ -15,7 +15,8 @@ metadata:
   maintainers:
     - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
-    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
   short_description: Creates a Virtual Network inside OpenNebula
   long_description: |
     Private Virtual Network inside the Trial Network.
