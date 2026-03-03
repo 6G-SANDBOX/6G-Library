@@ -1,4 +1,8 @@
 # Changelog
+## v1.1.0
+### Updated 
+ - agent from marketplace to version 5.0.1
+
 
 ## v0.5.1
 ### Added

@@ -1,6 +1,6 @@
 # Changelog
 
-## [unreleased] - 2025-XX-XX
+## [v1.1.0] - 2026-03-03
 ### Added
 - Component `ocf` has 2 new public variables: `ocf_any_capif_release` and `ocf_any_capif_name_version_chart`.
 - Components `open5gs_vm`, `open5gs_k8s` & `open5gcore_vm` can now select the DNS server which is sent to the UE's through variables.
@@ -17,6 +17,7 @@
 - Disabled `open5gs-seppd` component of `open5gs_vm`
 - Fixed 'ks8500_runner' renames the public variable ks8500_special_action to  ks8500_post_action
 - Fixed webUI installation of the `open5gs_vm` component
+- Fixed `loadagent_core` appliance url
 
 ## [v1.0.0] - 2025-09-11
 ### Added
@@ -197,7 +198,8 @@ Initial set of components is:
 
 
 <!-- Change latest version value at every release -->
-[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v1.0.0...unreleased
+[unreleased]: https://github.com/6G-SANDBOX/6G-Library/compare/v1.1.0...unreleased
+[v1.1.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v1.0.0...v1.1.0
 [v1.0.0]:https://github.com/6G-SANDBOX/6G-Library/compare/v0.5.0...v1.0.0
 [v0.5.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.4.0...v0.5.0
 [v0.4.0]: https://github.com/6G-SANDBOX/6G-Library/compare/v0.3.0...v0.4.0

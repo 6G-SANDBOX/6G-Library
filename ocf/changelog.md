@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v1.1.0
 ### Added
 - Added 2 news variables `ocf_any_capif_release`and `ocf_any_capif_name_version_chart`.
 

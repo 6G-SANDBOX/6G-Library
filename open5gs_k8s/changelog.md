@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased
+## v1.1.0
 ### Added
 - The DNS server which is send to the UE's can now be configured using a site variable or a public variable.
 ### Fixed
