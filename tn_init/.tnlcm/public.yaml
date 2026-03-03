@@ -13,10 +13,9 @@
 ####################################
 metadata:
   maintainers:
-    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
-- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
+    - Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
   short_description: Bootstraps the Trial Network with an initial Virtual Network (tn_vxlan) and a bastion VM (tn_bastion)
   long_description: |
     First component of any Trial Network, composed of two sepparate entities: tn_vxlan and tn_bastion:

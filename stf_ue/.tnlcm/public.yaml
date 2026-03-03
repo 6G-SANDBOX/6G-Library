@@ -14,7 +14,7 @@
 metadata:
   maintainers:
     - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
-- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
+    - Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
     - Javier Jimenez <ja.jimenez@uma.es>
   short_description: Enables the use of a physical UE via STF for a limited duration.
   long_description: |

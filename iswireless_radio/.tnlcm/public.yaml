@@ -13,10 +13,9 @@
 ####################################
 metadata:
   maintainers:
-    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
-- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
+    - Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
   short_description: Enables the capability of using ISWIRELESS Radio in a Trial Network.
   long_description: |
     TODO: Say more about how this component has virtualized RAN components blah blah.

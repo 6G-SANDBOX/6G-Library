@@ -13,10 +13,9 @@
 ####################################
 metadata:
   maintainers:
-    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
-- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
+    - Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
   short_description: Bootstraps the Trial Network with an initial Virtual Network (tn_vxlan). Deploying tn_init instead is the recommended approach.
   long_description: |
     Bootstrap component of any Trial Network. Virtual Network reachable to the experimenter, and used by most other compoents to communicate to each otehr inside the Trial Network.

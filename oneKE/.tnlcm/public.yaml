@@ -13,10 +13,9 @@
 ####################################
 metadata:
   maintainers:
-    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
     - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
-- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
+    - Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
   short_description: Deploys a Kubernetes cluster in OpenNebula
   long_description: |
     Kubernetes cluster based on the oneKE service created and mantained by OpenNebula.

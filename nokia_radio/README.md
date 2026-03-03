@@ -22,7 +22,6 @@ The configuration exposed by this component should be synchronized with the 5G c
 
 ## Maintainers
 
-- Jesus Macias Portela <jesus.maciasportela@telefonica.com>
 - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
 - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
 - Raúl Macián Castillo <raul.maciancastillo@telefonica.com>

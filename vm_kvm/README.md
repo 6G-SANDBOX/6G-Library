@@ -6,7 +6,6 @@ The **vm_kvm** 6G-Library component deploys a general-purpose Virtual Machine in
 
 ## Maintainers
 
-- Jesus Macias Portela <jesus.maciasportela@telefonica.com>
 - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
 - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
 - Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
