@@ -13,9 +13,9 @@
 ####################################
 metadata:
   maintainers:
-    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
-    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+    - Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
   short_description: Deploys a VM with UERANSIM services, simulating an state-of-art 5G gNB, UE or both.
   long_description: |
     The UERANSIM component can be used as a 5G gNB, a User Equipment (UE) or as both at the same time, according to input variable `one_ueransim_mode`.

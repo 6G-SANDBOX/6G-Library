@@ -13,9 +13,9 @@
 ####################################
 metadata:
   maintainers:
-    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
-    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+    - Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
   short_description: Enables routing temporarily between Nokia Airscale and a previously deployed 5G Core.
   long_description: |
     Component to integrate the Nokia Airscale physical equipment with a 5G core already deployed inside the Trial Network.

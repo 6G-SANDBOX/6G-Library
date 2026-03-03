@@ -13,9 +13,9 @@
 ####################################
 metadata:
   maintainers:
-    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
-    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+    - Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
   short_description: Main bridge VM to access the Trial Network. Deploying tn_init instead is the recommended approach.
   long_description: |
     Bootstrap VM of any Trial Network.

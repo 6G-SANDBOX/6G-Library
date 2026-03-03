@@ -44,7 +44,8 @@ Through variable "one_open5gs_vm_size", five different types of instances can be
 ## Maintainers
 
 - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
-- Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+- Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
 
 ## Short Description
 
