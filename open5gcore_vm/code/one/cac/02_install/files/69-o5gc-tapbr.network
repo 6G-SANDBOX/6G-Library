@@ -1,0 +1,5 @@
+[Match]
+Name=n6tap-br
+
+[Link]
+RequiredForOnline=no

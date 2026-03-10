@@ -50,7 +50,9 @@
                             { "type":"n3_n9", "name":"%UPF1_N3_IF", "bind_ip": "%UPF1_N3_IP", "mode": "single_thread" },
                             { "type":"n3_n9", "name":"%UPF1_N9_IF", "bind_ip": "%UPF1_N9_IP", "mode": "thread_pool" },
                             { "type":"n6_l3", "name":"%UPF1_N6_TUN", "bind_ip": "%UPF1_N6_IP", "mode": "thread_pool" },
-                            { "ignore":1, "type":"n6_l2", "name":"n6_eth" }
+                            { "type":"n6_l2", "name":"n6_tap1"},
+                            { "type":"n6_l2", "name":"n6_tap2"},
+                            { "type":"n6_l2", "name":"n6_tap3"}
                         ],
                         "xdp":{
                             "ignore": "%DISABLE_XDP",
