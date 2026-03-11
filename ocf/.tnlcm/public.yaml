@@ -148,6 +148,7 @@ terraform_outputs:
   __entity_name__component_type: "ocf"
   __entity_name__ocf_metadata:
     oneKE: input.ocf_one_oneKE
+    release: input.ocf_any_capif_release
     repo: input.ocf_any_repo
     branch: input.ocf_any_branch
     vault_namespace: input.ocf_any_vault_namespace
@@ -160,6 +161,7 @@ terraform_outputs:
     monitoring_snooker_enabled: private.ocf_any_monitoring_snooker_enabled
     capif_namespace: input.ocf_any_capif_namespace
     capif_resources_reserve: input.ocf_any_capif_resources_reserve
+    capif_name_version_chart: input.ocf_any_capif_name_version_chart
     capif_storage_class: input.ocf_any_capif_storage_class
     capif_storage_access_mode: input.ocf_any_capif_storage_access_mode
     capif_grafana_storage_size: input.ocf_any_capif_grafana_storage_size

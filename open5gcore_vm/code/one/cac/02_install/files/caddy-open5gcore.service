@@ -16,8 +16,6 @@ Requires=network-online.target
 
 [Service]
 Type=notify
-#User=caddy
-#Group=caddy
 
 #WorkingDirectory=/etc/open5gcore/caddy
 EnvironmentFile=/etc/open5gcore/systemd_env

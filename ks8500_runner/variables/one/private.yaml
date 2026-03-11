@@ -14,11 +14,12 @@
 
 one_ks8500runner_cpu: 2
 one_ks8500runner_memory: 16384
-one_ks8500runner_disk: 10000
-one_ks8500runner_networks: 
+one_ks8500runner_disk: 30000
+one_ks8500runner_networks:
   - tn_vxlan
 
-ks8500runner_backend_url: https://test-automation.pw.keysight.com
+ks8500runner_backend_url: https://6g-research-ext.automation.keysight.com
 ks8500runner_registration_token: null
+ks8500runner_package_download_token: none
 ks8500runner_name: OpenNebulaDefault
-ks8500runner_special_action: none
+ks8500runner_post_action: none

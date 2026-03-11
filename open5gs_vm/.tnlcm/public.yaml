@@ -14,7 +14,8 @@
 metadata:
   maintainers:
     - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
-    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+    - Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+    - Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
   short_description: Deploys a Open5GS as a standalone Virtual Machine
   long_description: |
     Deploys a Open5GS over a general-purpose Virtual Machine based on Ubuntu 22.04 lTS.
@@ -42,6 +43,7 @@ site_variables:
   template_id: ID of the Open5GS VM template to use in your OpenNebula environment
   image_id: ID of the Open5GS VM image to use in your OpenNebula environment
   testbed_sim: "Optional: contents of a shell script to provision sim card secrets used in the testbed"
+  dns: "Optional: Default DNS server to give to the UE's if public variable one_open5gs_vm_dns is unset (default: 8.8.8.8)"
 
 
 ####################################
@@ -163,6 +165,23 @@ input:
   one_open5gs_vm_install_webui:
     description: Install the WEB-UI of Open5GS. Note that this increases the deployment time.
     type: bool
+    default_value: false
+    required_when: false
+  one_open5gs_vm_loglevel:
+    description: "Loglevel of the open5GS components"
+    type: str
+    default_value: "warn"
+    required_when: false
+    choices:
+      - "fatal"
+      - "error"
+      - "warn"
+      - "info"
+      - "debug"
+      - "trace"
+  one_open5gs_vm_dns:
+    description: "DNS server to give to the UE's. Overrides the site's default."
+    type: str
     default_value: false
     required_when: false
 

@@ -1,0 +1,37 @@
+---
+- name: Install Open5GCore and dependencies
+  become: true
+  block:
+
+    - name: Update apt cache
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+      check_mode: False
+
+    - name: Download phoenix
+      ansible.builtin.get_url:
+        url: "{{ phoenix_deb_url }}"
+        dest: "~/"
+        url_username: x
+        url_password: "{{ gitlab_deploy_token }}"
+        mode: '0600'
+        headers:
+          Deploy-Token: "{{ gitlab_deploy_token }}"
+          Private-Token: "{{ gitlab_deploy_token }}"
+      changed_when: not ansible_check_mode
+
+    - name: Install phoenix deb file
+      ansible.builtin.apt:
+        deb: "~/open5gcore-{{ phoenix_version }}_amd64-u{{ ubuntu_version }}.deb"
+      when: not ansible_check_mode
+
+    - name: Install needed dependencies
+      ansible.builtin.apt:
+        state: present
+        pkg:
+          - mariadb-server
+          - mariadb-client
+          - bmon
+          - tmux
+          - jq

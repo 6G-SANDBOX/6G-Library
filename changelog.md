@@ -1,8 +1,22 @@
 # Changelog
 
 ## [unreleased] - 2025-XX-XX
+### Added
+- Component `ocf` has 2 new public variables: `ocf_any_capif_release` and `ocf_any_capif_name_version_chart`.
+- Components `open5gs_vm`, `open5gs_k8s` & `open5gcore_vm` can now select the DNS server which is sent to the UE's through variables.
+### Changed
+- Upgraded OpenNebula Terraform provider from 1.4 to 1.5.
+- `open5gs_vm` New input variabe `one_open5gs_vm_loglevel` to set the log-level of the open5gs components.
+- `open5gcore_vm` Update open5gcore to version 10.5.0
+- `ks8500_runner` is upgraded to version 2.0.0 which uses ubuntu vm image and has support for scpi-instruments
+- 
 ### Fixed
 - Fixed broken links for components that have appliances in `.tnlcm/public.yaml` file.
+- Fixed `open5gs_k8s` charts not being able to pull mongodb images. Chart version upgraded from `v2.3.1` to `v2.3.3`.
+- Fixed disk resize method used in `ks8500_runner`.
+- Disabled `open5gs-seppd` component of `open5gs_vm`
+- Fixed 'ks8500_runner' renames the public variable ks8500_special_action to  ks8500_post_action
+- Fixed webUI installation of the `open5gs_vm` component
 
 ## [v1.0.0] - 2025-09-11
 ### Added
@@ -18,6 +32,7 @@
 - New mandatory input variable for component `xrext`: `one_xrext_external_server`.
 - New input variable `one_open5gs_vm_install_webui` in `open5gs_vm`, enabling the installation of the webUI.
 - New input variable `one_loadcore_agent_hugepages` and site variable schema in `loadcore_agent`, to switch between the 2 possible appliances.
+- New component `athens_ran` implemented to support the athens testbed related to ericsson RAN and the Open5Gs module.
 ### Changed
 - Common task file `routemanager_add.yaml` now also supports adding routes with key `dev`.
 - MTU default values in 'subnet' components (`tn_vxlan`, `vnet` and `tn_init`) are now first gathered from 6G Sandbox sites repository as suggested in issue #78
@@ -25,7 +40,7 @@
 - Modified terraform outputs for all gNB components (`berlin_ran`, `iswireless_radio`, `nokia_radio` and `ueransim`).
 - Components `tn_bastion` and `tn_init` now support the inclusion of additional custom routes, and firewall/NAT exceptions.
 - Component `nokia_radio` renamed the site variables `cp_ip` and `up_ip` to `n2_ip` and `n3_ip` respectively, for coherence with the 5G Core outputs.
-- Software from `open5gs_vm` and `open5gs_k8s` upgraded from version `v2.7.2` to `v2.7.6`. Chart version upgraded from `v2.2.6` to `v2.3.1`.
+- Software from `open5gs_vm` and `open5gs_k8s` upgraded from version `v2.7.2` to `v2.7.6` and `v2.7.5` respectively. Chart version upgraded from `v2.2.6` to `v2.3.1`.
 - Enhanced variable autocompletion on `ueransim`, gathering all UE-related metadata directly from the gNB's linked 5G Core.
 - Component `elcm` now can use external influxdb and grafana instances.
 - Upgraded dockerfile to version `1.15.1` in component `ks8500_runner`.

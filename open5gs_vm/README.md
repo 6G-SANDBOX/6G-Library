@@ -44,7 +44,8 @@ Through variable "one_open5gs_vm_size", five different types of instances can be
 ## Maintainers
 
 - Bjoern Riemer <bjoern.riemer@fokus.fraunhofer.de>
-- Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+- Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
 
 ## Short Description
 
@@ -84,29 +85,31 @@ Through variable `one_open5gs_vm_size`, five different types of instances can be
 | `template_id` | ID of the Open5GS VM template to use in your OpenNebula environment |
 | `image_id` | ID of the Open5GS VM image to use in your OpenNebula environment |
 | `testbed_sim` | Optional: contents of a shell script to provision sim card secrets used in the testbed |
+| `dns` | Optional: Default DNS server to give to the UE's if public variable one_open5gs_vm_dns is unset (default: 8.8.8.8) |
 
 ## Input variables
 
 | Variable | Description | Type | Default | Choices | Required When |
 |----------|-------------|------|---------|---------|----------------|
-| one_open5gs_vm_external_vnet | Virtual Network name asigned to the VM for management purposes. | tn_vxlan or vnet | tn_vxlan | - | false |
-| one_open5gs_vm_internal_vnet | Optional list of 1 or 2 vnets used for interfaces N2 (AMF) and N3 (UPF) respectivelly. | list[tn_vxlan or vnet] | null | - | false |
-| one_open5gs_vm_size | Select one type of instance according to your hardware requirements. | str | - | extra_large, large, medium, small, very_small | true |
-| one_open5gs_vm_amf_n2_ip | IPv4 address of the AMF in the 5G core network. | str | 10.21.12.200 | - | false |
-| one_open5gs_vm_upf_n3_ip | IPv4 address of the UPF in the 5G core network. | str | 10.21.12.201 | - | false |
-| one_open5gs_vm_ue_count | Number of UEs to be provisioned. | int | 20 | - | false |
-| one_open5gs_vm_tac | Tracking Area Code (TAC) | int | 200 | - | false |
-| one_open5gs_vm_mcc | Mobile Country Code (MCC) | str | "001" | - | false |
-| one_open5gs_vm_mnc | Mobile Network Code (MNC) | str | "01" | - | false |
-| one_open5gs_vm_msin | Mobile Subscriber Identification Number (MSIN) | str | "0000000001" | - | false |
-| one_open5gs_vm_key | Permanent Subscription Key of each UE. | str | 465B5CE8B199B49FAA5F0A2EE238A6BC | - | false |
-| one_open5gs_vm_opc | Operator Code (OP or OPC) of each UE. | str | E8ED289DEBA952E4283B54E88E6183CA | - | false |
-| one_open5gs_vm_apn | APN of the initial PDU session. | str | internet | - | false |
-| one_open5gs_vm_s_nssai_sst | SST of the S-NSSAI | int | 1 | - | false |
-| one_open5gs_vm_s_nssai_sd | SD of the S-NSSAI | str | 000001 | - | false |
-| one_open5gs_vm_ue_subnet | Subnet to be used by the UEs. | str | 10.45.0.0/16 | - | false |
-| one_open5gs_vm_use_nightly | Install the Nightly version of Open5GS | bool | false | - | false |
-| one_open5gs_vm_install_webui | Install the Open5GS Web UI | bool | false | - | false |
+| `one_open5gs_vm_external_vnet` | Virtual Network name asigned to the VM for management purposes. | tn_vxlan or vnet | tn_vxlan | - | false |
+| `one_open5gs_vm_internal_vnet` | Optional list of 1 or 2 vnets used for interfaces N2 (AMF) and N3 (UPF) respectivelly. | list[tn_vxlan or vnet] | null | - | false |
+| `one_open5gs_vm_size` | Select one type of instance according to your hardware requirements. | str | - | extra_large, large, medium, small, very_small | true |
+| `one_open5gs_vm_amf_n2_ip` | IPv4 address of the AMF in the 5G core network. | str | 10.21.12.200 | - | false |
+| `one_open5gs_vm_upf_n3_ip` | IPv4 address of the UPF in the 5G core network. | str | 10.21.12.201 | - | false |
+| `one_open5gs_vm_ue_count` | Number of UEs to be provisioned. | int | 20 | - | false |
+| `one_open5gs_vm_tac` | Tracking Area Code (TAC) | int | 200 | - | false |
+| `one_open5gs_vm_mcc` | Mobile Country Code (MCC) | str | "001" | - | false |
+| `one_open5gs_vm_mnc` | Mobile Network Code (MNC) | str | "01" | - | false |
+| `one_open5gs_vm_msin` | Mobile Subscriber Identification Number (MSIN) | str | "0000000001" | - | false |
+| `one_open5gs_vm_key` | Permanent Subscription Key of each UE. | str | 465B5CE8B199B49FAA5F0A2EE238A6BC | - | false |
+| `one_open5gs_vm_opc` | Operator Code (OP or OPC) of each UE. | str | E8ED289DEBA952E4283B54E88E6183CA | - | false |
+| `one_open5gs_vm_apn` | APN of the initial PDU session. | str | internet | - | false |
+| `one_open5gs_vm_s_nssai_sst` | SST of the S-NSSAI | int | 1 | - | false |
+| `one_open5gs_vm_s_nssai_sd` | SD of the S-NSSAI | str | 000001 | - | false |
+| `one_open5gs_vm_ue_subnet` | Subnet to be used by the UEs. | str | 10.45.0.0/16 | - | false |
+| `one_open5gs_vm_use_nightly` | Install the Nightly version of Open5GS | bool | false | - | false |
+| `one_open5gs_vm_install_webui` | Install the Open5GS Web UI | bool | false | - | false |
+| `one_open5gs_vm_dns` | DNS server to give to the UE's. Overrides the site's default | str | false | - | false |
 
 ## Generated terraform outputs
 

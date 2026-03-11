@@ -23,3 +23,4 @@ one_open5gs_vm_upf_n3_ip: "10.10.10.201"
 # one_open5gs_vm_s_nssai_sst: 1
 # one_open5gs_vm_s_nssai_sd: "000001"
 # one_open5gs_vm_use_nightly: false
+# one_open5gs_vm_loglevel: watn

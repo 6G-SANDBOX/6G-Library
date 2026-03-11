@@ -90,7 +90,8 @@ The access time for the device is set to 1h by default, but can be modified
 
 ## Maintainers
 
-- Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+- Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
 - Javier Jimenez <ja.jimenez@uma.es>
 
 ## Short Description
