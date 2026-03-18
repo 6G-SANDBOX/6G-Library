@@ -25,7 +25,6 @@
         tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
         tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
         node_ips: "{{ (terraform_outputs.stdout | from_json)[one_cu_k8s_target + '-node_ips'] }}"
-        open5gs_metadata_dict: "{{ (terraform_outputs.stdout | from_json)[one_cu_open5gs_target + '-5gcore_metadata'] }}"
         domain_name: >-
           {{
             (
@@ -156,8 +155,8 @@
           - key: "{{ entity_name }}-n3_ip"
             value: "{{ one_cu_k8s_n3_ip }}"            
           - key: "{{ entity_name }}-n3_v2_ip"
-            value: "{{ one_cu_k8s_n3_v2_ip }}"              
-
+            value: "{{ one_cu_k8s_n3_v2_ip }}"           
+            
     - name: Set DNS record for the component
       ansible.builtin.uri:
         url: >-
@@ -169,6 +168,10 @@
         method: POST
         body_format: json
         status_code: [200]
+      register: dns_response
+      until: dns_response.status == 200
+      retries: 3
+      delay: 10
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"

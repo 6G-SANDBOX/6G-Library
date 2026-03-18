@@ -7,5 +7,5 @@
 ## Some of them are modifiable through input variables
 ##
 ######################################################
-one_cu_k8s_target: "oneKE-cluster"
+one_open5gs_k8s_isw_target: "oneKE-cluster"
 dockerhub_token: "XXX"

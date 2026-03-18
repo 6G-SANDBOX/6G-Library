@@ -46,10 +46,6 @@ input:
     description: Name of a previously deployed `oneKE` component, where the the CU Helm Chart will be applied. E.g. `oneKE-my_cluster`.
     type: "oneKE"
     required_when: true
-  one_cu_open5gs_target:
-    description: Name of a previously deployed `open5gs` component, which will be connected to the CU. E.g. `open5gs_k8s-my-core`.
-    type: "str"
-    required_when: true
   one_cu_k8s_n3_ip:
     description: |
       The IP address of a cu_k8s User Plane

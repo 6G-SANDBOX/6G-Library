@@ -61,7 +61,6 @@ trial_network:
       - "ric_k8s-demo"
     input:
       one_cu_k8s_target: "oneKE-cluster"
-      one_cu_open5gs_target: "open5gs_k8s-core"
       one_cu_k8s_n3_ip: "10.21.12.203"
       one_cu_k8s_n2_ip: "10.21.12.202"
       one_cu_open5gs_amf_ip: "open5gsk8s-core-amf-ngap.open5gsk8s-core.svc.cluster.local"

@@ -6,9 +6,11 @@
 
 - name: Authenticate in DockerHub and create secret
   ansible.builtin.shell: |
-    helm registry login registry-1.docker.io -u smecina -p {{ dockerhub_token }} && \
-    kubectl create ns {{ helm_release_name }} --kubeconfig /etc/rancher/rke2/rke2.yaml && \
-    kubectl create secret docker-registry regcred --docker-username=smecina --docker-password={{ dockerhub_token }} -n {{ helm_release_name }} --kubeconfig /etc/rancher/rke2/rke2.yaml
+    helm registry login registry-1.docker.io -u smecina -p {{ dockerhub_token }}
+    kubectl create ns {{ helm_release_name }} --dry-run=client -o yaml | kubectl apply -f -
+    kubectl create secret docker-registry regcred --docker-username=smecina --docker-password={{ dockerhub_token }} -n {{ helm_release_name }} --dry-run=client -o yaml | kubectl apply -f -
+  environment:
+    KUBECONFIG: /etc/rancher/rke2/rke2.yaml
 
 - name: Deploy RIC helm
   kubernetes.core.helm:
@@ -21,4 +23,6 @@
     - "/root/{{ helm_release_name }}-values-ric.yaml"
 
 - name: Wait until all pods are Running
-  ansible.builtin.command: "kubectl wait pod --all --for=condition=Ready -n {{ helm_release_name }} --kubeconfig /etc/rancher/rke2/rke2.yaml --timeout=240s"
+  ansible.builtin.command: "kubectl wait pod --all --for=condition=Ready -n {{ helm_release_name }} --timeout=240s"
+  environment:
+    KUBECONFIG: /etc/rancher/rke2/rke2.yaml

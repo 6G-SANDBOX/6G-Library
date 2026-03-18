@@ -24,8 +24,7 @@
         bastion_ip: "{{ (terraform_outputs.stdout | from_json)['tn_bastion-ips'][site_networks_id.default | string] }}"
         tn_routemanager_token: "{{ (terraform_outputs.stdout | from_json)['tn_routemanager_token'] }}"
         tn_dns_token: "{{ (terraform_outputs.stdout | from_json)['tn_dns_token'] }}"
-        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_cu_k8s_target + '-node_ips'] }}"
-        open5gs_metadata_dict: "{{ (terraform_outputs.stdout | from_json)[one_cu_open5gs_target + '-5gcore_metadata'] }}"
+        node_ips: "{{ (terraform_outputs.stdout | from_json)[one_open5gs_k8s_isw_target + '-node_ips'] }}"
         domain_name: >-
           {{
             (
@@ -53,26 +52,13 @@
     - name: Helm install
       vars:
         helm_release_name: "{{ hostvars['localhost']['entity_name'] | regex_replace('_', '') | lower }}"
-      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_install.yaml"
+      ansible.builtin.include_tasks: "{{ workspace }}/{{ component_type }}/code/any/cac/helm_install.yaml"           
 
-# - name: "STAGE 4: Publish execution results"
-#   hosts: localhost
-#   gather_facts: false
-#   connection: local
-#   tasks:       
-#     - name: Set custom terraform outputs for future components
-#       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/custom_tf_outputs.yaml"
-#       vars:
-#         custom_outputs:
-#           - key: "{{ entity_name }}-linked_5gcore"
-#             value: "{{ one_cu_k8s_target }}"
-#           - key: "{{ entity_name }}-n2_ip"
-#             value: "{{ one_cu_k8s_n2_ip }}"
-#           - key: "{{ entity_name }}-n3_ip"
-#             value: "{{ one_cu_k8s_n3_ip }}"            
-#           - key: "{{ entity_name }}-n3_v2_ip"
-#             value: "{{ one_cu_k8s_n3_v2_ip }}"              
-
+- name: "STAGE 3: Manipulate tn_bastion in order to enable communication to the component"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
     - name: Set DNS record for the component
       ansible.builtin.uri:
         url: >-
@@ -84,6 +70,10 @@
         method: POST
         body_format: json
         status_code: [200]
+      register: dns_response
+      until: dns_response.status == 200
+      retries: 3
+      delay: 10
 
     - name: Publish execution results to TNLCM and S3 object storage
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/publish_ok_results.yaml"
