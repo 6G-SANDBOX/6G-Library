@@ -31,7 +31,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     driver   = "qcow2"
   }
 
-{% for network in one_cyperf_agent_networks %}
+{% for network in one_rictest_agent_networks %}
   nic {
     model           = "virtio"
     network_id      = opennebula_virtual_network.{{ network }}.id
