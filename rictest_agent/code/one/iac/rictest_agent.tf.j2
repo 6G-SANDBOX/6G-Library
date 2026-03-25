@@ -6,6 +6,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   template_id = {{ template_id }}
   cpu         = {{ one_rictest_agent_cpu }}
   vcpu        = {{ one_rictest_agent_cpu }}
+  memory      = {{ one_memory }}
 
   {% if one_opennebula_host is defined %}
   sched_requirements = "ID = {{ one_opennebula_host }}"
