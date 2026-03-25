@@ -8,8 +8,8 @@
 ##
 ######################################################
 
-one_cyperf_agent_cpu: 1
-one_cyperf_agent_memory: 8192
-one_cyperf_agent_disk: 20480
-one_cyperf_agent_networks: 
+one_rictest_agent_cpu: 1
+one_rictest_agent_memory: 8192
+one_rictest_agent_disk: 20480
+one_rictest_agent_networks: 
   - tn_vxlan
