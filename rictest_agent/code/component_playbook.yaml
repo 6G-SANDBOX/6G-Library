@@ -121,11 +121,11 @@
   hosts: bastion
   gather_facts: false
   tasks:
-    - name: Write firewall exception for the cyperf Controller
+    - name: Write firewall exception for the RICTtest Middleware
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
       vars:
         fw_exceptions:
-          - "{{ hostvars.localhost.site_available_components.rictest_agent.cyperf_controller_ip | default('') }}"
+          - "{{ hostvars.localhost.site_available_components.rictest_agent.rictest_middleware_ip | default('') }}"
 
 
 - name: "STAGE 5: Publish execution results"
