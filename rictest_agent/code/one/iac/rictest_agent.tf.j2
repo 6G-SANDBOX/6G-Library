@@ -5,7 +5,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   name        = "{{ tn_id }}-{{ entity_name }}"
   template_id = {{ template_id }}
   cpu         = {{ one_rictest_agent_cpu }}
-  vcpu        = {{ one_rictest_agent_cpu }}
+  vcpu        = {{ one_rictest_agent_vcpu }}
   memory      = {{ one_memory }}
 
   {% if one_opennebula_host is defined %}

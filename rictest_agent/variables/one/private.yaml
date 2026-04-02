@@ -9,6 +9,7 @@
 ######################################################
 
 one_rictest_agent_cpu: 1
+one_rictest_agent_vcpu: 4
 one_rictest_agent_memory: 8192
 one_rictest_agent_disk: 32774
 one_rictest_agent_networks: 
