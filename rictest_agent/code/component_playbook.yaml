@@ -126,6 +126,30 @@
         cmd: dbus-uuidgen --ensure
       changed_when: true
       become: true 
+    
+    - name: Remove node id
+      ansible.builtin.file:
+        path: /etc/portmanager/node_id.txt
+        state: absent
+      become: true
+
+    - name: Remove tmp node id
+      ansible.builtin.file:
+        path: /tmp/keysight/portmanager/node_id.txt
+        state: absent
+      become: true
+
+    - name: Remove portmanager db
+      ansible.builtin.file:
+        path: /etc/portmanager/portmanager.db
+        state: absent
+      become: true
+
+    - name: Restart port-manager
+      ansible.builtin.systemd:
+        name: port-manager
+        state: restarted
+      become: true
 
     - name: Execute bash script to register the Agent with the Middleware
       ansible.builtin.shell: |
