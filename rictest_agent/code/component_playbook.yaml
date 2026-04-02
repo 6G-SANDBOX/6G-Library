@@ -106,6 +106,27 @@
       loop:
         - "{{ hostvars['localhost'].get('tn_ssh_public_key', '') }}"
 
+    - name: Remove existing machine-id files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /etc/machine-id
+        - /var/lib/dbus/machine-id
+      become: true
+
+    - name: Generate new machine-id
+      ansible.builtin.command:
+        cmd: systemd-machine-id-setup
+      changed_when: true
+      become: true
+
+    - name: Ensure D-Bus UUID is generated
+      ansible.builtin.command:
+        cmd: dbus-uuidgen --ensure
+      changed_when: true
+      become: true 
+
     - name: Execute bash script to register the Agent with the Middleware
       ansible.builtin.shell: |
         set -o pipefail
