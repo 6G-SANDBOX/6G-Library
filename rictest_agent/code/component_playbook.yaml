@@ -161,6 +161,17 @@
         middleware_ip: "{{ hostvars.localhost.site_available_components.rictest_agent.rictest_middleware_ip | default('') }}"
       become: true
       changed_when: false
+    
+    - name: Load Docker image 1
+      ansible.builtin.command:
+        cmd: docker load -i /home/ixia/mlb08Sept2025Latest4_4.tar.gz
+      become: true
+
+    - name: Load Docker image 2
+      ansible.builtin.command:
+        cmd: docker load -i /home/ixia/o1ftLatest10July2025.tar.gz
+      become: true
+
 
 - name: "STAGE 4: Access tn_bastion to set firewall exceptions"
   hosts: bastion
