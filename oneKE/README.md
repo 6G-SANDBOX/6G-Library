@@ -10,9 +10,9 @@ The cluster includes 6 virtual machines: `vnf_0`, `master_0`, `worker_0`, `stora
 
 ## Maintainers
 
-- Jesus Macias Portela <jesus.maciasportela@telefonica.com>
 - Ana Isabel Lara García <anaisabel.laragarcia@telefonica.com>
-- Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+- Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
 
 ## Short Description
 

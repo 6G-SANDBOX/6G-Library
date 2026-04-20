@@ -7,7 +7,8 @@ KS8500 Runner does not require any additional license. The users have to be a me
 ## Maintainers:
 - Torsten Iversen <torsten.iversen@keysight.com>
 - The Dao <the.dao@keysight.com>
-- Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+- Raúl Luzón González <raul.luzongonzalez@telefonica.com>
+- Raúl Macián Castillo <raul.maciancastillo@telefonica.com>
 ## Short_description: 
 Deploys a VM with KS8500 Runner
 ## Long_description:

@@ -1,6 +1,8 @@
 # Changelog
 
 ## unreleased
+### Added
+- The DNS server which is send to the UE's can now be configured using a site variable or a public variable.
 ### Fixed
 - Fixed Helm charts not being able to pull mongodb image. Chart version upgraded from `v2.3.1` to `v2.3.3`.
 

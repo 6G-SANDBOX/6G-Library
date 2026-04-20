@@ -13,7 +13,6 @@
 ####################################
 metadata:
   maintainers:
-    - Jesus Macias Portela <jesus.maciasportela@telefonica.com>
     - Francisco Luque Schempp <schempp@uma.es>
   short_description: Enables the capability of using TSN endpoints in the Trial Network.
   long_description: |

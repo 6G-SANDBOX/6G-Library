@@ -55,7 +55,12 @@
     - name: Add new VM to an SSH config file ment to be usable by the experimenter
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
-
+    # install passlib  
+    - name: Install Passlib
+      ansible.builtin.pip:
+        name: passlib
+        state: present
+  
 - name: "STAGE 3: Apply CAC to prepare the component"
   vars:
     ks8500runner_mounts:
@@ -64,7 +69,11 @@
       - Settings
       - Storage
       - OpentapImages
-    ks8500runner_path: /opt/KS8500Runner
+    home_path: /home/jenkins
+    ks8500runner_path: "{{ home_path }}/runner"
+    runner_dir: "{{ home_path }}/runner"   # change if you prefer another location
+    zip_path: "{{ runner_dir }}/opentap.zip"
+    opentap_url: "https://packages.opentap.io/4.0/Objects/Packages/OpenTAP?os=Linux&architecture=x64"
   hosts: "ks8500runner"
   gather_facts: false
   tasks:
@@ -86,121 +95,119 @@
         - "{{ hostvars['localhost'].get('site_admin_ssh_public_key', '') }}"
       when: item != ''
 
-    # Install additional packages
-    - name: Install additional required packages
+    #- name: Ensure sudo package is installed
+    #  become: true
+    #  ansible.builtin.package:
+    #    name: sudo
+    #    state: present
+
+    - name: Set admin group based on OS family
+      set_fact:
+        admin_group: sudo    
+
+    - name: Ensure admin group exists
+      become: true
+      ansible.builtin.group:
+        name: "{{ admin_group }}"
+        state: present
+
+    - name: Enable admin group in sudoers
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        regexp: "^%{{ admin_group }}"
+        line: "%{{ admin_group }} ALL=(ALL) ALL"
+        state: present
+        validate: "visudo -cf %s"
+
+    - name: Create new user for experimenter access
+      become: true
+      ansible.builtin.user:
+        name: tnuser
+        shell: /bin/bash
+        groups: "{{ admin_group }}"
+        append: yes
+        password: "{{ 'keysight' | password_hash('sha256') }}"
+        update_password: on_create
+
+    # add public key to authorized keys list in tnuser
+    - name: Set site ssh key as authorized in tnuser
+      become: true
+      ansible.posix.authorized_key:
+        user: tnuser
+        state: present
+        key: "{{ item }}"
+      loop:
+        - "{{ hostvars['localhost']['tn_ssh_public_key']}}"
+      when: item != ''  
+      
+    - name: Ensure tnuser has sudo privileges
+      become: true
+      ansible.builtin.user:
+        name: tnuser
+        groups: sudo        # or wheel on some systems
+        append: yes
+    
+    - name: Update apt cache
+      become: true
+      ansible.builtin.apt:
+        update_cache: yes
+   
+    - name: Wait for APT lock to be released
+      become: true
+      ansible.builtin.shell: |
+        while fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do
+          echo "APT lock detected, waiting..."
+          sleep 30
+        done
+      changed_when: false
+     
+    - name: Install Python 3 and related packages
       become: true
       ansible.builtin.package:
         name:
-          - py3-pip
-          - py3-requests
-          - docker
-          - docker-cli-buildx
-          - docker-compose
-          - openrc
-          - docker-cli-compose
+          - python3-pip
+          - python3-requests
+          - tshark 
+          - libcap2-bin
         state: present
+        
+    - name: Ensure Wireshark config directory exists for jenkins
+      file:
+        path: /home/jenkins/.config/wireshark
+        state: directory
+        mode: '0755'
+        
+    - name: Copy Wireshark preferences file to jenkins (remote) 
+      ansible.builtin.copy:
+        src: all/runner/preferences          
+        dest: /home/jenkins/.config/wireshark/preferences  # Path on the remote
+        mode: '0644'
+
+    - name: Copy Wireshark preferences file to system wide (remote)
+      ansible.builtin.copy:
+        src: all/runner/preferences          
+        dest: /etc/wireshark/preferences  # Path on the remote
+        owner: root
+        group: root
+        mode: '0644'
+      become: true 
 
     # Detect if required network connectivity is available for the runner
     # Curl returns error if we cannot connect, should cause ansible script to terminate
     - name: Verify connectivity
-      ansible.builtin.shell: curl https://6g-sandbox.automation.keysight.com/index.html
+      ansible.builtin.shell: curl "{{ks8500runner_backend_url}}/index.html"
 
-    # - name: Get os info
-    #   command: cat /etc/os-release
-    #   register: os_info
+    - name: install ms dotnet required by opentap 
+      ansible.builtin.include_tasks: install_dotnet.yaml  
 
-    # - name: List os info
-    #   debug:
-    #     msg: "{{ os_info.stdout }}"
-
-    - name: Enable docker service
-      ansible.builtin.service:
-        name: docker
-        state: started
-        enabled: true
-      become: true
-
-    - name: Delete runner data
-      ansible.builtin.include_tasks: special_action_delete_runner_data.yaml
-      when: ks8500runner_special_action is defined and ks8500runner_special_action == "delete_runner_data"
-
-    - name: Create runner dirs
-      ansible.builtin.file:
-        path: "{{ ks8500runner_path }}/{{ item }}"
-        state: directory
-        mode: '0700'
-      loop: "{{ ks8500runner_mounts }}"
-      become: true
-
-    - name: Deploy runner configuration
-      ansible.builtin.copy:
-        src: "{{ playbook_dir }}/all/runner/"
-        dest: "{{ ks8500runner_path }}"
-      become: true
-
-    - name: Build runner image
-      community.docker.docker_image_build:
-        name: ks8500_runner:latest
-        path: "{{ ks8500runner_path }}"
-        dockerfile: Dockerfile
-      become: true
-
-    - name: Create mount list
-      ansible.builtin.set_fact:
-        mount_list: '{{ (mount_list|default([])) + [{"target": "/opt/tap/" + item, "source": "{{ ks8500runner_path }}/" + item, "type": "bind" }] }}'
-      loop: "{{ ks8500runner_mounts }}"
-      become: true
-
-    # The microsoft base image uses this UID. Maybe we can find a better solution.
-    - name: Workaround permissions
-      ansible.builtin.shell: "chown -R 1654:1654 {{ ks8500runner_path }}"
-      become: true
-
-    # - name: Storage debug collect
-    #   ansible.builtin.command:
-    #     cmd: "ls -lR {{ ks8500runner_path }}"
-    #   register: storage_debug
-    #   become: true
-
-    # - name: Storage debug out
-    #   ansible.builtin.debug:
-    #     var: storage_debug.stdout_lines
-
-    - name: Check if the registration file exists
-      ansible.builtin.stat:
-        path: "{{ ks8500runner_path }}/Config/runner.lic"
-      register: registration_file
-      become: true
-
-    - name: Register runner
-      community.docker.docker_container:
-        image: ks8500_runner
-        name: register-runner
-        mounts: "{{ mount_list }}"
-        entrypoint: ""
-        detach: false
-        working_dir: "{{ ks8500runner_path }}"
-        command: /opt/tap/tap runner register --name {{ ks8500runner_name }} --url {{ ks8500runner_backend_url }} --token {{ ks8500runner_registration_token }}
-      register: docker_container_output
-      when: not registration_file.stat.exists
-      become: true
-
-    - name: Start runner
-      community.docker.docker_compose_v2:
-        project_src: "{{ ks8500runner_path }}"
-      become: true
-
-    - name: Add registration_info if not available
-      ansible.builtin.set_fact:
-        ks8500runner_registration_info: "Registration not performed (already registered)"
-      when: docker_container_output.container.Output is undefined
-
-    - name: Add registration_info if available
-      ansible.builtin.set_fact:
-        ks8500runner_registration_info: "{{ docker_container_output.container.Output }}"
-      when: docker_container_output.container.Output is defined
-
-
+    - name: install opentap package and deploy runner 
+      ansible.builtin.include_tasks: deploy_ks8500runner.yaml   
+    
+    - name: install Keysight IOLibrary 
+      ansible.builtin.include_tasks: post_action_install_keysight_iolibrary.yaml
+      when: ks8500runner_post_action is defined and ks8500runner_post_action == "install_keysight_iolibrary"     
+      
 - name: "STAGE 4: Access tn_bastion to set firewall exceptions"
   hosts: bastion
   gather_facts: false
