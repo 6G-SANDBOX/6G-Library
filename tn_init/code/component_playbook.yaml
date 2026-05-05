@@ -66,7 +66,7 @@
     - name: Wait again until one-appliance contextualization scripts have finished
       ansible.builtin.command: sudo grep -q bootstrap_success /etc/one-appliance/status
       retries: 30
-      delay: 10
+      delay: 15
       register: result
       until: result.rc == 0
     ### Calling load_variables.yaml is unnecesary, as I can call localhost values with hostvars['localhost']['var_name'] or hostvars['localhost'].var_name"
