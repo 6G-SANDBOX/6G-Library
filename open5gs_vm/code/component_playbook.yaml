@@ -69,7 +69,7 @@
       ansible.builtin.add_host:
         hostname: "open5gs_vm"
         ansible_host: "{{ ips[access_vnet_id] }}"
-        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }} -o KexAlgorithms=curve25519-sha256"
         ansible_user: "jenkins"
 
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
