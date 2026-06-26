@@ -92,6 +92,21 @@
   hosts: "open5gs_vm"
   gather_facts: false
   tasks:
+      - name: Wait for port 22 to be open
+      ansible.builtin.wait_for:
+        host: "{{ ansible_host }}"
+        port: 22
+        timeout: 300
+      delegate_to: localhost
+
+    - name: Check disk and tmp on VM
+      ansible.builtin.shell: "df -h && mount | grep tmp"
+      register: vm_status
+
+    - name: Show disk and tmp status
+      ansible.builtin.debug:
+        msg: "{{ vm_status.stdout }}"
+
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
         delay: 60
