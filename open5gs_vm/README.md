@@ -2,7 +2,7 @@
 
 The **open5gs_vm** 6G-Library component deploys a 5G SA Core inside an Ubuntu VM using scripts.
 Current versions:
-- Open5GS v2.7.6
+- Open5GS v2.8.0
 
 > [!NOTE]  
 > The VM needs a CPU architecture with the vmx instructions set.
@@ -54,7 +54,7 @@ Deploys a Open5GS as a standalone Virtual Machine
 ## Long Description
 
 Deploys a Open5GS over a general-purpose Virtual Machine based on Ubuntu 22.04 LTS.  
-The automation installs Open5GS version 2.7.6 and MongoDB on it.  
+The automation installs Open5GS version 2.8.0 and MongoDB on it.  
 Through variable `one_open5gs_vm_size`, five different types of instances can be deployed:
 
 - **extra_large**: 32 GiB of memory, 8 vCPU and 100GiB of storage  
