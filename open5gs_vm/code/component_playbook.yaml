@@ -92,7 +92,7 @@
   hosts: "open5gs_vm"
   gather_facts: false
   tasks:
-      - name: Wait for port 22 to be open
+    - name: Wait for port 22 to be open
       ansible.builtin.wait_for:
         host: "{{ ansible_host }}"
         port: 22
