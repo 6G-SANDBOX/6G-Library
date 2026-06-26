@@ -69,8 +69,16 @@
       ansible.builtin.add_host:
         hostname: "open5gs_vm"
         ansible_host: "{{ ips[access_vnet_id] }}"
-        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }} -o KexAlgorithms=curve25519-sha256"
         ansible_user: "jenkins"
+        ansible_ssh_private_key_file: /var/lib/jenkins/.ssh/id_ed25519
+        ansible_ssh_transfer_method: piped
+        ansible_ssh_common_args: >-
+          -F /dev/null
+          -o ProxyCommand="ssh -W %h:%p -i /var/lib/jenkins/.ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o KexAlgorithms=curve25519-sha256 jenkins@{{ bastion_ip }}"
+          -o IdentityFile=/var/lib/jenkins/.ssh/id_ed25519
+          -o KexAlgorithms=curve25519-sha256
+          -o StrictHostKeyChecking=no
+          -o UserKnownHostsFile=/dev/null
 
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/jenkins_ssh_config.yaml"
