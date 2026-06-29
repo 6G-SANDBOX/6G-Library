@@ -91,7 +91,7 @@
   hosts: localhost
   gather_facts: false
   connection: local
-    tasks:
+  tasks:
     - name: Wait for port 22 to be open via bastion
       ansible.builtin.shell: |
         for i in $(seq 1 60); do
