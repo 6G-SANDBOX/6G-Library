@@ -111,7 +111,7 @@
       register: port_check
       changed_when: false
 
-      - name: Configure KexAlgorithms on bastion
+    - name: Configure KexAlgorithms on bastion
       ansible.builtin.shell: |
         ssh -F /dev/null \
           -i /var/lib/jenkins/.ssh/id_ed25519 \
