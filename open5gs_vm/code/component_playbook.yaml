@@ -110,6 +110,17 @@
         exit 1
       register: port_check
       changed_when: false
+
+      - name: Configure KexAlgorithms on bastion
+      ansible.builtin.shell: |
+        ssh -F /dev/null \
+          -i /var/lib/jenkins/.ssh/id_ed25519 \
+          -o StrictHostKeyChecking=no \
+          -o UserKnownHostsFile=/dev/null \
+          -o ConnectTimeout=10 \
+          jenkins@{{ bastion_ip }} \
+          "grep -q 'KexAlgorithms curve25519-sha256' /etc/ssh/ssh_config || echo 'KexAlgorithms curve25519-sha256' | sudo tee -a /etc/ssh/ssh_config"
+      changed_when: false
         
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "open5gs_vm"
