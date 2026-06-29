@@ -87,17 +87,21 @@
     - name: Add new VM to an SSH config file ment to be usable by the experimenter
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/tnuser_ssh_config.yaml"
 
-
+- name: "STAGE 2.5: Wait for VM to be reachable"
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Wait for port 22 to be open
+      ansible.builtin.wait_for:
+        host: "{{ hostvars['open5gs_vm']['ansible_host'] }}"
+        port: 22
+        timeout: 300
+        
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "open5gs_vm"
   gather_facts: false
   tasks:
-    - name: Wait for port 22 to be open
-      ansible.builtin.wait_for:
-        host: "{{ ansible_host }}"
-        port: 22
-        timeout: 300
-      delegate_to: localhost
 
     - name: Check disk and tmp on VM
       ansible.builtin.shell: "df -h && mount | grep tmp"
