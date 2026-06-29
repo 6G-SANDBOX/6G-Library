@@ -73,6 +73,7 @@
         ansible_ssh_private_key_file: /var/lib/jenkins/.ssh/id_ed25519
         ansible_ssh_common_args: >-
           -F /dev/null
+          -o ControlMaster=no
           -o ProxyCommand="ssh -W %h:%p -i /var/lib/jenkins/.ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o KexAlgorithms=curve25519-sha256 jenkins@{{ bastion_ip }}"
           -o IdentityFile=/var/lib/jenkins/.ssh/id_ed25519
           -o KexAlgorithms=curve25519-sha256
@@ -88,6 +89,8 @@
 - name: "STAGE 2.5: Wait for VM to be reachable"
   hosts: localhost
   gather_facts: false
+  vars:
+    ansible_pipelining: true
   connection: local
   tasks:
     - name: Wait for port 22 to be open via bastion
