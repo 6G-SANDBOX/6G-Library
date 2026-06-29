@@ -91,12 +91,25 @@
   hosts: localhost
   gather_facts: false
   connection: local
-  tasks:
-    - name: Wait for port 22 to be open
-      ansible.builtin.wait_for:
-        host: "{{ hostvars['open5gs_vm']['ansible_host'] }}"
-        port: 22
-        timeout: 300
+    tasks:
+    - name: Wait for port 22 to be open via bastion
+      ansible.builtin.shell: |
+        for i in $(seq 1 60); do
+          ssh -F /dev/null \
+            -i /var/lib/jenkins/.ssh/id_ed25519 \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -o KexAlgorithms=curve25519-sha256 \
+            -o ConnectTimeout=5 \
+            -o BatchMode=yes \
+            -o ProxyCommand="ssh -W %h:%p -i /var/lib/jenkins/.ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o KexAlgorithms=curve25519-sha256 jenkins@{{ bastion_ip }}" \
+            jenkins@{{ hostvars['open5gs_vm']['ansible_host'] }} \
+            echo OK 2>/dev/null && exit 0
+          sleep 5
+        done
+        exit 1
+      register: port_check
+      changed_when: false
         
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "open5gs_vm"
