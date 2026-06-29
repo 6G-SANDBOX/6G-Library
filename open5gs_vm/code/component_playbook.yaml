@@ -126,6 +126,8 @@
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "open5gs_vm"
   gather_facts: false
+  vars:
+    ansible_pipelining: true
   tasks:
   
     - name: Wait for system to become reachable
