@@ -4,6 +4,14 @@
   gather_facts: false
   connection: local
   tasks:
+    - name: Create ansible.cfg to disable SSH multiplexing
+      ansible.builtin.copy:
+        dest: "{{ workspace }}/ansible.cfg"
+        content: |
+          [ssh_connection]
+          ssh_args = -o ControlMaster=no -o ControlPersist=no
+          pipelining = True
+  
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
