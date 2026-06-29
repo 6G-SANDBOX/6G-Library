@@ -126,10 +126,6 @@
   gather_facts: false
   tasks:
 
-    - name: Check disk and tmp on VM
-      ansible.builtin.shell: "df -h && mount | grep tmp"
-      register: vm_status
-
     - name: Show disk and tmp status
       ansible.builtin.debug:
         msg: "{{ vm_status.stdout }}"
