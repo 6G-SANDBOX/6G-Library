@@ -131,10 +131,11 @@
   tasks:
   
     - name: Wait for system to become reachable
-      ansible.builtin.wait_for_connection:
-        delay: 10
-        connect_timeout: 5
-        timeout: 200
+      ansible.builtin.shell: echo OK
+      register: result
+      until: result.rc == 0
+      retries: 40
+      delay: 5
 
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
