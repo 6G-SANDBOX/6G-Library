@@ -1,0 +1,30 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: 
+      one_vxlan_first_ip: "192.168.106.1"
+      one_vxlan_address_size: 254
+      one_bastion_vpn_clients: 10
+      one_bastion_routemanager_add:
+        - to: "10.2.1.0/24"
+          dev: "wg0"
+  vnet-n2:
+    type: "vnet"
+    name: "n2"
+    dependencies: 
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.6.1.1"
+      one_vnet_netmask: 24
+      one_vnet_address_size: 254
+  srs_open5gs-n2:
+    type: "srs_open5gs"
+    name: "n2"
+    dependencies:
+      - "vnet-n2"
+    input:
+      one_opennebula_host: 16
+      one_srs_open5gs_networks:
+        - "tn_vxlan"
+        - "vnet-n2"
