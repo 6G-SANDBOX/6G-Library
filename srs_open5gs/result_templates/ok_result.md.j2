@@ -1,0 +1,18 @@
+# {{ tn_id }}-{{ entity_name}}
+
+The component `{{ tn_id }}-{{ entity_name }}` has been succesfully created.
+
+It consists of an Cyperf Agent Virtual Machine 
+
+## Important information:
+
+- **OpenNebula VM ID**: `{{ id }}`
+- **VM memory**: `{{ one_srs_open5gs_memory}} MiB`
+- **VM VCPUs**: `{{ one_srs_open5gs_cpu }}`
+- **VM internal storage**: `{{ one_srs_open5gs_disk}} MiB`
+- **VM IP addresses**:
+{% for ip_list in ips.values() %}
+{% for ip in ip_list %}
+  - `{{ ip }}`
+{% endfor %}
+{% endfor %}

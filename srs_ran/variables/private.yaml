@@ -1,0 +1,16 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_srs_ran_cpu: 4
+one_srs_ran_vcpu: 6
+one_srs_ran_memory: 4096
+one_srs_ran_disk: 20480
+one_srs_ran_networks: 
+  - tn_vxlan

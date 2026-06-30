@@ -1,0 +1,16 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_srs_ue_cpu: 2
+one_srs_ue_vcpu: 2
+one_srs_ue_memory: 2048
+one_srs_ue_disk: 20480
+one_srs_ue_networks: 
+  - tn_vxlan
