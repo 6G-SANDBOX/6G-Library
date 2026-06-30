@@ -11,6 +11,6 @@
 one_srs_open5gs_cpu: 3
 one_srs_open5gs_vcpu: 2
 one_srs_open5gs_memory: 2048
-one_srs_open5gs_disk: 20480
+one_srs_open5gs_disk: 20584
 one_srs_open5gs_networks: 
   - tn_vxlan
