@@ -38,7 +38,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   }
 {% endfor %}
 
-  depends_on = [ opennebula_virtual_network_address_open5gsge.tn_vxlan ]
+  depends_on = [ opennebula_virtual_network_address_range.tn_vxlan ]
   
 }
 
