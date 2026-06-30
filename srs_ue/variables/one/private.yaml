@@ -11,6 +11,6 @@
 one_srs_ue_cpu: 2
 one_srs_ue_vcpu: 2
 one_srs_ue_memory: 2048
-one_srs_ue_disk: 20480
+one_srs_ue_disk: 20609
 one_srs_ue_networks: 
   - tn_vxlan
