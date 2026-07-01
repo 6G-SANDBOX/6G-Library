@@ -2,11 +2,17 @@
 - name: Run every task as root user
   become: true
   block:
+    - name: Stop unattended-upgrades to release dpkg lock
+      ansible.builtin.systemd:
+        name: unattended-upgrades
+        state: stopped
+      failed_when: false
+
     - name: Wait for dpkg lock to be released
       ansible.builtin.wait_for:
         path: /var/lib/dpkg/lock-frontend
         state: absent
-        timeout: 300
+        timeout: 60
 
     - name: Render netplan aliases
       ansible.builtin.template:
