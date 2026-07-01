@@ -2,6 +2,12 @@
 - name: Run every task as root user
   become: true
   block:
+    - name: Wait for dpkg lock to be released
+      ansible.builtin.wait_for:
+        path: /var/lib/dpkg/lock-frontend
+        state: absent
+        timeout: 300
+
     - name: Render netplan aliases
       ansible.builtin.template:
         src: "{{ workspace }}/{{ component_type }}/code/{{ site_hypervisor }}/cac/02_install/templates/99-netplan-aliases.yaml.j2"
