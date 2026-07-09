@@ -56,7 +56,14 @@
       ansible.builtin.add_host:
         hostname: "int_p4_switch_{{ item.key }}"
         ansible_host: "{{ item.value[switch_first_vnet_id] }}"
-        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_ssh_common_args: >-
+          -F /dev/null
+          -o ControlMaster=no
+          -o ProxyCommand="ssh -i /var/lib/jenkins/.ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o KexAlgorithms=curve25519-sha256 -o BatchMode=yes jenkins@{{ bastion_ip }} nc %h %p"
+          -o IdentityFile=/var/lib/jenkins/.ssh/id_ed25519
+          -o KexAlgorithms=curve25519-sha256
+          -o StrictHostKeyChecking=no
+          -o UserKnownHostsFile=/dev/null
         ansible_user: "jenkins"
       loop: "{{ switch_ips | dict2items }}"
 
@@ -65,7 +72,14 @@
       ansible.builtin.add_host:
         hostname: "int_p4_collector"
         ansible_host: "{{ collector_ips[collector_first_vnet_id] }}"
-        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_ssh_common_args: >-
+          -F /dev/null
+          -o ControlMaster=no
+          -o ProxyCommand="ssh -i /var/lib/jenkins/.ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o KexAlgorithms=curve25519-sha256 -o BatchMode=yes jenkins@{{ bastion_ip }} nc %h %p"
+          -o IdentityFile=/var/lib/jenkins/.ssh/id_ed25519
+          -o KexAlgorithms=curve25519-sha256
+          -o StrictHostKeyChecking=no
+          -o UserKnownHostsFile=/dev/null
         ansible_user: "jenkins"
 
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
