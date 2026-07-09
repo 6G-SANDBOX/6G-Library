@@ -10,7 +10,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     NETCFG_TYPE =    "interfaces"
     SET_HOSTNAME =   "$NAME"
     USERNAME =       "jenkins"
-    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
+    SSH_PUBLIC_KEY = "{{ jenkins_ssh_public_key }}"
   }
 
 {% for network in one_upf_p4_sw_networks %}

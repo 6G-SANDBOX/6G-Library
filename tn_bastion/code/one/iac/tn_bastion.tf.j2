@@ -12,7 +12,7 @@ resource "opennebula_virtual_machine" "tn_bastion" {
     NETCFG_TYPE =    "interfaces"
     SET_HOSTNAME =   "$NAME"
     USERNAME =       "jenkins"
-    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
+    SSH_PUBLIC_KEY = "{{ jenkins_ssh_public_key }}"
     TOKEN = "YES"
     ONEAPP_BASTION_DNS_PASSWORD =          ""
     ONEAPP_BASTION_DNS_FORWARDERS =        "{{ site_dns | default('8.8.8.8,1.1.1.1') }}"

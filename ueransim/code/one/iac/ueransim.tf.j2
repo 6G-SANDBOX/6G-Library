@@ -12,7 +12,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     NETCFG_TYPE =    "interfaces"
     SET_HOSTNAME =   "$NAME"
     USERNAME =       "jenkins"
-    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
+    SSH_PUBLIC_KEY = "{{ jenkins_ssh_public_key }}"
 {% if one_ueransim_mode in ['gnb', 'both'] %}
     ONEAPP_UERANSIM_RUN_GNB = "{% if one_ueransim_run_gnb %}YES{% else %}NO{% endif %}"
     ONEAPP_UERANSIM_GNB_AMF_IP = "{{ one_ueransim_gnb_amf_n2_ip }}"

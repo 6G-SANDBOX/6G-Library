@@ -12,7 +12,7 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     NETCFG_TYPE =    "interfaces"
     SET_HOSTNAME =   "$NAME"
     USERNAME =       "jenkins"
-    SSH_PUBLIC_KEY = "$USER[SSH_PUBLIC_KEY]"
+    SSH_PUBLIC_KEY = "{{ jenkins_ssh_public_key }}"
     ONEAPP_MONGODB_VERSION =        "{{ one_mongodb_version }}"
     ONEAPP_MONGODB_USER =           "{{ one_mongodb_user }}"
     ONEAPP_MONGODB_PASSWORD =       "{{ one_mongodb_password }}"
