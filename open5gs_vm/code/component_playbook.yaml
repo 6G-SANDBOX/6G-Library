@@ -75,7 +75,7 @@
         ansible_ssh_common_args: >-
           -F /dev/null
           -o ControlMaster=no
-          -o ProxyCommand="ssh -W %h:%p -i /var/lib/jenkins/.ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o KexAlgorithms=curve25519-sha256 jenkins@{{ bastion_ip }}"
+          -o ProxyCommand="ssh -W %h:%p -i /var/lib/jenkins/.ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o KexAlgorithms=curve25519-sha256 -o BatchMode=yes jenkins@{{ bastion_ip }}"
           -o IdentityFile=/var/lib/jenkins/.ssh/id_ed25519
           -o KexAlgorithms=curve25519-sha256
           -o StrictHostKeyChecking=no
