@@ -128,7 +128,7 @@
   hosts: "open5gs_vm"
   gather_facts: false
   vars:
-    ansible_pipelining: true
+    ansible_pipelining: false
   tasks:
   
     - name: Wait for system to become reachable
