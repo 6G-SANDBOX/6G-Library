@@ -132,7 +132,7 @@
   tasks:
   
     - name: Wait for system to become reachable
-      ansible.builtin.shell: echo OK
+      ansible.builtin.raw: echo OK
       register: result
       until: result.rc == 0
       retries: 40
