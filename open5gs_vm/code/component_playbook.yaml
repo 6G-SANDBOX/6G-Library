@@ -77,6 +77,7 @@
           -o KexAlgorithms=curve25519-sha256
           -o StrictHostKeyChecking=no
           -o UserKnownHostsFile=/dev/null
+        ansible_pipelining: true
         ansible_user: "jenkins"
 
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes

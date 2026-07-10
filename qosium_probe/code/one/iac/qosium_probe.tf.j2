@@ -14,8 +14,8 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     USERNAME = "jenkins"
     SSH_PUBLIC_KEY = "{{ jenkins_ssh_public_key }}"
     # Disable unattended-upgrades at first boot to prevent sshd restarts during Ansible provisioning
-    # Script: systemctl stop/mask unattended-upgrades apt-daily-upgrade apt-daily
-    START_SCRIPT_BASE64 = "IyEvYmluL2Jhc2gKc3lzdGVtY3RsIHN0b3AgdW5hdHRlbmRlZC11cGdyYWRlcyBhcHQtZGFpbHktdXBncmFkZSBhcHQtZGFpbHkgMj4vZGV2L251bGwgfHwgdHJ1ZQpzeXN0ZW1jdGwgbWFzayB1bmF0dGVuZGVkLXVwZ3JhZGVzIGFwdC1kYWlseS11cGdyYWRlIGFwdC1kYWlseSAyPi9kZXYvbnVsbCB8fCB0cnVlCg=="
+    # Script: systemctl stop/mask unattended-upgrades apt-daily-upgrade apt-daily and their timers and their timers
+    START_SCRIPT_BASE64 = "IyEvYmluL2Jhc2gKc3lzdGVtY3RsIHN0b3AgdW5hdHRlbmRlZC11cGdyYWRlcyBhcHQtZGFpbHktdXBncmFkZSBhcHQtZGFpbHkgMj4vZGV2L251bGwgfHwgdHJ1ZQpzeXN0ZW1jdGwgbWFzayB1bmF0dGVuZGVkLXVwZ3JhZGVzIGFwdC1kYWlseS11cGdyYWRlIGFwdC1kYWlseSAyPi9kZXYvbnVsbCB8fCB0cnVlCnN5c3RlbWN0bCBzdG9wIGFwdC1kYWlseS50aW1lciBhcHQtZGFpbHktdXBncmFkZS50aW1lciAyPi9kZXYvbnVsbCB8fCB0cnVlCnN5c3RlbWN0bCBtYXNrIGFwdC1kYWlseS50aW1lciBhcHQtZGFpbHktdXBncmFkZS50aW1lciAyPi9kZXYvbnVsbCB8fCB0cnVlCg=="
   }
 
 {# ### Disabled the possibility to modify VM's size due to a Terraform OpenNebula Provider's error
