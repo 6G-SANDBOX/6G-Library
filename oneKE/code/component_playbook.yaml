@@ -109,7 +109,7 @@
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
         connect_timeout: 5
-        timeout: 200
+        timeout: 600
 
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:

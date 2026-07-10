@@ -13,6 +13,9 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     SET_HOSTNAME =   "$NAME"
     USERNAME =       "jenkins"
     SSH_PUBLIC_KEY = "{{ jenkins_ssh_public_key }}"
+    # Disable unattended-upgrades at first boot to prevent sshd restarts during Ansible provisioning
+    # Script: systemctl stop/mask unattended-upgrades apt-daily-upgrade apt-daily
+    START_SCRIPT_BASE64 = "IyEvYmluL2Jhc2gKc3lzdGVtY3RsIHN0b3AgdW5hdHRlbmRlZC11cGdyYWRlcyBhcHQtZGFpbHktdXBncmFkZSBhcHQtZGFpbHkgMj4vZGV2L251bGwgfHwgdHJ1ZQpzeXN0ZW1jdGwgbWFzayB1bmF0dGVuZGVkLXVwZ3JhZGVzIGFwdC1kYWlseS11cGdyYWRlIGFwdC1kYWlseSAyPi9kZXYvbnVsbCB8fCB0cnVlCg=="
     ONEAPP_GRAFANA_VERSION =   "{{ one_grafana_version }}"
     ONEAPP_GRAFANA_ADMIN_PASSWORD =  "{{ one_grafana_password }}"
   }
