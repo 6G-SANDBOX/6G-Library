@@ -97,6 +97,8 @@
         path: "/tmp/ansible-ssh-{{ ansible_host }}-22-{{ ansible_user }}"
         state: absent
       delegate_to: localhost
+      vars:
+        ansible_connection: local
 
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
