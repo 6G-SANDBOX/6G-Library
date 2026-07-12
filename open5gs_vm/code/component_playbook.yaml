@@ -104,9 +104,16 @@
         connect_timeout: 5
         timeout: 1800
 
-    - name: Stop unattended-upgrades to prevent sshd restart during configuration
+    - name: Mask apt automation to prevent sshd restarts during configuration
       ansible.builtin.shell: |
-        systemctl stop unattended-upgrades apt-daily.service apt-daily-upgrade.service 2>/dev/null || true
+        systemctl mask --now \
+            unattended-upgrades \
+            apt-daily.service \
+            apt-daily-upgrade.service \
+            apt-daily.timer \
+            apt-daily-upgrade.timer \
+            2>/dev/null || true
+        echo '$nrconf{restart} = "l";' > /etc/needrestart/conf.d/00-ansible.conf 2>/dev/null || true
         fuser -k /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock /var/cache/apt/archives/lock 2>/dev/null || true
       become: true
       ignore_unreachable: true

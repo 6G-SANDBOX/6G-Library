@@ -2,9 +2,16 @@
 - name: Run every task as root user
   become: true
   block:
-    - name: Release dpkg lock held by unattended-upgrades or apt
+    - name: Release dpkg lock and suppress apt automation for the install
       ansible.builtin.shell: |
-        systemctl stop unattended-upgrades apt-daily.service apt-daily-upgrade.service 2>/dev/null || true
+        systemctl mask --now \
+            unattended-upgrades \
+            apt-daily.service \
+            apt-daily-upgrade.service \
+            apt-daily.timer \
+            apt-daily-upgrade.timer \
+            2>/dev/null || true
+        echo '$nrconf{restart} = "l";' > /etc/needrestart/conf.d/00-ansible.conf 2>/dev/null || true
         fuser -k /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock /var/cache/apt/archives/lock 2>/dev/null || true
         sleep 2
         dpkg --configure -a 2>/dev/null || true
