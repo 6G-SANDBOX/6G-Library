@@ -107,6 +107,12 @@
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
+    - name: Wait for SSH to stabilize before first remote task
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        delay: 5
+        timeout: 300
+
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
         user: jenkins
