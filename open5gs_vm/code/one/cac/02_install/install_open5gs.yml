@@ -25,6 +25,13 @@
       changed_when: false
       when: netplan_changed.changed
 
+    - name: Wait for SSH to recover after netplan apply
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        timeout: 120
+      become: false
+      when: netplan_changed.changed
+
     - name: Install MongoDB 6
       block:
         - name: Import MongoDB 6 public key
