@@ -104,6 +104,20 @@
         connect_timeout: 5
         timeout: 1800
 
+    - name: Stop unattended-upgrades to prevent sshd restart during configuration
+      ansible.builtin.shell: |
+        systemctl stop unattended-upgrades apt-daily.service apt-daily-upgrade.service 2>/dev/null || true
+        fuser -k /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock /var/cache/apt/archives/lock 2>/dev/null || true
+      become: true
+      ignore_unreachable: true
+      ignore_errors: true
+
+    - name: Wait for SSH to stabilize after stopping unattended-upgrades
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        delay: 5
+        timeout: 300
+
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
