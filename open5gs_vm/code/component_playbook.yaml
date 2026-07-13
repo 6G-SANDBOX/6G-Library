@@ -130,8 +130,8 @@
       changed_when: false
 
    - name: Debug bastion IP
-      ansible.builtin.debug:
-        msg: "Bastion IP: {{ bastion_ip }}"
+     ansible.builtin.debug:
+       msg: "Bastion IP: {{ bastion_ip }}"
         
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "open5gs_vm"
