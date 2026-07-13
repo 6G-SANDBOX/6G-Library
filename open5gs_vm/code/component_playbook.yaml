@@ -129,9 +129,9 @@
           "grep -q 'KexAlgorithms curve25519-sha256' /etc/ssh/ssh_config || echo 'KexAlgorithms curve25519-sha256' | sudo tee -a /etc/ssh/ssh_config"
       changed_when: false
 
-   - name: Debug bastion IP
-     ansible.builtin.debug:
-       msg: "Bastion IP: {{ bastion_ip }}"
+    - name: Debug bastion IP
+      ansible.builtin.debug:
+        msg: "Bastion IP: {{ bastion_ip }}"
         
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "open5gs_vm"
