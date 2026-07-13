@@ -65,6 +65,11 @@
             (terraform_outputs.stdout | from_json)[one_open5gs_vm_internal_vnet[2] + '-id'] | string
             if one_open5gs_vm_internal_vnet | length > 2 else ''
           }}
+          
+    - name: Debug bastion IP
+      ansible.builtin.debug:
+        msg: "Bastion IP from terraform: {{ bastion_ip }}"
+
 
     - name: Add new VM to Ansible Inventory
       ansible.builtin.add_host:
@@ -123,6 +128,10 @@
           jenkins@{{ bastion_ip }} \
           "grep -q 'KexAlgorithms curve25519-sha256' /etc/ssh/ssh_config || echo 'KexAlgorithms curve25519-sha256' | sudo tee -a /etc/ssh/ssh_config"
       changed_when: false
+
+   - name: Debug bastion IP
+      ansible.builtin.debug:
+        msg: "Bastion IP: {{ bastion_ip }}"
         
 - name: "STAGE 3: Apply CAC to prepare the component"
   hosts: "open5gs_vm"
