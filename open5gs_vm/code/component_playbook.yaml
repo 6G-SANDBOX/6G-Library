@@ -84,8 +84,6 @@
           -o KexAlgorithms=curve25519-sha256
           -o StrictHostKeyChecking=no
           -o UserKnownHostsFile=/dev/null
-          -o ServerAliveInterval=10
-          -o ServerAliveCountMax=3
 
 
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
