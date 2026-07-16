@@ -138,6 +138,14 @@
       ansible.builtin.wait_for_connection:
         connect_timeout: 5
         delay: 5
+        timeout: 600
+      ignore_unreachable: true
+      ignore_errors: true
+
+    - name: Confirm SSH is stable before first remote task
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        delay: 5
         timeout: 300
 
     - name: Wait for cloud-init to complete so sshd is no longer restarted
