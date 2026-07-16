@@ -116,7 +116,11 @@
             apt-daily-upgrade.timer \
             2>/dev/null || true
         echo '$nrconf{restart} = "l";' > /etc/needrestart/conf.d/00-ansible.conf 2>/dev/null || true
+        printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d
         fuser -k /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock /var/cache/apt/archives/lock 2>/dev/null || true
+        sleep 2
+        dpkg --configure -a 2>/dev/null || true
+        rm -f /usr/sbin/policy-rc.d
       become: true
       ignore_unreachable: true
       ignore_errors: true
