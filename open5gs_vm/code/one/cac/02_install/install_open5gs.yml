@@ -25,7 +25,16 @@
       ansible.builtin.wait_for_connection:
         connect_timeout: 5
         delay: 5
-        timeout: 120
+        timeout: 600
+      become: false
+      ignore_unreachable: true
+      ignore_errors: true
+
+    - name: Confirm SSH is stable after dpkg configure
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        delay: 5
+        timeout: 300
       become: false
 
     - name: Render netplan aliases
