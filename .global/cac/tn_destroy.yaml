@@ -61,13 +61,13 @@
       ansible.builtin.command:
         cmd: "terraform state rm {{ item.address }}"
         chdir: "{{ workspace }}/.terraform/"
-      loop: "{{ (tf_state_dump.stdout | from_json).values.root_module.resources | default([]) }}"
+      loop: "{{ (tf_state_dump.stdout | from_json)['values']['root_module']['resources'] | default([]) }}"
       loop_control:
         label: "{{ item.address }}"
       when: >-
         stale_ar_vnet_ids | length > 0 and
         item.type == 'opennebula_virtual_network_address_range' and
-        (item.values.virtual_network_id | string) in stale_ar_vnet_ids
+        (item['values']['virtual_network_id'] | string) in stale_ar_vnet_ids
       ignore_errors: true
 
     - name: Run 'terraform apply' a second time. Command should now succeed
