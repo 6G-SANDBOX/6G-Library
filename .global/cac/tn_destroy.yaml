@@ -32,6 +32,44 @@
         state: "present"
         force_init: true
       ignore_errors: true
+      register: first_apply_result
+
+    # The OpenNebula terraform provider can hard-error on refresh/plan when an
+    # opennebula_virtual_network_address_range's AR was already removed from OpenNebula
+    # (e.g. destroyed as a side effect of the first, ignored apply above) but the AR
+    # resource itself is still tracked in state. Drop just those stale AR entries so the
+    # retry below can proceed instead of failing again with "AR not found".
+    - name: Dump current terraform state as JSON to detect stale Address Ranges
+      ansible.builtin.command:
+        cmd: terraform show -json
+        chdir: "{{ workspace }}/.terraform/"
+      register: tf_state_dump
+      changed_when: false
+
+    - name: Identify OpenNebula Virtual Network IDs reported as having a missing Address Range
+      ansible.builtin.set_fact:
+        stale_ar_vnet_ids: "{{ (first_apply_result.msg | default('')) | regex_findall('Virtual network \\(ID:(\\d+)\\): AR \\(ID:\\d+\\) not found') }}"
+
+    - name: Compute terraform state addresses for the stale Address Range resources
+      ansible.builtin.set_fact:
+        stale_ar_state_addresses: >-
+          {{
+            (tf_state_dump.stdout | from_json).values.root_module.resources
+            | default([])
+            | selectattr('type', 'equalto', 'opennebula_virtual_network_address_range')
+            | selectattr('values.virtual_network_id', 'in', stale_ar_vnet_ids)
+            | map(attribute='address')
+            | list
+          }}
+      when: stale_ar_vnet_ids | length > 0
+
+    - name: Remove stale Address Range entries from terraform state so the retry can proceed
+      ansible.builtin.command:
+        cmd: "terraform state rm {{ item }}"
+        chdir: "{{ workspace }}/.terraform/"
+      loop: "{{ stale_ar_state_addresses | default([]) }}"
+      when: stale_ar_vnet_ids | length > 0
+      ignore_errors: true
 
     - name: Run 'terraform apply' a second time. Command should now succeed
       community.general.terraform:
