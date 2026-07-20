@@ -53,25 +53,21 @@
       ansible.builtin.set_fact:
         stale_ar_vnet_ids: "{{ (first_apply_result.msg | default('')) | regex_findall('Virtual network \\(ID:(\\d+)\\): AR \\(ID:\\d+\\)') }}"
 
-    - name: Compute terraform state addresses for the stale Address Range resources
-      ansible.builtin.set_fact:
-        stale_ar_state_addresses: >-
-          {{
-            (tf_state_dump.stdout | from_json).values.root_module.resources
-            | default([])
-            | selectattr('type', 'equalto', 'opennebula_virtual_network_address_range')
-            | selectattr('values.virtual_network_id', 'in', stale_ar_vnet_ids)
-            | map(attribute='address')
-            | list
-          }}
-      when: stale_ar_vnet_ids | length > 0
-
+    # virtual_network_id may be tracked as an int or a string depending on provider
+    # version, while stale_ar_vnet_ids (from regex_findall) is always a list of strings;
+    # cast explicitly per-item in the `when` below so the comparison isn't silently
+    # type-mismatched (a selectattr('..., 'in', ...) pipeline can't cast inline).
     - name: Remove stale Address Range entries from terraform state so the retry can proceed
       ansible.builtin.command:
-        cmd: "terraform state rm {{ item }}"
+        cmd: "terraform state rm {{ item.address }}"
         chdir: "{{ workspace }}/.terraform/"
-      loop: "{{ stale_ar_state_addresses | default([]) }}"
-      when: stale_ar_vnet_ids | length > 0
+      loop: "{{ (tf_state_dump.stdout | from_json).values.root_module.resources | default([]) }}"
+      loop_control:
+        label: "{{ item.address }}"
+      when: >-
+        stale_ar_vnet_ids | length > 0 and
+        item.type == 'opennebula_virtual_network_address_range' and
+        (item.values.virtual_network_id | string) in stale_ar_vnet_ids
       ignore_errors: true
 
     - name: Run 'terraform apply' a second time. Command should now succeed
