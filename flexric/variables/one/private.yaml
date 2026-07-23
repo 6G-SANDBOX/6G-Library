@@ -1,0 +1,16 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_flexric_cpu: 1
+one_flexric_vcpu: 2
+one_flexric_memory: 4086
+one_flexric_disk: 12288
+one_flexric_networks: 
+  - tn_vxlan

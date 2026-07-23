@@ -1,0 +1,57 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - 
+  short_description: Deploy a virtual machine with flexric 
+  long_description: |
+    Ubuntu 24.04 LTS virtual machine with flexric installed. 
+    
+  hypervisors: ["one"]
+  depends_on:
+    - tn_bastion
+  tags:
+    - "VM"
+    - "appliance"
+    - "monitoring"
+  appliances: []
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  template_id: ID of the InfluxDB VM template to use in your OpenNebula environment
+  image_id: ID of the InfluxDB VM image to use in your OpenNebula environment
+
+
+####################################
+## Input variables
+####################################
+input:
+  one_flexric_networks:
+    description: Ordered list of Virtual one_flexric_networks
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
+    required_when: false
+
+
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__component_type: "flexric"
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"
