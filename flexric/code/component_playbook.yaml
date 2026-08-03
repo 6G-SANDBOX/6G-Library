@@ -104,19 +104,8 @@
         key: "{{ item }}"
       loop:
         - "{{ hostvars['localhost'].get('tn_ssh_public_key', '') }}"
-        
-- name: "STAGE 4: Access tn_bastion to set firewall exceptions"
-  hosts: bastion
-  gather_facts: false
-  tasks:
-    - name: Write firewall exception for the cyperf Controller
-      ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/nftables_add.yaml"
-      vars:
-        fw_exceptions:
-          - "{{ hostvars.localhost.site_available_components.flexric.cyperf_controller_ip | default('') }}"
 
-
-- name: "STAGE 5: Publish execution results"
+- name: "STAGE 4: Publish execution results"
   hosts: localhost
   gather_facts: false
   connection: local
