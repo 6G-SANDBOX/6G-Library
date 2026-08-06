@@ -25,7 +25,6 @@ trial_network:
     name: "core"
     dependencies:
       - "tn_init"
-      - "tn_bastion-bastion"
       - "vnet-n3"
       - "vnet-n6"
     input:
