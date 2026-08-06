@@ -4,13 +4,6 @@ trial_network:
     dependencies: []
     input: {}
 
-  tn_bastion-bastion:
-    type: "tn_bastion"
-    name: "bastion"
-    dependencies:
-      - "tn_init"
-    input: {}
-
   vnet-n3:
     type: "vnet"
     name: "n3"
