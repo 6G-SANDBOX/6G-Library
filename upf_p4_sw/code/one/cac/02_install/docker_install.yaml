@@ -24,6 +24,11 @@
       - docker-compose-plugin
     state: present
 
+- name: Clean apt cache after Docker install
+  apt:
+    clean: true
+    autoremove: true
+
 - name: Add jenkins user to docker group
   user:
     name: jenkins

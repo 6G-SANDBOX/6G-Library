@@ -5,6 +5,11 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
   vcpu        = {{ one_upf_p4_sw_cpu }}
   memory      = {{ one_upf_p4_sw_memory }}
 
+  disk {
+    image_id = {{ site_available_components.upf_p4_sw.image_id }}
+    size     = {{ one_upf_p4_sw_disk }}
+  }
+
   context = {
     NETWORK =        "YES"
     NETCFG_TYPE =    "interfaces"
