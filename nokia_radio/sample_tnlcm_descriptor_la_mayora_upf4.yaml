@@ -60,5 +60,5 @@ trial_network:
     dependencies:
       - "upf_p4_sw-core"
     input:
-      any_nokia_radio_linked_5gcore: "
+      any_nokia_radio_linked_5gcore: "upf_p4_sw-core"
       any_nokia_radio_duration: 7200
