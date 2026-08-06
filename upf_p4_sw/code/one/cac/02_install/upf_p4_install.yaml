@@ -74,9 +74,13 @@
   args:
     chdir: /home/jenkins
 
-- name: Pause to wait for mongo to deployment
-  pause:
-    seconds: 5
+- name: Wait for MongoDB to be ready
+  wait_for:
+    host: 127.0.0.1
+    port: 27017
+    delay: 5
+    timeout: 120
+    state: started
 
 # TODO: At the moment, only one UE is registed
 - name: Apply template to UEs registration script
