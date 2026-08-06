@@ -1,0 +1,64 @@
+trial_network:
+  tn_init:
+    type: "tn_init"
+    dependencies: []
+    input: {}
+
+  tn_bastion-bastion:
+    type: "tn_bastion"
+    name: "bastion"
+    dependencies:
+      - "tn_init"
+    input: {}
+
+  vnet-n3:
+    type: "vnet"
+    name: "n3"
+    dependencies:
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.10.12.1"   # nokia_radio hardcodes AMF at .200 and UPF at .201
+
+  vnet-n6:
+    type: "vnet"
+    name: "n6"
+    dependencies:
+      - "tn_init"
+    input:
+      one_vnet_first_ip: "10.11.6.1"
+
+  upf_p4_sw-core:
+    type: "upf_p4_sw"
+    name: "core"
+    dependencies:
+      - "tn_init"
+      - "tn_bastion-bastion"
+      - "vnet-n3"
+      - "vnet-n6"
+    input:
+      one_upf_p4_sw_networks:
+        - tn_vxlan
+        - vnet-n3
+        - vnet-n6
+      # Must match nokia_radio hardcoded requirements:
+      one_upf_p4_sw_open5gs_amf_ngap_addr: "10.10.12.200"
+      one_upf_p4_sw_controller_upf_ipv4_n3: "10.10.12.201"
+      one_upf_p4_sw_open5gs_control_tac: 1
+      one_upf_p4_sw_open5gs_control_mcc: "214"
+      one_upf_p4_sw_open5gs_control_mnc: "702"
+      one_upf_p4_sw_open5gs_control_msin: "000000600"
+      one_upf_p4_sw_open5gs_control_s_nssai_sd: "000009"
+      # N6 side
+      one_upf_p4_sw_controller_upf_ipv4_n6: "10.11.6.1"
+      one_upf_p4_sw_controller_dn_ipv4_n6: "10.11.6.2"
+      # Nokia radio's physical N3 IP — update when real radio is installed
+      one_upf_p4_sw_controller_enb_ipv4_n3: "192.168.77.11"   # placeholder from core.yaml
+
+  nokia_radio-RAN:
+    type: "nokia_radio"
+    name: "RAN"
+    dependencies:
+      - "upf_p4_sw-core"
+    input:
+      any_nokia_radio_linked_5gcore: "
+      any_nokia_radio_duration: 7200
