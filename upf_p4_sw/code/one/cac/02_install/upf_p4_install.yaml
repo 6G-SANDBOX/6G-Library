@@ -67,6 +67,13 @@
 #        - docker-compose.yaml
 #      state: present
 
+- name: Pull docker-compose images
+  become: true
+  become_user: jenkins
+  command: docker compose -f /home/jenkins/docker-compose.yaml pull
+  args:
+    chdir: /home/jenkins
+
 - name: Execute docker-compose up
   become: true
   become_user: jenkins
@@ -78,8 +85,8 @@
   wait_for:
     host: 127.0.0.1
     port: 27017
-    delay: 5
-    timeout: 120
+    delay: 10
+    timeout: 300
     state: started
 
 # TODO: At the moment, only one UE is registed
