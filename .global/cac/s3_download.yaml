@@ -1,3 +1,12 @@
+- name: Ensure S3 bucket exists
+  amazon.aws.s3_bucket:
+    name: "{{ site_s3_server.bucket }}"
+    state: present
+    endpoint_url: "{{ site_s3_server.endpoint }}"
+    access_key: "{{ lookup('ansible.builtin.env', 'AWS_ACCESS_KEY_ID') }}"
+    secret_key: "{{ lookup('ansible.builtin.env', 'AWS_SECRET_ACCESS_KEY') }}"
+    validate_certs: false
+
 - name: Get list of files from S3 object storage
   amazon.aws.s3_object:
     endpoint_url: "{{ site_s3_server.endpoint }}"

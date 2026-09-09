@@ -24,6 +24,11 @@
       - docker-compose-plugin
     state: present
 
+- name: Clean apt cache after Docker install
+  apt:
+    clean: true
+    autoremove: true
+
 - name: Add jenkins user to docker group
   user:
     name: jenkins
@@ -34,6 +39,20 @@
   file:
     path: /var/run/docker.sock
     mode: '0666'
+
+- name: Create Docker certs directory for private registry
+  file:
+    path: /etc/docker/certs.d/dockerhub.mobilesandbox.cloud:9443
+    state: directory
+    mode: '0755'
+
+- name: Fetch and install private registry CA certificate
+  shell: |
+    openssl s_client -showcerts -connect dockerhub.mobilesandbox.cloud:9443 </dev/null 2>/dev/null \
+    | sed -n '/-----BEGIN CERTIFICATE-----/,/-----END CERTIFICATE-----/p' \
+    > /etc/docker/certs.d/dockerhub.mobilesandbox.cloud:9443/ca.crt
+  args:
+    creates: /etc/docker/certs.d/dockerhub.mobilesandbox.cloud:9443/ca.crt
 
 - name: Restart Docker service
   systemd:

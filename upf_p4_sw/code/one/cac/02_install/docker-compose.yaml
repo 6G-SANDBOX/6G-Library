@@ -22,7 +22,7 @@ services:
       
 # ---- Services for Open5GS ----
   mongo:
-    image: mongo
+    image: mongo:4.4
     environment:
       MONGO_INITDB_DATABASE: open5gs
     network_mode: host

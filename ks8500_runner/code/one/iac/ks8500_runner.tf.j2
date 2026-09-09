@@ -13,9 +13,9 @@ resource "opennebula_virtual_machine" "{{ entity_name }}" {
     SET_HOSTNAME: "$NAME"
     USERNAME: "jenkins"
     PASSWORD: "keysight"
-    SSH_PUBLIC_KEY: "$USER[SSH_PUBLIC_KEY]"
-    # install apt install python3 -y; growpart /dev/vda 1; resize2fs /dev/vda1
-    START_SCRIPT_BASE64: "IyEvYmluL2Jhc2gKZ3Jvd3BhcnQgL2Rldi92ZGEgMQpyZXNpemUyZnMgL2Rldi92ZGExCmFwdCBpbnN0YWxsIHB5dGhvbjMgLXk="
+    SSH_PUBLIC_KEY: "{{ jenkins_ssh_public_key }}"
+    # Disable unattended-upgrades at first boot; then growpart + resize2fs + apt install python3
+    START_SCRIPT_BASE64: "IyEvYmluL2Jhc2gKc3lzdGVtY3RsIHN0b3AgdW5hdHRlbmRlZC11cGdyYWRlcyBhcHQtZGFpbHktdXBncmFkZSBhcHQtZGFpbHkgMj4vZGV2L251bGwgfHwgdHJ1ZQpzeXN0ZW1jdGwgbWFzayB1bmF0dGVuZGVkLXVwZ3JhZGVzIGFwdC1kYWlseS11cGdyYWRlIGFwdC1kYWlseSAyPi9kZXYvbnVsbCB8fCB0cnVlCmdyb3dwYXJ0IC9kZXYvdmRhIDEKcmVzaXplMmZzIC9kZXYvdmRhMQphcHQgaW5zdGFsbCBweXRob24zIC15Cg=="
   }
 
   # Ignore changes in the disk argument due to limitations in the OpenNebula Terraform provider (#598)

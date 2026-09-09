@@ -32,6 +32,43 @@
         state: "present"
         force_init: true
       ignore_errors: true
+      register: first_apply_result
+
+    # The OpenNebula terraform provider can hard-error on refresh/plan when an
+    # opennebula_virtual_network_address_range's AR was already removed from OpenNebula
+    # (e.g. destroyed as a side effect of the first, ignored apply above) but the AR
+    # resource itself is still tracked in state. Drop just those stale AR entries so the
+    # retry below can proceed instead of failing again with "AR not found".
+    - name: Dump current terraform state as JSON to detect stale Address Ranges
+      ansible.builtin.command:
+        cmd: terraform show -json
+        chdir: "{{ workspace }}/.terraform/"
+      register: tf_state_dump
+      changed_when: false
+
+    # Matches both observed OpenNebula provider error phrasings for a stale AR:
+    #   "Virtual network (ID:X): AR (ID:Y) not found"
+    #   "Virtual network (ID:X): AR (ID:Y): OpenNebula error [INTERNAL]: [one.vn.free_ar] Address Range does not exist"
+    - name: Identify OpenNebula Virtual Network IDs reported as having a missing Address Range
+      ansible.builtin.set_fact:
+        stale_ar_vnet_ids: "{{ (first_apply_result.msg | default('')) | regex_findall('Virtual network \\(ID:(\\d+)\\): AR \\(ID:\\d+\\)') }}"
+
+    # virtual_network_id may be tracked as an int or a string depending on provider
+    # version, while stale_ar_vnet_ids (from regex_findall) is always a list of strings;
+    # cast explicitly per-item in the `when` below so the comparison isn't silently
+    # type-mismatched (a selectattr('..., 'in', ...) pipeline can't cast inline).
+    - name: Remove stale Address Range entries from terraform state so the retry can proceed
+      ansible.builtin.command:
+        cmd: "terraform state rm {{ item.address }}"
+        chdir: "{{ workspace }}/.terraform/"
+      loop: "{{ (tf_state_dump.stdout | from_json)['values']['root_module']['resources'] | default([]) }}"
+      loop_control:
+        label: "{{ item.address }}"
+      when: >-
+        stale_ar_vnet_ids | length > 0 and
+        item.type == 'opennebula_virtual_network_address_range' and
+        (item['values']['virtual_network_id'] | string) in stale_ar_vnet_ids
+      ignore_errors: true
 
     - name: Run 'terraform apply' a second time. Command should now succeed
       community.general.terraform:
