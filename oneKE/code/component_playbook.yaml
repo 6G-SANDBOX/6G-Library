@@ -61,12 +61,20 @@
 
     # For some weird reason, idempotency with this tool gives rc=255, but syntax errors give rc=0...
     - name: Resize the disk reserved for Longhorn in the storage VMs
-      ansible.builtin.shell: >
-        /usr/bin/onevm
-        disk-resize {{ item }} 1 30G
-        --user {{ lookup('ansible.builtin.env', 'OPENNEBULA_USERNAME') }}
-        --password {{ lookup('ansible.builtin.env', 'OPENNEBULA_PASSWORD') }}
-        --endpoint {{ lookup('ansible.builtin.env', 'OPENNEBULA_ENDPOINT') }}
+      ansible.builtin.shell: |
+        ruby - "{{ item }}" <<'RUBY'
+        require 'opennebula'
+
+        auth = "#{ENV.fetch('OPENNEBULA_USERNAME')}:#{ENV.fetch('OPENNEBULA_PASSWORD')}"
+        client = OpenNebula::Client.new(auth, ENV.fetch('OPENNEBULA_ENDPOINT'))
+        vm = OpenNebula::VirtualMachine.new_with_id(Integer(ARGV.fetch(0)), client)
+        rc = vm.disk_resize(1, 30 * 1024)
+
+        if OpenNebula.is_error?(rc)
+          warn rc.message
+          exit 255
+        end
+        RUBY
       register: disk_resize
       failed_when: >
         (disk_resize.rc !=  0 and 'must be larger' not in disk_resize.stderr) or
@@ -101,7 +109,7 @@
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
         connect_timeout: 5
-        timeout: 200
+        timeout: 600
 
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:

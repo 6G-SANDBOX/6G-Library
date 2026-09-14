@@ -16,3 +16,7 @@
 - name: Load public component-specific variables from input file
   ansible.builtin.include_vars:
     file: "{{ workspace }}/{{ component_type }}/variables/input_file.yaml"
+
+- name: Set Jenkins SSH public key from local file
+  ansible.builtin.set_fact:
+    jenkins_ssh_public_key: "{{ lookup('file', '/var/lib/jenkins/.ssh/id_ed25519.pub') }}"
