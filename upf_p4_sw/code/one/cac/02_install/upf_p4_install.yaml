@@ -71,7 +71,7 @@
   become: true
   command: ip addr add {{ hostvars['localhost']['one_upf_p4_sw_open5gs_amf_ngap_addr'] }}/24 dev {{ hostvars['localhost']['one_upf_p4_sw_chassis_conf_phy_n3'] }}
   register: ip_add_result
-  failed_when: ip_add_result.rc != 0 and 'RTNETLINK answers: File exists' not in ip_add_result.stderr
+  failed_when: "ip_add_result.rc != 0 and 'RTNETLINK answers: File exists' not in ip_add_result.stderr"
 
 - name: Persist AMF N2 IP across reboots via systemd-networkd override
   become: true
