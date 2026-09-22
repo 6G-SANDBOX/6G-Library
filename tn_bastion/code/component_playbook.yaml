@@ -69,6 +69,13 @@
     - name: Load enviromental variables from different sources inside the component
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
 
+    - name: Bring up VXLAN interface (eth1) and assign IP address
+      become: true
+      ansible.builtin.shell: |
+        ip link set eth1 up
+        ip addr replace {{ tn_vxlan_ip }}/{{ tn_vxlan_net.split('/')[1] }} dev eth1
+      changed_when: false
+
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:
         user: jenkins
