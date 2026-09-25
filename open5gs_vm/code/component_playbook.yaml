@@ -69,7 +69,17 @@
       ansible.builtin.add_host:
         hostname: "open5gs_vm"
         ansible_host: "{{ ips[access_vnet_id] }}"
-        ansible_ssh_common_args: "-J jenkins@{{ bastion_ip }}"
+        ansible_ssh_common_args: >-
+          -F /dev/null
+          -S none
+          -o ControlMaster=no
+          -o ServerAliveInterval=30
+          -o ServerAliveCountMax=10
+          -o ProxyCommand="ssh -i /var/lib/jenkins/.ssh/id_ed25519 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o KexAlgorithms=curve25519-sha256 -o BatchMode=yes -o ServerAliveInterval=30 -o ServerAliveCountMax=10 jenkins@{{ bastion_ip }} nc %h %p"
+          -o IdentityFile=/var/lib/jenkins/.ssh/id_ed25519
+          -o KexAlgorithms=curve25519-sha256
+          -o StrictHostKeyChecking=no
+          -o UserKnownHostsFile=/dev/null
         ansible_user: "jenkins"
 
     - name: Add new VM to SSH config file in the Jenkins-master for debugging purposes
@@ -83,13 +93,73 @@
   hosts: "open5gs_vm"
   gather_facts: false
   tasks:
+    - name: Remove stale SSH ControlMaster socket left by previous builds
+      ansible.builtin.file:
+        path: "/tmp/ansible-ssh-{{ ansible_host }}-22-{{ ansible_user }}"
+        state: absent
+      delegate_to: localhost
+      vars:
+        ansible_connection: local
+
     - name: Wait for system to become reachable
       ansible.builtin.wait_for_connection:
         connect_timeout: 5
-        timeout: 200
+        timeout: 1800
+
+    - name: Mask apt automation to prevent sshd restarts during configuration
+      ansible.builtin.shell: |
+        systemctl mask --now \
+            unattended-upgrades \
+            apt-daily.service \
+            apt-daily-upgrade.service \
+            apt-daily.timer \
+            apt-daily-upgrade.timer \
+            2>/dev/null || true
+        echo '$nrconf{restart} = "l";' > /etc/needrestart/conf.d/00-ansible.conf 2>/dev/null || true
+        printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d
+        fuser -k /var/lib/dpkg/lock-frontend /var/lib/dpkg/lock /var/cache/apt/archives/lock 2>/dev/null || true
+        sleep 2
+        dpkg --configure -a 2>/dev/null || true
+        rm -f /usr/sbin/policy-rc.d
+      become: true
+      ignore_unreachable: true
+      ignore_errors: true
+
+    - name: Wait for SSH to stabilize after stopping unattended-upgrades
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        delay: 5
+        timeout: 300
 
     - name: Load enviromental variables from different sources
       ansible.builtin.include_tasks: "{{ workspace }}/.global/cac/load_variables.yaml"
+
+    - name: Wait for SSH to stabilize before first remote task
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        delay: 5
+        timeout: 600
+      ignore_unreachable: true
+      ignore_errors: true
+
+    - name: Confirm SSH is stable before first remote task
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        delay: 5
+        timeout: 300
+
+    - name: Wait for cloud-init to complete so sshd is no longer restarted
+      ansible.builtin.command:
+        cmd: cloud-init status --wait
+      changed_when: false
+      ignore_unreachable: true
+      ignore_errors: true
+
+    - name: Wait for SSH to stabilize after cloud-init
+      ansible.builtin.wait_for_connection:
+        connect_timeout: 5
+        delay: 5
+        timeout: 300
 
     - name: Set site ssh key as authorized in jenkins user
       ansible.posix.authorized_key:

@@ -67,6 +67,47 @@
 #        - docker-compose.yaml
 #      state: present
 
+- name: Assign AMF N2 IP as secondary address on N3 interface
+  become: true
+  command: ip addr add {{ hostvars['localhost']['one_upf_p4_sw_open5gs_amf_ngap_addr'] }}/24 dev {{ hostvars['localhost']['one_upf_p4_sw_chassis_conf_phy_n3'] }}
+  register: ip_add_result
+  failed_when: "ip_add_result.rc != 0 and 'RTNETLINK answers: File exists' not in ip_add_result.stderr"
+
+- name: Persist AMF N2 IP across reboots via systemd-networkd override
+  become: true
+  copy:
+    dest: /etc/systemd/system/amf-n2-ip.service
+    content: |
+      [Unit]
+      Description=Assign AMF N2 secondary IP on N3 interface
+      After=network-online.target
+      Wants=network-online.target
+
+      [Service]
+      Type=oneshot
+      ExecStart=/sbin/ip addr add {{ hostvars['localhost']['one_upf_p4_sw_open5gs_amf_ngap_addr'] }}/24 dev {{ hostvars['localhost']['one_upf_p4_sw_chassis_conf_phy_n3'] }}
+      ExecStart=/bin/true
+      RemainAfterExit=yes
+      IgnoreExecErrors=yes
+
+      [Install]
+      WantedBy=multi-user.target
+    mode: '0644'
+
+- name: Enable AMF N2 IP persistence service
+  become: true
+  systemd:
+    name: amf-n2-ip
+    enabled: true
+    daemon_reload: true
+
+- name: Pull docker-compose images
+  become: true
+  become_user: jenkins
+  command: docker compose -f /home/jenkins/docker-compose.yaml pull
+  args:
+    chdir: /home/jenkins
+
 - name: Execute docker-compose up
   become: true
   become_user: jenkins
@@ -74,9 +115,13 @@
   args:
     chdir: /home/jenkins
 
-- name: Pause to wait for mongo to deployment
-  pause:
-    seconds: 5
+- name: Wait for MongoDB to be ready
+  wait_for:
+    host: 127.0.0.1
+    port: 27017
+    delay: 10
+    timeout: 300
+    state: started
 
 # TODO: At the moment, only one UE is registed
 - name: Apply template to UEs registration script

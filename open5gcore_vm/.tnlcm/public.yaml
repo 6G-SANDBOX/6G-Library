@@ -164,6 +164,6 @@ terraform_outputs:
     key: input.one_open5gcore_vm_key
     opc: input.one_open5gcore_vm_opc
     apn: input.one_open5gcore_vm_apn
-    s_nssai_sst: input.one_open5gcore_vm_s_nssai_sd
-    s_nssai_sd: input.one_open5gcore_vm_s_nssai_sst
+    s_nssai_sst: input.one_open5gcore_vm_s_nssai_sst
+    s_nssai_sd: input.one_open5gcore_vm_s_nssai_sd
     upf_xdp: input.one_open5gcore_vm_upf_xdp           # Debatable
