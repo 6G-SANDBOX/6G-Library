@@ -1,0 +1,53 @@
+######################################################
+##
+## Component public variables
+##
+## Diverse information read by the TNLCM
+## to adapt its behaviour depending on the component.
+##
+######################################################
+
+
+####################################
+## Component metadata
+####################################
+metadata:
+  maintainers:
+    - Matteo Pagin <matteo.pagin@keysight.com>
+    - Álvaro Curto Merino <alvaro.curtomerino@telefonica.com>
+  short_description: EXata Digital Twin appliance for KVM
+  long_description: |
+    Appliance featuring Keysight's EXata. The latter allows Experimenters to include EXata Digital Twins as part of a Trial Network, in turn enabling the programmatic retrieval of insights and predictions about the twinned live network.
+    This component requires a working EXata licensing server exposed to the Trial Networks in the site. The licensing server IP address can be provided in the 6G-Sandbox-Sites repository branch of the site.
+    The component has been implemented as a Docker Compose stack comprising two services: one hosting an instance of EXata, and the other hosting an instance of the official MariaDB service.
+    The interaction of Experimenters and/or the reminder of the Trial Network with the DT component takes place via northbound APIs exposed by a custom Python FastAPI webserver. The latter accepts HTTP requests and translates them into commands to the EXata and MariaDB Docker services.
+
+  hypervisors: ["one"]
+  appliances: ["https://marketplace.mobilesandbox.cloud:9443/appliance/EXata"]
+
+
+####################################
+## Site-specific variables
+####################################
+site_variables:
+  exata_licensing_server_ip: IP address of the EXata licensing server in your site.
+  template_id: ID of the Appliance to use in the OpenNebula environment
+  image_id: ID of the Appliance to use in the OpenNebula environment
+
+####################################
+## Input variables
+####################################
+input:
+  one_exata_dt_networks:
+    description: Ordered list of Virtual Network names the VM will be part of. The first Virtual Network is used by Jenkins to reach and configure the VM, so most cases will be fine using always the tn_vxlan
+    type: "list[tn_vxlan or vnet]"
+    default_value: ["tn_vxlan"]
+    required_when: false
+
+
+####################################
+## Generated terraform outputs
+####################################
+terraform_outputs:
+  __entity_name__id: "VM ID in OpenNebula. Generated from Terraform Manifest"
+  __entity_name__ips: "Dictionary of VM IP addresses: {<VNet ID in OpenNebula>: <IP address>}. Generated from Terraform Manifest"

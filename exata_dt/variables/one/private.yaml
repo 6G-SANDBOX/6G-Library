@@ -1,0 +1,15 @@
+######################################################
+##
+## Component private variables
+##
+## Variables required for the deployment
+## and their default value.
+## Some of them are modifiable through input variables
+##
+######################################################
+
+one_exata_dt_cpu: 6
+one_exata_dt_memory: 8192
+one_exata_dt_disk: 42950
+one_exata_dt_networks: 
+  - tn_vxlan
