@@ -123,15 +123,20 @@
 
     - name: render ue subnet into networkd file
       template:
-        src: "99-open5gcore.network.j2"
-        dest: /etc/systemd/network/99-open5gcore.network
+        src: "69-open5gcore.network.j2"
+        dest: /etc/systemd/network/69-open5gcore.network
         backup: true
       register: networkd_changed
 
-    - name: copy networkd netdev file
+    - name: copy networkd netdev files
       copy:
-        src: "99-open5gcore.netdev"
-        dest: /etc/systemd/network/99-open5gcore.netdev
+        src: "{{ item }}"
+        dest: /etc/systemd/network/
+      loop:
+        - "69-open5gcore.netdev"
+        - "69-o5gc-n6tap.network"
+        - "69-o5gc-tapbr.network"
+        - "69-o5gc-tapbr.netdev"
       register: networkd_changed
 
     - name: reload networkctl

@@ -95,6 +95,7 @@
                         { "ignore": 1 , "name": "", "ipaddr": "", "slice": [{"sst": 1, "sd": "000001"}],"ipv4_allocation": [{"supi": "", "ipaddr": ""}, {"mac": "", "ipaddr": ""}], "dns": [""] },
                         { "name": "ims", "ipaddr": "10.45.3.0/24", "reserved_ip": ["10.45.3.254"], "dns": ["{{ue_dns_server}}","1.1.1.1"] },
                         { "name": "%DNN", "ipaddr": "%DNN_SUBNET", "dns": ["{{ue_dns_server}}","1.1.1.1"] },
+                        { "name": "ethnet" },
                         { "name": "default", "ipaddr": "10.45.1.0/24", "reserved_ip":["10.45.1.1"], "dns": ["{{ue_dns_server}}","1.1.1.1"] }
                     ],
                     "hacks": {
@@ -212,10 +213,10 @@
                                 "Node_B":{ "type":"apn", "id":"ims", "port":0, "ip":"ignored" }
                             },
                             {
-                                "comment": "Single switch from upf1->igw(dnn:bt5g)",
+                                "comment": "Single switch from upf1->igw(dnn:ethnet)",
                                 "weight":1,
-                                "Node_A":{ "type":"upf", "id":"%UPF1_N4_IP", "port":0, "ip":"%UPF1_N6_IP" },
-                                "Node_B":{ "type":"apn", "id":"bt5g", "port":0, "ip":"ignored" }
+                                "Node_A":{ "type":"upf", "id":"%UPF1_N4_IP", "port":0, "ip":"0.0.0.0" },
+                                "Node_B":{ "type":"apn", "id":"ethnet", "port":0, "ip":"ignored" }
                             },
                             {
                                 "comment": "Single switch from upf1->igw(dnn:%DNN)",
